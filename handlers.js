@@ -116,6 +116,20 @@ function onButton6Click() {
   window.location.href = "pokemon.html";
 }
 
+function onButton7Click() {
+  fetch("https://jsonplaceholder.typicode.com/todos/1")
+    .then(response => response.json())
+    .then(data => {
+
+      var newWindow = window.open("", "_blank");
+
+      newWindow.document.write("<h1>Public API Result</h1>");
+      newWindow.document.write("<pre>" + JSON.stringify(data, null, 2) + "</pre>");
+
+    })
+    .catch(err => console.log(err));
+}
+
 function onButton8Click() {
     // Navigates the current tab to your new joke page
     window.location.href = "joke.html"; 

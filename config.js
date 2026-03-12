@@ -14,6 +14,6 @@ const BUTTON_LABELS = [
   "Button 4",
   "Button 5",
   "Show Pokemon",
-  "Button 7",
+  "API Test",
   "Tell Me A Joke",
 ];
