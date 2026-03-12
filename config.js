@@ -8,12 +8,12 @@
 const NUM_BUTTONS = 8;
 
 const BUTTON_LABELS = [
-  "Button 1",
+  "Cat Fact",
   "Button 2",
   "Button 3",
   "Button 4",
   "Button 5",
-  "Button 6",
+  "Show Pokemon",
   "API Test",
   "Button 8",
 ];

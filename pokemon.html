@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Pokémon</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    .card h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+
+    .description {
+      color: #64748b;
+      font-size: 0.875rem;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    #loading {
+      color: #4f46e5;
+      font-size: 1.125rem;
+      font-weight: 500;
+    }
+
+    #error {
+      color: #dc2626;
+      display: none;
+    }
+
+    #pokemon {
+      display: none;
+    }
+
+    #pokemon img {
+      width: 160px;
+      height: 160px;
+      image-rendering: pixelated;
+    }
+
+    #pokemon h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e293b;
+      text-transform: capitalize;
+      margin: 8px 0 12px;
+    }
+
+    .types {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .type-badge {
+      padding: 4px 14px;
+      border-radius: 20px;
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .stat-item {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .stat-item .label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-item .value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .actions {
+      margin-top: 28px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 150ms, box-shadow 150ms;
+    }
+
+    .btn-primary {
+      background-color: #4f46e5;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #4338ca;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+    }
+
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: #475569;
+    }
+
+    .btn-secondary:hover {
+      background-color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Random Pokémon</h1>
+    <p class="description">Here is your random Pokémon!</p>
+
+    <div id="loading">Loading Pokémon…</div>
+    <div id="error">Failed to load Pokémon. Please try again.</div>
+
+    <div id="pokemon">
+      <img id="sprite" src="" alt="" />
+      <h2 id="name"></h2>
+      <div id="types" class="types"></div>
+      <div id="stats" class="stats-grid"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="fetchRandomPokemon()">New Pokémon</button>
+      <a href="index.html" class="btn btn-secondary">← Back</a>
+    </div>
+  </div>
+
+  <script>
+    var TYPE_COLORS = {
+      normal: "#a8a77a", fire: "#ee8130", water: "#6390f0",
+      electric: "#f7d02c", grass: "#7ac74c", ice: "#96d9d6",
+      fighting: "#c22e28", poison: "#a33ea1", ground: "#e2bf65",
+      flying: "#a98ff3", psychic: "#f95587", bug: "#a6b91a",
+      rock: "#b6a136", ghost: "#735797", dragon: "#6f35fc",
+      dark: "#705746", steel: "#b7b7ce", fairy: "#d685ad"
+    };
+
+    var STAT_LABELS = { hp: "HP", attack: "ATK", defense: "DEF", speed: "SPD" };
+    var DISPLAY_STATS = ["hp", "attack", "defense", "speed"];
+
+    function fetchRandomPokemon() {
+      var id = Math.floor(Math.random() * 1025) + 1;
+
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("pokemon").style.display = "none";
+      document.getElementById("error").style.display = "none";
+
+      fetch("https://pokeapi.co/api/v2/pokemon/" + id)
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          document.getElementById("name").textContent = data.name;
+          document.getElementById("sprite").src =
+            data.sprites.other["official-artwork"].front_default ||
+            data.sprites.front_default;
+          document.getElementById("sprite").alt = data.name;
+
+          var typesEl = document.getElementById("types");
+          typesEl.innerHTML = "";
+          data.types.forEach(function (t) {
+            var badge = document.createElement("span");
+            badge.className = "type-badge";
+            badge.textContent = t.type.name;
+            badge.style.backgroundColor = TYPE_COLORS[t.type.name] || "#888";
+            typesEl.appendChild(badge);
+          });
+
+          var statsEl = document.getElementById("stats");
+          statsEl.innerHTML = "";
+          data.stats.forEach(function (s) {
+            if (DISPLAY_STATS.indexOf(s.stat.name) === -1) return;
+            var item = document.createElement("div");
+            item.className = "stat-item";
+            item.innerHTML =
+              '<div class="label">' + STAT_LABELS[s.stat.name] + '</div>' +
+              '<div class="value">' + s.base_stat + '</div>';
+            statsEl.appendChild(item);
+          });
+
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("pokemon").style.display = "block";
+        })
+        .catch(function () {
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("error").style.display = "block";
+        });
+    }
+
+    fetchRandomPokemon();
+  </script>
+</body>
+</html>
