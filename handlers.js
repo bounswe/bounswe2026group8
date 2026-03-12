@@ -6,7 +6,7 @@
  */
 
 function onButton1Click() {
-  window.location.href = "barisoksuz.html";
+  console.log("Button 1 clicked -- implement me!");
 }
 
 function onButton2Click() {
@@ -23,4 +23,8 @@ function onButton4Click() {
 
 function onButton5Click() {
   console.log("Button 5 clicked -- implement me!");
+}
+
+function onButton6Click() {
+  window.location.href = "pokemon.html";
 }
