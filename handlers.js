@@ -10,7 +10,41 @@ function onButton1Click() {
 }
 
 function onButton2Click() {
-  console.log("Button 2 clicked -- implement me!");
+  const apiUrl = "https://randomuser.me/api/";
+
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      const user = data.results[0];
+
+      const newWindow = window.open("", "_blank");
+
+      newWindow.document.write(`
+        <html>
+        <head>
+          <title>API Result</title>
+        </head>
+        <body>
+          <h1>Random User API Response</h1>
+
+          <p>
+          This page displays data retrieved from the Random User API. 
+          The API generates realistic but fictional user profiles that can be used 
+          for testing applications or demonstrating user interfaces.
+          </p>
+
+          <h2>User Information</h2>
+          <p><strong>Name:</strong> ${user.name.first} ${user.name.last}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Country:</strong> ${user.location.country}</p>
+          <img src="${user.picture.large}" alt="User picture">
+        </body>
+        </html>
+      `);
+    })
+    .catch(error => {
+      console.error("Error fetching API:", error);
+    });
 }
 
 function onButton3Click() {
