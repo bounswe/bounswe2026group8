@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Joke API Page</title>
+  <style>
+    /* Borrowed styles to match your team's main app */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      padding: 48px 40px;
+    }
+    h2 { color: #1e293b; margin-bottom: 24px; text-align: center; }
+    .joke-box { background: #f1f5f9; padding: 24px; border-radius: 12px; margin-bottom: 24px; }
+    .joke-box h3 { color: #333; margin-bottom: 12px; }
+    .joke-box p { color: #4f46e5; font-size: 1.25rem; font-style: italic; }
+    .api-description { color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 24px; margin-bottom: 24px; line-height: 1.5; }
+    .back-button {
+      display: block; width: 100%; padding: 12px 24px; border: none; border-radius: 12px;
+      background-color: #4f46e5; color: #ffffff; font-size: 1rem; font-weight: 500;
+      cursor: pointer; text-align: center; text-decoration: none;
+    }
+    .back-button:hover { background-color: #4338ca; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Here's Your Joke... </h2>
+    
+    <div id="joke-output" class="joke-box">
+      <p style="color: #64748b; font-style: normal; text-align: center;">Loading a joke...</p>
+    </div>
+    
+    <div class="api-description">
+      <strong>About this data:</strong> This page sends a GET request to the public Official Joke API. The API returns a JSON object containing a randomly generated joke, which is broken down into two distinct strings: a 'setup' and a 'punchline'.
+    </div>
+    
+    <a href="index.html" class="back-button">← Go Back to App</a>
+  </div>
+
+  <script>
+    // Fetches the joke and updates the HTML
+    async function fetchRandomJoke() {
+      try {
+        const response = await fetch('https://official-joke-api.appspot.com/random_joke');
+        if (!response.ok) {
+          throw new Error('Network error');
+        }
+        const jokeData = await response.json();
+        
+        document.getElementById('joke-output').innerHTML = `
+          <h3>${jokeData.setup}</h3>
+          <p>${jokeData.punchline}</p>
+        `;
+      } catch (error) {
+        console.error('Failed to fetch joke:', error);
+        document.getElementById('joke-output').innerHTML = `
+          <p style="color: #ef4444; font-style: normal; text-align: center;">Oops! Could not load a joke right now.</p>
+        `;
+      }
+    }
+    
+    // Run the function immediately when the page loads
+    fetchRandomJoke();
+  </script>
+</body>
+</html>
