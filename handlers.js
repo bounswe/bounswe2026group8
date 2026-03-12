@@ -22,7 +22,7 @@ function onButton4Click() {
 }
 
 function onButton5Click() {
-  console.log("Button 5 clicked -- implement me!");
+  window.open("button5.html", "_blank");
 }
 
 function onButton6Click() {
