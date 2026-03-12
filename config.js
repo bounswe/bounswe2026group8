@@ -5,7 +5,7 @@
  * Update BUTTON_LABELS to set the text displayed on each button.
  */
 
-const NUM_BUTTONS = 6;
+const NUM_BUTTONS = 8;
 
 const BUTTON_LABELS = [
   "Cat Fact",
@@ -14,4 +14,6 @@ const BUTTON_LABELS = [
   "Button 4",
   "Button 5",
   "Show Pokemon",
+  "Button 7",
+  "Tell Me A Joke",
 ];

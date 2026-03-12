@@ -115,3 +115,8 @@ function onButton5Click() {
 function onButton6Click() {
   window.location.href = "pokemon.html";
 }
+
+function onButton8Click() {
+    // Navigates the current tab to your new joke page
+    window.location.href = "joke.html"; 
+}
