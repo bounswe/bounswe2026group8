@@ -8,7 +8,7 @@
 const NUM_BUTTONS = 5;
 
 const BUTTON_LABELS = [
-  "Button 1",
+  "Baris Oksuz",
   "Button 2",
   "Button 3",
   "Button 4",
