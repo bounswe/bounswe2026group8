@@ -129,3 +129,8 @@ function onButton7Click() {
     })
     .catch(err => console.log(err));
 }
+
+function onButton8Click() {
+    // Navigates the current tab to your new joke page
+    window.location.href = "joke.html"; 
+}
