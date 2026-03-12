@@ -83,13 +83,5 @@ function onButton5Click() {
 }
 
 function onButton6Click() {
-  console.log("Button 6 clicked -- implement me!");
-}
-
-function onButton7Click() {
-  console.log("Button 7 clicked -- implement me!");
-}
-
-function onButton8Click() {
-  console.log("Button 8 clicked -- implement me!");
+  window.location.href = "pokemon.html";
 }
