@@ -9,11 +9,11 @@ const NUM_BUTTONS = 8;
 
 const BUTTON_LABELS = [
   "Cat Fact",
-  "Button 2",
-  "Button 3",
-  "Button 4",
-  "Button 5",
+  "Random User",
+  "Random Dog Image",
+  "Random Fun Fact",
+  "Random Joke by Mete",
   "Show Pokemon",
   "API Test",
-  "Tell Me A Joke",
+  "Joke creator by Cem",
 ];
