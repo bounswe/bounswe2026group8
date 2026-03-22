@@ -1,16 +1,51 @@
-# React + Vite
+# Frontend — React Web Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite web client for the Neighborhood Emergency Preparedness Hub authentication flow.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+# From the repo root
+cd frontend
+npm install
+npm run dev            # → http://localhost:5173
+```
 
-## React Compiler
+> The Django backend must be running on `http://localhost:8000` for API calls to work.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Pages
 
-## Expanding the ESLint configuration
+| Route | Component | Auth Required | Description |
+|-------|-----------|---------------|-------------|
+| `/` | LandingPage | No | Hero section, feature cards, entry buttons |
+| `/signup` | SignUpPage | No | Registration form (role-aware) |
+| `/signin` | SignInPage | No | Login form |
+| `/dashboard` | DashboardPage | Yes | Welcome card, feature placeholders, logout |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Project Structure
+
+```
+frontend/src/
+├── services/
+│   └── api.js              Fetch wrapper for backend endpoints
+├── context/
+│   └── AuthContext.jsx      Token + user state management
+├── components/
+│   └── ProtectedRoute.jsx   Redirects to /signin if not logged in
+├── pages/
+│   ├── LandingPage.jsx
+│   ├── SignUpPage.jsx
+│   ├── SignInPage.jsx
+│   └── DashboardPage.jsx
+├── App.jsx                  Router setup
+├── main.jsx                 Entry point
+└── index.css                Full design system
+```
+
+## Features
+
+- **Role-aware sign-up** — Expertise Field appears only when role = Expert
+- **Token management** — stored in `localStorage`, validated via `GET /me` on page load
+- **Protected routes** — `/dashboard` redirects unauthenticated users to sign-in
+- **Client-side validation** — immediate feedback before server round-trip
+- **Modern dark UI** — glassmorphism, gradient accents, Inter font, responsive

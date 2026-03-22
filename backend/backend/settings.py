@@ -7,6 +7,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SECURITY WARNING: This key is for local development only.
+# Before deploying to production, set SECRET_KEY via an environment variable:
+#   import os
+#   SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 SECRET_KEY = 'django-insecure-change-this-in-production-use-env-var'
 
 DEBUG = True
