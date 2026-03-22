@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authtoken.models import Token
 
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 
@@ -34,7 +34,7 @@ class RegisterView(APIView):
 class LoginView(APIView):
     """
     POST /login
-    Returns JWT tokens on success.
+    Returns an auth token on success.
     """
     permission_classes = [AllowAny]
 
@@ -42,13 +42,12 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
-            # Generate JWT token pair
-            refresh = RefreshToken.for_user(user)
+            # Get or create a DRF token for the user
+            token, _ = Token.objects.get_or_create(user=user)
             return Response(
                 {
                     'message': 'Login successful',
-                    'token': str(refresh.access_token),
-                    'refresh': str(refresh),
+                    'token': token.key,
                     'user': UserSerializer(user).data,
                 },
                 status=status.HTTP_200_OK,
@@ -62,12 +61,16 @@ class LoginView(APIView):
 class LogoutView(APIView):
     """
     POST /logout
-    For JWT, logout is handled client-side by discarding the token.
-    This endpoint exists for API compatibility.
+    Requires a valid token. Deletes the token so it can no longer be used.
     """
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        # Delete the user's auth token to invalidate the session
+        try:
+            request.user.auth_token.delete()
+        except Token.DoesNotExist:
+            pass
         return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
 
 
