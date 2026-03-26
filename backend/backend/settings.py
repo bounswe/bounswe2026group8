@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'corsheaders',
     # Local
     'accounts',
+    'forum',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +85,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ── Custom user model ──────────────────────────────────────────────────────────
@@ -103,3 +107,6 @@ REST_FRAMEWORK = {
 # Allow all origins for Milestone 1 dev convenience.
 # Restrict to specific origins before production.
 CORS_ALLOW_ALL_ORIGINS = True
+
+# ── Forum ──────────────────────────────────────────────────────────────────────
+FORUM_REPORT_HIDE_THRESHOLD = 5
