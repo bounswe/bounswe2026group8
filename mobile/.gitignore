@@ -1,0 +1,29 @@
+# NDK
+ndk/
+
+# Build-generated directories
+build/
+*/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+
+# IntelliJ / Android Studio
+.idea/
+.gradle/
+local.properties
+*.iml
+*.iws
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Cache
+.cxx/
+.gradle/
+.idea/

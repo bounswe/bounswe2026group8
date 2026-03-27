@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Emergency Hub</string>
+    <string name="app_title">Emergency\nPreparedness Hub</string>
+    <string name="app_subtitle">Prepare for emergencies, connect with neighbors, and build community resilience together.</string>
+    <string name="emergency_hub">Emergency Hub</string>
+
+    <!-- Auth actions -->
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="signing_up">Signing up…</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="logout">Logout</string>
+
+    <!-- Sign Up screen -->
+    <string name="create_account">Create Account</string>
+    <string name="join_community">Join your neighborhood emergency hub</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="select_role">Select your role</string>
+    <string name="role_standard">Standard</string>
+    <string name="role_expert">Expert</string>
+    <string name="expertise_field">Expertise Field</string>
+    <string name="neighborhood_optional">Neighborhood / Address (optional)</string>
+    <string name="already_have_account">Already have an account? Sign In</string>
+
+    <!-- Sign In screen -->
+    <string name="welcome_back">Welcome Back</string>
+    <string name="sign_in_subtitle">Sign in to your emergency hub account</string>
+    <string name="no_account">Don\'t have an account? Sign Up</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_placeholder">Welcome!</string>
+    <string name="feature_forum">Forum</string>
+    <string name="feature_forum_desc">Community discussions</string>
+    <string name="feature_help">Help Requests</string>
+    <string name="feature_help_desc">Ask for or offer help</string>
+    <string name="feature_profile">Profile</string>
+    <string name="feature_profile_desc">Manage your account</string>
+    <string name="feature_offline">Offline Info</string>
+    <string name="feature_offline_desc">Critical data access</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base palette — matching frontend dark theme -->
+    <color name="bg_base">#FF0B1120</color>
+    <color name="bg_surface">#FF111827</color>
+    <color name="bg_card">#A9111827</color>
+    <color name="bg_input">#FF1E293B</color>
+
+    <color name="border">#1F94A3B8</color>
+    <color name="border_focus">#FF38BDF8</color>
+
+    <color name="text_primary">#FFF1F5F9</color>
+    <color name="text_secondary">#FF94A3B8</color>
+    <color name="text_muted">#FF64748B</color>
+
+    <color name="accent">#FF38BDF8</color>
+    <color name="accent_hover">#FF0EA5E9</color>
+    <color name="accent_glow">#4038BDF8</color>
+    <color name="accent_secondary">#FFA5B4FC</color>
+
+    <color name="success">#FF34D399</color>
+    <color name="error">#FFF87171</color>
+
+    <color name="gradient_start">#FF38BDF8</color>
+    <color name="gradient_end">#FF818CF8</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <!-- Badge backgrounds -->
+    <color name="badge_bg">#1A38BDF8</color>
+    <color name="badge_accent_bg">#1A818CF8</color>
+    <color name="badge_muted_bg">#1494A3B8</color>
+</resources>
