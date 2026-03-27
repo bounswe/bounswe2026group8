@@ -6,12 +6,14 @@ HelpRequestDetailSerializer — full representation with location and descriptio
 HelpRequestCreateSerializer — validates input when creating a new request.
 HelpRequestUpdateSerializer — validates input when updating an existing request.
 HelpCommentSerializer       — comment with nested author (includes role for expert badge).
+HelpOfferSerializer         — offer for both list display and create responses.
+HelpOfferCreateSerializer   — validates input when creating a new offer.
 """
 
 from rest_framework import serializers
 
 from accounts.serializers import UserSerializer
-from .models import HelpRequest, HelpComment
+from .models import HelpRequest, HelpComment, HelpOffer
 
 
 class HelpRequestListSerializer(serializers.ModelSerializer):
@@ -108,3 +110,44 @@ class HelpCommentSerializer(serializers.ModelSerializer):
         model = HelpComment
         fields = ['id', 'request', 'author', 'content', 'created_at']
         read_only_fields = ['id', 'request', 'author', 'created_at']
+
+
+class HelpOfferSerializer(serializers.ModelSerializer):
+    """
+    Read-only serializer for displaying help offers in list responses.
+
+    Includes the nested author object (so the frontend can show who is
+    offering) and the hub name for display.
+    """
+    author = UserSerializer(read_only=True)
+    hub_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = HelpOffer
+        fields = [
+            'id', 'hub', 'hub_name', 'category', 'author',
+            'skill_or_resource', 'description', 'availability',
+            'created_at',
+        ]
+        read_only_fields = fields
+
+    def get_hub_name(self, obj):
+        return obj.hub.name if obj.hub_id else None
+
+
+class HelpOfferCreateSerializer(serializers.ModelSerializer):
+    """
+    Validates input for POST /help-offers/.
+
+    The author is set in the view from the authenticated user, not from input.
+    Hub is optional — an offer may not be tied to a specific neighborhood.
+    """
+
+    class Meta:
+        model = HelpOffer
+        fields = [
+            'hub', 'category', 'skill_or_resource', 'description', 'availability',
+        ]
+        extra_kwargs = {
+            'hub': {'required': False, 'allow_null': True},
+        }
