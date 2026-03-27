@@ -1,11 +1,14 @@
 """
 Views for the help_requests app.
 
-Implements CRUD endpoints for HelpRequest. Follows the same patterns as
-forum/views.py: APIView-based, permission toggling between AllowAny (GET)
-and IsAuthenticated (mutations), author-only guards on update/delete.
+Implements CRUD endpoints for HelpRequest and list/create for HelpComment.
+Follows the same patterns as forum/views.py: APIView-based, IsAuthenticated
+permission, author-only guards on update/delete, transaction.atomic() for
+multi-table writes.
 """
 
+from django.db import transaction
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 
 from rest_framework.views import APIView
@@ -13,13 +16,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+from accounts.models import User
 from .models import HelpRequest
 from .serializers import (
     HelpRequestListSerializer,
     HelpRequestDetailSerializer,
     HelpRequestCreateSerializer,
     HelpRequestUpdateSerializer,
+    HelpCommentSerializer,
 )
+from .services import update_status_on_expert_comment
 
 
 class HelpRequestListCreateView(APIView):
@@ -100,3 +106,49 @@ class HelpRequestDetailView(APIView):
             {'detail': 'Help request deleted.'},
             status=status.HTTP_204_NO_CONTENT,
         )
+
+
+# ── Comments ───────────────────────────────────────────────────────────────────
+
+class HelpCommentListCreateView(APIView):
+    """
+    GET  /help-requests/{id}/comments/  — list comments on a help request.
+    POST /help-requests/{id}/comments/  — add a comment to a help request.
+
+    When the commenter has role=EXPERT and the request is still OPEN,
+    the request status is automatically promoted to EXPERT_RESPONDING.
+    The comment_count on the parent request is kept in sync within the
+    same database transaction.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, request_pk):
+        help_request = get_object_or_404(HelpRequest, pk=request_pk)
+        # Comments are ordered by created_at ascending (oldest first) via model Meta.
+        comments = help_request.comments.all()
+        return Response(HelpCommentSerializer(comments, many=True).data)
+
+    def post(self, request, request_pk):
+        help_request = get_object_or_404(HelpRequest, pk=request_pk)
+        serializer = HelpCommentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Everything inside this block is wrapped in a single database transaction, so if any part fails 
+        # (e.g. the comment fails to save, or the request fails to update), the entire transaction will be rolled back,
+        # ensuring data integrity.
+        with transaction.atomic():
+            # Create the comment, setting author and request from server state.
+            serializer.save(author=request.user, request=help_request)
+
+            # Increment the denormalized comment_count using F() to avoid
+            # race conditions (two comments created at the same instant).
+            HelpRequest.objects.filter(pk=help_request.pk).update(
+                comment_count=F('comment_count') + 1,
+            )
+
+            # If the commenter is an expert, promote the request status.
+            # This call is safe — it won't overwrite RESOLVED status.
+            if request.user.role == User.Role.EXPERT:
+                update_status_on_expert_comment(help_request)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

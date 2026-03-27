@@ -5,12 +5,13 @@ HelpRequestListSerializer  — compact representation for list views.
 HelpRequestDetailSerializer — full representation with location and description.
 HelpRequestCreateSerializer — validates input when creating a new request.
 HelpRequestUpdateSerializer — validates input when updating an existing request.
+HelpCommentSerializer       — comment with nested author (includes role for expert badge).
 """
 
 from rest_framework import serializers
 
 from accounts.serializers import UserSerializer
-from .models import HelpRequest
+from .models import HelpRequest, HelpComment
 
 
 class HelpRequestListSerializer(serializers.ModelSerializer):
@@ -90,3 +91,20 @@ class HelpRequestUpdateSerializer(serializers.ModelSerializer):
             'category', 'urgency', 'title', 'description',
             'latitude', 'longitude', 'location_text',
         ]
+
+
+class HelpCommentSerializer(serializers.ModelSerializer):
+    """
+    Serializer for HelpComment, used for both list and create responses.
+
+    The nested UserSerializer includes the author's role field, which the
+    frontend uses to display an "Expert" badge next to expert comments.
+    The request and author fields are read-only because they are set in the
+    view — request comes from the URL, author comes from the auth token.
+    """
+    author = UserSerializer(read_only=True)
+
+    class Meta:
+        model = HelpComment
+        fields = ['id', 'request', 'author', 'content', 'created_at']
+        read_only_fields = ['id', 'request', 'author', 'created_at']
