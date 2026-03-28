@@ -94,6 +94,14 @@ export function getHelpRequests(params = {}) {
   });
 }
 
+/** POST /help-requests/ — create a new help request. */
+export function createHelpRequest(payload) {
+  return request('/help-requests/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 /** GET /help-requests/{id}/ — full detail of a single help request. */
 export function getHelpRequest(id) {
   return request(`/help-requests/${id}/`, { method: 'GET' });

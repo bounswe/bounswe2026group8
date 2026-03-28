@@ -7,6 +7,7 @@ import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
 import DashboardPage from './pages/DashboardPage';
 import HelpRequestsPage from './pages/HelpRequestsPage';
+import HelpRequestCreatePage from './pages/HelpRequestCreatePage';
 import HelpRequestDetailPage from './pages/HelpRequestDetailPage';
 
 export default function App() {
@@ -30,6 +31,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <HelpRequestsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/help-requests/new"
+            element={
+              <ProtectedRoute>
+                <HelpRequestCreatePage />
               </ProtectedRoute>
             }
           />

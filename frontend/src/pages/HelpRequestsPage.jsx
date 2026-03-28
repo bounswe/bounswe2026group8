@@ -89,7 +89,7 @@ export default function HelpRequestsPage() {
 
   return (
     <div className="page help-requests-page">
-      {/* Header with back button and title */}
+      {/* Header with back button, title, and create button */}
       <header className="help-requests-header">
         <button
           className="btn btn-secondary btn-sm"
@@ -98,6 +98,12 @@ export default function HelpRequestsPage() {
           &larr; Dashboard
         </button>
         <h2 className="gradient-text">Help Requests</h2>
+        <button
+          className="btn btn-primary btn-sm"
+          onClick={() => navigate('/help-requests/new')}
+        >
+          + New Request
+        </button>
       </header>
 
       {/* Hub context — tells the user which hub they're viewing */}

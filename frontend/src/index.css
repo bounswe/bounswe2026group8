@@ -731,6 +731,74 @@ select {
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Help Request Creation Page
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.help-create-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.25rem;
+  max-width: 640px;
+}
+
+/* Side-by-side row for category + urgency selectors */
+.help-create-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.help-create-half {
+  flex: 1;
+}
+
+/* Textarea — reuses the same tokens as the detail-page textarea */
+.help-create-textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: var(--font);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  outline: none;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.help-create-textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.help-create-textarea.input-error {
+  border-color: var(--error);
+}
+
+/* Geolocation row — button + coordinate readout */
+.help-create-location-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.help-create-coords {
+  font-size: 0.85rem;
+  color: var(--success);
+  font-family: monospace;
+}
+
+.help-create-location-status {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
 /* ── Responsive tweaks ──────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .auth-card { padding: 2rem 1.5rem; }
@@ -741,4 +809,6 @@ select {
   .help-request-card-footer { flex-wrap: wrap; }
   .help-detail-card { padding: 1.25rem; }
   .help-detail-map { height: 200px; }
+  .help-create-card { padding: 1.5rem 1.25rem; }
+  .help-create-row { flex-direction: column; gap: 0; }
 }
