@@ -147,7 +147,11 @@ export default function HelpRequestsPage() {
       {!loading && !error && requests.length > 0 && (
         <div className="help-requests-list">
           {requests.map((req) => (
-            <div className="help-request-card" key={req.id}>
+            <div
+              className="help-request-card dashboard-card-link"
+              key={req.id}
+              onClick={() => navigate(`/help-requests/${req.id}`)}
+            >
               {/* Top row: title + urgency badge */}
               <div className="help-request-card-top">
                 <h3 className="help-request-card-title">{req.title}</h3>

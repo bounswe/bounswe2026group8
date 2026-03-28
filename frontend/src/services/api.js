@@ -93,3 +93,21 @@ export function getHelpRequests(params = {}) {
     method: 'GET',
   });
 }
+
+/** GET /help-requests/{id}/ — full detail of a single help request. */
+export function getHelpRequest(id) {
+  return request(`/help-requests/${id}/`, { method: 'GET' });
+}
+
+/** GET /help-requests/{id}/comments/ — list comments on a help request. */
+export function getHelpComments(requestId) {
+  return request(`/help-requests/${requestId}/comments/`, { method: 'GET' });
+}
+
+/** POST /help-requests/{id}/comments/ — add a comment to a help request. */
+export function createHelpComment(requestId, content) {
+  return request(`/help-requests/${requestId}/comments/`, {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  });
+}
