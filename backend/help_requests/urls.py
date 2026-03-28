@@ -11,6 +11,7 @@ from django.urls import path
 from .views import (
     HelpRequestListCreateView,
     HelpRequestDetailView,
+    HelpRequestStatusView,
     HelpCommentListCreateView,
     HelpOfferListCreateView,
     HelpOfferDeleteView,
@@ -20,6 +21,7 @@ from .views import (
 help_request_urlpatterns = [
     path('', HelpRequestListCreateView.as_view(), name='help-request-list-create'),
     path('<int:pk>/', HelpRequestDetailView.as_view(), name='help-request-detail'),
+    path('<int:pk>/status/', HelpRequestStatusView.as_view(), name='help-request-status'),
     path('<int:request_pk>/comments/', HelpCommentListCreateView.as_view(), name='help-comment-list-create'),
 ]
 

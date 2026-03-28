@@ -102,6 +102,14 @@ export function createHelpRequest(payload) {
   });
 }
 
+/** PATCH /help-requests/{id}/status/ — update the status of a help request. */
+export function updateHelpRequestStatus(id, newStatus) {
+  return request(`/help-requests/${id}/status/`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: newStatus }),
+  });
+}
+
 /** GET /help-requests/{id}/ — full detail of a single help request. */
 export function getHelpRequest(id) {
   return request(`/help-requests/${id}/`, { method: 'GET' });

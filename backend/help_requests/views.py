@@ -110,6 +110,40 @@ class HelpRequestDetailView(APIView):
         )
 
 
+class HelpRequestStatusView(APIView):
+    """
+    PATCH /help-requests/{id}/status/  — update the status of a help request.
+
+    Only the request's author can change the status.  The only status transition
+    accepted from this endpoint is setting status to RESOLVED.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, pk):
+        help_request = get_object_or_404(HelpRequest, pk=pk)
+
+        # Author-only guard.
+        if help_request.author != request.user:
+            return Response(
+                {'detail': 'Only the author can change the status.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        new_status = request.data.get('status')
+        if new_status != HelpRequest.Status.RESOLVED:
+            return Response(
+                {'detail': 'Only RESOLVED status is allowed from this endpoint.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        help_request.status = HelpRequest.Status.RESOLVED
+        help_request.save(update_fields=['status'])
+
+        return Response(
+            HelpRequestDetailSerializer(help_request, context={'request': request}).data,
+        )
+
+
 # ── Comments ───────────────────────────────────────────────────────────────────
 
 class HelpCommentListCreateView(APIView):

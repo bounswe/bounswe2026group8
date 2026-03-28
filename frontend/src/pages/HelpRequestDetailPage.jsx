@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getHelpRequest, getHelpComments, createHelpComment } from '../services/api';
+import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus } from '../services/api';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -62,6 +62,9 @@ export default function HelpRequestDetailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [commentError, setCommentError] = useState('');
 
+  // Resolve button state
+  const [resolving, setResolving] = useState(false);
+
   // Fetch request detail and comments in parallel on mount.
   useEffect(() => {
     setLoading(true);
@@ -94,6 +97,18 @@ export default function HelpRequestDetailPage() {
       setCommentError(data.detail || 'Failed to post comment.');
     }
     setSubmitting(false);
+  };
+
+  /** Marks the help request as RESOLVED (author only). */
+  const handleResolve = async () => {
+    setResolving(true);
+    const { ok } = await updateHelpRequestStatus(id, 'RESOLVED');
+    if (ok) {
+      // Refresh the request to reflect the new status.
+      const refreshed = await getHelpRequest(id);
+      if (refreshed.ok) setHelpRequest(refreshed.data);
+    }
+    setResolving(false);
   };
 
   if (!user) return null;
@@ -154,6 +169,17 @@ export default function HelpRequestDetailPage() {
           {helpRequest.hub_name && <span>Hub: {helpRequest.hub_name}</span>}
           <span>{formatDate(helpRequest.created_at)}</span>
         </div>
+
+        {/* Resolve button — only visible to the author when not already resolved */}
+        {helpRequest.author.id === user.id && helpRequest.status !== 'RESOLVED' && (
+          <button
+            className="btn btn-primary btn-sm help-detail-resolve-btn"
+            onClick={handleResolve}
+            disabled={resolving}
+          >
+            {resolving ? 'Resolving...' : 'Mark as Resolved'}
+          </button>
+        )}
       </div>
 
       {/* Location section */}

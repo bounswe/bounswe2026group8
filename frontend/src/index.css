@@ -643,6 +643,10 @@ select {
   margin-bottom: 1rem;
 }
 
+.help-detail-resolve-btn {
+  margin-top: 1.25rem;
+}
+
 .help-detail-location-text {
   font-size: 0.9rem;
   color: var(--text-secondary);
