@@ -456,9 +456,147 @@ select {
   color: var(--text-secondary);
 }
 
+/* Clickable dashboard cards (e.g. Help Requests) */
+.dashboard-card-link {
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Help Requests Page
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.help-requests-page {
+  padding-top: 1.5rem;
+}
+
+.help-requests-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.help-requests-header h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.help-requests-hub {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.help-requests-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.help-requests-loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary);
+}
+
+.help-requests-empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-secondary);
+}
+
+.help-requests-empty-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.help-requests-empty h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.help-requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.help-request-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.help-request-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.06);
+}
+
+.help-request-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.help-request-card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.help-request-card-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.help-request-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.help-request-card-author {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.help-request-card-comments {
+  margin-left: auto;
+}
+
+/* Urgency HIGH — red-tinted to signal danger */
+.badge-urgency-high {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--error);
+  border-color: rgba(248, 113, 113, 0.25);
+}
+
+/* Resolved status — green-tinted */
+.badge-resolved {
+  background: rgba(52, 211, 153, 0.12);
+  color: var(--success);
+  border-color: rgba(52, 211, 153, 0.25);
+}
+
 /* ── Responsive tweaks ──────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .auth-card { padding: 2rem 1.5rem; }
   .welcome-card { padding: 1.5rem; }
   .landing-title { font-size: 2rem; }
+  .help-request-card { padding: 1rem; }
+  .help-request-card-top { flex-direction: column; gap: 0.5rem; }
+  .help-request-card-footer { flex-wrap: wrap; }
 }

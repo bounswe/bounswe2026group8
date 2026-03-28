@@ -73,3 +73,23 @@ export function getMe() {
     method: 'GET',
   });
 }
+
+/**
+ * GET /help-requests/
+ * Fetches help requests, optionally filtered by hub and/or category.
+ *
+ * @param {Object} params
+ * @param {number} [params.hub_id]   — filter by hub ID
+ * @param {string} [params.category] — filter by category (MEDICAL|FOOD|SHELTER|TRANSPORT)
+ *
+ * Success → array of help request objects
+ */
+export function getHelpRequests(params = {}) {
+  const query = new URLSearchParams();
+  if (params.hub_id) query.append('hub_id', params.hub_id);
+  if (params.category) query.append('category', params.category);
+  const qs = query.toString();
+  return request(`/help-requests/${qs ? `?${qs}` : ''}`, {
+    method: 'GET',
+  });
+}
