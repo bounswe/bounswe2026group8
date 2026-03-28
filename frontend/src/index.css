@@ -480,6 +480,37 @@ select {
   font-weight: 700;
 }
 
+/* Tab switcher — two-button bar for Requests / Offers */
+.help-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.help-tab {
+  flex: 1;
+  padding: 0.65rem 0;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.help-tab:hover {
+  color: var(--text-secondary);
+}
+
+.help-tab-active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 .help-requests-hub {
   font-size: 0.9rem;
   color: var(--text-secondary);
@@ -803,6 +834,148 @@ select {
   margin-top: 0.35rem;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Help Offers Page
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* Inline create form card — glassmorphic, sits above the list */
+.help-offer-form-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.5rem;
+  max-width: 640px;
+}
+
+/* Offer card — reuses help-request-card base layout */
+.help-offer-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.help-offer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.06);
+}
+
+.help-offer-card-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.help-offer-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.help-offer-card-avail {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.help-offer-delete-btn {
+  margin-left: auto;
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.help-offer-delete-btn:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+/* ── Offer detail modal ────────────────────────────────────────────────────── */
+.offer-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.offer-modal {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.25rem;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.offer-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.offer-modal-close:hover {
+  color: var(--text-primary);
+}
+
+.offer-modal-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  padding-right: 2rem;
+}
+
+.offer-modal .badge {
+  margin-bottom: 1rem;
+}
+
+.offer-modal-description {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.offer-modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.offer-modal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.offer-modal-label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
 /* ── Responsive tweaks ──────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .auth-card { padding: 2rem 1.5rem; }
@@ -815,4 +988,8 @@ select {
   .help-detail-map { height: 200px; }
   .help-create-card { padding: 1.5rem 1.25rem; }
   .help-create-row { flex-direction: column; gap: 0; }
+  .help-offer-form-card { padding: 1.25rem; }
+  .help-offer-card { padding: 1rem; }
+  .help-offer-card-footer { gap: 0.5rem; }
+  .offer-modal { padding: 1.5rem; }
 }
