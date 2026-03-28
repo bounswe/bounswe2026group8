@@ -16,7 +16,8 @@ async function request(endpoint, options = {}) {
     headers,
   });
 
-  const data = await response.json();
+  // 204 No Content — no body to parse.
+  const data = response.status === 204 ? null : await response.json();
   return { ok: response.ok, status: response.status, data };
 }
 
@@ -72,4 +73,83 @@ export function getMe() {
   return request('/me', {
     method: 'GET',
   });
+}
+
+/**
+ * GET /help-requests/
+ * Fetches help requests, optionally filtered by hub and/or category.
+ *
+ * @param {Object} params
+ * @param {number} [params.hub_id]   — filter by hub ID
+ * @param {string} [params.category] — filter by category (MEDICAL|FOOD|SHELTER|TRANSPORT)
+ *
+ * Success → array of help request objects
+ */
+export function getHelpRequests(params = {}) {
+  const query = new URLSearchParams();
+  if (params.hub_id) query.append('hub_id', params.hub_id);
+  if (params.category) query.append('category', params.category);
+  const qs = query.toString();
+  return request(`/help-requests/${qs ? `?${qs}` : ''}`, {
+    method: 'GET',
+  });
+}
+
+/** POST /help-requests/ — create a new help request. */
+export function createHelpRequest(payload) {
+  return request('/help-requests/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+/** PATCH /help-requests/{id}/status/ — update the status of a help request. */
+export function updateHelpRequestStatus(id, newStatus) {
+  return request(`/help-requests/${id}/status/`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: newStatus }),
+  });
+}
+
+/** GET /help-requests/{id}/ — full detail of a single help request. */
+export function getHelpRequest(id) {
+  return request(`/help-requests/${id}/`, { method: 'GET' });
+}
+
+/** GET /help-requests/{id}/comments/ — list comments on a help request. */
+export function getHelpComments(requestId) {
+  return request(`/help-requests/${requestId}/comments/`, { method: 'GET' });
+}
+
+/** POST /help-requests/{id}/comments/ — add a comment to a help request. */
+export function createHelpComment(requestId, content) {
+  return request(`/help-requests/${requestId}/comments/`, {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  });
+}
+
+/**
+ * GET /help-offers/
+ * Fetches help offers, optionally filtered by hub and/or category.
+ */
+export function getHelpOffers(params = {}) {
+  const query = new URLSearchParams();
+  if (params.hub_id) query.append('hub_id', params.hub_id);
+  if (params.category) query.append('category', params.category);
+  const qs = query.toString();
+  return request(`/help-offers/${qs ? `?${qs}` : ''}`, { method: 'GET' });
+}
+
+/** POST /help-offers/ — create a new help offer. */
+export function createHelpOffer(payload) {
+  return request('/help-offers/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+/** DELETE /help-offers/{id}/ — delete a help offer (author only). */
+export function deleteHelpOffer(id) {
+  return request(`/help-offers/${id}/`, { method: 'DELETE' });
 }

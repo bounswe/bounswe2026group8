@@ -16,10 +16,10 @@ export default function DashboardPage() {
 
   const roleLabel = user.role === 'EXPERT' ? '🎓 Expert' : '👤 Standard';
 
-  // Placeholder feature cards for future subgroup work
+  // Feature cards — cards with a `path` are clickable and navigate to that route.
   const features = [
     { icon: '💬', title: 'Forum', desc: 'Community discussions' },
-    { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help' },
+    { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help', path: '/help-requests' },
     { icon: '👤', title: 'Profile', desc: 'Manage your account' },
     { icon: '📶', title: 'Offline Info', desc: 'Critical data access' },
   ];
@@ -55,7 +55,11 @@ export default function DashboardPage() {
       {/* Feature grid */}
       <div className="dashboard-grid">
         {features.map((f) => (
-          <div className="dashboard-card" key={f.title}>
+          <div
+            className={`dashboard-card${f.path ? ' dashboard-card-link' : ''}`}
+            key={f.title}
+            onClick={f.path ? () => navigate(f.path) : undefined}
+          >
             <span className="dashboard-card-icon">{f.icon}</span>
             <h3>{f.title}</h3>
             <p>{f.desc}</p>

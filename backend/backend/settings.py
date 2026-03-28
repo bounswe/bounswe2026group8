@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     # Local
     'accounts',
     'forum',
+    'help_requests',
 ]
 
 MIDDLEWARE = [
