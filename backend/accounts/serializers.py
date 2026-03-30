@@ -1,15 +1,76 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 
-from .models import User
+from .models import User, Profile, Resource, ExpertiseField
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    """Serializer for the extended profile object."""
+
+    class Meta:
+        model = Profile
+        fields = [
+            'phone_number',
+            'blood_type',
+            'emergency_contact_phone',
+            'special_needs',
+            'has_disability',
+            'availability_status',
+            'bio',
+            'preferred_language',
+            'emergency_contact',
+            'created_at',
+            'updated_at',
+        ]
+        read_only_fields = ['created_at', 'updated_at']
+
+    def validate_phone_number(self, value):
+        """Convert empty string to None so the unique constraint allows multiple blank phones."""
+        return value if value else None
+
+    def validate_emergency_contact_phone(self, value):
+        """Normalise blank to None."""
+        return value if value else None
+
+
+class ResourceSerializer(serializers.ModelSerializer):
+    """Serializer for user-owned resources."""
+
+    class Meta:
+        model = Resource
+        fields = ['id', 'name', 'category', 'quantity', 'condition', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class ExpertiseFieldSerializer(serializers.ModelSerializer):
+    """Serializer for expert-only expertise entries."""
+
+    class Meta:
+        model = ExpertiseField
+        fields = ['id', 'field', 'certification_level', 'certification_document_url', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Read-only serializer for returning user data in API responses."""
+    """Read serializer for returning user data in API responses."""
+
+    profile = ProfileSerializer(read_only=True)
+    resources = ResourceSerializer(many=True, read_only=True)
+    expertise_fields = ExpertiseFieldSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'email', 'role', 'neighborhood_address', 'expertise_field']
+        fields = [
+            'id',
+            'full_name',
+            'email',
+            'role',
+            'neighborhood_address',
+            'expertise_field',
+            'profile',
+            'resources',
+            'expertise_fields',
+        ]
         read_only_fields = fields
 
 

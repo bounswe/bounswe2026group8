@@ -18,10 +18,10 @@ export default function DashboardPage() {
 
   // Placeholder feature cards for future subgroup work
   const features = [
-    { icon: '💬', title: 'Forum', desc: 'Community discussions' },
-    { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help' },
-    { icon: '👤', title: 'Profile', desc: 'Manage your account' },
-    { icon: '📶', title: 'Offline Info', desc: 'Critical data access' },
+    { icon: '💬', title: 'Forum', desc: 'Community discussions', path: '/forum' },
+    { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help', path: '/help-requests' },
+    { icon: '👤', title: 'Profile', desc: 'Manage your account', path: '/profile' },
+    { icon: '📶', title: 'Offline Info', desc: 'Critical data access', path: '/offline-info' },
   ];
 
   return (
@@ -55,11 +55,16 @@ export default function DashboardPage() {
       {/* Feature grid */}
       <div className="dashboard-grid">
         {features.map((f) => (
-          <div className="dashboard-card" key={f.title}>
+          <button
+            className="dashboard-card"
+            key={f.title}
+            onClick={() => navigate(f.path)}
+            style={{ cursor: 'pointer', textAlign: 'left', color: 'inherit', textDecoration: 'none' }}
+          >
             <span className="dashboard-card-icon">{f.icon}</span>
             <h3>{f.title}</h3>
             <p>{f.desc}</p>
-          </div>
+          </button>
         ))}
       </div>
     </div>
