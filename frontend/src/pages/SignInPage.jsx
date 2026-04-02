@@ -46,7 +46,7 @@ export default function SignInPage() {
     setSubmitting(false);
 
     if (ok) {
-      // Backend returns { message, token, user }
+      // Backend returns { message, token, refresh, user }
       loginUser(data.token, data.user);
       navigate('/dashboard', { replace: true });
     } else {

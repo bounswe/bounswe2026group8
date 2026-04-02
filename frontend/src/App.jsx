@@ -11,6 +11,9 @@ import DashboardPage from './pages/DashboardPage';
 import ForumPage from './pages/ForumPage';
 import PostDetailPage from './pages/PostDetailPage';
 import PostCreatePage from './pages/PostCreatePage';
+import HelpRequestsPage from './pages/HelpRequestsPage';
+import HelpRequestCreatePage from './pages/HelpRequestCreatePage';
+import HelpRequestDetailPage from './pages/HelpRequestDetailPage';
 
 export default function App() {
   return (
@@ -39,6 +42,30 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <PostCreatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/help-requests"
+              element={
+                <ProtectedRoute>
+                  <HelpRequestsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/help-requests/new"
+              element={
+                <ProtectedRoute>
+                  <HelpRequestCreatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/help-requests/:id"
+              element={
+                <ProtectedRoute>
+                  <HelpRequestDetailPage />
                 </ProtectedRoute>
               }
             />
