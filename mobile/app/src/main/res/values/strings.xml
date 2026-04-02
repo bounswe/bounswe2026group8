@@ -42,4 +42,12 @@
     <string name="feature_profile_desc">Manage your account</string>
     <string name="feature_offline">Offline Info</string>
     <string name="feature_offline_desc">Critical data access</string>
+
+    <!-- Offline Info screen -->
+    <string name="offline_info_title">Offline Info</string>
+    <string name="offline_info_heading">Emergency Preparedness Resources</string>
+    <string name="offline_info_desc">Access critical offline information to prepare for emergencies and protect yourself and your community.</string>
+    <string name="offline_info_tips_title">Key Resources</string>
+    <string name="offline_info_tips">• Emergency contact numbers\n• First aid basics\n• Evacuation procedures\n• Safety checklists\n• Community resources</string>
+    <string name="back">Back</string>
 </resources>
