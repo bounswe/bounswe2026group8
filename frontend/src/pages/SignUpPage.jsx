@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { register } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { useHub } from '../context/HubContext';
 
 export default function SignUpPage() {
   const navigate = useNavigate();
+  const { isAuthenticated, loading } = useAuth();
+  const { hubs, selectedHub } = useHub();
 
   const [form, setForm] = useState({
     full_name: '',
@@ -11,6 +15,7 @@ export default function SignUpPage() {
     password: '',
     confirm_password: '',
     role: 'STANDARD',
+    hub_id: '',
     neighborhood_address: '',
     expertise_field: '',
   });
@@ -21,6 +26,18 @@ export default function SignUpPage() {
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>Loading…</p>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,7 +80,6 @@ export default function SignUpPage() {
 
     setSubmitting(true);
 
-    // Build the payload matching the backend contract exactly
     const payload = {
       full_name: form.full_name.trim(),
       email: form.email.trim(),
@@ -71,6 +87,10 @@ export default function SignUpPage() {
       confirm_password: form.confirm_password,
       role: form.role,
     };
+    const hubId = form.hub_id || (selectedHub ? String(selectedHub.id) : '');
+    if (hubId) {
+      payload.hub_id = Number(hubId);
+    }
     if (form.neighborhood_address.trim()) {
       payload.neighborhood_address = form.neighborhood_address.trim();
     }
@@ -213,6 +233,24 @@ export default function SignUpPage() {
             >
               <option value="STANDARD">Standard</option>
               <option value="EXPERT">Expert</option>
+            </select>
+          </div>
+
+          {/* Hub */}
+          <div className="form-group">
+            <label htmlFor="hub_id">Hub (City)</label>
+            <select
+              id="hub_id"
+              name="hub_id"
+              value={form.hub_id || (selectedHub ? String(selectedHub.id) : '')}
+              onChange={handleChange}
+            >
+              <option value="">Select a hub</option>
+              {hubs.map((h) => (
+                <option key={h.id} value={String(h.id)}>
+                  {h.name}
+                </option>
+              ))}
             </select>
           </div>
 

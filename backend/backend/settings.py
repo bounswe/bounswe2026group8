@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'corsheaders',
     # Local
     'accounts',
+    'forum',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +85,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ── Custom user model ──────────────────────────────────────────────────────────
@@ -105,6 +109,9 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# ── Forum ──────────────────────────────────────────────────────────────────────
+FORUM_REPORT_HIDE_THRESHOLD = 5
 
 # ── CORS ───────────────────────────────────────────────────────────────────────
 # Allow all origins for Milestone 1 dev convenience.

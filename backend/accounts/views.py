@@ -4,7 +4,8 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from .models import Hub
+from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, HubSerializer
 
 
 class RegisterView(APIView):
@@ -80,3 +81,15 @@ class MeView(APIView):
 
     def get(self, request):
         return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
+
+
+class HubListView(APIView):
+    """
+    GET /hubs/
+    Public list of all hubs.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        hubs = Hub.objects.all()
+        return Response(HubSerializer(hubs, many=True).data, status=status.HTTP_200_OK)
