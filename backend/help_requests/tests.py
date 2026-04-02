@@ -13,7 +13,7 @@ Covers all acceptance criteria from issues #120-#123:
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from accounts.models import Hub, User
 from .models import HelpRequest, HelpComment, HelpOffer
@@ -47,14 +47,14 @@ class HelpTestBase(TestCase):
             password='Pass1234', hub=self.hub, role=User.Role.EXPERT,
         )
 
-        # Pre-configured API clients with auth tokens.
+        # Pre-configured API clients with JWT Bearer tokens.
         self.standard_client = APIClient()
-        token1 = Token.objects.create(user=self.standard_user)
-        self.standard_client.credentials(HTTP_AUTHORIZATION=f'Token {token1.key}')
+        token1 = RefreshToken.for_user(self.standard_user).access_token
+        self.standard_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token1}')
 
         self.expert_client = APIClient()
-        token2 = Token.objects.create(user=self.expert_user)
-        self.expert_client.credentials(HTTP_AUTHORIZATION=f'Token {token2.key}')
+        token2 = RefreshToken.for_user(self.expert_user).access_token
+        self.expert_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token2}')
 
         # Anonymous client — no auth token, should always get 401.
         self.anon = APIClient()

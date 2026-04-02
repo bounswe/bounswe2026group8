@@ -18,9 +18,12 @@ npm run dev            # → http://localhost:5173
 | Route | Component | Auth Required | Description |
 |-------|-----------|---------------|-------------|
 | `/` | LandingPage | No | Hero section, feature cards, entry buttons |
-| `/signup` | SignUpPage | No | Registration form (role-aware) |
+| `/signup` | SignUpPage | No | Registration form (role-aware, hub selector) |
 | `/signin` | SignInPage | No | Login form |
 | `/dashboard` | DashboardPage | Yes | Welcome card, feature grid, logout |
+| `/forum` | ForumPage | No | Community discussion board |
+| `/forum/posts/:id` | PostDetailPage | No | Post detail with comments and voting |
+| `/forum/new` | PostCreatePage | Yes | Create a new forum post |
 | `/help-requests` | HelpRequestsPage | Yes | Tabbed view: help requests list + help offers list |
 | `/help-requests/new` | HelpRequestCreatePage | Yes | Form to create a new help request |
 | `/help-requests/:id` | HelpRequestDetailPage | Yes | Request detail, map, comments, resolve button |
@@ -30,17 +33,22 @@ npm run dev            # → http://localhost:5173
 ```
 frontend/src/
 ├── services/
-│   └── api.js                     Fetch wrapper for backend endpoints
+│   └── api.js                     Fetch wrapper for all backend endpoints
 ├── context/
-│   └── AuthContext.jsx            Token + user state management
+│   ├── AuthContext.jsx            Token + user state management
+│   └── HubContext.jsx             Hub selection state
 ├── components/
-│   └── ProtectedRoute.jsx         Redirects to /signin if not logged in
+│   ├── ProtectedRoute.jsx         Redirects to /signin if not logged in
+│   └── HubSelector.jsx            Hub picker dropdown
 ├── pages/
 │   ├── LandingPage.jsx
 │   ├── SignUpPage.jsx
 │   ├── SignInPage.jsx
 │   ├── DashboardPage.jsx
-│   ├── HelpRequestsPage.jsx       Requests/Offers tabs, category filter, offer CRUD
+│   ├── ForumPage.jsx              Forum post list with filters
+│   ├── PostDetailPage.jsx         Post detail, comments, voting
+│   ├── PostCreatePage.jsx         New forum post form
+│   ├── HelpRequestsPage.jsx      Requests/Offers tabs, category filter, offer CRUD
 │   ├── HelpRequestCreatePage.jsx  New help request form with geolocation
 │   └── HelpRequestDetailPage.jsx  Detail view, Leaflet map, comments, resolve
 ├── App.jsx                        Router setup
@@ -51,10 +59,12 @@ frontend/src/
 ## Features
 
 - **Role-aware sign-up** — Expertise Field appears only when role = Expert
-- **Token management** — stored in `localStorage`, validated via `GET /me` on page load
+- **JWT management** — stored in `localStorage`, validated via `GET /me` on page load
 - **Protected routes** — redirects unauthenticated users to sign-in
 - **Client-side validation** — immediate feedback before server round-trip
 - **Modern dark UI** — glassmorphism, gradient accents, Inter font, responsive
+- **Hub selector** — persistent hub picker for filtering content by city
+- **Forum** — post list, detail view, comments, voting, reporting, reposting
 - **Help Requests** — list, create, view detail, category filtering, mark as resolved (author only)
 - **Help Offers** — list, create, delete (author only), detail modal, category filtering
 - **Tab switcher** — Requests and Offers tabs share the same page with a shared category filter

@@ -1,20 +1,26 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function SignInPage() {
   const navigate = useNavigate();
-  const { loginUser, isAuthenticated } = useAuth();
+  const { loginUser, isAuthenticated, loading } = useAuth();
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // If already authenticated, redirect immediately
+  if (loading) {
+    return (
+      <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>Loading…</p>
+      </div>
+    );
+  }
+
   if (isAuthenticated) {
-    navigate('/dashboard', { replace: true });
-    return null;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const handleChange = (e) => {
@@ -39,7 +45,7 @@ export default function SignInPage() {
     setSubmitting(false);
 
     if (ok) {
-      // Backend returns { message, token, user }
+      // Backend returns { message, token, refresh, user }
       loginUser(data.token, data.user);
       navigate('/dashboard', { replace: true });
     } else {

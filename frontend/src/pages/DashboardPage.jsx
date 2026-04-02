@@ -16,17 +16,15 @@ export default function DashboardPage() {
 
   const roleLabel = user.role === 'EXPERT' ? '🎓 Expert' : '👤 Standard';
 
-  // Feature cards — cards with a `path` are clickable and navigate to that route.
   const features = [
-    { icon: '💬', title: 'Forum', desc: 'Community discussions' },
+    { icon: '💬', title: 'Forum', desc: 'Community discussions', path: '/forum' },
     { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help', path: '/help-requests' },
-    { icon: '👤', title: 'Profile', desc: 'Manage your account' },
-    { icon: '📶', title: 'Offline Info', desc: 'Critical data access' },
+    { icon: '👤', title: 'Profile', desc: 'Manage your account', path: null },
+    { icon: '📶', title: 'Offline Info', desc: 'Critical data access', path: null },
   ];
 
   return (
     <div className="page dashboard-page">
-      {/* Top bar */}
       <header className="dashboard-header">
         <h2 className="gradient-text">Emergency Hub</h2>
         <button className="btn btn-secondary btn-sm" onClick={handleLogout}>
@@ -34,7 +32,6 @@ export default function DashboardPage() {
         </button>
       </header>
 
-      {/* Welcome card */}
       <div className="welcome-card">
         <h1>Welcome, {user.full_name}!</h1>
         <div className="welcome-meta">
@@ -52,13 +49,13 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Feature grid */}
       <div className="dashboard-grid">
         {features.map((f) => (
           <div
-            className={`dashboard-card${f.path ? ' dashboard-card-link' : ''}`}
+            className={`dashboard-card ${f.path ? 'dashboard-card--clickable' : ''}`}
             key={f.title}
-            onClick={f.path ? () => navigate(f.path) : undefined}
+            onClick={() => f.path && navigate(f.path)}
+            role={f.path ? 'link' : undefined}
           >
             <span className="dashboard-card-icon">{f.icon}</span>
             <h3>{f.title}</h3>

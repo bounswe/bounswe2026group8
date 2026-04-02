@@ -7,7 +7,7 @@ async function request(endpoint, options = {}) {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Token ${token}` } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
@@ -41,7 +41,7 @@ export function register(payload) {
  * POST /login
  * Request body: { email, password }
  *
- * Success → { message, token, user: { id, full_name, email, role, neighborhood_address, expertise_field } }
+ * Success → { message, token, refresh, user: { ... } }
  * Failure → { message: "Invalid email or password" }
  */
 export function login(payload) {
@@ -74,6 +74,18 @@ export function getMe() {
     method: 'GET',
   });
 }
+
+/**
+ * GET /hubs/
+ * Public — returns list of all hubs.
+ */
+export function getHubs() {
+  return request('/hubs/', {
+    method: 'GET',
+  });
+}
+
+// ── Help Requests ────────────────────────────────────────────────────────────
 
 /**
  * GET /help-requests/
@@ -152,4 +164,87 @@ export function createHelpOffer(payload) {
 /** DELETE /help-offers/{id}/ — delete a help offer (author only). */
 export function deleteHelpOffer(id) {
   return request(`/help-offers/${id}/`, { method: 'DELETE' });
+}
+
+// ── Forum ─────────────────────────────────────────────────────────────────────
+
+export function getPosts({ hub, forumType } = {}) {
+  const params = new URLSearchParams();
+  if (hub) params.set('hub', hub);
+  if (forumType) params.set('forum_type', forumType);
+  const qs = params.toString();
+  return request(`/forum/posts/${qs ? `?${qs}` : ''}`, { method: 'GET' });
+}
+
+export function getPost(id) {
+  return request(`/forum/posts/${id}/`, { method: 'GET' });
+}
+
+export function createPost(payload) {
+  return request('/forum/posts/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updatePost(id, payload) {
+  return request(`/forum/posts/${id}/`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deletePost(id) {
+  return request(`/forum/posts/${id}/`, { method: 'DELETE' });
+}
+
+export function getComments(postId) {
+  return request(`/forum/posts/${postId}/comments/`, { method: 'GET' });
+}
+
+export function createComment(postId, content) {
+  return request(`/forum/posts/${postId}/comments/`, {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  });
+}
+
+export function deleteComment(commentId) {
+  return request(`/forum/comments/${commentId}/`, { method: 'DELETE' });
+}
+
+export function vote(postId, voteType) {
+  return request(`/forum/posts/${postId}/vote/`, {
+    method: 'POST',
+    body: JSON.stringify({ vote_type: voteType }),
+  });
+}
+
+export function reportPost(postId, reason) {
+  return request(`/forum/posts/${postId}/report/`, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export function repost(postId, hubId) {
+  return request(`/forum/posts/${postId}/repost/`, {
+    method: 'POST',
+    body: JSON.stringify(hubId ? { hub: hubId } : {}),
+  });
+}
+
+export async function uploadImages(files) {
+  const token = localStorage.getItem('token');
+  const formData = new FormData();
+  files.forEach((f) => formData.append('images', f));
+
+  const response = await fetch(`${API_BASE}/forum/upload/`, {
+    method: 'POST',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: formData,
+  });
+
+  const data = await response.json();
+  return { ok: response.ok, status: response.status, data };
 }

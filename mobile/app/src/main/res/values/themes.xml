@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.EmergencyHub" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorPrimaryVariant">@color/accent_hover</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Background -->
+        <item name="android:colorBackground">@color/bg_base</item>
+        <item name="colorSurface">@color/bg_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/bg_base</item>
+        <item name="android:navigationBarColor">@color/bg_base</item>
+
+        <!-- Text input style -->
+        <item name="textInputStyle">@style/Widget.EmergencyHub.TextInput</item>
+    </style>
+
+</resources>
