@@ -2,6 +2,7 @@ package com.bounswe2026group8.emergencyhub.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +50,9 @@ class DashboardActivity : AppCompatActivity() {
 
         // Logout
         findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { performLogout() }
+
+        // Hub selector
+        HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector)).load()
 
         // Feature card placeholders
         setupFeatureCards()
@@ -109,13 +113,16 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureCards() {
-        val cards = mapOf(
-            R.id.cardForum to "Forum",
+        findViewById<MaterialCardView>(R.id.cardForum).setOnClickListener {
+            startActivity(Intent(this, ForumActivity::class.java))
+        }
+
+        val placeholders = mapOf(
             R.id.cardHelpRequests to "Help Requests",
             R.id.cardProfile to "Profile",
             R.id.cardOfflineInfo to "Offline Info"
         )
-        for ((id, name) in cards) {
+        for ((id, name) in placeholders) {
             findViewById<MaterialCardView>(id).setOnClickListener {
                 Toast.makeText(this, "$name — coming soon!", Toast.LENGTH_SHORT).show()
             }

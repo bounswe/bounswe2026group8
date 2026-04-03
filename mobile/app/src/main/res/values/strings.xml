@@ -50,4 +50,37 @@
     <string name="offline_info_tips_title">Key Resources</string>
     <string name="offline_info_tips">• Emergency contact numbers\n• First aid basics\n• Evacuation procedures\n• Safety checklists\n• Community resources</string>
     <string name="back">Back</string>
+    <string name="hub_city">Hub (City)</string>
+    <string name="select_hub">Select a hub</string>
+
+    <!-- Forum -->
+    <string name="forum_title">Forum</string>
+    <string name="forum_hub_all">All hubs — everyone</string>
+    <string name="new_post">+ New Post</string>
+    <string name="tab_global">Global</string>
+    <string name="tab_standard">Standard</string>
+    <string name="tab_urgent">Urgent</string>
+    <string name="sort_newest">Newest</string>
+    <string name="sort_most_liked">Most Liked</string>
+    <string name="sort_hot">Hot</string>
+    <string name="forum_loading">Loading posts…</string>
+    <string name="forum_empty_global">No global posts yet.</string>
+    <string name="forum_empty_hub">No %1$s posts yet.</string>
+    <string name="forum_select_hub">Select a hub to see posts.</string>
+    <string name="back_to_dashboard">← Back to Dashboard</string>
+    <string name="comment_count">%1$d %2$s</string>
+
+    <!-- Create Post -->
+    <string name="create_post_title">New Post</string>
+    <string name="create_post_subtitle_global">Visible to everyone (all hubs)</string>
+    <string name="create_post_subtitle_hub">Posting to %1$s</string>
+    <string name="post_title_hint">What\'s happening?</string>
+    <string name="post_content_hint">Describe the situation, share info, or ask for help…</string>
+    <string name="title_label">Title</string>
+    <string name="content_label">Content</string>
+    <string name="create_post">Create Post</string>
+    <string name="creating_post">Creating…</string>
+    <string name="back_to_forum">← Back to Forum</string>
+    <string name="title_required">Title is required.</string>
+    <string name="content_required">Content is required.</string>
 </resources>
