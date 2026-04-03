@@ -13,6 +13,7 @@ import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
+import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
 
 /**
  * Dashboard screen — the post-login home page.
@@ -112,13 +113,17 @@ class DashboardActivity : AppCompatActivity() {
         val cards = mapOf(
             R.id.cardForum to "Forum",
             R.id.cardHelpRequests to "Help Requests",
-            R.id.cardProfile to "Profile",
-            R.id.cardOfflineInfo to "Offline Info"
+            R.id.cardProfile to "Profile"
         )
+
         for ((id, name) in cards) {
             findViewById<MaterialCardView>(id).setOnClickListener {
                 Toast.makeText(this, "$name — coming soon!", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        findViewById<MaterialCardView>(R.id.cardOfflineInfo).setOnClickListener {
+            startActivity(Intent(this, OfflineFeaturesActivity::class.java))
         }
     }
 

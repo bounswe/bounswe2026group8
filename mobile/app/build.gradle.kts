@@ -51,4 +51,11 @@ dependencies {
     // Coroutines for async API calls
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
+    // Map
+    implementation("org.mapsforge:mapsforge-map-android:0.18.0")
+    implementation("org.mapsforge:mapsforge-map:0.18.0")
+    implementation("org.mapsforge:mapsforge-themes:0.18.0")
+    implementation("org.mapsforge:mapsforge-poi-android:0.18.0")
+    implementation("com.google.code.gson:gson:2.10.1")
 }

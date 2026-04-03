@@ -42,4 +42,12 @@
     <string name="feature_profile_desc">Manage your account</string>
     <string name="feature_offline">Offline Info</string>
     <string name="feature_offline_desc">Critical data access</string>
+
+    <!-- Map -->
+    <string name="nearest_label">Nearest: -</string>
+    <string name="nearest_format">Nearest: %1$s</string>
+    <string name="change_region_button">Change Region</string>
+    <string name="back">Back</string>
+    <string name="map_content_description">Offline Emergency Map</string>
+
 </resources>
