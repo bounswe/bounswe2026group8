@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   getPost, updatePost, deletePost,
   getComments, createComment, deleteComment,
-  vote, reportPost, repost, uploadImages,
+  vote, reportPost, repost, uploadImages, resolveImageUrl,
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useHub } from '../context/HubContext';
@@ -244,7 +244,7 @@ export default function PostDetailPage() {
                 <div className="image-preview-list">
                   {editImages.map((url, i) => (
                     <div className="image-preview-item" key={i}>
-                      <img src={url} alt={`Image ${i + 1}`} className="image-preview-thumb" />
+                      <img src={resolveImageUrl(url)} alt={`Image ${i + 1}`} className="image-preview-thumb" />
                       <button
                         type="button"
                         className="image-preview-remove"
@@ -306,7 +306,7 @@ export default function PostDetailPage() {
                 {post.image_urls.map((url, i) => (
                   <img
                     key={i}
-                    src={url}
+                    src={resolveImageUrl(url)}
                     alt={`Attachment ${i + 1}`}
                     className="post-image"
                     onClick={() => setLightboxIndex(i)}
@@ -467,7 +467,7 @@ export default function PostDetailPage() {
             >&#8249;</button>
           )}
           <img
-            src={post.image_urls[lightboxIndex]}
+            src={resolveImageUrl(post.image_urls[lightboxIndex])}
             alt={`Image ${lightboxIndex + 1}`}
             className="lightbox-img"
             onClick={(e) => e.stopPropagation()}

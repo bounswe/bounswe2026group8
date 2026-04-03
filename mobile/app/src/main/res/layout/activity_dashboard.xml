@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="6dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -37,6 +37,18 @@
                 style="@style/Widget.EmergencyHub.Button.Secondary" />
 
         </LinearLayout>
+
+        <!-- Hub selector -->
+        <Spinner
+            android:id="@+id/spinnerHubSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:minWidth="140dp"
+            android:background="@drawable/sort_pill_active_bg"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="14dp" />
 
         <!-- ── Welcome card ────────────────────────────────────────────────── -->
         <com.google.android.material.card.MaterialCardView

@@ -2,6 +2,7 @@ package com.bounswe2026group8.emergencyhub.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,10 +23,8 @@ import kotlinx.coroutines.launch
  *   - Role badge (STANDARD / EXPERT)
  *   - Expertise badge (if EXPERT)
  *   - Neighborhood badge (if provided)
- *   - 4 placeholder feature cards (Forum, Help Requests, Profile, Offline Info)
+ *   - Feature cards (Forum, Help Requests, Profile, Offline Info)
  *   - Logout button
- *
- * Feature cards are UI-only placeholders — they show a Toast when tapped.
  */
 class DashboardActivity : AppCompatActivity() {
 
@@ -50,7 +49,10 @@ class DashboardActivity : AppCompatActivity() {
         // Logout
         findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { performLogout() }
 
-        // Feature card placeholders
+        // Hub selector
+        HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector)).load()
+
+        // Feature cards
         setupFeatureCards()
     }
 
@@ -109,17 +111,21 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureCards() {
-        // Help Requests — navigate to the list screen
+        // Forum — navigate to forum screen
+        findViewById<MaterialCardView>(R.id.cardForum).setOnClickListener {
+            startActivity(Intent(this, ForumActivity::class.java))
+        }
+
+        // Help Requests — navigate to the help center (tabbed list)
         findViewById<MaterialCardView>(R.id.cardHelpRequests).setOnClickListener {
             startActivity(Intent(this, HelpRequestListActivity::class.java))
         }
 
-        val cards = mapOf(
-            R.id.cardForum to "Forum",
+        val placeholders = mapOf(
             R.id.cardProfile to "Profile",
             R.id.cardOfflineInfo to "Offline Info"
         )
-        for ((id, name) in cards) {
+        for ((id, name) in placeholders) {
             findViewById<MaterialCardView>(id).setOnClickListener {
                 Toast.makeText(this, "$name — coming soon!", Toast.LENGTH_SHORT).show()
             }

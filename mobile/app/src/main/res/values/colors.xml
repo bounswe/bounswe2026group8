@@ -49,4 +49,20 @@
     <color name="category_shelter_bg">#1A38BDF8</color>
     <color name="category_transport">#FFFBBF24</color>
     <color name="category_transport_bg">#1AFBBF24</color>
+
+    <!-- Forum type colors -->
+    <color name="forum_global">#FFA78BFA</color>
+    <color name="forum_global_bg">#1AA78BFA</color>
+    <color name="forum_standard">#FF38BDF8</color>
+    <color name="forum_standard_bg">#1A38BDF8</color>
+    <color name="forum_urgent">#FFF87171</color>
+    <color name="forum_urgent_bg">#1AF87171</color>
+
+    <!-- Vote colors -->
+    <color name="vote_up_active">#FF34D399</color>
+    <color name="vote_down_active">#FFF87171</color>
+
+    <!-- Sort pill -->
+    <color name="sort_active_bg">#1E38BDF8</color>
+    <color name="sort_active_border">#4038BDF8</color>
 </resources>

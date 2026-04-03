@@ -157,6 +157,24 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Hub (City) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hub_city"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerHub"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/tab_pill_bg"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:layout_marginBottom="16dp" />
+
         <!-- Neighborhood (optional) -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

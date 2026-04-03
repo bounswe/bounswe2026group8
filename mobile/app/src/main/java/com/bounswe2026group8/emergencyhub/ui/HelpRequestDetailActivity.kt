@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.CreateCommentRequest
+import com.bounswe2026group8.emergencyhub.api.HelpRequestComment
 import com.bounswe2026group8.emergencyhub.api.HelpRequestDetail
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
@@ -43,7 +44,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     private lateinit var tokenManager: TokenManager
-    private lateinit var commentAdapter: CommentAdapter
+    private lateinit var commentAdapter: HelpRequestCommentAdapter
 
     // Detail views
     private lateinit var txtDetailTitle: TextView
@@ -146,7 +147,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        commentAdapter = CommentAdapter(emptyList())
+        commentAdapter = HelpRequestCommentAdapter(emptyList())
         recyclerComments.layoutManager = LinearLayoutManager(this)
         recyclerComments.isNestedScrollingEnabled = false
         recyclerComments.adapter = commentAdapter
@@ -315,7 +316,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
-                    .createComment(requestId, CreateCommentRequest(content))
+                    .createHelpRequestComment(requestId, CreateCommentRequest(content))
 
                 if (response.isSuccessful) {
                     val comment = response.body()!!

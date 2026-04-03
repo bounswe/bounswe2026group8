@@ -1,17 +1,20 @@
 package com.bounswe2026group8.emergencyhub.api
 
+import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
  * Retrofit interface for the backend API.
- * Covers auth endpoints and help-requests endpoints.
+ * Covers auth, help-requests, help-offers, and forum endpoints.
  */
 interface ApiService {
 
@@ -47,18 +50,18 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<HelpRequestDetail>
 
-    // ── Comments ─────────────────────────────────────────────────────────
+    // ── Help Request Comments ────────────────────────────────────────────
 
     @GET("/help-requests/{id}/comments/")
     suspend fun getHelpRequestComments(
         @Path("id") requestId: Int
-    ): Response<List<Comment>>
+    ): Response<List<HelpRequestComment>>
 
     @POST("/help-requests/{id}/comments/")
-    suspend fun createComment(
+    suspend fun createHelpRequestComment(
         @Path("id") requestId: Int,
         @Body body: CreateCommentRequest
-    ): Response<Comment>
+    ): Response<HelpRequestComment>
 
     // ── Help Offers ──────────────────────────────────────────────────────
 
@@ -78,4 +81,53 @@ interface ApiService {
     suspend fun deleteHelpOffer(
         @Path("id") id: Int
     ): Response<ResponseBody?>
+
+    // ── Hubs ─────────────────────────────────────────────────────────────
+
+    @GET("/hubs/")
+    suspend fun getHubs(): Response<List<Hub>>
+
+    // ── Forum ────────────────────────────────────────────────────────────
+
+    @GET("/forum/posts/")
+    suspend fun getPosts(
+        @Query("forum_type") forumType: String,
+        @Query("hub") hub: Int? = null
+    ): Response<List<Post>>
+
+    @POST("/forum/posts/")
+    suspend fun createPost(@Body body: CreatePostRequest): Response<Post>
+
+    @GET("/forum/posts/{id}/")
+    suspend fun getPost(@Path("id") id: Int): Response<Post>
+
+    @GET("/forum/posts/{postId}/comments/")
+    suspend fun getComments(@Path("postId") postId: Int): Response<List<Comment>>
+
+    @POST("/forum/posts/{postId}/comments/")
+    suspend fun createComment(
+        @Path("postId") postId: Int,
+        @Body body: CreateCommentRequest
+    ): Response<Comment>
+
+    @DELETE("/forum/comments/{id}/")
+    suspend fun deleteComment(@Path("id") id: Int): Response<Unit>
+
+    @POST("/forum/posts/{postId}/vote/")
+    suspend fun vote(
+        @Path("postId") postId: Int,
+        @Body body: VoteRequest
+    ): Response<VoteResponse>
+
+    @POST("/forum/posts/{postId}/repost/")
+    suspend fun repost(
+        @Path("postId") postId: Int,
+        @Body body: RepostRequest
+    ): Response<Post>
+
+    @Multipart
+    @POST("/forum/upload/")
+    suspend fun uploadImages(
+        @Part images: List<MultipartBody.Part>
+    ): Response<UploadImagesResponse>
 }

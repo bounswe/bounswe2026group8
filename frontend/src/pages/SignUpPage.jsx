@@ -24,6 +24,8 @@ export default function SignUpPage() {
   const [globalError, setGlobalError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   if (loading) {
     return (
@@ -169,15 +171,25 @@ export default function SignUpPage() {
           {/* Password */}
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Min. 8 characters"
-              value={form.password}
-              onChange={handleChange}
-              className={errors.password ? 'input-error' : ''}
-            />
+            <div className="password-input-wrapper">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Min. 8 characters"
+                value={form.password}
+                onChange={handleChange}
+                className={errors.password ? 'input-error' : ''}
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
             {errors.password && (
               <span className="field-error">{errors.password}</span>
             )}
@@ -186,15 +198,25 @@ export default function SignUpPage() {
           {/* Confirm Password */}
           <div className="form-group">
             <label htmlFor="confirm_password">Confirm Password</label>
-            <input
-              id="confirm_password"
-              name="confirm_password"
-              type="password"
-              placeholder="Repeat your password"
-              value={form.confirm_password}
-              onChange={handleChange}
-              className={errors.confirm_password ? 'input-error' : ''}
-            />
+            <div className="password-input-wrapper">
+              <input
+                id="confirm_password"
+                name="confirm_password"
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="Repeat your password"
+                value={form.confirm_password}
+                onChange={handleChange}
+                className={errors.confirm_password ? 'input-error' : ''}
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+              >
+                {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
             {errors.confirm_password && (
               <span className="field-error">{errors.confirm_password}</span>
             )}

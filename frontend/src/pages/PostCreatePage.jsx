@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { createPost, uploadImages } from '../services/api';
+import { createPost, uploadImages, resolveImageUrl } from '../services/api';
 import { useHub } from '../context/HubContext';
 
 const TYPE_LABELS = { GLOBAL: 'Global', STANDARD: 'Standard', URGENT: 'Urgent' };
@@ -157,7 +157,7 @@ export default function PostCreatePage() {
               <div className="image-preview-list">
                 {uploadedImages.map((url, i) => (
                   <div className="image-preview-item" key={i}>
-                    <img src={url} alt={`Upload ${i + 1}`} className="image-preview-thumb" />
+                    <img src={resolveImageUrl(url)} alt={`Upload ${i + 1}`} className="image-preview-thumb" />
                     <button
                       type="button"
                       className="image-preview-remove"
