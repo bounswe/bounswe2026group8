@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bumptech.glide.Glide
 
 class ImageLightboxActivity : AppCompatActivity() {
@@ -57,7 +58,7 @@ class ImageLightboxActivity : AppCompatActivity() {
 
     private fun displayImage() {
         Glide.with(this)
-            .load(imageUrls[currentIndex])
+            .load(RetrofitClient.resolveImageUrl(imageUrls[currentIndex]))
             .into(imgLightbox)
 
         if (imageUrls.size > 1) {

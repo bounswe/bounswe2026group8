@@ -1,6 +1,16 @@
 const API_BASE = 'http://localhost:8000';
 
 /**
+ * Resolves an image URL so relative paths served by the backend are loadable.
+ * - Relative paths (e.g. "/media/uploads/abc.png") get the API base prepended.
+ * - Absolute URLs are returned as-is.
+ */
+export function resolveImageUrl(url) {
+  if (url.startsWith('/')) return `${API_BASE}${url}`;
+  return url;
+}
+
+/**
  * Generic fetch wrapper that handles JSON and auth headers.
  */
 async function request(endpoint, options = {}) {

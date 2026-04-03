@@ -187,7 +187,7 @@ class CreatePostActivity : AppCompatActivity() {
                 .inflate(R.layout.item_image_preview, imagePreviewContainer, false)
 
             Glide.with(this)
-                .load(url)
+                .load(RetrofitClient.resolveImageUrl(url))
                 .centerCrop()
                 .into(itemView.findViewById<ImageView>(R.id.imgPreview))
 
