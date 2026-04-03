@@ -27,6 +27,7 @@ from .serializers import (
     HelpOfferSerializer,
     HelpOfferCreateSerializer,
 )
+from .notifications import send_help_request_notification
 from .services import update_status_on_expert_comment
 
 
@@ -58,6 +59,7 @@ class HelpRequestListCreateView(APIView):
         serializer.is_valid(raise_exception=True)
         # Author is always the authenticated user, never from client input.
         help_request = serializer.save(author=request.user)
+        send_help_request_notification(help_request)
         return Response(
             HelpRequestDetailSerializer(help_request, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
