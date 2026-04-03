@@ -34,6 +34,14 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="+ New"
+            android:textSize="13sp"
+            style="@style/Widget.EmergencyHub.Button.Primary" />
+
     </LinearLayout>
 
     <!-- ── Category filter chips ───────────────────────────────────────── -->

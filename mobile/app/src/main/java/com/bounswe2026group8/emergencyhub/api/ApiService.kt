@@ -33,4 +33,9 @@ interface ApiService {
         @Query("hub_id") hubId: Int? = null,
         @Query("category") category: String? = null
     ): Response<List<HelpRequestItem>>
+
+    @POST("/help-requests/")
+    suspend fun createHelpRequest(
+        @Body body: CreateHelpRequest
+    ): Response<HelpRequestDetail>
 }

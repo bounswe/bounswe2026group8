@@ -60,6 +60,11 @@ class HelpRequestListActivity : AppCompatActivity() {
         // Back button
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
 
+        // Create button
+        findViewById<MaterialButton>(R.id.btnCreate).setOnClickListener {
+            startActivity(Intent(this, CreateHelpRequestActivity::class.java))
+        }
+
         // RecyclerView setup
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = HelpRequestAdapter(emptyList()) { item -> onItemClick(item) }
@@ -80,6 +85,14 @@ class HelpRequestListActivity : AppCompatActivity() {
         }
 
         fetchHelpRequests()
+    }
+
+    /** Re-fetch on resume so the list updates after creating a new request. */
+    override fun onResume() {
+        super.onResume()
+        if (::adapter.isInitialized) {
+            fetchHelpRequests()
+        }
     }
 
     /** Fetches all help requests from the backend. */

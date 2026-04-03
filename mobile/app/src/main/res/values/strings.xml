@@ -55,4 +55,19 @@
     <string name="status_open">Open</string>
     <string name="status_expert_responding">Expert Responding</string>
     <string name="status_resolved">Resolved</string>
+
+    <!-- Create Help Request -->
+    <string name="create_help_request">Create Help Request</string>
+    <string name="create_help_request_subtitle">Describe what help you need</string>
+    <string name="help_title">Title</string>
+    <string name="help_description">Description</string>
+    <string name="select_category">Select category</string>
+    <string name="select_urgency">Select urgency</string>
+    <string name="location_text_hint">Location description (optional)</string>
+    <string name="use_my_location">Use My Location</string>
+    <string name="location_acquired">Location acquired</string>
+    <string name="location_section">Location (optional)</string>
+    <string name="submitting">Submitting…</string>
+    <string name="submit">Submit</string>
+    <string name="help_request_created">Help request created!</string>
 </resources>
