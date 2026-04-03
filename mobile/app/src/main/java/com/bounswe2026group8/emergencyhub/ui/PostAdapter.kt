@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.Post
+import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bumptech.glide.Glide
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -107,7 +108,7 @@ class PostAdapter(
                 for ((i, thumb) in thumbs.withIndex()) {
                     if (i < images.size) {
                         thumb.visibility = View.VISIBLE
-                        Glide.with(itemView.context).load(images[i]).centerCrop().into(thumb)
+                        Glide.with(itemView.context).load(RetrofitClient.resolveImageUrl(images[i])).centerCrop().into(thumb)
                     } else {
                         thumb.visibility = View.GONE
                     }

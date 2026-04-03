@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { getPosts, vote, repost } from '../services/api';
+import { getPosts, vote, repost, resolveImageUrl } from '../services/api';
 import { useHub } from '../context/HubContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -244,7 +244,7 @@ export default function ForumPage() {
                 {post.image_urls && post.image_urls.length > 0 && (
                   <div className={`post-card-images ${post.image_urls.length === 1 ? 'post-card-images--single' : 'post-card-images--multi'}`}>
                     {post.image_urls.slice(0, 3).map((url, i) => (
-                      <img key={i} src={url} alt="" className="post-card-thumb" />
+                      <img key={i} src={resolveImageUrl(url)} alt="" className="post-card-thumb" />
                     ))}
                     {post.image_urls.length > 3 && (
                       <span className="post-card-more-images">+{post.image_urls.length - 3}</span>

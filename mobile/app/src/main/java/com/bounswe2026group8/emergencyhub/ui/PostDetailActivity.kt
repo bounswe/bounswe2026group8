@@ -160,7 +160,7 @@ class PostDetailActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                 }
-                Glide.with(this).load(url).centerCrop().into(imgView)
+                Glide.with(this).load(RetrofitClient.resolveImageUrl(url)).centerCrop().into(imgView)
                 imageGallery.addView(imgView)
             }
         } else {

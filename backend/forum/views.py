@@ -334,6 +334,6 @@ class ImageUploadView(APIView):
             ext = Path(f.name).suffix.lower() or '.jpg'
             filename = f'uploads/{uuid.uuid4().hex}{ext}'
             saved = default_storage.save(filename, f)
-            urls.append(request.build_absolute_uri(f'{settings.MEDIA_URL}{saved}'))
+            urls.append(f'{settings.MEDIA_URL}{saved}')
 
         return Response({'urls': urls}, status=status.HTTP_201_CREATED)
