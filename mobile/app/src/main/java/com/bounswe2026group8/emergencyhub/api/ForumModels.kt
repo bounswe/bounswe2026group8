@@ -75,3 +75,7 @@ data class ReportRequest(
 data class UploadImagesResponse(
     val urls: List<String>
 )
+
+data class FcmTokenRequest(
+    @SerializedName("fcm_token") val fcmToken: String
+)
