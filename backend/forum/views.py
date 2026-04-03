@@ -110,7 +110,7 @@ class PostDetailView(APIView):
                     repost_count=F('repost_count') - 1,
                 )
             post.delete()
-        return Response({'detail': 'Post deleted.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # ── Comments ───────────────────────────────────────────────────────────────────

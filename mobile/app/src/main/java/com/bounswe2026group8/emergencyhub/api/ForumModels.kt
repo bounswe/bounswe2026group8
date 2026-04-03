@@ -68,6 +68,10 @@ data class RepostRequest(
     val hub: Int? = null
 )
 
+data class ReportRequest(
+    val reason: String
+)
+
 data class UploadImagesResponse(
     val urls: List<String>
 )

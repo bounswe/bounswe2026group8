@@ -152,10 +152,12 @@ export default function PostDetailPage() {
   };
 
   // ── Delete ──────────────────────────────────────────────────────────────────
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setShowDeleteConfirm(false);
-    deletePost(id);
-    navigate('/forum', { replace: true, state: { forumTab: post?.forum_type } });
+    const { ok } = await deletePost(id);
+    if (ok) {
+      navigate('/forum', { replace: true, state: { forumTab: post?.forum_type } });
+    }
   };
 
   // ── Share ────────────────────────────────────────────────────────────────────

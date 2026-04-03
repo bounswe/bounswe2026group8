@@ -195,7 +195,7 @@
                             android:textStyle="bold"
                             android:textColor="@color/text_muted"
                             android:background="@drawable/sort_pill_bg"
-                            android:layout_marginEnd="8dp" />
+                            android:layout_marginEnd="4dp" />
 
                         <TextView
                             android:id="@+id/btnDownvote"
@@ -208,7 +208,7 @@
                             android:textStyle="bold"
                             android:textColor="@color/text_muted"
                             android:background="@drawable/sort_pill_bg"
-                            android:layout_marginEnd="16dp" />
+                            android:layout_marginEnd="4dp" />
 
                         <TextView
                             android:id="@+id/txtRepostCount"
@@ -228,26 +228,26 @@
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             android:gravity="center"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
                             android:text="Share"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textColor="@color/text_muted"
                             android:background="@drawable/sort_pill_bg"
-                            android:layout_marginStart="8dp" />
+                            android:layout_marginStart="4dp" />
 
                         <TextView
                             android:id="@+id/btnRepost"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             android:gravity="center"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
                             android:text="Repost"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textColor="@color/text_muted"
                             android:background="@drawable/sort_pill_bg"
-                            android:layout_marginStart="8dp"
+                            android:layout_marginStart="4dp"
                             android:visibility="gone" />
 
                         <TextView
@@ -256,8 +256,36 @@
                             android:layout_height="wrap_content"
                             android:text="Reposted"
                             android:textColor="@color/accent"
-                            android:textSize="13sp"
-                            android:layout_marginStart="8dp"
+                            android:textSize="12sp"
+                            android:layout_marginStart="4dp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/btnDeletePost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:gravity="center"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="Delete"
+                            android:textSize="12sp"
+                            android:textColor="@color/vote_down_active"
+                            android:background="@drawable/sort_pill_bg"
+                            android:layout_marginStart="4dp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/btnReportPost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:gravity="center"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="Report"
+                            android:textSize="12sp"
+                            android:textColor="@color/accent_secondary"
+                            android:background="@drawable/sort_pill_bg"
+                            android:layout_marginStart="4dp"
                             android:visibility="gone" />
 
                     </LinearLayout>
