@@ -1,5 +1,6 @@
 package com.bounswe2026group8.emergencyhub.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,8 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +39,18 @@ class ForumActivity : AppCompatActivity() {
     private var posts: List<Post> = emptyList()
     private var selectedHub: Hub? = null
 
+    private val postDetailLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val deletedPostId = result.data?.getIntExtra("deleted_post_id", -1) ?: -1
+            if (deletedPostId != -1) {
+                posts = posts.filter { it.id != deletedPostId }
+                applySortAndDisplay()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forum)
@@ -50,7 +65,13 @@ class ForumActivity : AppCompatActivity() {
             currentUserId = tokenManager.getUser()?.id,
             isLoggedIn = tokenManager.isLoggedIn(),
             onVoteClick = { postId, voteType -> handleVote(postId, voteType) },
-            onRepostClick = { postId -> handleRepost(postId) }
+            onRepostClick = { postId -> handleRepost(postId) },
+            onDeleteClick = { postId -> confirmAndDeletePost(postId) },
+            onPostClick = { postId ->
+                val intent = Intent(this, PostDetailActivity::class.java)
+                intent.putExtra("post_id", postId)
+                postDetailLauncher.launch(intent)
+            }
         )
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = postAdapter
@@ -297,6 +318,32 @@ class ForumActivity : AppCompatActivity() {
                     Toast.makeText(this@ForumActivity, msg, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
+                Toast.makeText(this@ForumActivity, "Network error", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun confirmAndDeletePost(postId: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Post")
+            .setMessage("Are you sure you want to delete this post? This action cannot be undone.")
+            .setPositiveButton("Delete") { _, _ -> deletePost(postId) }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deletePost(postId: Int) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@ForumActivity).deletePost(postId)
+                if (response.isSuccessful || response.code() == 204) {
+                    posts = posts.filter { it.id != postId }
+                    applySortAndDisplay()
+                    Toast.makeText(this@ForumActivity, "Post deleted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@ForumActivity, "Failed to delete post", Toast.LENGTH_SHORT).show()
+                }
+            } catch (_: Exception) {
                 Toast.makeText(this@ForumActivity, "Network error", Toast.LENGTH_SHORT).show()
             }
         }

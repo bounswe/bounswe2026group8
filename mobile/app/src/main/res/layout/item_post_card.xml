@@ -238,6 +238,20 @@
                     android:layout_marginStart="6dp"
                     android:visibility="gone" />
 
+                <TextView
+                    android:id="@+id/btnDeletePost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:gravity="center"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="Delete"
+                    android:textColor="@color/vote_down_active"
+                    android:textSize="12sp"
+                    android:background="@drawable/sort_pill_bg"
+                    android:layout_marginStart="6dp"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
         </LinearLayout>

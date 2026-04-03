@@ -1,6 +1,7 @@
 package com.bounswe2026group8.emergencyhub.api
 
 import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -50,7 +51,10 @@ interface ApiService {
     ): Response<Comment>
 
     @DELETE("/forum/comments/{id}/")
-    suspend fun deleteComment(@Path("id") id: Int): Response<Unit>
+    suspend fun deleteComment(@Path("id") id: Int): Response<ResponseBody>
+
+    @DELETE("/forum/posts/{id}/")
+    suspend fun deletePost(@Path("id") id: Int): Response<ResponseBody>
 
     @POST("/forum/posts/{postId}/vote/")
     suspend fun vote(
@@ -63,6 +67,12 @@ interface ApiService {
         @Path("postId") postId: Int,
         @Body body: RepostRequest
     ): Response<Post>
+
+    @POST("/forum/posts/{postId}/report/")
+    suspend fun reportPost(
+        @Path("postId") postId: Int,
+        @Body body: ReportRequest
+    ): Response<ResponseBody>
 
     @Multipart
     @POST("/forum/upload/")
