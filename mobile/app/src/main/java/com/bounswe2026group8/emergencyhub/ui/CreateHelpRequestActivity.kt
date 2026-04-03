@@ -210,11 +210,15 @@ class CreateHelpRequestActivity : AppCompatActivity() {
                         getString(R.string.help_request_created),
                         Toast.LENGTH_SHORT
                     ).show()
-                    // TODO: Navigate to detail screen when Issue #131 is implemented
-                    //  val detail = response.body()
-                    //  val intent = Intent(this, HelpRequestDetailActivity::class.java)
-                    //  intent.putExtra("request_id", detail?.id)
-                    //  startActivity(intent)
+                    val detail = response.body()
+                    if (detail != null) {
+                        val detailIntent = Intent(
+                            this@CreateHelpRequestActivity,
+                            HelpRequestDetailActivity::class.java
+                        )
+                        detailIntent.putExtra(HelpRequestDetailActivity.EXTRA_REQUEST_ID, detail.id)
+                        startActivity(detailIntent)
+                    }
                     finish()
                 } else if (response.code() == 401) {
                     tokenManager.clear()

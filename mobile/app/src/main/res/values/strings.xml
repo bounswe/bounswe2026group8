@@ -70,4 +70,16 @@
     <string name="submitting">Submitting…</string>
     <string name="submit">Submit</string>
     <string name="help_request_created">Help request created!</string>
+
+    <!-- Help Request Detail -->
+    <string name="help_request_detail_title">Help Request</string>
+    <string name="location_label">Location</string>
+    <string name="comments_label">Comments</string>
+    <string name="comments_count_label">Comments (%d)</string>
+    <string name="no_comments_yet">No comments yet. Be the first to respond!</string>
+    <string name="comment_hint">Write a comment…</string>
+    <string name="send">Send</string>
+    <string name="sending">Sending…</string>
+    <string name="comment_posted">Comment posted</string>
+    <string name="expert_badge">Expert</string>
 </resources>

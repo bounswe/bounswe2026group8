@@ -72,3 +72,17 @@ data class HelpRequestDetail(
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String
 )
+
+/** Single comment from GET /help-requests/{id}/comments/. */
+data class Comment(
+    val id: Int,
+    val request: Int,
+    val author: HelpRequestAuthor,
+    val content: String,
+    @SerializedName("created_at") val createdAt: String
+)
+
+/** Request body for POST /help-requests/{id}/comments/. */
+data class CreateCommentRequest(
+    val content: String
+)

@@ -4,6 +4,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -38,4 +39,22 @@ interface ApiService {
     suspend fun createHelpRequest(
         @Body body: CreateHelpRequest
     ): Response<HelpRequestDetail>
+
+    @GET("/help-requests/{id}/")
+    suspend fun getHelpRequestDetail(
+        @Path("id") id: Int
+    ): Response<HelpRequestDetail>
+
+    // ── Comments ─────────────────────────────────────────────────────────
+
+    @GET("/help-requests/{id}/comments/")
+    suspend fun getHelpRequestComments(
+        @Path("id") requestId: Int
+    ): Response<List<Comment>>
+
+    @POST("/help-requests/{id}/comments/")
+    suspend fun createComment(
+        @Path("id") requestId: Int,
+        @Body body: CreateCommentRequest
+    ): Response<Comment>
 }

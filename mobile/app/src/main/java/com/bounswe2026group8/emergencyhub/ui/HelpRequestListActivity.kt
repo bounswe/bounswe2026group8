@@ -152,8 +152,9 @@ class HelpRequestListActivity : AppCompatActivity() {
     }
 
     private fun onItemClick(item: HelpRequestItem) {
-        // TODO: Navigate to HelpRequestDetailActivity (Issue #131)
-        Toast.makeText(this, "Detail view — coming soon!", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, HelpRequestDetailActivity::class.java)
+        intent.putExtra(HelpRequestDetailActivity.EXTRA_REQUEST_ID, item.id)
+        startActivity(intent)
     }
 
     private fun showEmpty() {

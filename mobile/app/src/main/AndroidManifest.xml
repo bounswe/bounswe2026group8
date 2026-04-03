@@ -27,6 +27,8 @@
         <activity android:name=".ui.DashboardActivity" android:exported="false" />
         <activity android:name=".ui.HelpRequestListActivity" android:exported="false" />
         <activity android:name=".ui.CreateHelpRequestActivity" android:exported="false" />
+        <activity android:name=".ui.HelpRequestDetailActivity" android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
