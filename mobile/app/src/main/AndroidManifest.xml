@@ -29,6 +29,8 @@
         <activity android:name=".ui.CreateHelpRequestActivity" android:exported="false" />
         <activity android:name=".ui.HelpRequestDetailActivity" android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.HelpOfferListActivity" android:exported="false" />
+        <activity android:name=".ui.CreateHelpOfferActivity" android:exported="false" />
     </application>
 
 </manifest>

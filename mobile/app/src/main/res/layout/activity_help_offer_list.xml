@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="16dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBack"
@@ -26,11 +26,10 @@
             style="@style/Widget.EmergencyHub.Button.Secondary" />
 
         <TextView
-            android:id="@+id/txtHeaderTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/help_center_title"
+            android:text="@string/help_offers_title"
             android:textColor="@color/accent"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -42,42 +41,6 @@
             android:text="+ New"
             android:textSize="13sp"
             style="@style/Widget.EmergencyHub.Button.Primary" />
-
-    </LinearLayout>
-
-    <!-- ── Tab switcher (Requests / Offers) ─────────────────────────────── -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="12dp">
-
-        <TextView
-            android:id="@+id/tabRequests"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/tab_requests"
-            android:textColor="@color/accent"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:background="@drawable/tab_active_bg" />
-
-        <TextView
-            android:id="@+id/tabOffers"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/tab_offers"
-            android:textColor="@color/text_muted"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp" />
 
     </LinearLayout>
 
@@ -166,22 +129,12 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- Requests RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerHelpRequests"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false" />
-
-        <!-- Offers RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerHelpOffers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:visibility="gone" />
+            android:clipToPadding="false" />
 
-        <!-- Empty state (shared) -->
         <LinearLayout
             android:id="@+id/emptyState"
             android:layout_width="wrap_content"
@@ -192,33 +145,29 @@
             android:visibility="gone">
 
             <TextView
-                android:id="@+id/txtEmptyIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📋"
+                android:text="🤝"
                 android:textSize="40sp"
                 android:layout_marginBottom="12dp" />
 
             <TextView
-                android:id="@+id/txtEmptyTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/empty_help_requests"
+                android:text="@string/empty_help_offers"
                 android:textColor="@color/text_secondary"
                 android:textSize="16sp"
                 android:layout_marginBottom="4dp" />
 
             <TextView
-                android:id="@+id/txtEmptyHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/empty_help_requests_hint"
+                android:text="@string/empty_help_offers_hint"
                 android:textColor="@color/text_muted"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
-        <!-- Loading spinner -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"

@@ -1,7 +1,9 @@
 package com.bounswe2026group8.emergencyhub.api
 
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -57,4 +59,23 @@ interface ApiService {
         @Path("id") requestId: Int,
         @Body body: CreateCommentRequest
     ): Response<Comment>
+
+    // ── Help Offers ──────────────────────────────────────────────────────
+
+    @GET("/help-offers/")
+    suspend fun getHelpOffers(
+        @Query("hub_id") hubId: Int? = null,
+        @Query("category") category: String? = null
+    ): Response<List<HelpOfferItem>>
+
+    @POST("/help-offers/")
+    suspend fun createHelpOffer(
+        @Body body: CreateHelpOffer
+    ): Response<HelpOfferItem>
+
+    /** Returns Response<ResponseBody?> to avoid Gson parsing the empty 204 body. */
+    @DELETE("/help-offers/{id}/")
+    suspend fun deleteHelpOffer(
+        @Path("id") id: Int
+    ): Response<ResponseBody?>
 }

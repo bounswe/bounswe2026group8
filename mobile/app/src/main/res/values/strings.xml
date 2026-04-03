@@ -43,7 +43,10 @@
     <string name="feature_offline">Offline Info</string>
     <string name="feature_offline_desc">Critical data access</string>
 
-    <!-- Help Requests List -->
+    <!-- Help Center (tabbed: Requests + Offers) -->
+    <string name="help_center_title">Help Center</string>
+    <string name="tab_requests">Requests</string>
+    <string name="tab_offers">Offers</string>
     <string name="help_requests_title">Help Requests</string>
     <string name="filter_all">All</string>
     <string name="filter_medical">Medical</string>
@@ -82,4 +85,21 @@
     <string name="sending">Sending…</string>
     <string name="comment_posted">Comment posted</string>
     <string name="expert_badge">Expert</string>
+
+    <!-- Help Offers -->
+    <string name="help_offers_title">Help Offers</string>
+    <string name="feature_help_offers">Help Offers</string>
+    <string name="feature_help_offers_desc">Offer your skills</string>
+    <string name="empty_help_offers">No help offers found</string>
+    <string name="empty_help_offers_hint">Be the first to offer help in your community</string>
+    <string name="create_help_offer">Create Help Offer</string>
+    <string name="create_help_offer_subtitle">Describe what help you can offer</string>
+    <string name="skill_or_resource">Skill or Resource</string>
+    <string name="help_availability">Availability</string>
+    <string name="help_offer_created">Help offer created!</string>
+    <string name="delete_offer">Delete Offer</string>
+    <string name="delete_offer_confirm">Are you sure you want to delete this help offer?</string>
+    <string name="help_offer_deleted">Help offer deleted</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>
