@@ -16,17 +16,15 @@ export default function DashboardPage() {
 
   const roleLabel = user.role === 'EXPERT' ? '🎓 Expert' : '👤 Standard';
 
-  // Placeholder feature cards for future subgroup work
   const features = [
     { icon: '💬', title: 'Forum', desc: 'Community discussions', path: '/forum' },
     { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help', path: '/help-requests' },
     { icon: '👤', title: 'Profile', desc: 'Manage your account', path: '/profile' },
-    { icon: '📶', title: 'Offline Info', desc: 'Critical data access', path: '/offline-info' },
+    { icon: '📶', title: 'Offline Info', desc: 'Critical data access', path: null },
   ];
 
   return (
     <div className="page dashboard-page">
-      {/* Top bar */}
       <header className="dashboard-header">
         <h2 className="gradient-text">Emergency Hub</h2>
         <button className="btn btn-secondary btn-sm" onClick={handleLogout}>
@@ -34,7 +32,6 @@ export default function DashboardPage() {
         </button>
       </header>
 
-      {/* Welcome card */}
       <div className="welcome-card">
         <h1>Welcome, {user.full_name}!</h1>
         <div className="welcome-meta">
@@ -52,19 +49,18 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Feature grid */}
       <div className="dashboard-grid">
         {features.map((f) => (
-          <button
-            className="dashboard-card"
+          <div
+            className={`dashboard-card ${f.path ? 'dashboard-card--clickable' : ''}`}
             key={f.title}
-            onClick={() => navigate(f.path)}
-            style={{ cursor: 'pointer', textAlign: 'left', color: 'inherit', textDecoration: 'none' }}
+            onClick={() => f.path && navigate(f.path)}
+            role={f.path ? 'link' : undefined}
           >
             <span className="dashboard-card-icon">{f.icon}</span>
             <h3>{f.title}</h3>
             <p>{f.desc}</p>
-          </button>
+          </div>
         ))}
       </div>
     </div>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Text input fields -->
+    <style name="Widget.EmergencyHub.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/border_focus</item>
+        <item name="boxBackgroundColor">@color/bg_input</item>
+        <item name="android:textColorHint">@color/text_muted</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+    </style>
+
+    <!-- Primary button (filled) -->
+    <style name="Widget.EmergencyHub.Button.Primary" parent="Widget.Material3.Button">
+        <item name="cornerRadius">8dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- Secondary button (outlined) -->
+    <style name="Widget.EmergencyHub.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">8dp</item>
+        <item name="strokeColor">@color/accent</item>
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+</resources>

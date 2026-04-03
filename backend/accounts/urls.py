@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    RegisterView, LoginView, LogoutView, MeView, ProfileView,
+    RegisterView, LoginView, LogoutView, MeView, HubListView, ProfileView,
     ResourceListView, ResourceDetailView,
     ExpertiseFieldListView, ExpertiseFieldDetailView,
 )
@@ -15,4 +15,5 @@ urlpatterns = [
     path('resources/<int:pk>', ResourceDetailView.as_view(), name='resource-detail'),
     path('expertise', ExpertiseFieldListView.as_view(), name='expertise-list'),
     path('expertise/<int:pk>', ExpertiseFieldDetailView.as_view(), name='expertise-detail'),
+    path('hubs/', HubListView.as_view(), name='hub-list'),
 ]

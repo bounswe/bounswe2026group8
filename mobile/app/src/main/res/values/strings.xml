@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Emergency Hub</string>
+    <string name="app_title">Emergency\nPreparedness Hub</string>
+    <string name="app_subtitle">Prepare for emergencies, connect with neighbors, and build community resilience together.</string>
+    <string name="emergency_hub">Emergency Hub</string>
+
+    <!-- Auth actions -->
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="signing_up">Signing up…</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="logout">Logout</string>
+
+    <!-- Sign Up screen -->
+    <string name="create_account">Create Account</string>
+    <string name="join_community">Join your neighborhood emergency hub</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="select_role">Select your role</string>
+    <string name="role_standard">Standard</string>
+    <string name="role_expert">Expert</string>
+    <string name="expertise_field">Expertise Field</string>
+    <string name="neighborhood_optional">Neighborhood / Address (optional)</string>
+    <string name="already_have_account">Already have an account? Sign In</string>
+
+    <!-- Sign In screen -->
+    <string name="welcome_back">Welcome Back</string>
+    <string name="sign_in_subtitle">Sign in to your emergency hub account</string>
+    <string name="no_account">Don\'t have an account? Sign Up</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_placeholder">Welcome!</string>
+    <string name="feature_forum">Forum</string>
+    <string name="feature_forum_desc">Community discussions</string>
+    <string name="feature_help">Help Requests</string>
+    <string name="feature_help_desc">Ask for or offer help</string>
+    <string name="feature_profile">Profile</string>
+    <string name="feature_profile_desc">Manage your account</string>
+    <string name="feature_offline">Offline Info</string>
+    <string name="feature_offline_desc">Critical data access</string>
+
+    <!-- Offline Info screen -->
+    <string name="offline_info_title">Offline Info</string>
+    <string name="offline_info_heading">Emergency Preparedness Resources</string>
+    <string name="offline_info_desc">Access critical offline information to prepare for emergencies and protect yourself and your community.</string>
+    <string name="offline_info_tips_title">Key Resources</string>
+    <string name="offline_info_tips">• Emergency contact numbers\n• First aid basics\n• Evacuation procedures\n• Safety checklists\n• Community resources</string>
+    <string name="back">Back</string>
+    <string name="hub_city">Hub (City)</string>
+    <string name="select_hub">Select a hub</string>
+
+    <!-- Forum -->
+    <string name="forum_title">Forum</string>
+    <string name="forum_hub_all">All hubs — everyone</string>
+    <string name="new_post">+ New Post</string>
+    <string name="tab_global">Global</string>
+    <string name="tab_standard">Standard</string>
+    <string name="tab_urgent">Urgent</string>
+    <string name="sort_newest">Newest</string>
+    <string name="sort_most_liked">Most Liked</string>
+    <string name="sort_hot">Hot</string>
+    <string name="forum_loading">Loading posts…</string>
+    <string name="forum_empty_global">No global posts yet.</string>
+    <string name="forum_empty_hub">No %1$s posts yet.</string>
+    <string name="forum_select_hub">Select a hub to see posts.</string>
+    <string name="back_to_dashboard">← Back to Dashboard</string>
+    <string name="comment_count">%1$d %2$s</string>
+
+    <!-- Create Post -->
+    <string name="create_post_title">New Post</string>
+    <string name="create_post_subtitle_global">Visible to everyone (all hubs)</string>
+    <string name="create_post_subtitle_hub">Posting to %1$s</string>
+    <string name="post_title_hint">What\'s happening?</string>
+    <string name="post_content_hint">Describe the situation, share info, or ask for help…</string>
+    <string name="title_label">Title</string>
+    <string name="content_label">Content</string>
+    <string name="create_post">Create Post</string>
+    <string name="creating_post">Creating…</string>
+    <string name="back_to_forum">← Back to Forum</string>
+    <string name="title_required">Title is required.</string>
+    <string name="content_required">Content is required.</string>
+</resources>

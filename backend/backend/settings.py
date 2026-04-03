@@ -4,6 +4,7 @@ Neighborhood Emergency Preparedness Hub — Auth Backend
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,10 +27,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third-party
     'rest_framework',
-    'rest_framework.authtoken',
     'corsheaders',
     # Local
     'accounts',
+    'forum',
+    'help_requests',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +86,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ── Custom user model ──────────────────────────────────────────────────────────
@@ -92,12 +97,22 @@ AUTH_USER_MODEL = 'accounts.User'
 # ── Django REST Framework ──────────────────────────────────────────────────────
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+# ── Simple JWT ─────────────────────────────────────────────────────────────────
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+# ── Forum ──────────────────────────────────────────────────────────────────────
+FORUM_REPORT_HIDE_THRESHOLD = 5
 
 # ── CORS ───────────────────────────────────────────────────────────────────────
 # Allow all origins for Milestone 1 dev convenience.

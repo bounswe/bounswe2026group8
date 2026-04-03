@@ -2,6 +2,19 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 
 
+class Hub(models.Model):
+    """A city / neighbourhood hub that users and posts belong to."""
+    name = models.CharField(max_length=120, unique=True)
+    slug = models.SlugField(max_length=120, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class UserManager(BaseUserManager):
     """Custom manager that uses email as the unique identifier."""
 
@@ -43,8 +56,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         choices=Role.choices,
         default=Role.STANDARD,
     )
+    hub = models.ForeignKey(
+        Hub,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='members',
+    )
     neighborhood_address = models.CharField(max_length=255, blank=True, null=True)
     expertise_field = models.CharField(max_length=255, blank=True, null=True)
+
+    # Push notifications
+    fcm_token = models.TextField(blank=True, null=True)
 
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)

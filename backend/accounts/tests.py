@@ -9,7 +9,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
 
@@ -113,7 +113,7 @@ class LoginTests(TestCase):
         )
 
     def test_login_valid_credentials(self):
-        """Valid credentials return a token and user data."""
+        """Valid credentials return JWT tokens and user data."""
         response = self.client.post(
             self.url,
             {'email': 'sheila@example.com', 'password': 'StrongPass123'},
@@ -122,6 +122,7 @@ class LoginTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['message'], 'Login successful')
         self.assertIn('token', response.data)
+        self.assertIn('refresh', response.data)
         self.assertEqual(response.data['user']['email'], 'sheila@example.com')
         self.assertEqual(response.data['user']['role'], 'EXPERT')
 
@@ -166,11 +167,13 @@ class MeTests(TestCase):
             expertise_field='Medical Doctor',
             neighborhood_address='Sariyer, Istanbul',
         )
-        self.token = Token.objects.create(user=self.user)
+        # Generate a JWT access token for the user
+        refresh = RefreshToken.for_user(self.user)
+        self.access_token = str(refresh.access_token)
 
     def test_me_with_valid_token(self):
         """Authenticated user gets their profile data."""
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['email'], 'sheila@example.com')
@@ -194,25 +197,18 @@ class LogoutTests(TestCase):
             full_name='Sheila Davis',
             password='StrongPass123',
         )
-        self.token = Token.objects.create(user=self.user)
+        # Generate a JWT access token for the user
+        refresh = RefreshToken.for_user(self.user)
+        self.access_token = str(refresh.access_token)
 
-    def test_logout_invalidates_token(self):
-        """Logging out deletes the auth token so it can no longer be used."""
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
+    def test_logout_returns_success(self):
+        """Logging out returns a success message."""
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['message'], 'Logged out successfully')
-        # Token must no longer exist
-        self.assertFalse(Token.objects.filter(key=self.token.key).exists())
 
     def test_logout_without_token_returns_401(self):
         """Unauthenticated logout attempt returns 401."""
         response = self.client.post(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_me_after_logout_returns_401(self):
-        """After logout, the former token no longer grants /me access."""
-        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
-        self.client.post(self.url)
-        response = self.client.get('/me')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
