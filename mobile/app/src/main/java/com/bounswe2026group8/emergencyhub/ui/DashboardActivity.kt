@@ -109,9 +109,13 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureCards() {
+        // Help Requests — navigate to the list screen
+        findViewById<MaterialCardView>(R.id.cardHelpRequests).setOnClickListener {
+            startActivity(Intent(this, HelpRequestListActivity::class.java))
+        }
+
         val cards = mapOf(
             R.id.cardForum to "Forum",
-            R.id.cardHelpRequests to "Help Requests",
             R.id.cardProfile to "Profile",
             R.id.cardOfflineInfo to "Offline Info"
         )

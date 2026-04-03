@@ -42,4 +42,17 @@
     <string name="feature_profile_desc">Manage your account</string>
     <string name="feature_offline">Offline Info</string>
     <string name="feature_offline_desc">Critical data access</string>
+
+    <!-- Help Requests List -->
+    <string name="help_requests_title">Help Requests</string>
+    <string name="filter_all">All</string>
+    <string name="filter_medical">Medical</string>
+    <string name="filter_food">Food</string>
+    <string name="filter_shelter">Shelter</string>
+    <string name="filter_transport">Transport</string>
+    <string name="empty_help_requests">No help requests found</string>
+    <string name="empty_help_requests_hint">Try changing your filter or check back later</string>
+    <string name="status_open">Open</string>
+    <string name="status_expert_responding">Expert Responding</string>
+    <string name="status_resolved">Resolved</string>
 </resources>

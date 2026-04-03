@@ -23,6 +23,7 @@
         <activity android:name=".ui.SignUpActivity" android:exported="false" />
         <activity android:name=".ui.SignInActivity" android:exported="false" />
         <activity android:name=".ui.DashboardActivity" android:exported="false" />
+        <activity android:name=".ui.HelpRequestListActivity" android:exported="false" />
     </application>
 
 </manifest>
