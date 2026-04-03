@@ -69,4 +69,7 @@ interface ApiService {
     suspend fun uploadImages(
         @Part images: List<MultipartBody.Part>
     ): Response<UploadImagesResponse>
+
+    @POST("/accounts/fcm-token/")
+    suspend fun updateFcmToken(@Body body: FcmTokenRequest): Response<Void>
 }

@@ -7,7 +7,7 @@ import { useHub } from '../context/HubContext';
 export default function SignUpPage() {
   const navigate = useNavigate();
   const { isAuthenticated, loading } = useAuth();
-  const { hubs, selectedHub } = useHub();
+  const { hubs } = useHub();
 
   const [form, setForm] = useState({
     full_name: '',
@@ -242,7 +242,7 @@ export default function SignUpPage() {
             <select
               id="hub_id"
               name="hub_id"
-              value={form.hub_id || (selectedHub ? String(selectedHub.id) : '')}
+              value={form.hub_id}
               onChange={handleChange}
             >
               <option value="">Select a hub</option>

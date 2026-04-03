@@ -8,12 +8,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.FcmTokenRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.api.UserData
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 /**
  * Dashboard screen — the post-login home page.
@@ -31,6 +34,7 @@ import kotlinx.coroutines.launch
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var tokenManager: TokenManager
+    private lateinit var hubSelectorHelper: HubSelectorHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,14 +52,22 @@ class DashboardActivity : AppCompatActivity() {
         tokenManager.getUser()?.let { displayUser(it) }
         fetchMe()
 
+        // Register FCM token for push notifications
+        sendFcmTokenToBackend()
+
         // Logout
         findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { performLogout() }
 
-        // Hub selector
-        HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector)).load()
+        // Hub selector (load() is called in onResume)
+        hubSelectorHelper = HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector))
 
         // Feature card placeholders
         setupFeatureCards()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hubSelectorHelper.load()
     }
 
     private fun fetchMe() {
@@ -125,6 +137,18 @@ class DashboardActivity : AppCompatActivity() {
         for ((id, name) in placeholders) {
             findViewById<MaterialCardView>(id).setOnClickListener {
                 Toast.makeText(this, "$name — coming soon!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun sendFcmTokenToBackend() {
+        lifecycleScope.launch {
+            try {
+                val fcmToken = FirebaseMessaging.getInstance().token.await()
+                RetrofitClient.getService(this@DashboardActivity)
+                    .updateFcmToken(FcmTokenRequest(fcmToken))
+            } catch (_: Exception) {
+                // FCM token registration failed — will retry on next launch
             }
         }
     }
