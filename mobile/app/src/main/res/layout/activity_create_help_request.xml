@@ -179,6 +179,65 @@
 
         </LinearLayout>
 
+        <!-- ── Images (optional) ──────────────────────────────────────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/images_optional"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUploadImages"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="@string/upload_from_gallery"
+                android:textSize="13sp"
+                android:layout_marginEnd="8dp"
+                style="@style/Widget.EmergencyHub.Button.Secondary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCaptureImage"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="@string/take_photo"
+                android:textSize="13sp"
+                style="@style/Widget.EmergencyHub.Button.Secondary" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtUploadStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <HorizontalScrollView
+            android:id="@+id/imagePreviewScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/imagePreviewContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:orientation="horizontal" />
+
+        </HorizontalScrollView>
+
         <!-- ── Submit button ───────────────────────────────────────────────── -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"
