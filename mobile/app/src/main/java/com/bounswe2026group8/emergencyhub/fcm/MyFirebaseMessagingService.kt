@@ -6,8 +6,12 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.ui.DashboardActivity
+import com.bounswe2026group8.emergencyhub.ui.ForumActivity
 import com.bounswe2026group8.emergencyhub.ui.HelpRequestDetailActivity
+import com.bounswe2026group8.emergencyhub.ui.HelpRequestListActivity
 import com.bounswe2026group8.emergencyhub.ui.PostDetailActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -54,15 +58,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         createHelpRequestNotificationChannel()
 
-        val intent = Intent(this, HelpRequestDetailActivity::class.java).apply {
+        val detailIntent = Intent(this, HelpRequestDetailActivity::class.java).apply {
             putExtra(HelpRequestDetailActivity.EXTRA_REQUEST_ID, requestId)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
-        val pendingIntent = PendingIntent.getActivity(
-            this, requestId, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
+        val pendingIntent = TaskStackBuilder.create(this)
+            .addNextIntentWithParentStack(Intent(this, DashboardActivity::class.java))
+            .addNextIntent(Intent(this, HelpRequestListActivity::class.java))
+            .addNextIntent(detailIntent)
+            .getPendingIntent(requestId, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(this, HELP_REQUEST_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
@@ -104,15 +108,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         createPostNotificationChannel()
 
-        val intent = Intent(this, PostDetailActivity::class.java).apply {
+        val detailIntent = Intent(this, PostDetailActivity::class.java).apply {
             putExtra("post_id", postId)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
-        val pendingIntent = PendingIntent.getActivity(
-            this, postId, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
+        val pendingIntent = TaskStackBuilder.create(this)
+            .addNextIntentWithParentStack(Intent(this, DashboardActivity::class.java))
+            .addNextIntent(Intent(this, ForumActivity::class.java))
+            .addNextIntent(detailIntent)
+            .getPendingIntent(postId, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(this, POST_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
