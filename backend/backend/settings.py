@@ -2,6 +2,7 @@
 Django settings for backend project.
 Neighborhood Emergency Preparedness Hub — Auth Backend
 """
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -15,9 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Before deploying to production, set SECRET_KEY via an environment variable:
 #   import os
 #   SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-SECRET_KEY = 'django-insecure-change-this-in-production-use-env-var'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-this-in-production-use-env-var')
 
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1')
 
 ALLOWED_HOSTS = ['*']
 
@@ -70,8 +71,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'emergencyhub'),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
@@ -88,6 +93,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

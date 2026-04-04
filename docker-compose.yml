@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-emergencyhub}
+      POSTGRES_USER: ${DB_USER:-emergencyhub}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-emergencyhub}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-emergencyhub}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: always
+    environment:
+      DB_NAME: ${DB_NAME:-emergencyhub}
+      DB_USER: ${DB_USER:-emergencyhub}
+      DB_PASSWORD: ${DB_PASSWORD:-emergencyhub}
+      DB_HOST: db
+      DB_PORT: 5432
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-change-me-in-production}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-False}
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE: /api
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - media_data:/media:ro
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:
+  media_data:
