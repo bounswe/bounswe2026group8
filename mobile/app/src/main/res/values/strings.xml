@@ -53,6 +53,33 @@
     <string name="hub_city">Hub (City)</string>
     <string name="select_hub">Select a hub</string>
 
+    <!-- Profile -->
+    <string name="profile_title">Your Profile</string>
+    <string name="back_arrow">← Back</string>
+    <string name="profile_personal_info">Personal Information</string>
+    <string name="profile_phone">Phone</string>
+    <string name="profile_blood_type">Blood Type</string>
+    <string name="profile_emergency_contact">Emergency Contact</string>
+    <string name="profile_emergency_phone">Emergency Phone</string>
+    <string name="profile_bio">Bio</string>
+    <string name="profile_special_needs_label">Special Needs</string>
+    <string name="profile_has_disability">Has Disability</string>
+    <string name="profile_availability">Availability Status</string>
+    <string name="status_safe">Safe</string>
+    <string name="status_needs_help">Needs Help</string>
+    <string name="status_available">Available</string>
+    <string name="profile_resources">Resources</string>
+    <string name="profile_expertise">Expertise Fields</string>
+    <string name="profile_add">+ Add</string>
+    <string name="profile_save">Save</string>
+    <string name="profile_resource_name">Resource name</string>
+    <string name="profile_resource_category">Category</string>
+    <string name="profile_resource_qty">Quantity</string>
+    <string name="profile_no_resources">No resources added yet.</string>
+    <string name="profile_expertise_field">Field (e.g. First Aid)</string>
+    <string name="profile_cert_url">Certificate URL (optional)</string>
+    <string name="profile_no_expertise">No expertise fields added yet.</string>
+
     <!-- Forum -->
     <string name="forum_title">Forum</string>
     <string name="forum_hub_all">All hubs — everyone</string>

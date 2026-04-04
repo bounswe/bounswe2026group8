@@ -117,9 +117,12 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(Intent(this, ForumActivity::class.java))
         }
 
+        findViewById<MaterialCardView>(R.id.cardProfile).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
+
         val placeholders = mapOf(
             R.id.cardHelpRequests to "Help Requests",
-            R.id.cardProfile to "Profile",
             R.id.cardOfflineInfo to "Offline Info"
         )
         for ((id, name) in placeholders) {

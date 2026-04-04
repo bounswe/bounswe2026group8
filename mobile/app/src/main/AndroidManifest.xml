@@ -23,6 +23,7 @@
         <activity android:name=".ui.SignUpActivity" android:exported="false" />
         <activity android:name=".ui.SignInActivity" android:exported="false" />
         <activity android:name=".ui.DashboardActivity" android:exported="false" />
+        <activity android:name=".ui.ProfileActivity" android:exported="false" />
         <activity android:name=".ui.ForumActivity" android:exported="false" />
         <activity android:name=".ui.CreatePostActivity" android:exported="false" />
         <activity android:name=".ui.PostDetailActivity" android:exported="false" />
