@@ -6,7 +6,16 @@ import {
   vote, reportPost, repost, uploadImages, resolveImageUrl,
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { useHub } from '../context/HubContext';
+
+const AVAIL_COLORS = { SAFE: '#34d399', NEEDS_HELP: '#f87171', AVAILABLE_TO_HELP: '#38bdf8' };
+const AVAIL_LABELS = { SAFE: 'Safe', NEEDS_HELP: 'Needs Help', AVAILABLE_TO_HELP: 'Available' };
+
+function AuthorStatus({ profile }) {
+  const s = profile?.availability_status;
+  if (!s || !AVAIL_COLORS[s]) return null;
+  const c = AVAIL_COLORS[s];
+  return <span className="badge" style={{ color: c, borderColor: c + '44', background: c + '11', fontSize: '0.7rem', padding: '1px 6px' }}>● {AVAIL_LABELS[s]}</span>;
+}
 
 function timeAgo(dateStr) {
   const seconds = Math.floor((Date.now() - new Date(dateStr)) / 1000);
@@ -23,7 +32,7 @@ export default function PostDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
-  const { selectedHub } = useHub();
+  const selectedHub = user?.hub;
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -156,7 +165,7 @@ export default function PostDetailPage() {
     setShowDeleteConfirm(false);
     const { ok } = await deletePost(id);
     if (ok) {
-      navigate('/forum', { replace: true, state: { forumTab: post?.forum_type } });
+      navigate(-1);
     }
   };
 
@@ -202,7 +211,7 @@ export default function PostDetailPage() {
 
   return (
     <div className="page post-detail-page">
-      <Link to="/forum" state={{ forumTab: post?.forum_type }} className="link post-back-link">&larr; Back to Forum</Link>
+      <button onClick={() => navigate(-1)} className="link post-back-link" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>&larr; Back</button>
 
       {/* Post content */}
       <article className="post-article">
@@ -294,6 +303,8 @@ export default function PostDetailPage() {
 
             <div className="post-meta">
               <span>{post.author.full_name}</span>
+              {post.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+              <AuthorStatus profile={post.author.profile} />
               <span className="post-card-dot">&middot;</span>
               <span>{timeAgo(post.created_at)}</span>
               {Math.abs(new Date(post.updated_at) - new Date(post.created_at)) > 1000 && (
@@ -439,6 +450,8 @@ export default function PostDetailPage() {
               <div className="comment-card" key={c.id}>
                 <div className="comment-header">
                   <span className="comment-author">{c.author.full_name}</span>
+                  {c.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+                  <AuthorStatus profile={c.author.profile} />
                   <span className="post-card-dot">&middot;</span>
                   <span className="comment-time">{timeAgo(c.created_at)}</span>
                   {user && user.id === c.author.id && (

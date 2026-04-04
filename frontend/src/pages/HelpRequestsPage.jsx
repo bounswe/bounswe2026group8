@@ -64,8 +64,19 @@ function formatDate(isoString) {
   return date.toLocaleDateString();
 }
 
+const STATUS_COLORS = { SAFE: '#34d399', NEEDS_HELP: '#f87171', AVAILABLE_TO_HELP: '#38bdf8' };
+const STATUS_LABELS_MAP = { SAFE: 'Safe', NEEDS_HELP: 'Needs Help', AVAILABLE_TO_HELP: 'Available' };
+
+function AuthorStatus({ profile }) {
+  const s = profile?.availability_status;
+  if (!s || !STATUS_COLORS[s]) return null;
+  const c = STATUS_COLORS[s];
+  return <span className="badge" style={{ color: c, borderColor: c + '44', background: c + '11', fontSize: '0.7rem', padding: '1px 6px' }}>● {STATUS_LABELS_MAP[s]}</span>;
+}
+
 export default function HelpRequestsPage() {
   const { user } = useAuth();
+  const selectedHub = user?.hub;
   const navigate = useNavigate();
 
   /* ── Tab state — "requests" or "offers" ─────────────────────────────────── */
@@ -106,7 +117,7 @@ export default function HelpRequestsPage() {
     setReqError('');
 
     const params = {};
-    if (user.hub?.id) params.hub_id = user.hub.id;
+    if (selectedHub?.id) params.hub_id = selectedHub.id;
     if (category) params.category = category;
 
     getHelpRequests(params)
@@ -126,7 +137,7 @@ export default function HelpRequestsPage() {
     setOffError('');
 
     const params = {};
-    if (user.hub?.id) params.hub_id = user.hub.id;
+    if (selectedHub?.id) params.hub_id = selectedHub.id;
     if (category) params.category = category;
 
     getHelpOffers(params)
@@ -259,9 +270,9 @@ export default function HelpRequestsPage() {
       </div>
 
       {/* Hub context */}
-      {user.hub && (
+      {selectedHub && (
         <p className="help-requests-hub">
-          Showing {activeTab} for <strong>{user.hub.name}</strong>
+          Showing {activeTab} for <strong>{selectedHub.name}</strong>
         </p>
       )}
 
@@ -323,6 +334,8 @@ export default function HelpRequestsPage() {
 
                   <div className="help-request-card-footer">
                     <span className="help-request-card-author">{req.author.full_name}</span>
+                    {req.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+                    <AuthorStatus profile={req.author.profile} />
                     <span>{formatDate(req.created_at)}</span>
                     {req.comment_count > 0 && (
                       <span className="help-request-card-comments">
@@ -396,15 +409,21 @@ export default function HelpRequestsPage() {
 
                 <div className="form-group">
                   <label htmlFor="offer-availability">Availability</label>
-                  <input
+                  <select
                     id="offer-availability"
                     name="availability"
-                    type="text"
-                    placeholder="e.g. Weekdays 9-5, 24/7, On-call"
                     value={offerForm.availability}
                     onChange={handleOfferChange}
                     className={offerFormErrors.availability ? 'input-error' : ''}
-                  />
+                  >
+                    <option value="">— Select availability —</option>
+                    <option value="24/7">24/7</option>
+                    <option value="Weekdays">Weekdays</option>
+                    <option value="Weekends">Weekends</option>
+                    <option value="Mornings">Mornings</option>
+                    <option value="Evenings">Evenings</option>
+                    <option value="On-call">On-call</option>
+                  </select>
                   {offerFormErrors.availability && (
                     <span className="field-error">{offerFormErrors.availability}</span>
                   )}
@@ -456,6 +475,8 @@ export default function HelpRequestsPage() {
 
                   <div className="help-offer-card-footer">
                     <span className="help-request-card-author">{offer.author.full_name}</span>
+                    {offer.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+                    <AuthorStatus profile={offer.author.profile} />
                     <span className="help-offer-card-avail">{offer.availability}</span>
                     <span>{formatDate(offer.created_at)}</span>
 

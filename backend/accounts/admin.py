@@ -1,6 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Hub, User
+from .models import Hub, User, Profile
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone_number', 'preferred_language', 'created_at')
+    search_fields = ('user__email', 'user__full_name', 'phone_number')
+    readonly_fields = ('created_at', 'updated_at')
 
 
 @admin.register(Hub)

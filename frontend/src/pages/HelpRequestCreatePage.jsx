@@ -7,10 +7,10 @@
  * On success, redirects to the newly created request's detail page.
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { createHelpRequest } from '../services/api';
+import { createHelpRequest, uploadHelpRequestImages, resolveImageUrl } from '../services/api';
 
 /** Category options — matches backend Category.choices. */
 const CATEGORIES = [
@@ -30,6 +30,7 @@ const URGENCIES = [
 export default function HelpRequestCreatePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   /* ── Form state ─────────────────────────────────────────────────────────── */
   const [form, setForm] = useState({
@@ -46,9 +47,37 @@ export default function HelpRequestCreatePage() {
   const [globalError, setGlobalError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  /* ── Image upload state ─────────────────────────────────────────────────── */
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
   /* ── Geolocation state ──────────────────────────────────────────────────── */
   const [locating, setLocating] = useState(false);
   const [locationStatus, setLocationStatus] = useState('');
+
+  /** Uploads selected files and appends returned URLs to the preview list. */
+  const handleFileSelect = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    setUploading(true);
+    setGlobalError('');
+    const { ok, data } = await uploadHelpRequestImages(files);
+    setUploading(false);
+
+    if (ok) {
+      setUploadedImages((prev) => [...prev, ...data.urls]);
+    } else {
+      setGlobalError(data?.detail || 'Image upload failed.');
+    }
+
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  /** Removes a previously uploaded image from the preview list. */
+  const removeUploadedImage = (index) => {
+    setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
   /** Generic change handler — clears field error on edit. */
   const handleChange = (e) => {
@@ -124,6 +153,7 @@ export default function HelpRequestCreatePage() {
       payload.latitude = form.latitude;
       payload.longitude = form.longitude;
     }
+    if (uploadedImages.length > 0) payload.image_urls = uploadedImages;
 
     const { ok, data } = await createHelpRequest(payload);
     setSubmitting(false);
@@ -196,6 +226,46 @@ export default function HelpRequestCreatePage() {
             />
             {errors.description && (
               <span className="field-error">{errors.description}</span>
+            )}
+          </div>
+
+          {/* Images — optional */}
+          <div className="form-group">
+            <label>Images <span className="optional-tag">optional</span></label>
+
+            <div className="image-upload-area">
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+              >
+                {uploading ? 'Uploading...' : 'Upload from Device'}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                multiple
+                onChange={handleFileSelect}
+                style={{ display: 'none' }}
+              />
+            </div>
+
+            {uploadedImages.length > 0 && (
+              <div className="image-preview-list">
+                {uploadedImages.map((url, i) => (
+                  <div className="image-preview-item" key={i}>
+                    <img src={resolveImageUrl(url)} alt={`Upload ${i + 1}`} className="image-preview-thumb" />
+                    <button
+                      type="button"
+                      className="image-preview-remove"
+                      onClick={() => removeUploadedImage(i)}
+                      title="Remove"
+                    >&times;</button>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
@@ -280,7 +350,7 @@ export default function HelpRequestCreatePage() {
           <button
             type="submit"
             className="btn btn-primary btn-block"
-            disabled={submitting}
+            disabled={submitting || uploading}
           >
             {submitting ? 'Submitting...' : 'Submit Request'}
           </button>

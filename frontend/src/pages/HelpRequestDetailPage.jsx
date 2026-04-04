@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus } from '../services/api';
+import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus, resolveImageUrl } from '../services/api';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -45,6 +45,16 @@ function formatDate(isoString) {
   if (diffHours < 24) return `${diffHours}h ago`;
   if (diffDays < 7) return `${diffDays}d ago`;
   return date.toLocaleDateString();
+}
+
+const AVAIL_COLORS = { SAFE: '#34d399', NEEDS_HELP: '#f87171', AVAILABLE_TO_HELP: '#38bdf8' };
+const AVAIL_LABELS = { SAFE: 'Safe', NEEDS_HELP: 'Needs Help', AVAILABLE_TO_HELP: 'Available' };
+
+function AuthorStatus({ profile }) {
+  const s = profile?.availability_status;
+  if (!s || !AVAIL_COLORS[s]) return null;
+  const c = AVAIL_COLORS[s];
+  return <span className="badge" style={{ color: c, borderColor: c + '44', background: c + '11', fontSize: '0.7rem', padding: '1px 6px' }}>● {AVAIL_LABELS[s]}</span>;
 }
 
 export default function HelpRequestDetailPage() {
@@ -125,7 +135,7 @@ export default function HelpRequestDetailPage() {
     return (
       <div className="page help-detail-page">
         <div className="alert alert-error">{error || 'Request not found.'}</div>
-        <button className="btn btn-secondary btn-sm" onClick={() => navigate('/help-requests')}>
+        <button className="btn btn-secondary btn-sm" onClick={() => navigate(-1)}>
           &larr; Back
         </button>
       </div>
@@ -138,7 +148,7 @@ export default function HelpRequestDetailPage() {
     <div className="page help-detail-page">
       {/* Header */}
       <header className="help-requests-header">
-        <button className="btn btn-secondary btn-sm" onClick={() => navigate('/help-requests')}>
+        <button className="btn btn-secondary btn-sm" onClick={() => navigate(-1)}>
           &larr; Back
         </button>
         <h2 className="gradient-text">Request Detail</h2>
@@ -164,8 +174,23 @@ export default function HelpRequestDetailPage() {
 
         <p className="help-detail-description">{helpRequest.description}</p>
 
+        {helpRequest.image_urls && helpRequest.image_urls.length > 0 && (
+          <div className="post-images">
+            {helpRequest.image_urls.map((url, i) => (
+              <img
+                key={i}
+                src={resolveImageUrl(url)}
+                alt={`Attachment ${i + 1}`}
+                className="post-image"
+              />
+            ))}
+          </div>
+        )}
+
         <div className="help-detail-meta">
           <span>By <strong>{helpRequest.author.full_name}</strong></span>
+          {helpRequest.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+          <AuthorStatus profile={helpRequest.author.profile} />
           {helpRequest.hub_name && <span>Hub: {helpRequest.hub_name}</span>}
           <span>{formatDate(helpRequest.created_at)}</span>
         </div>

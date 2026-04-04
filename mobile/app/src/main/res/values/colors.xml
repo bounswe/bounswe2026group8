@@ -32,6 +32,24 @@
     <color name="badge_accent_bg">#1A818CF8</color>
     <color name="badge_muted_bg">#1494A3B8</color>
 
+    <!-- Urgency badge colors -->
+    <color name="urgency_high">#FFF87171</color>
+    <color name="urgency_high_bg">#1AF87171</color>
+    <color name="urgency_medium">#FFFBBF24</color>
+    <color name="urgency_medium_bg">#1AFBBF24</color>
+    <color name="urgency_low">#FF34D399</color>
+    <color name="urgency_low_bg">#1A34D399</color>
+
+    <!-- Category badge colors -->
+    <color name="category_medical">#FFF87171</color>
+    <color name="category_medical_bg">#1AF87171</color>
+    <color name="category_food">#FF34D399</color>
+    <color name="category_food_bg">#1A34D399</color>
+    <color name="category_shelter">#FF38BDF8</color>
+    <color name="category_shelter_bg">#1A38BDF8</color>
+    <color name="category_transport">#FFFBBF24</color>
+    <color name="category_transport_bg">#1AFBBF24</color>
+
     <!-- Forum type colors -->
     <color name="forum_global">#FFA78BFA</color>
     <color name="forum_global_bg">#1AA78BFA</color>
