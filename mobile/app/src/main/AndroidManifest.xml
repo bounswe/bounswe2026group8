@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -24,6 +26,12 @@
         <activity android:name=".ui.SignUpActivity" android:exported="false" />
         <activity android:name=".ui.SignInActivity" android:exported="false" />
         <activity android:name=".ui.DashboardActivity" android:exported="false" />
+        <activity android:name=".ui.HelpRequestListActivity" android:exported="false" />
+        <activity android:name=".ui.CreateHelpRequestActivity" android:exported="false" />
+        <activity android:name=".ui.HelpRequestDetailActivity" android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.HelpOfferListActivity" android:exported="false" />
+        <activity android:name=".ui.CreateHelpOfferActivity" android:exported="false" />
         <activity android:name=".ui.ForumActivity" android:exported="false" />
         <activity android:name=".ui.CreatePostActivity" android:exported="false" />
         <activity android:name=".ui.PostDetailActivity" android:exported="false" />

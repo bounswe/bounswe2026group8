@@ -26,10 +26,8 @@ import kotlinx.coroutines.tasks.await
  *   - Role badge (STANDARD / EXPERT)
  *   - Expertise badge (if EXPERT)
  *   - Neighborhood badge (if provided)
- *   - 4 placeholder feature cards (Forum, Help Requests, Profile, Offline Info)
+ *   - Feature cards (Forum, Help Requests, Profile, Offline Info)
  *   - Logout button
- *
- * Feature cards are UI-only placeholders — they show a Toast when tapped.
  */
 class DashboardActivity : AppCompatActivity() {
 
@@ -61,7 +59,7 @@ class DashboardActivity : AppCompatActivity() {
         // Hub selector (load() is called in onResume)
         hubSelectorHelper = HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector))
 
-        // Feature card placeholders
+        // Feature cards
         setupFeatureCards()
     }
 
@@ -125,12 +123,17 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureCards() {
+        // Forum — navigate to forum screen
         findViewById<MaterialCardView>(R.id.cardForum).setOnClickListener {
             startActivity(Intent(this, ForumActivity::class.java))
         }
 
+        // Help Requests — navigate to the help center (tabbed list)
+        findViewById<MaterialCardView>(R.id.cardHelpRequests).setOnClickListener {
+            startActivity(Intent(this, HelpRequestListActivity::class.java))
+        }
+
         val placeholders = mapOf(
-            R.id.cardHelpRequests to "Help Requests",
             R.id.cardProfile to "Profile",
             R.id.cardOfflineInfo to "Offline Info"
         )
