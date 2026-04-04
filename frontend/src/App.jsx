@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { HubProvider } from './context/HubContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import HubSelector from './components/HubSelector';
 
@@ -17,60 +16,59 @@ import HelpRequestCreatePage from './pages/HelpRequestCreatePage';
 import HelpRequestDetailPage from './pages/HelpRequestDetailPage';
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <HubProvider>
-          <div className="hub-selector-bar">
-            <HubSelector />
-          </div>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/signin" element={<SignInPage />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/forum" element={<ForumPage />} />
-            <Route path="/forum/posts/:id" element={<PostDetailPage />} />
-            <Route
-              path="/forum/new"
-              element={
-                <ProtectedRoute>
-                  <PostCreatePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/help-requests"
-              element={
-                <ProtectedRoute>
-                  <HelpRequestsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/help-requests/new"
-              element={
-                <ProtectedRoute>
-                  <HelpRequestCreatePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/help-requests/:id"
-              element={
-                <ProtectedRoute>
-                  <HelpRequestDetailPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
+return (
+  <BrowserRouter>
+    <AuthProvider>
+        <div className="hub-selector-bar">
+          <HubSelector />
+        </div>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/forum" element={<ForumPage />} />
+          <Route path="/forum/posts/:id" element={<PostDetailPage />} />
+          <Route
+            path="/forum/new"
+            element={
+              <ProtectedRoute>
+                <PostCreatePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/help-requests"
+            element={
+              <ProtectedRoute>
+                <HelpRequestsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/help-requests/new"
+            element={
+              <ProtectedRoute>
+                <HelpRequestCreatePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/help-requests/:id"
+            element={
+              <ProtectedRoute>
+                <HelpRequestDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/profile"
             element={
               <ProtectedRoute>
@@ -79,8 +77,7 @@ export default function App() {
             }
           />
         </Routes>
-        </HubProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  );
+    </AuthProvider>
+  </BrowserRouter>
+);
 }

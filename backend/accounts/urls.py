@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     RegisterView, LoginView, LogoutView, MeView, HubListView, ProfileView,
     ResourceListView, ResourceDetailView,
-    ExpertiseFieldListView, ExpertiseFieldDetailView,
+    ExpertiseFieldListView, ExpertiseFieldDetailView, FCMTokenView
 )
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     path('expertise', ExpertiseFieldListView.as_view(), name='expertise-list'),
     path('expertise/<int:pk>', ExpertiseFieldDetailView.as_view(), name='expertise-detail'),
     path('hubs/', HubListView.as_view(), name='hub-list'),
+    path('accounts/fcm-token/', FCMTokenView.as_view(), name='fcm-token'),
 ]

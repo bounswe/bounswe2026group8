@@ -152,6 +152,13 @@ export function deleteExpertiseField(id) {
   return request(`/expertise/${id}`, { method: 'DELETE' });
 }
 
+export function updateMe(data) {
+  return request('/me', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
 /**
  * GET /hubs/
  * Public — returns list of all hubs.
@@ -317,6 +324,21 @@ export async function uploadImages(files) {
   files.forEach((f) => formData.append('images', f));
 
   const response = await fetch(`${API_BASE}/forum/upload/`, {
+    method: 'POST',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: formData,
+  });
+
+  const data = await response.json();
+  return { ok: response.ok, status: response.status, data };
+}
+
+export async function uploadHelpRequestImages(files) {
+  const token = localStorage.getItem('token');
+  const formData = new FormData();
+  files.forEach((f) => formData.append('images', f));
+
+  const response = await fetch(`${API_BASE}/help-requests/upload/`, {
     method: 'POST',
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body: formData,

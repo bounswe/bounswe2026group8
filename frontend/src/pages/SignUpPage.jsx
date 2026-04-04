@@ -2,12 +2,10 @@ import { useState } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { register } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { useHub } from '../context/HubContext';
 
 export default function SignUpPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, loading } = useAuth();
-  const { hubs, selectedHub } = useHub();
+  const { isAuthenticated, loading, hubs } = useAuth();
 
   const [form, setForm] = useState({
     full_name: '',
@@ -87,7 +85,7 @@ export default function SignUpPage() {
       confirm_password: form.confirm_password,
       role: form.role,
     };
-    const hubId = form.hub_id || (selectedHub ? String(selectedHub.id) : '');
+    const hubId = form.hub_id || '';
     if (hubId) {
       payload.hub_id = Number(hubId);
     }
@@ -242,7 +240,7 @@ export default function SignUpPage() {
             <select
               id="hub_id"
               name="hub_id"
-              value={form.hub_id || (selectedHub ? String(selectedHub.id) : '')}
+              value={form.hub_id}
               onChange={handleChange}
             >
               <option value="">Select a hub</option>

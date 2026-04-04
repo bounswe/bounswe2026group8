@@ -1,6 +1,7 @@
 package com.bounswe2026group8.emergencyhub.api
 
 import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -12,7 +13,13 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+/**
+ * Retrofit interface for the backend API.
+ * Covers auth, help-requests, help-offers, and forum endpoints.
+ */
 interface ApiService {
+
+    // ── Auth ──────────────────────────────────────────────────────────────
 
     @POST("/register")
     suspend fun register(@Body body: RegisterRequest): Response<RegisterResponse>
@@ -26,8 +33,62 @@ interface ApiService {
     @GET("/me")
     suspend fun getMe(): Response<MeResponse>
 
+    // ── Help Requests ────────────────────────────────────────────────────
+
+    @GET("/help-requests/")
+    suspend fun getHelpRequests(
+        @Query("hub_id") hubId: Int? = null,
+        @Query("category") category: String? = null
+    ): Response<List<HelpRequestItem>>
+
+    @POST("/help-requests/")
+    suspend fun createHelpRequest(
+        @Body body: CreateHelpRequest
+    ): Response<HelpRequestDetail>
+
+    @GET("/help-requests/{id}/")
+    suspend fun getHelpRequestDetail(
+        @Path("id") id: Int
+    ): Response<HelpRequestDetail>
+
+    // ── Help Request Comments ────────────────────────────────────────────
+
+    @GET("/help-requests/{id}/comments/")
+    suspend fun getHelpRequestComments(
+        @Path("id") requestId: Int
+    ): Response<List<HelpRequestComment>>
+
+    @POST("/help-requests/{id}/comments/")
+    suspend fun createHelpRequestComment(
+        @Path("id") requestId: Int,
+        @Body body: CreateCommentRequest
+    ): Response<HelpRequestComment>
+
+    // ── Help Offers ──────────────────────────────────────────────────────
+
+    @GET("/help-offers/")
+    suspend fun getHelpOffers(
+        @Query("hub_id") hubId: Int? = null,
+        @Query("category") category: String? = null
+    ): Response<List<HelpOfferItem>>
+
+    @POST("/help-offers/")
+    suspend fun createHelpOffer(
+        @Body body: CreateHelpOffer
+    ): Response<HelpOfferItem>
+
+    /** Returns Response<ResponseBody?> to avoid Gson parsing the empty 204 body. */
+    @DELETE("/help-offers/{id}/")
+    suspend fun deleteHelpOffer(
+        @Path("id") id: Int
+    ): Response<ResponseBody?>
+
+    // ── Hubs ─────────────────────────────────────────────────────────────
+
     @GET("/hubs/")
     suspend fun getHubs(): Response<List<Hub>>
+
+    // ── Forum ────────────────────────────────────────────────────────────
 
     @GET("/forum/posts/")
     suspend fun getPosts(
@@ -51,7 +112,10 @@ interface ApiService {
     ): Response<Comment>
 
     @DELETE("/forum/comments/{id}/")
-    suspend fun deleteComment(@Path("id") id: Int): Response<Unit>
+    suspend fun deleteComment(@Path("id") id: Int): Response<ResponseBody>
+
+    @DELETE("/forum/posts/{id}/")
+    suspend fun deletePost(@Path("id") id: Int): Response<ResponseBody>
 
     @POST("/forum/posts/{postId}/vote/")
     suspend fun vote(
@@ -65,11 +129,20 @@ interface ApiService {
         @Body body: RepostRequest
     ): Response<Post>
 
+    @POST("/forum/posts/{postId}/report/")
+    suspend fun reportPost(
+        @Path("postId") postId: Int,
+        @Body body: ReportRequest
+    ): Response<ResponseBody>
+
     @Multipart
     @POST("/forum/upload/")
     suspend fun uploadImages(
         @Part images: List<MultipartBody.Part>
     ): Response<UploadImagesResponse>
+
+    @POST("/accounts/fcm-token/")
+    suspend fun updateFcmToken(@Body body: FcmTokenRequest): Response<Void>
 
     // ── Profile ─────────────────────────────────────────────────────────────────
 

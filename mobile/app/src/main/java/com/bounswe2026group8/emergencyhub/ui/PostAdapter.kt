@@ -26,7 +26,9 @@ class PostAdapter(
     private val currentUserId: Int? = null,
     private val isLoggedIn: Boolean = false,
     private val onVoteClick: ((postId: Int, voteType: String) -> Unit)? = null,
-    private val onRepostClick: ((postId: Int) -> Unit)? = null
+    private val onRepostClick: ((postId: Int) -> Unit)? = null,
+    private val onDeleteClick: ((postId: Int) -> Unit)? = null,
+    private val onPostClick: ((postId: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     fun submitList(newPosts: List<Post>) {
@@ -47,6 +49,14 @@ class PostAdapter(
         notifyItemInserted(0)
     }
 
+    fun removePost(postId: Int) {
+        val idx = posts.indexOfFirst { it.id == postId }
+        if (idx != -1) {
+            posts.removeAt(idx)
+            notifyItemRemoved(idx)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_post_card, parent, false)
@@ -54,7 +64,7 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(posts[position], currentUserId, isLoggedIn, onVoteClick, onRepostClick)
+        holder.bind(posts[position], currentUserId, isLoggedIn, onVoteClick, onRepostClick, onDeleteClick, onPostClick)
     }
 
     override fun getItemCount(): Int = posts.size
@@ -72,6 +82,7 @@ class PostAdapter(
         private val btnShare: TextView = itemView.findViewById(R.id.btnShare)
         private val btnRepost: TextView = itemView.findViewById(R.id.btnRepost)
         private val txtReposted: TextView = itemView.findViewById(R.id.txtReposted)
+        private val btnDeletePost: TextView = itemView.findViewById(R.id.btnDeletePost)
         private val imageContainer: LinearLayout = itemView.findViewById(R.id.imageContainer)
         private val imgThumb1: ImageView = itemView.findViewById(R.id.imgThumb1)
         private val imgThumb2: ImageView = itemView.findViewById(R.id.imgThumb2)
@@ -83,7 +94,9 @@ class PostAdapter(
             currentUserId: Int?,
             isLoggedIn: Boolean,
             onVoteClick: ((Int, String) -> Unit)?,
-            onRepostClick: ((Int) -> Unit)?
+            onRepostClick: ((Int) -> Unit)?,
+            onDeleteClick: ((Int) -> Unit)?,
+            onPostClick: ((Int) -> Unit)?
         ) {
             // Repost label
             if (post.repostedFrom != null) {
@@ -198,11 +211,22 @@ class PostAdapter(
                 txtReposted.visibility = View.GONE
             }
 
+            if (isLoggedIn && isAuthor && onDeleteClick != null) {
+                btnDeletePost.visibility = View.VISIBLE
+                btnDeletePost.setOnClickListener { onDeleteClick.invoke(post.id) }
+            } else {
+                btnDeletePost.visibility = View.GONE
+            }
+
             itemView.setOnClickListener {
-                val context = itemView.context
-                val intent = Intent(context, PostDetailActivity::class.java)
-                intent.putExtra("post_id", post.id)
-                context.startActivity(intent)
+                if (onPostClick != null) {
+                    onPostClick.invoke(post.id)
+                } else {
+                    val context = itemView.context
+                    val intent = Intent(context, PostDetailActivity::class.java)
+                    intent.putExtra("post_id", post.id)
+                    context.startActivity(intent)
+                }
             }
         }
 
