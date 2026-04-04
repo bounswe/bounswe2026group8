@@ -19,7 +19,7 @@ export default function DashboardPage() {
   const features = [
     { icon: '💬', title: 'Forum', desc: 'Community discussions', path: '/forum' },
     { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help', path: '/help-requests' },
-    { icon: '👤', title: 'Profile', desc: 'Manage your account', path: null },
+    { icon: '👤', title: 'Profile', desc: 'Manage your account', path: '/profile' },
     { icon: '📶', title: 'Offline Info', desc: 'Critical data access', path: null },
   ];
 

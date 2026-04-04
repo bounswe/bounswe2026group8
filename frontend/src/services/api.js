@@ -26,9 +26,15 @@ async function request(endpoint, options = {}) {
     headers,
   });
 
-  // 204 No Content — no body to parse.
+  // 204 No Content has no body — skip JSON parsing
+  if (response.status === 204) {
+    return { ok: true, status: 204, data: null };
+  }
+
+ // 204 No Content — no body to parse.
   const data = response.status === 204 ? null : await response.json();
   return { ok: response.ok, status: response.status, data };
+
 }
 
 /**
@@ -83,6 +89,67 @@ export function getMe() {
   return request('/me', {
     method: 'GET',
   });
+}
+
+export function getProfile() {
+  return request('/profile', {
+    method: 'GET',
+  });
+}
+
+export function updateProfile(payload) {
+  return request('/profile', {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+// --------------- Resources ---------------
+
+export function getResources() {
+  return request('/resources', { method: 'GET' });
+}
+
+export function createResource(payload) {
+  return request('/resources', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateResource(id, payload) {
+  return request(`/resources/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteResource(id) {
+  return request(`/resources/${id}`, { method: 'DELETE' });
+}
+
+// --------------- Expertise Fields (EXPERT only) ---------------
+
+export function getExpertiseFields() {
+  return request('/expertise', { method: 'GET' });
+}
+
+export function createExpertiseField(payload) {
+  return request('/expertise', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateExpertiseField(id, payload) {
+  return request(`/expertise/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteExpertiseField(id) {
+  return request(`/expertise/${id}`, { method: 'DELETE' });
 }
 
 export function updateMe(data) {
