@@ -251,6 +251,21 @@ class ExpertiseFieldDetailView(APIView):
 
 
 
+class UserPublicProfileView(APIView):
+    """
+    GET /users/{id}/
+    Returns a user's public profile. Authenticated users only.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
+
 class HubListView(APIView):
     """
     GET /hubs/
