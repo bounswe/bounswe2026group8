@@ -1,5 +1,6 @@
 package com.bounswe2026group8.emergencyhub.ui
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -111,6 +112,11 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
         btnSendComment.setOnClickListener { submitComment() }
 
+        // Delete request button — shown only after displayDetail() confirms authorship
+        findViewById<MaterialButton>(R.id.btnDeleteRequest).setOnClickListener {
+            confirmDeleteRequest()
+        }
+
         fetchDetail()
         fetchComments()
     }
@@ -157,7 +163,12 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        commentAdapter = HelpRequestCommentAdapter(emptyList())
+        val currentUserId = tokenManager.getUser()?.id
+        commentAdapter = HelpRequestCommentAdapter(
+            items = emptyList(),
+            currentUserId = currentUserId,
+            onDeleteClick = { comment -> confirmDeleteComment(comment.id) },
+        )
         recyclerComments.layoutManager = LinearLayoutManager(this)
         recyclerComments.isNestedScrollingEnabled = false
         recyclerComments.adapter = commentAdapter
@@ -277,6 +288,11 @@ class HelpRequestDetailActivity : AppCompatActivity() {
 
         // Comments header count
         txtCommentsHeader.text = getString(R.string.comments_count_label, detail.commentCount)
+
+        // Show delete button to the request author only
+        val currentUserId = tokenManager.getUser()?.id
+        val btnDelete = findViewById<MaterialButton>(R.id.btnDeleteRequest)
+        btnDelete.visibility = if (currentUserId == detail.author.id) View.VISIBLE else View.GONE
     }
 
     private fun setupMap(lat: Double, lng: Double) {
@@ -336,6 +352,67 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     // ── Submit comment ───────────────────────────────────────────────────
+
+    // ── Delete request ───────────────────────────────────────────────────
+
+    /** Shows a confirmation dialog then deletes the help request. */
+    private fun confirmDeleteRequest() {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Help Request")
+            .setMessage("Are you sure you want to delete this help request? This cannot be undone.")
+            .setPositiveButton("Delete") { _, _ -> deleteRequest() }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteRequest() {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
+                    .deleteHelpRequest(requestId)
+                if (response.isSuccessful || response.code() == 204) {
+                    Toast.makeText(this@HelpRequestDetailActivity, "Help request deleted.", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else if (response.code() == 403) {
+                    Toast.makeText(this@HelpRequestDetailActivity, "You can only delete your own requests.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to delete request.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (_: Exception) {
+                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // ── Delete comment ───────────────────────────────────────────────────
+
+    /** Shows a confirmation dialog then deletes the comment and updates the UI. */
+    private fun confirmDeleteComment(commentId: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Comment")
+            .setMessage("Are you sure you want to delete this comment?")
+            .setPositiveButton("Delete") { _, _ -> deleteComment(commentId) }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteComment(commentId: Int) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
+                    .deleteHelpRequestComment(commentId)
+                if (response.isSuccessful || response.code() == 204) {
+                    // Re-fetch both comments and detail so the list and count update immediately
+                    fetchComments()
+                    fetchDetail()
+                } else {
+                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to delete comment.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (_: Exception) {
+                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private fun submitComment() {
         val content = inputComment.text.toString().trim()

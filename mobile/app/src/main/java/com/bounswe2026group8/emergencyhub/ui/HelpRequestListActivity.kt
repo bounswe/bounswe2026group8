@@ -154,12 +154,13 @@ class HelpRequestListActivity : AppCompatActivity() {
         hubSelectorHelper.load()
     }
 
-    /** Re-fetch on resume so lists update after creating a new item. */
+    /** Re-fetch on resume so lists update after creating or deleting an item. */
     override fun onResume() {
         super.onResume()
         if (::hubSelectorHelper.isInitialized) {
             hubSelectorHelper.load()
         }
+        if (activeTab == "requests") fetchHelpRequests() else fetchHelpOffers()
     }
 
     // ── Tab switching ────────────────────────────────────────────────────

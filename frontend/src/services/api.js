@@ -256,6 +256,16 @@ export function deleteHelpOffer(id) {
   return request(`/help-offers/${id}/`, { method: 'DELETE' });
 }
 
+/** DELETE /help-requests/{id}/ — delete a help request (author only). */
+export function deleteHelpRequest(id) {
+  return request(`/help-requests/${id}/`, { method: 'DELETE' });
+}
+
+/** DELETE /help-requests/comments/{id}/ — delete a help request comment (author only). */
+export function deleteHelpComment(commentId) {
+  return request(`/help-requests/comments/${commentId}/`, { method: 'DELETE' });
+}
+
 // ── Forum ─────────────────────────────────────────────────────────────────────
 
 export function getPosts({ hub, forumType, author } = {}) {

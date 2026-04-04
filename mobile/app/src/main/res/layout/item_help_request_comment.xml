@@ -69,6 +69,17 @@
         android:lineSpacingExtra="2dp"
         android:layout_marginTop="6dp" />
 
+    <!-- Delete button — only shown to the comment author -->
+    <TextView
+        android:id="@+id/btnDeleteComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:textColor="@color/urgency_high"
+        android:textSize="12sp"
+        android:layout_marginTop="4dp"
+        android:visibility="gone" />
+
     <!-- Bottom divider -->
     <View
         android:layout_width="match_parent"

@@ -857,6 +857,9 @@ select {
 .post-owner-actions {
   display: flex;
   gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.25rem;
 }
 
 .btn-danger {
@@ -1214,7 +1217,6 @@ textarea:focus {
 }
 
 .comment-delete {
-  margin-left: auto;
   background: none;
   border: none;
   color: var(--text-muted);
@@ -1557,7 +1559,6 @@ textarea:focus {
 }
 
 .help-detail-resolve-btn {
-  margin-top: 1.25rem;
 }
 
 .help-detail-location-text {
@@ -1611,8 +1612,14 @@ textarea:focus {
 
 .help-detail-comment-date {
   color: var(--text-muted);
-  margin-left: auto;
   font-weight: 400;
+}
+
+.comment-right-group {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .help-detail-comment p {
