@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { getPosts, vote, repost, resolveImageUrl } from '../services/api';
-import { useHub } from '../context/HubContext';
 import { useAuth } from '../context/AuthContext';
 
 function timeAgo(dateStr) {
@@ -28,8 +27,8 @@ const FORUM_TABS = ['GLOBAL', 'STANDARD', 'URGENT'];
 export default function ForumPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { selectedHub } = useHub();
   const { user, isAuthenticated } = useAuth();
+  const selectedHub = user?.hub;
 
   const [tab, setTab] = useState(() => {
     const s = location.state?.forumTab;
@@ -80,7 +79,7 @@ export default function ForumPage() {
       if (ok) setPosts(data);
       setLoading(false);
     });
-  }, [selectedHub, tab]);
+  }, [user, tab]);
 
   useEffect(() => {
     if (!loading && scrollRef.current) {

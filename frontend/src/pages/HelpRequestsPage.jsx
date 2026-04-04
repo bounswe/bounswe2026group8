@@ -66,6 +66,7 @@ function formatDate(isoString) {
 
 export default function HelpRequestsPage() {
   const { user } = useAuth();
+  const selectedHub = user?.hub;
   const navigate = useNavigate();
 
   /* ── Tab state — "requests" or "offers" ─────────────────────────────────── */
@@ -106,7 +107,7 @@ export default function HelpRequestsPage() {
     setReqError('');
 
     const params = {};
-    if (user.hub?.id) params.hub_id = user.hub.id;
+    if (selectedHub?.id) params.hub_id = selectedHub.id;
     if (category) params.category = category;
 
     getHelpRequests(params)
@@ -126,7 +127,7 @@ export default function HelpRequestsPage() {
     setOffError('');
 
     const params = {};
-    if (user.hub?.id) params.hub_id = user.hub.id;
+    if (selectedHub?.id) params.hub_id = selectedHub.id;
     if (category) params.category = category;
 
     getHelpOffers(params)
@@ -259,9 +260,9 @@ export default function HelpRequestsPage() {
       </div>
 
       {/* Hub context */}
-      {user.hub && (
+      {selectedHub && (
         <p className="help-requests-hub">
-          Showing {activeTab} for <strong>{user.hub.name}</strong>
+          Showing {activeTab} for <strong>{selectedHub.name}</strong>
         </p>
       )}
 

@@ -6,7 +6,6 @@ import {
   vote, reportPost, repost, uploadImages, resolveImageUrl,
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { useHub } from '../context/HubContext';
 
 function timeAgo(dateStr) {
   const seconds = Math.floor((Date.now() - new Date(dateStr)) / 1000);
@@ -23,7 +22,7 @@ export default function PostDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
-  const { selectedHub } = useHub();
+  const selectedHub = user?.hub;
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
