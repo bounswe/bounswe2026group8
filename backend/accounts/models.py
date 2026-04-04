@@ -158,7 +158,7 @@ class ExpertiseField(models.Model):
         choices=CertificationLevel.choices,
         default=CertificationLevel.BEGINNER,
     )
-    certification_document_url = models.URLField(blank=True, null=True)
+    certification_document_url = models.CharField(max_length=500, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

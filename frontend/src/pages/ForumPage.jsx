@@ -3,6 +3,16 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { getPosts, vote, repost, resolveImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
+const STATUS_COLORS = { SAFE: '#34d399', NEEDS_HELP: '#f87171', AVAILABLE_TO_HELP: '#38bdf8' };
+const STATUS_LABELS = { SAFE: 'Safe', NEEDS_HELP: 'Needs Help', AVAILABLE_TO_HELP: 'Available' };
+
+function AuthorStatus({ profile }) {
+  const s = profile?.availability_status;
+  if (!s || !STATUS_COLORS[s]) return null;
+  const c = STATUS_COLORS[s];
+  return <span className="badge" style={{ color: c, borderColor: c + '44', background: c + '11', fontSize: '0.7rem', padding: '1px 6px' }}>● {STATUS_LABELS[s]}</span>;
+}
+
 function timeAgo(dateStr) {
   const seconds = Math.floor((Date.now() - new Date(dateStr)) / 1000);
   if (seconds < 60) return 'just now';
@@ -252,6 +262,8 @@ export default function ForumPage() {
                 )}
                 <div className="post-card-meta">
                   <span className="post-card-author">{post.author.full_name}</span>
+                  {post.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+                  <AuthorStatus profile={post.author.profile} />
                   <span className="post-card-dot">&middot;</span>
                   <span className="post-card-time">{timeAgo(post.created_at)}</span>
                 </div>

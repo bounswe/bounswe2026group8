@@ -15,6 +15,8 @@ export default function DashboardPage() {
   if (!user) return null; // guarded by ProtectedRoute, but just in case
 
   const roleLabel = user.role === 'EXPERT' ? '🎓 Expert' : '👤 Standard';
+  const statusLabels = { SAFE: { label: 'Safe', color: '#34d399' }, NEEDS_HELP: { label: 'Needs Help', color: '#f87171' }, AVAILABLE_TO_HELP: { label: 'Available to Help', color: '#38bdf8' } };
+  const avail = statusLabels[user.profile?.availability_status] || statusLabels.SAFE;
 
   const features = [
     { icon: '💬', title: 'Forum', desc: 'Community discussions', path: '/forum' },
@@ -36,6 +38,9 @@ export default function DashboardPage() {
         <h1>Welcome, {user.full_name}!</h1>
         <div className="welcome-meta">
           <span className="badge">{roleLabel}</span>
+          <span className="badge" style={{ color: avail.color, borderColor: avail.color + '44', background: avail.color + '11' }}>
+            ● {avail.label}
+          </span>
           {user.expertise_field && (
             <span className="badge badge-accent">
               {user.expertise_field}

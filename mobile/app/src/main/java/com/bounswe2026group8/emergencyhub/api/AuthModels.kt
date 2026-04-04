@@ -55,5 +55,9 @@ data class LogoutResponse(
     val message: String
 )
 
+data class UpdateMeRequest(
+    @SerializedName("hub_id") val hubId: Int
+)
+
 /** /me returns user data directly (no wrapper) */
 typealias MeResponse = UserData
