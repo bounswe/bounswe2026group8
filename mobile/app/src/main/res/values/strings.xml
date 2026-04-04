@@ -116,6 +116,10 @@
     <string name="hub_city">Hub (City)</string>
     <string name="select_hub">Select a hub</string>
 
+    <!-- Notification Preferences -->
+    <string name="notification_preferences">Notification Preferences</string>
+    <string name="help_request_notifications">Help Request Notifications</string>
+
     <!-- Forum -->
     <string name="forum_title">Forum</string>
     <string name="forum_hub_all">All hubs — everyone</string>
