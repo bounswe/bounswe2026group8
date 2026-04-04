@@ -60,3 +60,4 @@ backend/firebase-credentials.json
 .env
 .env.local
 .env.*.local
+backend/emergencyhub-b470b-firebase-adminsdk-fbsvc-c8c7a20e37.json

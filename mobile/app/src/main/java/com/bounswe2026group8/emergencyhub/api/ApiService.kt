@@ -162,4 +162,34 @@ interface ApiService {
 
     @POST("/accounts/fcm-token/")
     suspend fun updateFcmToken(@Body body: FcmTokenRequest): Response<Void>
+
+    // ── Profile ─────────────────────────────────────────────────────────────────
+
+    @GET("/profile")
+    suspend fun getProfile(): Response<ProfileData>
+
+    @PATCH("/profile")
+    suspend fun updateProfile(@Body body: ProfileUpdateRequest): Response<ProfileData>
+
+    // ── Resources ───────────────────────────────────────────────────────────────
+
+    @GET("/resources")
+    suspend fun getResources(): Response<List<ResourceData>>
+
+    @POST("/resources")
+    suspend fun createResource(@Body body: ResourceCreateRequest): Response<ResourceData>
+
+    @DELETE("/resources/{id}")
+    suspend fun deleteResource(@Path("id") id: Int): Response<Unit>
+
+    // ── Expertise Fields ────────────────────────────────────────────────────────
+
+    @GET("/expertise")
+    suspend fun getExpertiseFields(): Response<List<ExpertiseFieldData>>
+
+    @POST("/expertise")
+    suspend fun createExpertiseField(@Body body: ExpertiseFieldCreateRequest): Response<ExpertiseFieldData>
+
+    @DELETE("/expertise/{id}")
+    suspend fun deleteExpertiseField(@Path("id") id: Int): Response<Unit>
 }
