@@ -63,7 +63,11 @@ class HelpRequestListCreateView(APIView):
         serializer = HelpRequestCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         # Author is always the authenticated user, never from client input.
-        help_request = serializer.save(author=request.user)
+        # Auto-assign the user's hub if not explicitly provided.
+        extra = {'author': request.user}
+        if 'hub' not in request.data and request.user.hub_id:
+            extra['hub'] = request.user.hub
+        help_request = serializer.save(**extra)
         return Response(
             HelpRequestDetailSerializer(help_request, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
@@ -229,7 +233,11 @@ class HelpOfferListCreateView(APIView):
         serializer = HelpOfferCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         # Author is always the authenticated user, never from client input.
-        offer = serializer.save(author=request.user)
+        # Auto-assign the user's hub if not explicitly provided.
+        extra = {'author': request.user}
+        if 'hub' not in request.data and request.user.hub_id:
+            extra['hub'] = request.user.hub
+        offer = serializer.save(**extra)
         return Response(
             HelpOfferSerializer(offer, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
