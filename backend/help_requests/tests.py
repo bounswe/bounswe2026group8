@@ -1,19 +1,21 @@
 """
 Tests for the help_requests app.
 
-Covers all acceptance criteria from issues #120-#123:
+Covers all acceptance criteria from issues #120-#124:
   - Help request CRUD with permission enforcement
   - Comment list/create with comment_count sync
   - Auto status update to EXPERT_RESPONDING on expert comment
   - Status not overwritten when already RESOLVED
   - Help offer CRUD with permission checks
   - Unauthenticated access returns 401
+  - FCM notifications sent to hub experts on help request creation
   - Image upload endpoint validation and auth
 """
 
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from django.core.files.uploadedfile import SimpleUploadedFile
+
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -475,6 +477,150 @@ class HelpOfferTests(HelpTestBase):
         pk = self._create_help_offer().data['id']
         res = self.anon.delete(f'/help-offers/{pk}/')
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+# ── FCM Notification Tests ───────────────────────────────────────────────────
+
+class HelpRequestNotificationTests(HelpTestBase):
+    """
+    Tests for send_help_request_notification (issue #124).
+
+    Firebase is mocked so tests run without real credentials.
+    Each test patches firebase_admin._apps to simulate an initialised app,
+    and patches messaging.send_each_for_multicast to capture FCM calls.
+    """
+
+    def _setup_expert_with_token(self, email, token, hub=None):
+        """Create an expert user with an FCM token."""
+        user = User.objects.create_user(
+            email=email, full_name=email.split('@')[0],
+            password='Pass1234', hub=hub or self.hub, role=User.Role.EXPERT,
+        )
+        user.fcm_token = token
+        user.save(update_fields=['fcm_token'])
+        return user
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_notification_sent_to_hub_experts(self, mock_send):
+        """Experts in the same hub receive a notification when a help request is created."""
+        mock_send.return_value = MagicMock(failure_count=0)
+        self._setup_expert_with_token('exp1@test.com', 'token-1')
+        self._setup_expert_with_token('exp2@test.com', 'token-2')
+
+        res = self._create_help_request()
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        mock_send.assert_called_once()
+        message = mock_send.call_args[0][0]
+        self.assertCountEqual(message.tokens, ['token-1', 'token-2'])
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_author_excluded_from_notification(self, mock_send):
+        """The request author does not receive a notification, even if they are an expert."""
+        mock_send.return_value = MagicMock(failure_count=0)
+        # Make the standard_user an expert with a token.
+        self.standard_user.role = User.Role.EXPERT
+        self.standard_user.fcm_token = 'author-token'
+        self.standard_user.save(update_fields=['role', 'fcm_token'])
+
+        other = self._setup_expert_with_token('other@test.com', 'other-token')
+
+        res = self._create_help_request()
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        mock_send.assert_called_once()
+        tokens = mock_send.call_args[0][0].tokens
+        self.assertNotIn('author-token', tokens)
+        self.assertIn('other-token', tokens)
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_experts_in_other_hub_not_notified(self, mock_send):
+        """Experts in a different hub do not receive a notification."""
+        mock_send.return_value = MagicMock(failure_count=0)
+        other_hub, _ = Hub.objects.get_or_create(name='Ankara', defaults={'slug': 'ankara'})
+        self._setup_expert_with_token('same@test.com', 'same-hub-token', hub=self.hub)
+        self._setup_expert_with_token('diff@test.com', 'diff-hub-token', hub=other_hub)
+
+        self._create_help_request()
+
+        mock_send.assert_called_once()
+        tokens = mock_send.call_args[0][0].tokens
+        self.assertIn('same-hub-token', tokens)
+        self.assertNotIn('diff-hub-token', tokens)
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_no_notification_without_hub(self, mock_send):
+        """Help requests without a hub skip notifications entirely."""
+        self._setup_expert_with_token('exp@test.com', 'token-1')
+
+        res = self._create_help_request(hub=None)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        mock_send.assert_not_called()
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_standard_users_not_notified(self, mock_send):
+        """Standard (non-expert) users with FCM tokens do not receive notifications."""
+        mock_send.return_value = MagicMock(failure_count=0)
+        # standard_user already exists in setUp with role=STANDARD
+        self.standard_user.fcm_token = 'standard-token'
+        self.standard_user.save(update_fields=['fcm_token'])
+
+        expert = self._setup_expert_with_token('exp@test.com', 'expert-token')
+
+        # Create as expert so standard_user isn't the author.
+        res = self._create_help_request(client=self.expert_client)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        mock_send.assert_called_once()
+        tokens = mock_send.call_args[0][0].tokens
+        self.assertNotIn('standard-token', tokens)
+        self.assertIn('expert-token', tokens)
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_no_fcm_call_when_no_expert_tokens(self, mock_send):
+        """If no experts have FCM tokens, send_each_for_multicast is not called."""
+        # expert_user from setUp has no fcm_token by default.
+        res = self._create_help_request()
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        mock_send.assert_not_called()
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_notification_payload_contains_request_details(self, mock_send):
+        """Notification data payload includes request_id, title, category, and urgency."""
+        mock_send.return_value = MagicMock(failure_count=0)
+        self._setup_expert_with_token('exp@test.com', 'token-1')
+
+        res = self._create_help_request(
+            title='Injured person', category='MEDICAL', urgency='HIGH',
+        )
+        request_id = res.data['id']
+
+        data = mock_send.call_args[0][0].data
+        self.assertEqual(data['type'], 'help_request')
+        self.assertEqual(data['request_id'], str(request_id))
+        self.assertIn('Injured person', data['title'])
+        self.assertIn('Medical', data['body'])
+        self.assertIn('High', data['body'])
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_fcm_failure_does_not_break_create(self, mock_send):
+        """If FCM raises an exception, the help request is still created successfully."""
+        mock_send.side_effect = Exception('FCM unavailable')
+        self._setup_expert_with_token('exp@test.com', 'token-1')
+
+        res = self._create_help_request()
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(HelpRequest.objects.filter(pk=res.data['id']).exists())
 
 
 # ── Image Upload Tests ────────────────────────────────────────────────────────

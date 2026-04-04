@@ -33,6 +33,7 @@ from .serializers import (
     HelpOfferSerializer,
     HelpOfferCreateSerializer,
 )
+from .notifications import send_help_request_notification
 from .services import update_status_on_expert_comment
 
 
@@ -72,6 +73,7 @@ class HelpRequestListCreateView(APIView):
         if 'hub' not in request.data and request.user.hub_id:
             extra['hub'] = request.user.hub
         help_request = serializer.save(**extra)
+        send_help_request_notification(help_request)
         return Response(
             HelpRequestDetailSerializer(help_request, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
