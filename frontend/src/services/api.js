@@ -152,6 +152,10 @@ export function deleteExpertiseField(id) {
   return request(`/expertise/${id}`, { method: 'DELETE' });
 }
 
+export function getUserProfile(id) {
+  return request(`/users/${id}/`, { method: 'GET' });
+}
+
 export function updateMe(data) {
   return request('/me', {
     method: 'PATCH',

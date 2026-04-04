@@ -87,7 +87,7 @@ export default function PostCreatePage() {
     setSubmitting(false);
 
     if (ok) {
-      navigate('/forum', { state: { forumTab: forumType } });
+      navigate(`/forum?tab=${forumType}`);
     } else {
       const msg = data?.detail || data?.title?.[0] || data?.content?.[0] || 'Failed to create post.';
       setError(msg);
@@ -192,7 +192,7 @@ export default function PostCreatePage() {
         </form>
 
         <p className="auth-footer">
-          <Link to="/forum" state={{ forumTab: forumType }} className="link">&larr; Back to Forum</Link>
+          <Link to={`/forum?tab=${forumType}`} className="link">&larr; Back to Forum</Link>
         </p>
       </div>
     </div>
