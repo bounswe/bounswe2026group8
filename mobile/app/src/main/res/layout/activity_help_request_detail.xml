@@ -47,6 +47,16 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+                <!-- Delete button — shown only to the request author -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDeleteRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Delete"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    style="@style/Widget.EmergencyHub.Button.Secondary" />
+
             </LinearLayout>
 
             <!-- ── Detail card ─────────────────────────────────────────── -->

@@ -23,7 +23,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 from accounts.models import User
-from .models import HelpRequest, HelpOffer
+from .models import HelpRequest, HelpComment, HelpOffer
 from .serializers import (
     HelpRequestListSerializer,
     HelpRequestDetailSerializer,
@@ -204,6 +204,31 @@ class HelpCommentListCreateView(APIView):
                 update_status_on_expert_comment(help_request)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class HelpCommentDeleteView(APIView):
+    """
+    DELETE /help-requests/comments/{pk}/ — delete a comment (author only).
+
+    Decrements comment_count on the parent HelpRequest atomically so the
+    denormalised counter stays in sync, matching the increment in HelpCommentListCreateView.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        comment = get_object_or_404(HelpComment, pk=pk)
+        if comment.author != request.user:
+            return Response(
+                {'detail': 'You can only delete your own comments.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        with transaction.atomic():
+            # Keep comment_count in sync using F() to avoid race conditions.
+            HelpRequest.objects.filter(pk=comment.request_id).update(
+                comment_count=F('comment_count') - 1,
+            )
+            comment.delete()
+        return Response({'detail': 'Comment deleted.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 # ── Help Offers ────────────────────────────────────────────────────────────────
