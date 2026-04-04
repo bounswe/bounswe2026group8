@@ -111,7 +111,10 @@ interface ApiService {
     ): Response<Comment>
 
     @DELETE("/forum/comments/{id}/")
-    suspend fun deleteComment(@Path("id") id: Int): Response<Unit>
+    suspend fun deleteComment(@Path("id") id: Int): Response<ResponseBody>
+
+    @DELETE("/forum/posts/{id}/")
+    suspend fun deletePost(@Path("id") id: Int): Response<ResponseBody>
 
     @POST("/forum/posts/{postId}/vote/")
     suspend fun vote(
@@ -125,9 +128,18 @@ interface ApiService {
         @Body body: RepostRequest
     ): Response<Post>
 
+    @POST("/forum/posts/{postId}/report/")
+    suspend fun reportPost(
+        @Path("postId") postId: Int,
+        @Body body: ReportRequest
+    ): Response<ResponseBody>
+
     @Multipart
     @POST("/forum/upload/")
     suspend fun uploadImages(
         @Part images: List<MultipartBody.Part>
     ): Response<UploadImagesResponse>
+
+    @POST("/accounts/fcm-token/")
+    suspend fun updateFcmToken(@Body body: FcmTokenRequest): Response<Void>
 }

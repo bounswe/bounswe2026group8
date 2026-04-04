@@ -2,11 +2,14 @@
 Django settings for backend project.
 Neighborhood Emergency Preparedness Hub — Auth Backend
 """
-
 from pathlib import Path
 from datetime import timedelta
 
+import firebase_admin
+from firebase_admin import credentials
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # SECURITY WARNING: This key is for local development only.
 # Before deploying to production, set SECRET_KEY via an environment variable:
@@ -118,3 +121,11 @@ FORUM_REPORT_HIDE_THRESHOLD = 5
 # Allow all origins for Milestone 1 dev convenience.
 # Restrict to specific origins before production.
 CORS_ALLOW_ALL_ORIGINS = True
+
+# ── Firebase Cloud Messaging ──────────────────────────────────────────────────
+
+
+_firebase_cred_path = BASE_DIR / 'firebase-credentials.json'
+if _firebase_cred_path.exists() and not firebase_admin._apps:
+    _cred = credentials.Certificate(str(_firebase_cred_path))
+    firebase_admin.initialize_app(_cred)

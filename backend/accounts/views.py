@@ -83,6 +83,25 @@ class MeView(APIView):
         return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
 
 
+class FCMTokenView(APIView):
+    """
+    POST /accounts/fcm-token/
+    Saves the device's FCM token for push notifications.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        token = request.data.get('fcm_token')
+        if not token:
+            return Response(
+                {'detail': 'fcm_token is required.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        request.user.fcm_token = token
+        request.user.save(update_fields=['fcm_token'])
+        return Response({'detail': 'FCM token saved.'}, status=status.HTTP_200_OK)
+
+
 class HubListView(APIView):
     """
     GET /hubs/
