@@ -302,7 +302,7 @@ export default function PostDetailPage() {
             <h1 className="post-title">{post.title}</h1>
 
             <div className="post-meta">
-              <span>{post.author.full_name}</span>
+              <Link to={`/users/${post.author.id}`} className="author-link">{post.author.full_name}</Link>
               {post.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
               <AuthorStatus profile={post.author.profile} />
               <span className="post-card-dot">&middot;</span>
@@ -449,7 +449,7 @@ export default function PostDetailPage() {
             {comments.map((c) => (
               <div className="comment-card" key={c.id}>
                 <div className="comment-header">
-                  <span className="comment-author">{c.author.full_name}</span>
+                  <Link to={`/users/${c.author.id}`} className="comment-author author-link">{c.author.full_name}</Link>
                   {c.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
                   <AuthorStatus profile={c.author.profile} />
                   <span className="post-card-dot">&middot;</span>

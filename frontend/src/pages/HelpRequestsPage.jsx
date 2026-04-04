@@ -10,7 +10,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   getHelpRequests,
@@ -333,7 +333,7 @@ export default function HelpRequestsPage() {
                   </div>
 
                   <div className="help-request-card-footer">
-                    <span className="help-request-card-author">{req.author.full_name}</span>
+                    <Link to={`/users/${req.author.id}`} className="help-request-card-author author-link" onClick={(e) => e.stopPropagation()}>{req.author.full_name}</Link>
                     {req.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
                     <AuthorStatus profile={req.author.profile} />
                     <span>{formatDate(req.created_at)}</span>
@@ -474,7 +474,7 @@ export default function HelpRequestsPage() {
                   <p className="help-offer-card-desc">{offer.description}</p>
 
                   <div className="help-offer-card-footer">
-                    <span className="help-request-card-author">{offer.author.full_name}</span>
+                    <Link to={`/users/${offer.author.id}`} className="help-request-card-author author-link" onClick={(e) => e.stopPropagation()}>{offer.author.full_name}</Link>
                     {offer.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
                     <AuthorStatus profile={offer.author.profile} />
                     <span className="help-offer-card-avail">{offer.availability}</span>

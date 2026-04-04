@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus, resolveImageUrl } from '../services/api';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
@@ -188,7 +188,7 @@ export default function HelpRequestDetailPage() {
         )}
 
         <div className="help-detail-meta">
-          <span>By <strong>{helpRequest.author.full_name}</strong></span>
+          <span>By <Link to={`/users/${helpRequest.author.id}`} className="author-link"><strong>{helpRequest.author.full_name}</strong></Link></span>
           {helpRequest.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
           <AuthorStatus profile={helpRequest.author.profile} />
           {helpRequest.hub_name && <span>Hub: {helpRequest.hub_name}</span>}
@@ -248,7 +248,7 @@ export default function HelpRequestDetailPage() {
             {comments.map((c) => (
               <div className="help-detail-comment" key={c.id}>
                 <div className="help-detail-comment-header">
-                  <strong>{c.author.full_name}</strong>
+                  <Link to={`/users/${c.author.id}`} className="author-link"><strong>{c.author.full_name}</strong></Link>
                   {c.author.role === 'EXPERT' && (
                     <span className="badge badge-expert-responding">Expert</span>
                   )}
