@@ -8,7 +8,7 @@ import com.google.gson.Gson
 class HubManager(context: Context) {
 
     private val prefs: SharedPreferences =
-        context.getSharedPreferences("emergency_hub_prefs", Context.MODE_PRIVATE)
+        context.getSharedPreferences("emergency_hub_selection", Context.MODE_PRIVATE)
 
     private val gson = Gson()
 

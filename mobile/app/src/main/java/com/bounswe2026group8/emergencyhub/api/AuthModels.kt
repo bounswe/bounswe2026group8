@@ -33,6 +33,7 @@ data class UserData(
     @SerializedName("full_name") val fullName: String,
     val email: String,
     val role: String,
+    val hub: Hub?,
     @SerializedName("neighborhood_address") val neighborhoodAddress: String?,
     @SerializedName("expertise_field") val expertiseField: String?
 )

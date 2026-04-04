@@ -1,3 +1,4 @@
+import logging
 import uuid
 from pathlib import Path
 
@@ -13,6 +14,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
+import firebase_admin
+from firebase_admin import messaging
+
+from accounts.models import User
+
 from .models import Post, Comment, Vote, Report
 from .serializers import (
     PostListSerializer,
@@ -23,6 +29,8 @@ from .serializers import (
     VoteSerializer,
     ReportSerializer,
 )
+
+logger = logging.getLogger(__name__)
 
 
 # ── Post CRUD ──────────────────────────────────────────────────────────────────
@@ -59,6 +67,10 @@ class PostListCreateView(APIView):
         serializer = PostCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         post = serializer.save(author=request.user)
+
+        if post.forum_type == Post.ForumType.URGENT:
+            _send_urgent_post_notification(post)
+
         return Response(
             PostDetailSerializer(post, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
@@ -110,7 +122,7 @@ class PostDetailView(APIView):
                     repost_count=F('repost_count') - 1,
                 )
             post.delete()
-        return Response({'detail': 'Post deleted.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # ── Comments ───────────────────────────────────────────────────────────────────
@@ -294,6 +306,45 @@ class RepostView(APIView):
             PostDetailSerializer(repost_obj, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
         )
+
+
+# ── FCM Notifications ─────────────────────────────────────────────────────────
+
+def _send_urgent_post_notification(post):
+    """Send a push notification to hub members (or all users for GLOBAL) when an urgent post is created."""
+    if not firebase_admin._apps:
+        return
+
+    # Determine target users: hub members or all users
+    users = User.objects.filter(is_active=True).exclude(fcm_token__isnull=True).exclude(fcm_token='')
+    if post.hub_id:
+        users = users.filter(hub_id=post.hub_id)
+    # Exclude the post author
+    tokens = list(users.exclude(pk=post.author_id).values_list('fcm_token', flat=True))
+
+    if not tokens:
+        return
+
+    data = {
+        'post_id': str(post.id),
+        'title': f'🚨 Urgent: {post.title}',
+        'body': (post.content[:200] + '…') if len(post.content) > 200 else post.content,
+    }
+
+    # FCM supports max 500 tokens per multicast
+    for i in range(0, len(tokens), 500):
+        batch = tokens[i:i + 500]
+        message = messaging.MulticastMessage(
+            data=data,
+            tokens=batch,
+            android=messaging.AndroidConfig(priority='high'),
+        )
+        try:
+            response = messaging.send_each_for_multicast(message)
+            if response.failure_count > 0:
+                logger.warning('FCM: %d/%d messages failed', response.failure_count, len(batch))
+        except Exception:
+            logger.exception('FCM: failed to send multicast')
 
 
 # ── Image Upload ──────────────────────────────────────────────────────────────

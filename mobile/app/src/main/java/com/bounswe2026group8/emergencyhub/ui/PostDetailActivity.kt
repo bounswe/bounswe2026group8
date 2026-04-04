@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.CreateCommentRequest
 import com.bounswe2026group8.emergencyhub.api.Post
+import com.bounswe2026group8.emergencyhub.api.ReportRequest
 import com.bounswe2026group8.emergencyhub.api.RepostRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.api.VoteRequest
@@ -178,7 +180,93 @@ class PostDetailActivity : AppCompatActivity() {
 
         updateVoteDisplay()
         updateShareRepostButtons(p)
+        updateDeleteButton(p)
+        updateReportButton(p)
         updateCommentsUI()
+    }
+
+    private fun updateDeleteButton(p: Post) {
+        val btnDelete = findViewById<TextView>(R.id.btnDeletePost)
+        val currentUserId = tokenManager.getUser()?.id
+        val isAuthor = currentUserId != null && currentUserId == p.author.id
+        if (tokenManager.isLoggedIn() && isAuthor) {
+            btnDelete.visibility = View.VISIBLE
+            btnDelete.setOnClickListener {
+                AlertDialog.Builder(this)
+                    .setTitle("Delete Post")
+                    .setMessage("Are you sure you want to delete this post? This action cannot be undone.")
+                    .setPositiveButton("Delete") { _, _ -> deletePost() }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+        } else {
+            btnDelete.visibility = View.GONE
+        }
+    }
+
+    private fun deletePost() {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@PostDetailActivity).deletePost(postId)
+                if (response.isSuccessful || response.code() == 204) {
+                    Toast.makeText(this@PostDetailActivity, "Post deleted", Toast.LENGTH_SHORT).show()
+                    val resultIntent = Intent().putExtra("deleted_post_id", postId)
+                    setResult(RESULT_OK, resultIntent)
+                    finish()
+                } else {
+                    Toast.makeText(this@PostDetailActivity, "Failed to delete post", Toast.LENGTH_SHORT).show()
+                }
+            } catch (_: Exception) {
+                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // ── Report ──────────────────────────────────────────────────────────────
+
+    private fun updateReportButton(p: Post) {
+        val btnReport = findViewById<TextView>(R.id.btnReportPost)
+        val currentUserId = tokenManager.getUser()?.id
+        val isAuthor = currentUserId != null && currentUserId == p.author.id
+        if (tokenManager.isLoggedIn() && !isAuthor) {
+            btnReport.visibility = View.VISIBLE
+            btnReport.setOnClickListener { showReportDialog() }
+        } else {
+            btnReport.visibility = View.GONE
+        }
+    }
+
+    private fun showReportDialog() {
+        val reasons = arrayOf("Spam", "Misinformation", "Abuse", "Irrelevant")
+        val reasonValues = arrayOf("SPAM", "MISINFORMATION", "ABUSE", "IRRELEVANT")
+        var selectedIndex = 0
+        AlertDialog.Builder(this)
+            .setTitle("Report this post")
+            .setSingleChoiceItems(reasons, 0) { _, which -> selectedIndex = which }
+            .setPositiveButton("Submit") { _, _ -> reportPost(reasonValues[selectedIndex]) }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun reportPost(reason: String) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@PostDetailActivity)
+                    .reportPost(postId, ReportRequest(reason))
+                if (response.isSuccessful) {
+                    Toast.makeText(this@PostDetailActivity, "Report submitted. Thank you.", Toast.LENGTH_SHORT).show()
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val message = if (errorBody?.contains("already reported") == true)
+                        "You have already reported this post."
+                    else
+                        "Could not submit report."
+                    Toast.makeText(this@PostDetailActivity, message, Toast.LENGTH_SHORT).show()
+                }
+            } catch (_: Exception) {
+                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     // ── Share & Repost ──────────────────────────────────────────────────────
@@ -377,6 +465,7 @@ class PostDetailActivity : AppCompatActivity() {
             try {
                 val response = RetrofitClient.getService(this@PostDetailActivity)
                     .deleteComment(commentId)
+                response.body()?.close()
 
                 if (response.isSuccessful || response.code() == 204) {
                     commentAdapter.removeComment(commentId)
