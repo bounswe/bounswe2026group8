@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   getProfile, updateProfile,
   getResources, createResource, updateResource, deleteResource,
   getExpertiseFields, createExpertiseField, updateExpertiseField, deleteExpertiseField,
+  uploadImages, resolveImageUrl,
 } from '../services/api';
 
 /* ── Chevron icon ───────────────────────────────────────────────────────────── */
@@ -174,7 +175,7 @@ const AVAILABILITY_LABELS = { SAFE: { label: 'Safe', color: '#34d399' }, NEEDS_H
    ProfilePage
    ═══════════════════════════════════════════════════════════════════════════════ */
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   const [profile, setProfile] = useState({
@@ -190,6 +191,8 @@ export default function ProfilePage() {
   const [expertiseFields, setExpertiseFields] = useState([]);
   const [newExpertise, setNewExpertise] = useState(EMPTY_EXPERTISE);
   const [showExpertiseForm, setShowExpertiseForm] = useState(false);
+  const [certUploading, setCertUploading] = useState(false);
+  const certFileRef = useRef(null);
 
   const [toast, setToast] = useState(null);
   const isExpert = user?.role === 'EXPERT';
@@ -211,20 +214,23 @@ export default function ProfilePage() {
   const onSaveField = async (field, value) => {
     setProfile((p) => ({ ...p, [field]: value }));
     const { ok, data } = await updateProfile({ [field]: value });
-    ok ? notify('Saved') : notify(data?.message || 'Update failed', 'error');
+    if (ok) { notify('Saved'); refreshUser(); }
+    else notify(data?.message || 'Update failed', 'error');
   };
 
   const onToggleField = async (field) => {
     const newVal = !profile[field];
     setProfile((p) => ({ ...p, [field]: newVal }));
     const { ok, data } = await updateProfile({ [field]: newVal });
-    ok ? notify('Saved') : notify(data?.message || 'Update failed', 'error');
+    if (ok) { notify('Saved'); refreshUser(); }
+    else notify(data?.message || 'Update failed', 'error');
   };
 
   const onSelectField = async (field, value) => {
     setProfile((p) => ({ ...p, [field]: value }));
     const { ok, data } = await updateProfile({ [field]: value });
-    ok ? notify('Saved') : notify(data?.message || 'Update failed', 'error');
+    if (ok) { notify('Saved'); refreshUser(); }
+    else notify(data?.message || 'Update failed', 'error');
   };
 
   /* Resources */
@@ -258,6 +264,21 @@ export default function ProfilePage() {
     if (ok) { setExpertiseFields((p) => p.filter((ef) => ef.id !== id)); notify('Expertise removed'); }
   };
 
+  const handleCertFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCertUploading(true);
+    const { ok, data } = await uploadImages([file]);
+    if (ok && data.urls?.length) {
+      setNewExpertise((p) => ({ ...p, certification_document_url: resolveImageUrl(data.urls[0]) }));
+      notify('File uploaded');
+    } else {
+      notify('Upload failed', 'error');
+    }
+    setCertUploading(false);
+    if (certFileRef.current) certFileRef.current.value = '';
+  };
+
   const statusMeta = AVAILABILITY_LABELS[profile.availability_status] || AVAILABILITY_LABELS.SAFE;
 
   return (
@@ -285,6 +306,15 @@ export default function ProfilePage() {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* ── My Posts ── */}
+      <div className="profile-section-card profile-my-posts-card" onClick={() => navigate('/my-posts')} role="link" style={{ cursor: 'pointer' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h4 className="profile-section-title" style={{ margin: 0 }}>My Posts</h4>
+          <span style={{ color: 'var(--accent)', fontSize: '1.2rem' }}>&rarr;</span>
+        </div>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.25rem' }}>View your forum posts, help requests, and help offers</p>
       </div>
 
       {/* ── Personal Info ── */}
@@ -415,8 +445,14 @@ export default function ProfilePage() {
                 </div>
               </div>
               <div className="form-group">
-                <label>Certificate URL <span className="optional-tag">(optional)</span></label>
-                <input placeholder="https://…" value={newExpertise.certification_document_url} onChange={(e) => setNewExpertise((p) => ({ ...p, certification_document_url: e.target.value }))} />
+                <label>Certificate <span className="optional-tag">(optional)</span></label>
+                <div className="cert-upload-row">
+                  <input placeholder="https://… or upload a file" value={newExpertise.certification_document_url} onChange={(e) => setNewExpertise((p) => ({ ...p, certification_document_url: e.target.value }))} />
+                  <input type="file" ref={certFileRef} accept="image/*,.pdf" onChange={handleCertFileUpload} style={{ display: 'none' }} />
+                  <button type="button" className="btn btn-secondary btn-sm" disabled={certUploading} onClick={() => certFileRef.current?.click()}>
+                    {certUploading ? 'Uploading…' : 'Upload'}
+                  </button>
+                </div>
               </div>
               <div className="form-check-row">
                 <button className="btn btn-primary btn-sm" type="submit">Save</button>

@@ -53,6 +53,11 @@ export function AuthProvider({ children }) {
     if (ok) setUser(data);
   };
 
+  const refreshUser = async () => {
+    const { ok, data } = await getMe();
+    if (ok) setUser(data);
+  };
+
   const value = {
     user,
     token,
@@ -62,6 +67,7 @@ export function AuthProvider({ children }) {
     loginUser,
     logoutUser,
     updateHub,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

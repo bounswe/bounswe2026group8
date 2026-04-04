@@ -33,6 +33,9 @@ interface ApiService {
     @GET("/me")
     suspend fun getMe(): Response<MeResponse>
 
+    @PATCH("/me")
+    suspend fun updateMe(@Body body: UpdateMeRequest): Response<MeResponse>
+
     // ── Help Requests ────────────────────────────────────────────────────
 
     @GET("/help-requests/")
@@ -138,6 +141,12 @@ interface ApiService {
     @Multipart
     @POST("/forum/upload/")
     suspend fun uploadImages(
+        @Part images: List<MultipartBody.Part>
+    ): Response<UploadImagesResponse>
+
+    @Multipart
+    @POST("/help-requests/upload/")
+    suspend fun uploadHelpRequestImages(
         @Part images: List<MultipartBody.Part>
     ): Response<UploadImagesResponse>
 

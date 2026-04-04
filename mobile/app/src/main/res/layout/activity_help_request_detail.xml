@@ -131,6 +131,22 @@
                         android:lineSpacingExtra="4dp"
                         android:layout_marginBottom="12dp" />
 
+                    <!-- Images (hidden when none) -->
+                    <HorizontalScrollView
+                        android:id="@+id/imageGalleryScroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:id="@+id/imageGallery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="140dp"
+                            android:orientation="horizontal" />
+
+                    </HorizontalScrollView>
+
                     <!-- Author + time -->
                     <LinearLayout
                         android:layout_width="match_parent"

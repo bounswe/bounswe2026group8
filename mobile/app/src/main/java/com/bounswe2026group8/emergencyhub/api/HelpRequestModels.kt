@@ -49,6 +49,7 @@ data class CreateHelpRequest(
     val urgency: String,
     val title: String,
     val description: String,
+    @SerializedName("image_urls") val imageUrls: List<String> = emptyList(),
     val latitude: String? = null,
     val longitude: String? = null,
     @SerializedName("location_text") val locationText: String? = null
@@ -64,6 +65,7 @@ data class HelpRequestDetail(
     val author: HelpRequestAuthor,
     val title: String,
     val description: String,
+    @SerializedName("image_urls") val imageUrls: List<String> = emptyList(),
     val latitude: String?,
     val longitude: String?,
     @SerializedName("location_text") val locationText: String?,

@@ -152,6 +152,10 @@ export function deleteExpertiseField(id) {
   return request(`/expertise/${id}`, { method: 'DELETE' });
 }
 
+export function getUserProfile(id) {
+  return request(`/users/${id}/`, { method: 'GET' });
+}
+
 export function updateMe(data) {
   return request('/me', {
     method: 'PATCH',
@@ -185,6 +189,7 @@ export function getHelpRequests(params = {}) {
   const query = new URLSearchParams();
   if (params.hub_id) query.append('hub_id', params.hub_id);
   if (params.category) query.append('category', params.category);
+  if (params.author) query.append('author', params.author);
   const qs = query.toString();
   return request(`/help-requests/${qs ? `?${qs}` : ''}`, {
     method: 'GET',
@@ -233,6 +238,7 @@ export function getHelpOffers(params = {}) {
   const query = new URLSearchParams();
   if (params.hub_id) query.append('hub_id', params.hub_id);
   if (params.category) query.append('category', params.category);
+  if (params.author) query.append('author', params.author);
   const qs = query.toString();
   return request(`/help-offers/${qs ? `?${qs}` : ''}`, { method: 'GET' });
 }
@@ -252,10 +258,11 @@ export function deleteHelpOffer(id) {
 
 // ── Forum ─────────────────────────────────────────────────────────────────────
 
-export function getPosts({ hub, forumType } = {}) {
+export function getPosts({ hub, forumType, author } = {}) {
   const params = new URLSearchParams();
   if (hub) params.set('hub', hub);
   if (forumType) params.set('forum_type', forumType);
+  if (author) params.set('author', author);
   const qs = params.toString();
   return request(`/forum/posts/${qs ? `?${qs}` : ''}`, { method: 'GET' });
 }

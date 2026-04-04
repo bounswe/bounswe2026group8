@@ -33,6 +33,7 @@ from .serializers import (
     HelpOfferSerializer,
     HelpOfferCreateSerializer,
 )
+from .notifications import send_help_request_notification
 from .services import update_status_on_expert_comment
 
 
@@ -45,6 +46,10 @@ class HelpRequestListCreateView(APIView):
 
     def get(self, request):
         qs = HelpRequest.objects.all()
+
+        author_id = request.query_params.get('author')
+        if author_id:
+            qs = qs.filter(author_id=author_id)
 
         # Filter by hub if provided (e.g. ?hub_id=3).
         hub_id = request.query_params.get('hub_id')
@@ -68,6 +73,7 @@ class HelpRequestListCreateView(APIView):
         if 'hub' not in request.data and request.user.hub_id:
             extra['hub'] = request.user.hub
         help_request = serializer.save(**extra)
+        send_help_request_notification(help_request)
         return Response(
             HelpRequestDetailSerializer(help_request, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
@@ -215,6 +221,10 @@ class HelpOfferListCreateView(APIView):
 
     def get(self, request):
         qs = HelpOffer.objects.all()
+
+        author_id = request.query_params.get('author')
+        if author_id:
+            qs = qs.filter(author_id=author_id)
 
         # Filter by hub if provided (e.g. ?hub_id=3).
         hub_id = request.query_params.get('hub_id')

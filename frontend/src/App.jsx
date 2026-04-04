@@ -14,6 +14,8 @@ import PostCreatePage from './pages/PostCreatePage';
 import HelpRequestsPage from './pages/HelpRequestsPage';
 import HelpRequestCreatePage from './pages/HelpRequestCreatePage';
 import HelpRequestDetailPage from './pages/HelpRequestDetailPage';
+import MyPostsPage from './pages/MyPostsPage';
+import UserProfilePage from './pages/UserProfilePage';
 
 export default function App() {
 return (
@@ -73,6 +75,22 @@ return (
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-posts"
+            element={
+              <ProtectedRoute>
+                <MyPostsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users/:id"
+            element={
+              <ProtectedRoute>
+                <UserProfilePage />
               </ProtectedRoute>
             }
           />
