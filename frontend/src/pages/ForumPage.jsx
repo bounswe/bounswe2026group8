@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { getPosts, vote, repost, resolveImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -37,13 +37,15 @@ const FORUM_TABS = ['GLOBAL', 'STANDARD', 'URGENT'];
 export default function ForumPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user, isAuthenticated } = useAuth();
   const selectedHub = user?.hub;
 
-  const [tab, setTab] = useState(() => {
-    const s = location.state?.forumTab;
-    return FORUM_TABS.includes(s) ? s : 'GLOBAL';
-  });
+  const tabParam = searchParams.get('tab')?.toUpperCase();
+  const tab = FORUM_TABS.includes(tabParam) ? tabParam
+    : FORUM_TABS.includes(location.state?.forumTab) ? location.state.forumTab
+    : 'GLOBAL';
+  const setTab = (t) => setSearchParams({ tab: t }, { replace: true });
   const [sortBy, setSortBy] = useState('newest');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -261,7 +263,7 @@ export default function ForumPage() {
                   </div>
                 )}
                 <div className="post-card-meta">
-                  <span className="post-card-author">{post.author.full_name}</span>
+                  <Link to={`/users/${post.author.id}`} className="post-card-author author-link" onClick={(e) => e.stopPropagation()}>{post.author.full_name}</Link>
                   {post.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
                   <AuthorStatus profile={post.author.profile} />
                   <span className="post-card-dot">&middot;</span>
