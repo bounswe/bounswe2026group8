@@ -190,6 +190,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         btnSubmit.text = getString(R.string.submitting)
 
         val request = CreateHelpRequest(
+            hub = tokenManager.getUser()?.hub?.id,
             category = category,
             urgency = urgency,
             title = title,
