@@ -50,7 +50,7 @@ class HelpRequestDetailSerializer(serializers.ModelSerializer):
         model = HelpRequest
         fields = [
             'id', 'hub', 'hub_name', 'category', 'urgency',
-            'author', 'title', 'description',
+            'author', 'title', 'description', 'image_urls',
             'latitude', 'longitude', 'location_text',
             'status', 'comment_count',
             'created_at', 'updated_at',
@@ -72,11 +72,12 @@ class HelpRequestCreateSerializer(serializers.ModelSerializer):
         model = HelpRequest
         fields = [
             'hub', 'category', 'urgency', 'title', 'description',
-            'latitude', 'longitude', 'location_text',
+            'image_urls', 'latitude', 'longitude', 'location_text',
         ]
         extra_kwargs = {
             'hub': {'required': False, 'allow_null': True},
             'urgency': {'required': False},
+            'image_urls': {'required': False},
         }
 
 
@@ -91,7 +92,7 @@ class HelpRequestUpdateSerializer(serializers.ModelSerializer):
         model = HelpRequest
         fields = [
             'category', 'urgency', 'title', 'description',
-            'latitude', 'longitude', 'location_text',
+            'image_urls', 'latitude', 'longitude', 'location_text',
         ]
 
 

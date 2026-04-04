@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus } from '../services/api';
+import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus, resolveImageUrl } from '../services/api';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -163,6 +163,19 @@ export default function HelpRequestDetailPage() {
         </div>
 
         <p className="help-detail-description">{helpRequest.description}</p>
+
+        {helpRequest.image_urls && helpRequest.image_urls.length > 0 && (
+          <div className="post-images">
+            {helpRequest.image_urls.map((url, i) => (
+              <img
+                key={i}
+                src={resolveImageUrl(url)}
+                alt={`Attachment ${i + 1}`}
+                className="post-image"
+              />
+            ))}
+          </div>
+        )}
 
         <div className="help-detail-meta">
           <span>By <strong>{helpRequest.author.full_name}</strong></span>
