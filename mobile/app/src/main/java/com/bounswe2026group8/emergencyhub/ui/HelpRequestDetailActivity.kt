@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.View
+import android.widget.HorizontalScrollView
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +21,7 @@ import com.bounswe2026group8.emergencyhub.api.HelpRequestComment
 import com.bounswe2026group8.emergencyhub.api.HelpRequestDetail
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
@@ -60,6 +64,10 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     private lateinit var txtMapLocationText: TextView
     private lateinit var txtLocationOnly: TextView
     private var mapView: MapView? = null
+
+    // Images
+    private lateinit var imageGalleryScroll: HorizontalScrollView
+    private lateinit var imageGallery: LinearLayout
 
     // Comments
     private lateinit var txtCommentsHeader: TextView
@@ -137,6 +145,8 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         mapView = findViewById(R.id.mapView)
         txtMapLocationText = findViewById(R.id.txtMapLocationText)
         txtLocationOnly = findViewById(R.id.txtLocationOnly)
+        imageGalleryScroll = findViewById(R.id.imageGalleryScroll)
+        imageGallery = findViewById(R.id.imageGallery)
 
         txtCommentsHeader = findViewById(R.id.txtCommentsHeader)
         recyclerComments = findViewById(R.id.recyclerComments)
@@ -218,6 +228,30 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             else -> {
                 txtDetailStatus.text = getString(R.string.status_open)
             }
+        }
+
+        // Images
+        if (detail.imageUrls.isNotEmpty()) {
+            imageGalleryScroll.visibility = View.VISIBLE
+            imageGallery.removeAllViews()
+            val density = resources.displayMetrics.density
+            val sizePx = (140 * density).toInt()
+            val marginPx = (8 * density).toInt()
+            for (url in detail.imageUrls) {
+                val imgView = ImageView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(sizePx, sizePx).also {
+                        it.marginEnd = marginPx
+                    }
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                }
+                Glide.with(this)
+                    .load(RetrofitClient.resolveImageUrl(url))
+                    .centerCrop()
+                    .into(imgView)
+                imageGallery.addView(imgView)
+            }
+        } else {
+            imageGalleryScroll.visibility = View.GONE
         }
 
         // Map / location
