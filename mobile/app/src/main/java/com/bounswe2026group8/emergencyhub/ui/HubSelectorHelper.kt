@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
-import com.bounswe2026group8.emergencyhub.auth.HubManager
+import com.bounswe2026group8.emergencyhub.api.UpdateMeRequest
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import kotlinx.coroutines.launch
 
@@ -17,7 +17,7 @@ class HubSelectorHelper(
     private val spinner: Spinner,
     private val onHubSelected: ((Hub?) -> Unit)? = null
 ) {
-    private val hubManager = HubManager(activity)
+    private val tokenManager = TokenManager(activity)
     private var hubs: List<Hub> = emptyList()
     private var initialSetupDone = false
 
@@ -44,11 +44,9 @@ class HubSelectorHelper(
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
-        // Priority: manually saved hub > user's registered hub > istanbul fallback
-        val savedHub = hubManager.getSelectedHub()
-        val userHub = TokenManager(activity).getUser()?.hub
-        val resolvedHub = savedHub ?: userHub
-        val resolvedIdx = if (resolvedHub != null) hubs.indexOfFirst { it.id == resolvedHub.id } else -1
+        // Use user's hub from backend as source of truth
+        val userHub = tokenManager.getUser()?.hub
+        val resolvedIdx = if (userHub != null) hubs.indexOfFirst { it.id == userHub.id } else -1
 
         val selectedIdx = if (resolvedIdx >= 0) {
             resolvedIdx
@@ -59,7 +57,7 @@ class HubSelectorHelper(
 
         spinner.setSelection(selectedIdx)
 
-        // Notify the callback with the initial hub (without saving — it's already persisted)
+        // Notify the callback with the initial hub
         if (selectedIdx in hubs.indices) {
             onHubSelected?.invoke(hubs[selectedIdx])
         }
@@ -72,13 +70,25 @@ class HubSelectorHelper(
                 }
                 if (pos in hubs.indices) {
                     val hub = hubs[pos]
-                    hubManager.saveSelectedHub(hub)
+                    updateHubOnBackend(hub)
                     onHubSelected?.invoke(hub)
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 onHubSelected?.invoke(null)
             }
+        }
+    }
+
+    private fun updateHubOnBackend(hub: Hub) {
+        activity.lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(activity)
+                    .updateMe(UpdateMeRequest(hubId = hub.id))
+                if (response.isSuccessful) {
+                    response.body()?.let { tokenManager.saveUser(it) }
+                }
+            } catch (_: Exception) { }
         }
     }
 }

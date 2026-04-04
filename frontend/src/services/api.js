@@ -26,9 +26,15 @@ async function request(endpoint, options = {}) {
     headers,
   });
 
-  // 204 No Content — no body to parse.
+  // 204 No Content has no body — skip JSON parsing
+  if (response.status === 204) {
+    return { ok: true, status: 204, data: null };
+  }
+
+ // 204 No Content — no body to parse.
   const data = response.status === 204 ? null : await response.json();
   return { ok: response.ok, status: response.status, data };
+
 }
 
 /**
@@ -85,6 +91,74 @@ export function getMe() {
   });
 }
 
+export function getProfile() {
+  return request('/profile', {
+    method: 'GET',
+  });
+}
+
+export function updateProfile(payload) {
+  return request('/profile', {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+// --------------- Resources ---------------
+
+export function getResources() {
+  return request('/resources', { method: 'GET' });
+}
+
+export function createResource(payload) {
+  return request('/resources', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateResource(id, payload) {
+  return request(`/resources/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteResource(id) {
+  return request(`/resources/${id}`, { method: 'DELETE' });
+}
+
+// --------------- Expertise Fields (EXPERT only) ---------------
+
+export function getExpertiseFields() {
+  return request('/expertise', { method: 'GET' });
+}
+
+export function createExpertiseField(payload) {
+  return request('/expertise', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateExpertiseField(id, payload) {
+  return request(`/expertise/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteExpertiseField(id) {
+  return request(`/expertise/${id}`, { method: 'DELETE' });
+}
+
+export function updateMe(data) {
+  return request('/me', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
 /**
  * GET /hubs/
  * Public — returns list of all hubs.
@@ -111,6 +185,7 @@ export function getHelpRequests(params = {}) {
   const query = new URLSearchParams();
   if (params.hub_id) query.append('hub_id', params.hub_id);
   if (params.category) query.append('category', params.category);
+  if (params.author) query.append('author', params.author);
   const qs = query.toString();
   return request(`/help-requests/${qs ? `?${qs}` : ''}`, {
     method: 'GET',
@@ -159,6 +234,7 @@ export function getHelpOffers(params = {}) {
   const query = new URLSearchParams();
   if (params.hub_id) query.append('hub_id', params.hub_id);
   if (params.category) query.append('category', params.category);
+  if (params.author) query.append('author', params.author);
   const qs = query.toString();
   return request(`/help-offers/${qs ? `?${qs}` : ''}`, { method: 'GET' });
 }
@@ -178,10 +254,11 @@ export function deleteHelpOffer(id) {
 
 // ── Forum ─────────────────────────────────────────────────────────────────────
 
-export function getPosts({ hub, forumType } = {}) {
+export function getPosts({ hub, forumType, author } = {}) {
   const params = new URLSearchParams();
   if (hub) params.set('hub', hub);
   if (forumType) params.set('forum_type', forumType);
+  if (author) params.set('author', author);
   const qs = params.toString();
   return request(`/forum/posts/${qs ? `?${qs}` : ''}`, { method: 'GET' });
 }
@@ -250,6 +327,21 @@ export async function uploadImages(files) {
   files.forEach((f) => formData.append('images', f));
 
   const response = await fetch(`${API_BASE}/forum/upload/`, {
+    method: 'POST',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: formData,
+  });
+
+  const data = await response.json();
+  return { ok: response.ok, status: response.status, data };
+}
+
+export async function uploadHelpRequestImages(files) {
+  const token = localStorage.getItem('token');
+  const formData = new FormData();
+  files.forEach((f) => formData.append('images', f));
+
+  const response = await fetch(`${API_BASE}/help-requests/upload/`, {
     method: 'POST',
     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body: formData,

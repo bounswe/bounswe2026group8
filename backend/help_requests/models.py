@@ -65,6 +65,9 @@ class HelpRequest(models.Model):
     # Uses default='' instead of null=True, following Django's convention for text fields.
     location_text = models.CharField(max_length=255, blank=True, default='')
 
+    # Optional images attached by the requester (list of URLs or relative media paths).
+    image_urls = models.JSONField(default=list, blank=True)
+
     # Tracks the lifecycle of the request (see Status choices above).
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.OPEN)
     # Denormalized counter — avoids an extra COUNT query every time we list requests.
