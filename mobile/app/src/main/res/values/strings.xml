@@ -73,6 +73,9 @@
     <string name="submitting">Submitting…</string>
     <string name="submit">Submit</string>
     <string name="help_request_created">Help request created!</string>
+    <string name="images_optional">Images (optional)</string>
+    <string name="upload_from_gallery">Gallery</string>
+    <string name="take_photo">Camera</string>
 
     <!-- Help Request Detail -->
     <string name="help_request_detail_title">Help Request</string>
