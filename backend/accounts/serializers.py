@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 from .models import Hub, User, Profile, Resource, ExpertiseField
 
@@ -109,6 +111,12 @@ class RegisterSerializer(serializers.Serializer):
     def validate(self, data):
         if data['password'] != data['confirm_password']:
             raise serializers.ValidationError({'confirm_password': ['Passwords do not match.']})
+
+        # Validate password against Django's password validators
+        try:
+            validate_password(data['password'])
+        except DjangoValidationError as e:
+            raise serializers.ValidationError({'password': e.messages})
 
         if data['role'] == User.Role.EXPERT:
             expertise = data.get('expertise_field', '').strip() if data.get('expertise_field') else ''
