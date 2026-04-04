@@ -54,6 +54,11 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<HelpRequestDetail>
 
+    @DELETE("/help-requests/{id}/")
+    suspend fun deleteHelpRequest(
+        @Path("id") id: Int
+    ): Response<ResponseBody?>
+
     // ── Help Request Comments ────────────────────────────────────────────
 
     @GET("/help-requests/{id}/comments/")
@@ -66,6 +71,11 @@ interface ApiService {
         @Path("id") requestId: Int,
         @Body body: CreateCommentRequest
     ): Response<HelpRequestComment>
+
+    @DELETE("/help-requests/comments/{id}/")
+    suspend fun deleteHelpRequestComment(
+        @Path("id") commentId: Int
+    ): Response<ResponseBody?>
 
     // ── Help Offers ──────────────────────────────────────────────────────
 

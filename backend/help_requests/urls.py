@@ -13,6 +13,7 @@ from .views import (
     HelpRequestDetailView,
     HelpRequestStatusView,
     HelpCommentListCreateView,
+    HelpCommentDeleteView,
     HelpOfferListCreateView,
     HelpOfferDeleteView,
     ImageUploadView,
@@ -25,6 +26,7 @@ help_request_urlpatterns = [
     path('<int:pk>/', HelpRequestDetailView.as_view(), name='help-request-detail'),
     path('<int:pk>/status/', HelpRequestStatusView.as_view(), name='help-request-status'),
     path('<int:request_pk>/comments/', HelpCommentListCreateView.as_view(), name='help-comment-list-create'),
+    path('comments/<int:pk>/', HelpCommentDeleteView.as_view(), name='help-comment-delete'),
 ]
 
 # Mounted at /help-offers/ by backend/urls.py.

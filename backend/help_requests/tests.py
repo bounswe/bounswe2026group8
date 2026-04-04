@@ -695,3 +695,64 @@ class ImageUploadTests(HelpTestBase):
         img = self._make_image()
         res = self.anon.post(self.UPLOAD_URL, {'images': img}, format='multipart')
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+# ── Comment Delete Tests ──────────────────────────────────────────────────────
+
+class HelpCommentDeleteTests(HelpTestBase):
+    """
+    Tests for DELETE /help-requests/comments/{pk}/.
+
+    Verifies author-only enforcement, comment_count decrement, and error cases.
+    """
+
+    def _create_comment(self, client=None, request_pk=None, content='Test comment'):
+        """Helper to create a comment and return its data."""
+        client = client or self.standard_client
+        res = client.post(
+            f'/help-requests/{request_pk}/comments/',
+            {'content': content},
+            format='json',
+        )
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        return res.data
+
+    def test_author_can_delete_own_comment(self):
+        """Comment author can delete their own comment — returns 204."""
+        request_pk = self._create_help_request().data['id']
+        comment = self._create_comment(request_pk=request_pk)
+
+        res = self.standard_client.delete(f'/help-requests/comments/{comment["id"]}/')
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(HelpComment.objects.filter(pk=comment['id']).exists())
+
+    def test_delete_decrements_comment_count(self):
+        """Deleting a comment decrements comment_count on the parent request."""
+        request_pk = self._create_help_request().data['id']
+        comment = self._create_comment(request_pk=request_pk)
+        self.assertEqual(HelpRequest.objects.get(pk=request_pk).comment_count, 1)
+
+        self.standard_client.delete(f'/help-requests/comments/{comment["id"]}/')
+        self.assertEqual(HelpRequest.objects.get(pk=request_pk).comment_count, 0)
+
+    def test_non_author_cannot_delete_comment(self):
+        """A user who did not write the comment gets 403."""
+        request_pk = self._create_help_request().data['id']
+        comment = self._create_comment(request_pk=request_pk)
+
+        res = self.expert_client.delete(f'/help-requests/comments/{comment["id"]}/')
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(HelpComment.objects.filter(pk=comment['id']).exists())
+
+    def test_unauthenticated_cannot_delete_comment(self):
+        """Unauthenticated request returns 401."""
+        request_pk = self._create_help_request().data['id']
+        comment = self._create_comment(request_pk=request_pk)
+
+        res = self.anon.delete(f'/help-requests/comments/{comment["id"]}/')
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_nonexistent_comment_returns_404(self):
+        """Deleting a comment that does not exist returns 404."""
+        res = self.standard_client.delete('/help-requests/comments/99999/')
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)

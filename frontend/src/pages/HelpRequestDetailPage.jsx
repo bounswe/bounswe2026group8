@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus, resolveImageUrl } from '../services/api';
+import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus, deleteHelpRequest, deleteHelpComment, resolveImageUrl } from '../services/api';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -75,6 +75,9 @@ export default function HelpRequestDetailPage() {
   // Resolve button state
   const [resolving, setResolving] = useState(false);
 
+  // Delete request confirmation modal state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
   // Fetch request detail and comments in parallel on mount.
   useEffect(() => {
     setLoading(true);
@@ -107,6 +110,22 @@ export default function HelpRequestDetailPage() {
       setCommentError(data.detail || 'Failed to post comment.');
     }
     setSubmitting(false);
+  };
+
+  /** Deletes the help request and navigates back (author only). */
+  const handleDeleteRequest = async () => {
+    setShowDeleteConfirm(false);
+    const { ok } = await deleteHelpRequest(id);
+    if (ok) navigate(-1);
+  };
+
+  /** Removes a single comment optimistically (comment author only). */
+  const handleDeleteComment = async (commentId) => {
+    const { ok } = await deleteHelpComment(commentId);
+    if (ok) {
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+      setHelpRequest((r) => r && { ...r, comment_count: Math.max(0, r.comment_count - 1) });
+    }
   };
 
   /** Marks the help request as RESOLVED (author only). */
@@ -195,17 +214,41 @@ export default function HelpRequestDetailPage() {
           <span>{formatDate(helpRequest.created_at)}</span>
         </div>
 
-        {/* Resolve button — only visible to the author when not already resolved */}
-        {helpRequest.author.id === user.id && helpRequest.status !== 'RESOLVED' && (
-          <button
-            className="btn btn-primary btn-sm help-detail-resolve-btn"
-            onClick={handleResolve}
-            disabled={resolving}
-          >
-            {resolving ? 'Resolving...' : 'Mark as Resolved'}
-          </button>
+        {/* Author actions — resolve and delete */}
+        {helpRequest.author.id === user.id && (
+          <div className="post-owner-actions">
+            {helpRequest.status !== 'RESOLVED' && (
+              <button
+                className="btn btn-primary btn-sm help-detail-resolve-btn"
+                onClick={handleResolve}
+                disabled={resolving}
+              >
+                {resolving ? 'Resolving...' : 'Mark as Resolved'}
+              </button>
+            )}
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              Delete
+            </button>
+          </div>
         )}
       </div>
+
+      {/* Delete confirmation modal */}
+      {showDeleteConfirm && (
+        <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <h3>Delete Request</h3>
+            <p className="modal-body-text">Are you sure you want to delete this help request? This cannot be undone.</p>
+            <div className="modal-actions">
+              <button className="btn btn-danger btn-sm" onClick={handleDeleteRequest}>Delete</button>
+              <button className="btn btn-secondary btn-sm" onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Location section */}
       {(hasCoords || helpRequest.location_text) && (
@@ -252,7 +295,18 @@ export default function HelpRequestDetailPage() {
                   {c.author.role === 'EXPERT' && (
                     <span className="badge badge-expert-responding">Expert</span>
                   )}
-                  <span className="help-detail-comment-date">{formatDate(c.created_at)}</span>
+                  <div className="comment-right-group">
+                    <span className="help-detail-comment-date">{formatDate(c.created_at)}</span>
+                    {user.id === c.author.id && (
+                      <button
+                        className="comment-delete"
+                        onClick={() => handleDeleteComment(c.id)}
+                        title="Delete comment"
+                      >
+                        &times;
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <p>{c.content}</p>
               </div>
