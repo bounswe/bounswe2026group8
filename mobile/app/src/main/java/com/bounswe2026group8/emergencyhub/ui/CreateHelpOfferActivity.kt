@@ -26,7 +26,7 @@ class CreateHelpOfferActivity : AppCompatActivity() {
     private lateinit var tokenManager: TokenManager
     private lateinit var inputSkillOrResource: TextInputEditText
     private lateinit var inputDescription: TextInputEditText
-    private lateinit var inputAvailability: TextInputEditText
+    private lateinit var dropdownAvailability: AutoCompleteTextView
     private lateinit var dropdownCategory: AutoCompleteTextView
     private lateinit var btnSubmit: MaterialButton
 
@@ -45,7 +45,7 @@ class CreateHelpOfferActivity : AppCompatActivity() {
         // Bind views
         inputSkillOrResource = findViewById(R.id.inputSkillOrResource)
         inputDescription = findViewById(R.id.inputDescription)
-        inputAvailability = findViewById(R.id.inputAvailability)
+        dropdownAvailability = findViewById(R.id.dropdownAvailability)
         dropdownCategory = findViewById(R.id.dropdownCategory)
         btnSubmit = findViewById(R.id.btnSubmit)
 
@@ -57,6 +57,11 @@ class CreateHelpOfferActivity : AppCompatActivity() {
         val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categoryLabels)
         dropdownCategory.setAdapter(categoryAdapter)
 
+        // Availability dropdown
+        val availabilityLabels = arrayOf("24/7", "Weekdays", "Weekends", "Mornings", "Evenings", "On-call")
+        val availabilityAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, availabilityLabels)
+        dropdownAvailability.setAdapter(availabilityAdapter)
+
         // Submit
         btnSubmit.setOnClickListener { attemptSubmit() }
     }
@@ -64,7 +69,7 @@ class CreateHelpOfferActivity : AppCompatActivity() {
     private fun attemptSubmit() {
         val skillOrResource = inputSkillOrResource.text.toString().trim()
         val description = inputDescription.text.toString().trim()
-        val availability = inputAvailability.text.toString().trim()
+        val availability = dropdownAvailability.text.toString().trim()
 
         // Client-side validation
         if (skillOrResource.isEmpty()) {

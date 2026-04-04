@@ -46,6 +46,10 @@ class HelpRequestListCreateView(APIView):
     def get(self, request):
         qs = HelpRequest.objects.all()
 
+        author_id = request.query_params.get('author')
+        if author_id:
+            qs = qs.filter(author_id=author_id)
+
         # Filter by hub if provided (e.g. ?hub_id=3).
         hub_id = request.query_params.get('hub_id')
         if hub_id:
@@ -215,6 +219,10 @@ class HelpOfferListCreateView(APIView):
 
     def get(self, request):
         qs = HelpOffer.objects.all()
+
+        author_id = request.query_params.get('author')
+        if author_id:
+            qs = qs.filter(author_id=author_id)
 
         # Filter by hub if provided (e.g. ?hub_id=3).
         hub_id = request.query_params.get('hub_id')
