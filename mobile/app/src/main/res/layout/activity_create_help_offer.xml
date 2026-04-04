@@ -111,13 +111,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:hint="@string/help_availability"
-            style="@style/Widget.EmergencyHub.TextInput">
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputAvailability"
+            <AutoCompleteTextView
+                android:id="@+id/dropdownAvailability"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="none"
                 android:textColor="@color/text_primary" />
 
         </com.google.android.material.textfield.TextInputLayout>

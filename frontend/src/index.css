@@ -2201,6 +2201,101 @@ textarea:focus {
 }
 .cert-link:hover { text-decoration: underline; }
 
+.cert-upload-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.cert-upload-row input[type="text"],
+.cert-upload-row input:not([type]) {
+  flex: 1;
+}
+
+/* ── My Posts Page ── */
+.my-posts-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.my-posts-tab {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.my-posts-tab:hover { background: rgba(255,255,255,0.04); }
+.my-posts-tab-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.08);
+}
+.my-posts-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.my-posts-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.my-posts-card:hover { border-color: var(--accent); }
+.my-posts-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.my-posts-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+}
+.my-posts-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; flex-shrink: 0; }
+.my-posts-card-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.my-posts-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0.25rem 0 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.my-posts-card-images {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.my-posts-card-thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.my-posts-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 3rem 0;
+}
+.profile-my-posts-card:hover {
+  border-color: var(--accent);
+}
+
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .profile-identity-card { flex-direction: column; align-items: flex-start; gap: 1rem; }

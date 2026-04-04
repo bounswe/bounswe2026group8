@@ -48,6 +48,9 @@ class PostListCreateView(APIView):
 
     def get(self, request):
         qs = Post.objects.filter(status=Post.Status.ACTIVE)
+        author_id = request.query_params.get('author')
+        if author_id:
+            qs = qs.filter(author_id=author_id)
         forum_type = request.query_params.get('forum_type')
         if forum_type:
             ft = forum_type.upper()
