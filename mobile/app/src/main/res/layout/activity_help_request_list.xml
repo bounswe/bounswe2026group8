@@ -45,6 +45,33 @@
 
     </LinearLayout>
 
+    <!-- ── Hub selector ────────────────────────────────────────────────── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hub:"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <Spinner
+            android:id="@+id/spinnerHubSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:minWidth="140dp"
+            android:background="@drawable/sort_pill_active_bg"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
+
     <!-- ── Tab switcher (Requests / Offers) ─────────────────────────────── -->
     <LinearLayout
         android:layout_width="match_parent"

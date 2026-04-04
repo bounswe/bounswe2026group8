@@ -1,14 +1,15 @@
 import { useState, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { createPost, uploadImages, resolveImageUrl } from '../services/api';
-import { useHub } from '../context/HubContext';
+import { useAuth } from '../context/AuthContext';
 
 const TYPE_LABELS = { GLOBAL: 'Global', STANDARD: 'Standard', URGENT: 'Urgent' };
 
 export default function PostCreatePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { selectedHub } = useHub();
+  const { user } = useAuth();
+  const selectedHub = user?.hub;
   const fileInputRef = useRef(null);
 
   const forumType = ['GLOBAL', 'STANDARD', 'URGENT'].includes(location.state?.forumType)

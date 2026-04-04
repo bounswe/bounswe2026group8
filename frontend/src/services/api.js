@@ -85,6 +85,13 @@ export function getMe() {
   });
 }
 
+export function updateMe(data) {
+  return request('/me', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
 /**
  * GET /hubs/
  * Public — returns list of all hubs.

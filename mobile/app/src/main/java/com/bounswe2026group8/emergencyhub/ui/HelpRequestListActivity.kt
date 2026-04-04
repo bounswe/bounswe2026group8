@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,9 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.HelpOfferItem
 import com.bounswe2026group8.emergencyhub.api.HelpRequestItem
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
+import com.bounswe2026group8.emergencyhub.auth.HubManager
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
@@ -30,6 +33,8 @@ import kotlinx.coroutines.launch
 class HelpRequestListActivity : AppCompatActivity() {
 
     private lateinit var tokenManager: TokenManager
+    private lateinit var hubSelectorHelper: HubSelectorHelper
+    private var selectedHub: Hub? = null
 
     // Views
     private lateinit var recyclerRequests: RecyclerView
@@ -137,15 +142,23 @@ class HelpRequestListActivity : AppCompatActivity() {
             applyFilter()
         }
 
-        // Initial load
-        fetchHelpRequests()
+        // Hub selector
+        hubSelectorHelper = HubSelectorHelper(
+            this,
+            findViewById<Spinner>(R.id.spinnerHubSelector),
+            onHubSelected = { hub ->
+                selectedHub = hub
+                if (activeTab == "requests") fetchHelpRequests() else fetchHelpOffers()
+            }
+        )
+        hubSelectorHelper.load()
     }
 
     /** Re-fetch on resume so lists update after creating a new item. */
     override fun onResume() {
         super.onResume()
-        if (::requestAdapter.isInitialized) {
-            if (activeTab == "requests") fetchHelpRequests() else fetchHelpOffers()
+        if (::hubSelectorHelper.isInitialized) {
+            hubSelectorHelper.load()
         }
     }
 
@@ -189,7 +202,7 @@ class HelpRequestListActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestListActivity)
-                    .getHelpRequests()
+                    .getHelpRequests(hubId = selectedHub?.id)
 
                 if (response.isSuccessful) {
                     allRequests = response.body() ?: emptyList()
@@ -225,7 +238,7 @@ class HelpRequestListActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestListActivity)
-                    .getHelpOffers()
+                    .getHelpOffers(hubId = selectedHub?.id)
 
                 if (response.isSuccessful) {
                     allOffers = response.body() ?: emptyList()

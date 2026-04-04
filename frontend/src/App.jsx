@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import { HubProvider } from './context/HubContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import HubSelector from './components/HubSelector';
 
@@ -19,7 +18,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <HubProvider>
           <div className="hub-selector-bar">
             <HubSelector />
           </div>
@@ -70,7 +68,6 @@ export default function App() {
               }
             />
           </Routes>
-        </HubProvider>
       </AuthProvider>
     </BrowserRouter>
   );

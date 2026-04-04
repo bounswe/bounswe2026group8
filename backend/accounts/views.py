@@ -74,12 +74,26 @@ class LogoutView(APIView):
 
 class MeView(APIView):
     """
-    GET /me
-    Returns the currently authenticated user's profile.
+    GET  /me  — Returns the currently authenticated user's profile.
+    PATCH /me — Updates the user's hub.
     """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        hub_id = request.data.get('hub_id')
+        if hub_id is not None:
+            from .models import Hub
+            hub = Hub.objects.filter(pk=hub_id).first()
+            if not hub:
+                return Response(
+                    {'detail': 'Hub not found.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            request.user.hub = hub
+            request.user.save(update_fields=['hub'])
         return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
 
 
