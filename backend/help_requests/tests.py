@@ -8,8 +8,12 @@ Covers all acceptance criteria from issues #120-#123:
   - Status not overwritten when already RESOLVED
   - Help offer CRUD with permission checks
   - Unauthenticated access returns 401
+  - Image upload endpoint validation and auth
 """
 
+from unittest.mock import patch
+
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
@@ -470,4 +474,78 @@ class HelpOfferTests(HelpTestBase):
         """Unauthenticated offer delete returns 401."""
         pk = self._create_help_offer().data['id']
         res = self.anon.delete(f'/help-offers/{pk}/')
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+# ── Image Upload Tests ────────────────────────────────────────────────────────
+
+class ImageUploadTests(HelpTestBase):
+    """
+    Tests for POST /help-requests/upload/.
+
+    Uses SimpleUploadedFile to create in-memory files and mocks
+    default_storage.save to avoid touching the filesystem.
+    """
+
+    UPLOAD_URL = '/help-requests/upload/'
+
+    def _make_image(self, name='photo.jpg', content_type='image/jpeg', size=None):
+        """Return a SimpleUploadedFile representing a small valid image."""
+        data = b'\xff\xd8\xff' + b'\x00' * (size - 3 if size and size > 3 else 1)
+        return SimpleUploadedFile(name, data, content_type=content_type)
+
+    @patch('help_requests.views.default_storage')
+    def test_upload_single_image(self, mock_storage):
+        """201 with a list of one URL for a valid single-file upload."""
+        mock_storage.save.return_value = 'uploads/abc.jpg'
+        img = self._make_image()
+        res = self.standard_client.post(
+            self.UPLOAD_URL, {'images': img}, format='multipart',
+        )
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertIn('urls', res.data)
+        self.assertEqual(len(res.data['urls']), 1)
+
+    @patch('help_requests.views.default_storage')
+    def test_upload_multiple_images(self, mock_storage):
+        """201 with a list of two URLs when two valid files are uploaded."""
+        mock_storage.save.side_effect = ['uploads/a.jpg', 'uploads/b.png']
+        img1 = self._make_image('a.jpg', 'image/jpeg')
+        img2 = self._make_image('b.png', 'image/png')
+        res = self.standard_client.post(
+            self.UPLOAD_URL, {'images': [img1, img2]}, format='multipart',
+        )
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(len(res.data['urls']), 2)
+
+    def test_upload_no_files_returns_400(self):
+        """400 when no files are provided."""
+        res = self.standard_client.post(self.UPLOAD_URL, {}, format='multipart')
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_upload_invalid_file_type_returns_400(self):
+        """400 when an unsupported MIME type is uploaded."""
+        txt = SimpleUploadedFile('doc.txt', b'hello', content_type='text/plain')
+        res = self.standard_client.post(
+            self.UPLOAD_URL, {'images': txt}, format='multipart',
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('Unsupported file type', res.data['detail'])
+
+    def test_upload_file_too_large_returns_400(self):
+        """400 when a file exceeds the 5 MB limit."""
+        big = SimpleUploadedFile(
+            'big.jpg', b'\xff\xd8\xff' + b'\x00' * (5 * 1024 * 1024),
+            content_type='image/jpeg',
+        )
+        res = self.standard_client.post(
+            self.UPLOAD_URL, {'images': big}, format='multipart',
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('5 MB limit', res.data['detail'])
+
+    def test_upload_unauthenticated_returns_401(self):
+        """401 when no auth token is provided."""
+        img = self._make_image()
+        res = self.anon.post(self.UPLOAD_URL, {'images': img}, format='multipart')
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)

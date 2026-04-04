@@ -7,10 +7,16 @@ permission, author-only guards on update/delete, transaction.atomic() for
 multi-table writes.
 """
 
+import uuid
+from pathlib import Path
+
+from django.conf import settings
+from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 
+from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -251,3 +257,46 @@ class HelpOfferDeleteView(APIView):
             {'detail': 'Help offer deleted.'},
             status=status.HTTP_204_NO_CONTENT,
         )
+
+
+# ── Image Upload ───────────────────────────────────────────────────────────────
+
+ALLOWED_IMAGE_TYPES = {'image/jpeg', 'image/png', 'image/gif', 'image/webp'}
+MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB
+
+
+class ImageUploadView(APIView):
+    """
+    POST /help-requests/upload/
+    Accepts multipart image files, saves to media/uploads/, returns URLs.
+    """
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
+
+    def post(self, request):
+        files = request.FILES.getlist('images')
+        if not files:
+            return Response(
+                {'detail': 'No images provided.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        urls = []
+        for f in files:
+            if f.content_type not in ALLOWED_IMAGE_TYPES:
+                return Response(
+                    {'detail': f'Unsupported file type: {f.content_type}. Allowed: JPEG, PNG, GIF, WebP.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if f.size > MAX_IMAGE_SIZE:
+                return Response(
+                    {'detail': f'File "{f.name}" exceeds the 5 MB limit.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            ext = Path(f.name).suffix.lower() or '.jpg'
+            filename = f'uploads/{uuid.uuid4().hex}{ext}'
+            saved = default_storage.save(filename, f)
+            urls.append(f'{settings.MEDIA_URL}{saved}')
+
+        return Response({'urls': urls}, status=status.HTTP_201_CREATED)
