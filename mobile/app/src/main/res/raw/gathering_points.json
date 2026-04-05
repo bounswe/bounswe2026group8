@@ -1,34 +1,42 @@
 [
   {
-    "name": "Point 1",
-    "lat": 41.0102,
-    "lon": 28.9555,
-    "description": "Test gathering area 1",
+    "name": "Shoreline Amphitheatre",
+    "lat": 37.4250,
+    "lon": -122.0800,
+    "description": "Large open area often used for events and emergency gathering",
     "type": "gathering",
-    "region": "Istanbul"
+    "region": "California"
   },
   {
-    "name": "Point 2",
-    "lat": 41.015,
-    "lon": 28.99,
-    "description": "Test gathering area 2",
-    "type": "hospital",
-    "region": "Istanbul"
+    "name": "Shoreline Park",
+    "lat": 37.4300,
+    "lon": -122.0870,
+    "description": "Open park area suitable for emergency gathering",
+    "type": "gathering",
+    "region": "California"
   },
   {
-    "name": "Point 3",
-    "lat": 41.02,
-    "lon": 28.97,
-    "description": "Test gathering area 3",
+    "name": "Computer History Museum",
+    "lat": 37.4143,
+    "lon": -122.0768,
+    "description": "Public facility that can act as coordination point",
     "type": "shelter",
-    "region": "Istanbul"
+    "region": "California"
   },
   {
-    "name": "Point 4",
-    "lat": 41.005,
-    "lon": 28.965,
-    "description": "Test gathering area 4",
+    "name": "El Camino Hospital Mountain View",
+    "lat": 37.3695,
+    "lon": -122.0796,
+    "description": "Major hospital in the area",
+    "type": "hospital",
+    "region": "California"
+  },
+  {
+    "name": "Rengstorff Park",
+    "lat": 37.4080,
+    "lon": -122.0990,
+    "description": "Local park with open space and facilities",
     "type": "gathering",
-    "region": "Istanbul"
+    "region": "California"
   }
 ]

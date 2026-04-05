@@ -17,6 +17,10 @@ import com.bounswe2026group8.emergencyhub.R
 class MapRenderer(private val context: Context) {
 
     fun loadMap(mapView: MapView, mapFile: File) {
+        if (!mapFile.exists() || mapFile.length() == 0L) {
+            throw IllegalArgumentException("Map file missing or empty: ${mapFile.absolutePath}")
+        }
+
         val tileCache = AndroidUtil.createTileCache(
             context,
             "mapcache",
@@ -32,9 +36,10 @@ class MapRenderer(private val context: Context) {
             mapDataStore,
             mapView.model.mapViewPosition,
             AndroidGraphicFactory.INSTANCE
-        )
+        ).apply {
+            setXmlRenderTheme(InternalRenderTheme.DEFAULT)
+        }
 
-        tileRendererLayer.setXmlRenderTheme(InternalRenderTheme.DEFAULT)
         mapView.layerManager.layers.add(tileRendererLayer)
     }
 

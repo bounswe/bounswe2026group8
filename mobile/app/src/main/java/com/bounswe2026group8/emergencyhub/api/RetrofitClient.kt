@@ -22,7 +22,6 @@ object RetrofitClient {
 
     // For emulator → host-machine localhost
     private const val BASE_URL = "http://10.0.2.2:8000"
-
     private var apiService: ApiService? = null
 
     fun getService(context: Context): ApiService {

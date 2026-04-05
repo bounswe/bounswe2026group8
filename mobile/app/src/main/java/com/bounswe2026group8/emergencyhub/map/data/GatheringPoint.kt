@@ -6,5 +6,5 @@ data class GatheringPoint(
     val lon: Double,
     val description: String,
     val type: String,
-    val region: String
+    val region: String? = null
 )
