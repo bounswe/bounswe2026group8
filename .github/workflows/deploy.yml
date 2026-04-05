@@ -1,0 +1,22 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - deployment   # Change to 'main' when ready
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd bounswe2026group8
+            git pull
+            docker-compose up --build -d
