@@ -23,8 +23,8 @@ class RegisterTests(TestCase):
         payload = {
             'full_name': 'Test User',
             'email': 'test@example.com',
-            'password': 'StrongPass123',
-            'confirm_password': 'StrongPass123',
+            'password': 'StrongPass123!',
+            'confirm_password': 'StrongPass123!',
             'role': 'STANDARD',
         }
         payload.update(overrides)
@@ -95,7 +95,7 @@ class RegisterTests(TestCase):
         """Passwords must never be stored in plaintext."""
         self.client.post(self.url, self._base_payload(), format='json')
         user = User.objects.get(email='test@example.com')
-        self.assertNotEqual(user.password, 'StrongPass123')
+        self.assertNotEqual(user.password, 'StrongPass123!')
         self.assertTrue(user.password.startswith('pbkdf2_'))
 
 
@@ -106,7 +106,7 @@ class LoginTests(TestCase):
         self.user = User.objects.create_user(
             email='sheila@example.com',
             full_name='Sheila Davis',
-            password='StrongPass123',
+            password='StrongPass123!',
             role='EXPERT',
             expertise_field='Medical Doctor',
         )
@@ -115,7 +115,7 @@ class LoginTests(TestCase):
         """Valid credentials return JWT tokens and user data."""
         response = self.client.post(
             self.url,
-            {'email': 'sheila@example.com', 'password': 'StrongPass123'},
+            {'email': 'sheila@example.com', 'password': 'StrongPass123!'},
             format='json',
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -139,7 +139,7 @@ class LoginTests(TestCase):
         """Non-existent email returns 400."""
         response = self.client.post(
             self.url,
-            {'email': 'nobody@example.com', 'password': 'StrongPass123'},
+            {'email': 'nobody@example.com', 'password': 'StrongPass123!'},
             format='json',
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -148,7 +148,7 @@ class LoginTests(TestCase):
         """Login should work regardless of email casing."""
         response = self.client.post(
             self.url,
-            {'email': 'SHEILA@EXAMPLE.COM', 'password': 'StrongPass123'},
+            {'email': 'SHEILA@EXAMPLE.COM', 'password': 'StrongPass123!'},
             format='json',
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -161,7 +161,7 @@ class MeTests(TestCase):
         self.user = User.objects.create_user(
             email='sheila@example.com',
             full_name='Sheila Davis',
-            password='StrongPass123',
+            password='StrongPass123!',
             role='EXPERT',
             expertise_field='Medical Doctor',
             neighborhood_address='Sariyer, Istanbul',
@@ -193,7 +193,7 @@ class LogoutTests(TestCase):
         self.user = User.objects.create_user(
             email='sheila@example.com',
             full_name='Sheila Davis',
-            password='StrongPass123',
+            password='StrongPass123!',
         )
         # Generate a JWT access token for the user
         refresh = RefreshToken.for_user(self.user)
@@ -238,7 +238,7 @@ class MePatchTests(TestCase):
         self.user = User.objects.create_user(
             email='user@example.com',
             full_name='Test User',
-            password='StrongPass123',
+            password='StrongPass123!',
             hub=self.hub,
         )
         refresh = RefreshToken.for_user(self.user)
@@ -264,7 +264,7 @@ class ProfileTests(TestCase):
         self.user = User.objects.create_user(
             email='user@example.com',
             full_name='Test User',
-            password='StrongPass123',
+            password='StrongPass123!',
         )
         refresh = RefreshToken.for_user(self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
@@ -293,12 +293,12 @@ class UserPublicProfileTests(TestCase):
         self.user = User.objects.create_user(
             email='user@example.com',
             full_name='Test User',
-            password='StrongPass123',
+            password='StrongPass123!',
         )
         self.other = User.objects.create_user(
             email='other@example.com',
             full_name='Other User',
-            password='StrongPass123',
+            password='StrongPass123!',
         )
         refresh = RefreshToken.for_user(self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
