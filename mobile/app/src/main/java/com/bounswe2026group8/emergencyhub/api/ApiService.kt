@@ -21,35 +21,35 @@ interface ApiService {
 
     // ── Auth ──────────────────────────────────────────────────────────────
 
-    @POST("/register")
+    @POST("/api/register")
     suspend fun register(@Body body: RegisterRequest): Response<RegisterResponse>
 
-    @POST("/login")
+    @POST("/api/login")
     suspend fun login(@Body body: LoginRequest): Response<LoginResponse>
 
-    @POST("/logout")
+    @POST("/api/logout")
     suspend fun logout(): Response<LogoutResponse>
 
-    @GET("/me")
+    @GET("/api/me")
     suspend fun getMe(): Response<MeResponse>
 
-    @PATCH("/me")
+    @PATCH("/api/me")
     suspend fun updateMe(@Body body: UpdateMeRequest): Response<MeResponse>
 
     // ── Help Requests ────────────────────────────────────────────────────
 
-    @GET("/help-requests/")
+    @GET("/api/help-requests/")
     suspend fun getHelpRequests(
         @Query("hub_id") hubId: Int? = null,
         @Query("category") category: String? = null
     ): Response<List<HelpRequestItem>>
 
-    @POST("/help-requests/")
+    @POST("/api/help-requests/")
     suspend fun createHelpRequest(
         @Body body: CreateHelpRequest
     ): Response<HelpRequestDetail>
 
-    @GET("/help-requests/{id}/")
+    @GET("/api/help-requests/{id}/")
     suspend fun getHelpRequestDetail(
         @Path("id") id: Int
     ): Response<HelpRequestDetail>
@@ -61,12 +61,12 @@ interface ApiService {
 
     // ── Help Request Comments ────────────────────────────────────────────
 
-    @GET("/help-requests/{id}/comments/")
+    @GET("/api/help-requests/{id}/comments/")
     suspend fun getHelpRequestComments(
         @Path("id") requestId: Int
     ): Response<List<HelpRequestComment>>
 
-    @POST("/help-requests/{id}/comments/")
+    @POST("/api/help-requests/{id}/comments/")
     suspend fun createHelpRequestComment(
         @Path("id") requestId: Int,
         @Body body: CreateCommentRequest
@@ -79,88 +79,88 @@ interface ApiService {
 
     // ── Help Offers ──────────────────────────────────────────────────────
 
-    @GET("/help-offers/")
+    @GET("/api/help-offers/")
     suspend fun getHelpOffers(
         @Query("hub_id") hubId: Int? = null,
         @Query("category") category: String? = null
     ): Response<List<HelpOfferItem>>
 
-    @POST("/help-offers/")
+    @POST("/api/help-offers/")
     suspend fun createHelpOffer(
         @Body body: CreateHelpOffer
     ): Response<HelpOfferItem>
 
     /** Returns Response<ResponseBody?> to avoid Gson parsing the empty 204 body. */
-    @DELETE("/help-offers/{id}/")
+    @DELETE("/api/help-offers/{id}/")
     suspend fun deleteHelpOffer(
         @Path("id") id: Int
     ): Response<ResponseBody?>
 
     // ── Hubs ─────────────────────────────────────────────────────────────
 
-    @GET("/hubs/")
+    @GET("/api/hubs/")
     suspend fun getHubs(): Response<List<Hub>>
 
     // ── Forum ────────────────────────────────────────────────────────────
 
-    @GET("/forum/posts/")
+    @GET("/api/forum/posts/")
     suspend fun getPosts(
         @Query("forum_type") forumType: String,
         @Query("hub") hub: Int? = null
     ): Response<List<Post>>
 
-    @POST("/forum/posts/")
+    @POST("/api/forum/posts/")
     suspend fun createPost(@Body body: CreatePostRequest): Response<Post>
 
-    @GET("/forum/posts/{id}/")
+    @GET("/api/forum/posts/{id}/")
     suspend fun getPost(@Path("id") id: Int): Response<Post>
 
-    @GET("/forum/posts/{postId}/comments/")
+    @GET("/api/forum/posts/{postId}/comments/")
     suspend fun getComments(@Path("postId") postId: Int): Response<List<Comment>>
 
-    @POST("/forum/posts/{postId}/comments/")
+    @POST("/api/forum/posts/{postId}/comments/")
     suspend fun createComment(
         @Path("postId") postId: Int,
         @Body body: CreateCommentRequest
     ): Response<Comment>
 
-    @DELETE("/forum/comments/{id}/")
+    @DELETE("/api/forum/comments/{id}/")
     suspend fun deleteComment(@Path("id") id: Int): Response<ResponseBody>
 
-    @DELETE("/forum/posts/{id}/")
+    @DELETE("/api/forum/posts/{id}/")
     suspend fun deletePost(@Path("id") id: Int): Response<ResponseBody>
 
-    @POST("/forum/posts/{postId}/vote/")
+    @POST("/api/forum/posts/{postId}/vote/")
     suspend fun vote(
         @Path("postId") postId: Int,
         @Body body: VoteRequest
     ): Response<VoteResponse>
 
-    @POST("/forum/posts/{postId}/repost/")
+    @POST("/api/forum/posts/{postId}/repost/")
     suspend fun repost(
         @Path("postId") postId: Int,
         @Body body: RepostRequest
     ): Response<Post>
 
-    @POST("/forum/posts/{postId}/report/")
+    @POST("/api/forum/posts/{postId}/report/")
     suspend fun reportPost(
         @Path("postId") postId: Int,
         @Body body: ReportRequest
     ): Response<ResponseBody>
 
     @Multipart
-    @POST("/forum/upload/")
+    @POST("/api/forum/upload/")
     suspend fun uploadImages(
         @Part images: List<MultipartBody.Part>
     ): Response<UploadImagesResponse>
 
     @Multipart
-    @POST("/help-requests/upload/")
+    @POST("/api/help-requests/upload/")
     suspend fun uploadHelpRequestImages(
         @Part images: List<MultipartBody.Part>
     ): Response<UploadImagesResponse>
 
-    @POST("/accounts/fcm-token/")
+    @POST("/api/accounts/fcm-token/")
     suspend fun updateFcmToken(@Body body: FcmTokenRequest): Response<Void>
 
     // ── Profile ─────────────────────────────────────────────────────────────────
