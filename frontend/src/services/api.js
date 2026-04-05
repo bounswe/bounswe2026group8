@@ -6,7 +6,14 @@ const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
  * - Absolute URLs are returned as-is.
  */
 export function resolveImageUrl(url) {
-  if (url.startsWith('/')) return `${API_BASE}${url}`;
+  if (!url) return url;
+  if (!url.startsWith('/')) return url;
+  // API_BASE may be a relative path like '/api' (production) or an absolute URL
+  // like 'http://localhost:8000' (local dev). Media is always served from the
+  // same origin, so we must NOT prepend '/api' to '/media/...' paths.
+  if (API_BASE.startsWith('http')) {
+    return `${new URL(API_BASE).origin}${url}`;
+  }
   return url;
 }
 
