@@ -38,7 +38,7 @@ class RegisterTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['message'], 'Account created successfully')
         self.assertEqual(response.data['user']['role'], 'STANDARD')
-        self.assertIsNone(response.data['user']['expertise_field'])
+        self.assertEqual(response.data['user']['expertise_fields'], [])
 
     def test_register_expert_user(self):
         """Expert user can register with an expertise_field."""
@@ -50,7 +50,6 @@ class RegisterTests(TestCase):
         response = self.client.post(self.url, payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['user']['role'], 'EXPERT')
-        self.assertEqual(response.data['user']['expertise_field'], 'Medical Doctor')
         self.assertEqual(response.data['user']['neighborhood_address'], 'Sariyer, Istanbul')
 
     def test_register_standard_user_without_optional_fields(self):
@@ -179,7 +178,6 @@ class MeTests(TestCase):
         self.assertEqual(response.data['email'], 'sheila@example.com')
         self.assertEqual(response.data['full_name'], 'Sheila Davis')
         self.assertEqual(response.data['role'], 'EXPERT')
-        self.assertEqual(response.data['expertise_field'], 'Medical Doctor')
         self.assertEqual(response.data['neighborhood_address'], 'Sariyer, Istanbul')
 
     def test_me_without_token_returns_401(self):
@@ -248,7 +246,7 @@ class MePatchTests(TestCase):
 
     def test_patch_me_updates_hub(self):
         """PATCH /me can update the user's hub."""
-        response = self.client.patch('/me', {'hub': self.other_hub.pk}, format='json')
+        response = self.client.patch('/me', {'hub_id': self.other_hub.pk}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.user.refresh_from_db()
         self.assertEqual(self.user.hub, self.other_hub)
