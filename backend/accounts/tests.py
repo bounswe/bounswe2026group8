@@ -11,7 +11,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User
+from .models import Hub, User
 
 
 class RegisterTests(TestCase):
@@ -212,3 +212,112 @@ class LogoutTests(TestCase):
         """Unauthenticated logout attempt returns 401."""
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class HubTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.hub, _ = Hub.objects.get_or_create(name='Istanbul', defaults={'slug': 'istanbul'})
+
+    def test_list_hubs_public(self):
+        """Anyone can list hubs without authentication."""
+        response = self.client.get('/hubs/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(response.data) >= 1)
+
+    def test_hub_has_name_and_slug(self):
+        """Hub list returns name and slug fields."""
+        response = self.client.get('/hubs/')
+        hub = next(h for h in response.data if h['slug'] == 'istanbul')
+        self.assertEqual(hub['name'], 'Istanbul')
+
+
+class MePatchTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.hub, _ = Hub.objects.get_or_create(name='Istanbul', defaults={'slug': 'istanbul'})
+        self.other_hub, _ = Hub.objects.get_or_create(name='Ankara', defaults={'slug': 'ankara'})
+        self.user = User.objects.create_user(
+            email='user@example.com',
+            full_name='Test User',
+            password='StrongPass123',
+            hub=self.hub,
+        )
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
+
+    def test_patch_me_updates_hub(self):
+        """PATCH /me can update the user's hub."""
+        response = self.client.patch('/me', {'hub': self.other_hub.pk}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.hub, self.other_hub)
+
+    def test_patch_me_unauthenticated_returns_401(self):
+        """Unauthenticated PATCH /me returns 401."""
+        anon = APIClient()
+        response = anon.patch('/me', {'hub': self.other_hub.pk}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class ProfileTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            email='user@example.com',
+            full_name='Test User',
+            password='StrongPass123',
+        )
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
+
+    def test_get_profile(self):
+        """GET /profile returns the user's extended profile."""
+        response = self.client.get('/profile')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_patch_profile_updates_bio(self):
+        """PATCH /profile can update bio."""
+        response = self.client.patch('/profile', {'bio': 'Hello world'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['bio'], 'Hello world')
+
+    def test_get_profile_unauthenticated_returns_401(self):
+        """Unauthenticated GET /profile returns 401."""
+        anon = APIClient()
+        response = anon.get('/profile')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class UserPublicProfileTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            email='user@example.com',
+            full_name='Test User',
+            password='StrongPass123',
+        )
+        self.other = User.objects.create_user(
+            email='other@example.com',
+            full_name='Other User',
+            password='StrongPass123',
+        )
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
+
+    def test_get_public_profile(self):
+        """GET /users/<id>/ returns the public profile of another user."""
+        response = self.client.get(f'/users/{self.other.pk}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['full_name'], 'Other User')
+
+    def test_get_public_profile_unauthenticated_returns_401(self):
+        """Unauthenticated request to /users/<id>/ returns 401."""
+        anon = APIClient()
+        response = anon.get(f'/users/{self.other.pk}/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_nonexistent_user_returns_404(self):
+        """Requesting a non-existent user returns 404."""
+        response = self.client.get('/users/99999/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

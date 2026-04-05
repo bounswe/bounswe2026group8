@@ -1,7 +1,7 @@
 from django.test import TestCase, override_settings
 from rest_framework.test import APIClient
 from rest_framework import status
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from accounts.models import Hub, User
 from .models import Post, Comment, Vote, Report
@@ -18,13 +18,11 @@ class ForumTestBase(TestCase):
         self.user2 = User.objects.create_user(
             email='bob@example.com', full_name='Bob', password='Pass1234', hub=self.hub,
         )
-        self.token1 = Token.objects.create(user=self.user1)
-        self.token2 = Token.objects.create(user=self.user2)
 
         self.client1 = APIClient()
-        self.client1.credentials(HTTP_AUTHORIZATION=f'Token {self.token1.key}')
+        self.client1.credentials(HTTP_AUTHORIZATION=f'Bearer {str(RefreshToken.for_user(self.user1).access_token)}')
         self.client2 = APIClient()
-        self.client2.credentials(HTTP_AUTHORIZATION=f'Token {self.token2.key}')
+        self.client2.credentials(HTTP_AUTHORIZATION=f'Bearer {str(RefreshToken.for_user(self.user2).access_token)}')
         self.anon = APIClient()
 
     def _create_post(self, client=None, **overrides):
@@ -73,6 +71,13 @@ class PostCRUDTests(ForumTestBase):
         res = self.anon.get('/forum/posts/?forum_type=urgent')
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['title'], 'Urgent!')
+
+    def test_list_posts_filtered_by_author(self):
+        self._create_post(client=self.client1, title='Alice post')
+        self._create_post(client=self.client2, title='Bob post')
+        res = self.anon.get(f'/forum/posts/?author={self.user1.pk}')
+        self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data[0]['title'], 'Alice post')
 
     def test_create_global_post_no_hub(self):
         res = self.client1.post(
@@ -247,4 +252,33 @@ class ReportTests(ForumTestBase):
     def test_report_unauthenticated(self):
         pk = self._create_post().data['id']
         res = self.anon.post(f'/forum/posts/{pk}/report/', {'reason': 'SPAM'}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+# ── Repost Tests ───────────────────────────────────────────────────────────────
+
+class RepostTests(ForumTestBase):
+
+    def test_repost_to_another_hub(self):
+        other_hub, _ = Hub.objects.get_or_create(name='Ankara', defaults={'slug': 'ankara'})
+        pk = self._create_post().data['id']
+        res = self.client2.post(f'/forum/posts/{pk}/repost/', {'hub': other_hub.pk}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Post.objects.get(pk=pk).repost_count, 1)
+
+    def test_cannot_repost_own_post(self):
+        pk = self._create_post().data['id']
+        res = self.client1.post(f'/forum/posts/{pk}/repost/', {}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_cannot_repost_same_post_twice(self):
+        other_hub, _ = Hub.objects.get_or_create(name='Ankara', defaults={'slug': 'ankara'})
+        pk = self._create_post().data['id']
+        self.client2.post(f'/forum/posts/{pk}/repost/', {'hub': other_hub.pk}, format='json')
+        res = self.client2.post(f'/forum/posts/{pk}/repost/', {'hub': other_hub.pk}, format='json')
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_repost_unauthenticated(self):
+        pk = self._create_post().data['id']
+        res = self.anon.post(f'/forum/posts/{pk}/repost/', {}, format='json')
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
