@@ -2,11 +2,14 @@
 Django settings for backend project.
 Neighborhood Emergency Preparedness Hub — Auth Backend
 """
-
 from pathlib import Path
 from datetime import timedelta
 
+import firebase_admin
+from firebase_admin import credentials
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # SECURITY WARNING: This key is for local development only.
 # Before deploying to production, set SECRET_KEY via an environment variable:
@@ -30,6 +33,8 @@ INSTALLED_APPS = [
     'corsheaders',
     # Local
     'accounts',
+    'forum',
+    'help_requests',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +80,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {'NAME': 'accounts.validators.ComplexPasswordValidator'},
 ]
 
 LANGUAGE_CODE = 'en-us'
@@ -83,6 +89,9 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -106,7 +115,18 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+# ── Forum ──────────────────────────────────────────────────────────────────────
+FORUM_REPORT_HIDE_THRESHOLD = 5
+
 # ── CORS ───────────────────────────────────────────────────────────────────────
 # Allow all origins for Milestone 1 dev convenience.
 # Restrict to specific origins before production.
 CORS_ALLOW_ALL_ORIGINS = True
+
+# ── Firebase Cloud Messaging ──────────────────────────────────────────────────
+
+
+_firebase_cred_path = BASE_DIR / 'firebase-credentials.json'
+if _firebase_cred_path.exists() and not firebase_admin._apps:
+    _cred = credentials.Certificate(str(_firebase_cred_path))
+    firebase_admin.initialize_app(_cred)

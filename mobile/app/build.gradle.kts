@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,6 +49,10 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     // Coroutines for async API calls
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -59,4 +64,16 @@ dependencies {
     implementation("org.mapsforge:mapsforge-poi-android:0.18.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    // Google Play Services — Location
+    implementation("com.google.android.gms:play-services-location:21.1.0")
+
+    // OpenStreetMap for map display
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
+
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Firebase Cloud Messaging
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-messaging")
 }

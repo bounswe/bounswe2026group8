@@ -22,6 +22,19 @@ object RetrofitClient {
 
     // For emulator → host-machine localhost
     private const val BASE_URL = "http://10.0.2.2:8000"
+
+    /**
+     * Resolves an image URL so it is loadable from the mobile client.
+     * - Relative paths (e.g. "/media/uploads/abc.png") get the emulator base URL prepended.
+     * - Absolute URLs pointing at localhost are rewritten to 10.0.2.2.
+     * - All other URLs (external) are returned as-is.
+     */
+    fun resolveImageUrl(url: String): String {
+        if (url.startsWith("/")) return "$BASE_URL$url"
+        if (url.startsWith("http://localhost")) return url.replace("http://localhost", "http://10.0.2.2")
+        return url
+    }
+
     private var apiService: ApiService? = null
 
     fun getService(context: Context): ApiService {
