@@ -29,6 +29,8 @@ services:
       DJANGO_DEBUG: ${DJANGO_DEBUG:-False}
     volumes:
       - media_data:/app/media
+      # Mount credentials from the host — never commit this file to git
+      - ./backend/firebase-credentials.json:/app/firebase-credentials.json:ro
     depends_on:
       db:
         condition: service_healthy
