@@ -1,9 +1,8 @@
-package com.bounswe2026group8.emergencyhub.map.ui
+package com.bounswe2026group8.emergencyhub.offline.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bounswe2026group8.emergencyhub.R
 
@@ -22,11 +21,11 @@ class OfflineFeaturesActivity : AppCompatActivity() {
         }
 
         checklistButton.setOnClickListener {
-            Toast.makeText(this, "Emergency Checklist — coming soon!", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, FirstAidActivity::class.java))
         }
 
         contactsButton.setOnClickListener {
-            Toast.makeText(this, "Offline Contacts — coming soon!", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, EmergencyContactsActivity::class.java))
         }
     }
 }

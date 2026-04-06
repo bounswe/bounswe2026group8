@@ -25,8 +25,11 @@
         <activity android:name=".ui.SignUpActivity" android:exported="false" />
         <activity android:name=".ui.SignInActivity" android:exported="false" />
         <activity android:name=".ui.DashboardActivity" android:exported="false" />
-        <activity android:name=".map.ui.MapActivity" android:exported="false"/>
-        <activity android:name=".map.ui.OfflineFeaturesActivity" android:exported="false" />
+        <activity android:name=".offline.ui.MapActivity" android:exported="false"/>
+        <activity android:name=".offline.ui.OfflineFeaturesActivity" android:exported="false" />
+        <activity android:name=".offline.ui.FirstAidActivity" android:exported="false" />
+        <activity android:name=".offline.ui.EmergencyContactsActivity" android:exported="false" />
+        <activity android:name=".offline.ui.FirstAidDetailActivity" android:exported="false" />
     </application>
 
 </manifest>

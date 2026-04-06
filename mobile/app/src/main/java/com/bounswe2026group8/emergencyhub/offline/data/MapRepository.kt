@@ -1,4 +1,4 @@
-package com.bounswe2026group8.emergencyhub.map.ui
+package com.bounswe2026group8.emergencyhub.offline.ui
 
 import android.content.Context
 import com.bounswe2026group8.emergencyhub.R
@@ -133,11 +133,11 @@ class MapRepository(private val context: Context) {
     }
 
     fun getCountryMapFileName(countryName: String): String {
-        return "${normalizeSlug(countryName)}.map"
+        return "${normalizeSlug(countryName)}.offline"
     }
 
     fun getUsStateMapFileName(stateNameOrCode: String): String {
-        return "${normalizeUsStateSlug(stateNameOrCode)}.map"
+        return "${normalizeUsStateSlug(stateNameOrCode)}.offline"
     }
 
     fun getAllGatheringPoints(): List<GatheringPoint> {

@@ -13,7 +13,7 @@ import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
-import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
+import com.bounswe2026group8.emergencyhub.offline.ui.OfflineFeaturesActivity
 
 /**
  * Dashboard screen — the post-login home page.

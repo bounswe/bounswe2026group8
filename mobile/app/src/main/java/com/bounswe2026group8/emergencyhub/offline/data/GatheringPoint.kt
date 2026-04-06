@@ -1,4 +1,4 @@
-package com.bounswe2026group8.emergencyhub.map.ui
+package com.bounswe2026group8.emergencyhub.offline.ui
 
 data class GatheringPoint(
     val name: String,

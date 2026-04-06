@@ -1,4 +1,4 @@
-package com.bounswe2026group8.emergencyhub.map.ui
+package com.bounswe2026group8.emergencyhub.offline.ui
 
 import android.content.Context
 import org.mapsforge.core.model.LatLong
@@ -40,7 +40,7 @@ class PreferencesManager(private val context: Context) {
         prefs.edit().putString("user_map_file_name", fileName).apply()
     }
 
-    fun loadMapFileName(defaultFileName: String = "turkey.map"): String {
+    fun loadMapFileName(defaultFileName: String = "turkey.offline"): String {
         return prefs.getString("user_map_file_name", defaultFileName) ?: defaultFileName
     }
 }

@@ -1,4 +1,4 @@
-package com.bounswe2026group8.emergencyhub.map.ui
+package com.bounswe2026group8.emergencyhub.offline.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -365,7 +365,7 @@ class MapActivity : AppCompatActivity() {
 
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle("Downloading $fileName")
-            .setDescription("Offline map download in progress")
+            .setDescription("Offline offline download in progress")
             .setNotificationVisibility(
                 DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
             )
@@ -421,7 +421,7 @@ class MapActivity : AppCompatActivity() {
 
         val request = DownloadManager.Request(Uri.parse(url))
             .setTitle("Downloading $fileName")
-            .setDescription("Offline map download in progress")
+            .setDescription("Offline offline download in progress")
             .setNotificationVisibility(
                 DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
             )

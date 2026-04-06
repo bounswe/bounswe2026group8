@@ -1,4 +1,4 @@
-package com.bounswe2026group8.emergencyhub.map.ui
+package com.bounswe2026group8.emergencyhub.offline.ui
 
 import android.content.Context
 import android.os.Environment
@@ -22,7 +22,7 @@ class MapScreenController(
     ) {
         mapView.layerManager.layers.clear()
 
-        val mapFileName = preferencesManager.loadMapFileName("turkey.map")
+        val mapFileName = preferencesManager.loadMapFileName("turkey.offline")
         val appDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
         val mapFile = File(appDir, mapFileName)
 
