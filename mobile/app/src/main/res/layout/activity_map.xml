@@ -1,0 +1,30 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.mapsforge.map.android.view.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/map_content_description" />
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nearest_label"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:background="#EEFFFFFF"
+        android:padding="8dp"
+        android:layout_margin="16dp"
+        android:layout_gravity="top|center_horizontal" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:layout_margin="16dp"/>
+
+</FrameLayout>

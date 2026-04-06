@@ -65,6 +65,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
+    // Map
+    implementation("org.mapsforge:mapsforge-map-android:0.18.0")
+    implementation("org.mapsforge:mapsforge-map:0.18.0")
+    implementation("org.mapsforge:mapsforge-themes:0.18.0")
+    implementation("org.mapsforge:mapsforge-poi-android:0.18.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     // Google Play Services — Location
     implementation("com.google.android.gms:play-services-location:21.1.0")
 

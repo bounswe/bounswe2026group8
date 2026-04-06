@@ -30,6 +30,8 @@
         <activity android:name=".ui.SignUpActivity" android:exported="false" />
         <activity android:name=".ui.SignInActivity" android:exported="false" />
         <activity android:name=".ui.DashboardActivity" android:exported="false" />
+        <activity android:name=".map.ui.MapActivity" android:exported="false"/>
+        <activity android:name=".map.ui.OfflineFeaturesActivity" android:exported="false" />
         <activity android:name=".ui.HelpRequestListActivity" android:exported="false" />
         <activity android:name=".ui.CreateHelpRequestActivity" android:exported="false" />
         <activity android:name=".ui.HelpRequestDetailActivity" android:exported="false"

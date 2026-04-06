@@ -16,6 +16,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
+import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -123,6 +124,13 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureCards() {
+        val cards = mapOf(
+            R.id.cardForum to "Forum",
+            R.id.cardHelpRequests to "Help Requests",
+            R.id.cardProfile to "Profile"
+        )
+
+        for ((id, name) in cards) {
         // Forum — navigate to forum screen
         findViewById<MaterialCardView>(R.id.cardForum).setOnClickListener {
             startActivity(Intent(this, ForumActivity::class.java))
@@ -144,6 +152,10 @@ class DashboardActivity : AppCompatActivity() {
             findViewById<MaterialCardView>(id).setOnClickListener {
                 Toast.makeText(this, "$name — coming soon!", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        findViewById<MaterialCardView>(R.id.cardOfflineInfo).setOnClickListener {
+            startActivity(Intent(this, OfflineFeaturesActivity::class.java))
         }
     }
 
