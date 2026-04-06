@@ -35,12 +35,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 
@@ -65,18 +65,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
-    // Map
-    implementation("org.mapsforge:mapsforge-map-android:0.18.0")
-    implementation("org.mapsforge:mapsforge-map:0.18.0")
-    implementation("org.mapsforge:mapsforge-themes:0.18.0")
-    implementation("org.mapsforge:mapsforge-poi-android:0.18.0")
+    // Map (OSMDroid for online/offline tile display)
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.android.gms:play-services-location:21.3.0")
-    // Google Play Services — Location
-    implementation("com.google.android.gms:play-services-location:21.1.0")
-
-    // OpenStreetMap for map display
-    implementation("org.osmdroid:osmdroid-android:6.1.18")
 
     // Glide for image loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
