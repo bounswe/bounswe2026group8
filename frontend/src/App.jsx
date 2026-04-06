@@ -21,9 +21,7 @@ export default function App() {
 return (
   <BrowserRouter>
     <AuthProvider>
-        <div className="hub-selector-bar">
-          <HubSelector />
-        </div>
+        <HubSelector />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignUpPage />} />

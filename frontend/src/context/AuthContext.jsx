@@ -23,15 +23,16 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    getMe().then(({ ok, data }) => {
+    getMe().then(({ ok, status, data }) => {
       if (ok) {
         setUser(data);
-      } else {
+      } else if (status === 401 || status === 403) {
         // Token invalid / expired — clear it
         localStorage.removeItem('token');
         setToken(null);
         setUser(null);
       }
+      // For other errors (502, network issues) keep the token — don't log user out
       setLoading(false);
     });
   }, [token]);
