@@ -112,7 +112,6 @@
     <string name="offline_info_desc">Access critical offline information to prepare for emergencies and protect yourself and your community.</string>
     <string name="offline_info_tips_title">Key Resources</string>
     <string name="offline_info_tips">• Emergency contact numbers\n• First aid basics\n• Evacuation procedures\n• Safety checklists\n• Community resources</string>
-    <string name="back">Back</string>
     <string name="hub_city">Hub (City)</string>
     <string name="select_hub">Select a hub</string>
 

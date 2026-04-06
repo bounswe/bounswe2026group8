@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.FcmTokenRequest
-import com.bounswe2026group8.emergencyhub.api.RetrofitClient    
+import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.api.UserData
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.bounswe2026group8.emergencyhub.map.cache.MapTileCacheHelper
@@ -63,10 +63,6 @@ class DashboardActivity : AppCompatActivity() {
         // Register FCM token for push notifications
         sendFcmTokenToBackend()
 
-        // Pre-cache map tiles and gathering points for offline use                                                                      
-        preCacheOfflineData()                                                                                                            
-                                 
-
         // Logout
         findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { performLogout() }
 
@@ -80,6 +76,7 @@ class DashboardActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hubSelectorHelper.load()
+        preCacheOfflineData()
     }
 
     private fun fetchMe() {
@@ -221,9 +218,12 @@ class DashboardActivity : AppCompatActivity() {
         // Cache gathering points from Overpass API
         lifecycleScope.launch {
             try {
-                val points = GatheringPointCache(this@DashboardActivity).getPoints(lat, lon)
-                Log.d("Dashboard", "Pre-cached ${points.size} gathering points")
-            } catch (_: Exception) { }
+                val cache = GatheringPointCache(this@DashboardActivity)
+                val points = cache.getPoints(lat, lon)
+                Log.d("Dashboard", "Pre-cached ${points.size} gathering points for ($lat, $lon)")
+            } catch (e: Exception) {
+                Log.e("Dashboard", "Failed to pre-cache gathering points: ${e.message}")
+            }
         }
     }
 
