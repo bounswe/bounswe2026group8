@@ -756,3 +756,46 @@ class HelpCommentDeleteTests(HelpTestBase):
         """Deleting a comment that does not exist returns 404."""
         res = self.standard_client.delete('/help-requests/comments/99999/')
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_deleting_only_expert_comment_reverts_status_to_open(self):
+        """When the last expert comment is deleted, status reverts from EXPERT_RESPONDING to OPEN."""
+        request_pk = self._create_help_request().data['id']
+
+        # Expert (different from author) comments — promotes status.
+        comment = self._create_comment(client=self.expert_client, request_pk=request_pk)
+        self.assertEqual(
+            HelpRequest.objects.get(pk=request_pk).status,
+            HelpRequest.Status.EXPERT_RESPONDING,
+        )
+
+        # Expert deletes their comment — status should revert.
+        self.expert_client.delete(f'/help-requests/comments/{comment["id"]}/')
+        self.assertEqual(
+            HelpRequest.objects.get(pk=request_pk).status,
+            HelpRequest.Status.OPEN,
+        )
+
+    def test_deleting_expert_comment_with_other_expert_comments_keeps_status(self):
+        """Deleting one expert comment keeps status EXPERT_RESPONDING if another expert comment remains."""
+        # Create a second expert user.
+        expert2 = User.objects.create_user(
+            email='expert2@example.com', full_name='Expert Two',
+            password='Pass1234', hub=self.hub, role=User.Role.EXPERT,
+        )
+        expert2_client = APIClient()
+        expert2_client.credentials(
+            HTTP_AUTHORIZATION=f'Bearer {RefreshToken.for_user(expert2).access_token}'
+        )
+
+        request_pk = self._create_help_request().data['id']
+
+        # Two different experts comment.
+        comment1 = self._create_comment(client=self.expert_client, request_pk=request_pk)
+        self._create_comment(client=expert2_client, request_pk=request_pk)
+
+        # First expert deletes their comment — second expert's comment still exists.
+        self.expert_client.delete(f'/help-requests/comments/{comment1["id"]}/')
+        self.assertEqual(
+            HelpRequest.objects.get(pk=request_pk).status,
+            HelpRequest.Status.EXPERT_RESPONDING,
+        )
