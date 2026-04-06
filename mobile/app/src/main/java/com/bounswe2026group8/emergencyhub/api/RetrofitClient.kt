@@ -1,6 +1,7 @@
 package com.bounswe2026group8.emergencyhub.api
 
 import android.content.Context
+import com.bounswe2026group8.emergencyhub.BuildConfig
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -11,16 +12,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Singleton providing the configured Retrofit [ApiService] instance.
  *
- * Uses OkHttp interceptors to:
- *   1. Automatically attach `Authorization: Bearer <token>` when a token exists
- *   2. Log HTTP traffic for debugging
- *
- * The base URL points to the production server at emergencyhub.duckdns.org.
- * For local development, change BASE_URL to "http://10.0.2.2:8000" (emulator) or your machine's IP.
+ * BASE_URL is set per build type via BuildConfig:
+ *   - debug:   http://10.0.2.2:8000  (Android emulator → localhost)
+ *   - release: https://emergencyhub.duckdns.org
  */
 object RetrofitClient {
 
-    private const val BASE_URL = "https://emergencyhub.duckdns.org"
+    private val BASE_URL = BuildConfig.BASE_URL
 
     /**
      * Resolves an image URL so it is loadable from the mobile client.
@@ -47,14 +45,15 @@ object RetrofitClient {
                 chain.proceed(requestBuilder.build())
             }
 
-            // Logging interceptor for debug builds
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
-
             val client = OkHttpClient.Builder()
                 .addInterceptor(authInterceptor)
-                .addInterceptor(loggingInterceptor)
+                .apply {
+                    if (BuildConfig.DEBUG) {
+                        addInterceptor(HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        })
+                    }
+                }
                 .build()
 
             apiService = Retrofit.Builder()
