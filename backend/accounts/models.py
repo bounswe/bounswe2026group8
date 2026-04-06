@@ -2,6 +2,19 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 
 
+class Hub(models.Model):
+    """A city / neighbourhood hub that users and posts belong to."""
+    name = models.CharField(max_length=120, unique=True)
+    slug = models.SlugField(max_length=120, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class UserManager(BaseUserManager):
     """Custom manager that uses email as the unique identifier."""
 
@@ -43,8 +56,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         choices=Role.choices,
         default=Role.STANDARD,
     )
+    hub = models.ForeignKey(
+        Hub,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='members',
+    )
     neighborhood_address = models.CharField(max_length=255, blank=True, null=True)
     expertise_field = models.CharField(max_length=255, blank=True, null=True)
+
+    # Push notifications
+    fcm_token = models.TextField(blank=True, null=True)
 
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -65,3 +88,101 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f'{self.full_name} <{self.email}> [{self.role}]'
+
+
+class Profile(models.Model):
+    """Extended profile attributes linked to a single user."""
+
+    class AvailabilityStatus(models.TextChoices):
+        SAFE = 'SAFE', 'Safe'
+        NEEDS_HELP = 'NEEDS_HELP', 'Needs Help'
+        AVAILABLE_TO_HELP = 'AVAILABLE_TO_HELP', 'Available to Help'
+
+    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='profile')
+
+    # Contact fields
+    phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
+    emergency_contact_phone = models.CharField(max_length=20, blank=True, null=True)
+
+    # Medical / accessibility fields
+    blood_type = models.CharField(max_length=10, blank=True, null=True)
+    special_needs = models.TextField(blank=True, null=True)
+    has_disability = models.BooleanField(default=False)
+
+    # Emergency availability status
+    availability_status = models.CharField(
+        max_length=20,
+        choices=AvailabilityStatus.choices,
+        default=AvailabilityStatus.SAFE,
+    )
+
+    # General profile fields (kept from original)
+    bio = models.TextField(blank=True, null=True)
+    preferred_language = models.CharField(max_length=100, blank=True, null=True)
+    emergency_contact = models.CharField(max_length=255, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Profile for {self.user.email}'
+
+
+class Resource(models.Model):
+    """A resource owned by a user (available during emergencies)."""
+
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='resources')
+    name = models.CharField(max_length=255)
+    category = models.CharField(max_length=255)
+    quantity = models.PositiveIntegerField(default=1)
+    condition = models.BooleanField(default=True, help_text='Whether the resource is functional')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.name} (x{self.quantity}) — {self.user.email}'
+
+
+class ExpertiseField(models.Model):
+    """An area of expertise for EXPERT users only."""
+
+    class CertificationLevel(models.TextChoices):
+        BEGINNER = 'BEGINNER', 'Beginner'
+        ADVANCED = 'ADVANCED', 'Advanced'
+
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='expertise_fields')
+    field = models.CharField(max_length=255, help_text='e.g. First Aid, Search and Rescue')
+    certification_level = models.CharField(
+        max_length=10,
+        choices=CertificationLevel.choices,
+        default=CertificationLevel.BEGINNER,
+    )
+    certification_document_url = models.CharField(max_length=500, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.field} ({self.certification_level}) — {self.user.email}'
+
+
+# Automatically create Profile when User is created
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, created, **kwargs):
+    if not created:
+        try:
+            instance.profile.save()
+        except Profile.DoesNotExist:
+            Profile.objects.create(user=instance)
+

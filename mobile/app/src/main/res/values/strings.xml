@@ -42,4 +42,139 @@
     <string name="feature_profile_desc">Manage your account</string>
     <string name="feature_offline">Offline Info</string>
     <string name="feature_offline_desc">Critical data access</string>
+
+    <!-- Help Center (tabbed: Requests + Offers) -->
+    <string name="help_center_title">Help Center</string>
+    <string name="tab_requests">Requests</string>
+    <string name="tab_offers">Offers</string>
+    <string name="help_requests_title">Help Requests</string>
+    <string name="filter_all">All</string>
+    <string name="filter_medical">Medical</string>
+    <string name="filter_food">Food</string>
+    <string name="filter_shelter">Shelter</string>
+    <string name="filter_transport">Transport</string>
+    <string name="empty_help_requests">No help requests found</string>
+    <string name="empty_help_requests_hint">Try changing your filter or check back later</string>
+    <string name="status_open">Open</string>
+    <string name="status_expert_responding">Expert Responding</string>
+    <string name="status_resolved">Resolved</string>
+
+    <!-- Create Help Request -->
+    <string name="create_help_request">Create Help Request</string>
+    <string name="create_help_request_subtitle">Describe what help you need</string>
+    <string name="help_title">Title</string>
+    <string name="help_description">Description</string>
+    <string name="select_category">Select category</string>
+    <string name="select_urgency">Select urgency</string>
+    <string name="location_text_hint">Location description (optional)</string>
+    <string name="use_my_location">Use My Location</string>
+    <string name="location_acquired">Location acquired</string>
+    <string name="location_section">Location (optional)</string>
+    <string name="submitting">Submitting…</string>
+    <string name="submit">Submit</string>
+    <string name="help_request_created">Help request created!</string>
+    <string name="images_optional">Images (optional)</string>
+    <string name="upload_from_gallery">Gallery</string>
+    <string name="take_photo">Camera</string>
+
+    <!-- Help Request Detail -->
+    <string name="help_request_detail_title">Help Request</string>
+    <string name="location_label">Location</string>
+    <string name="comments_label">Comments</string>
+    <string name="comments_count_label">Comments (%d)</string>
+    <string name="no_comments_yet">No comments yet. Be the first to respond!</string>
+    <string name="comment_hint">Write a comment…</string>
+    <string name="send">Send</string>
+    <string name="sending">Sending…</string>
+    <string name="comment_posted">Comment posted</string>
+    <string name="expert_badge">Expert</string>
+
+    <!-- Help Offers -->
+    <string name="help_offers_title">Help Offers</string>
+    <string name="feature_help_offers">Help Offers</string>
+    <string name="feature_help_offers_desc">Offer your skills</string>
+    <string name="empty_help_offers">No help offers found</string>
+    <string name="empty_help_offers_hint">Be the first to offer help in your community</string>
+    <string name="create_help_offer">Create Help Offer</string>
+    <string name="create_help_offer_subtitle">Describe what help you can offer</string>
+    <string name="skill_or_resource">Skill or Resource</string>
+    <string name="help_availability">Availability</string>
+    <string name="help_offer_created">Help offer created!</string>
+    <string name="delete_offer">Delete Offer</string>
+    <string name="delete_offer_confirm">Are you sure you want to delete this help offer?</string>
+    <string name="help_offer_deleted">Help offer deleted</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Offline Info screen -->
+    <string name="offline_info_title">Offline Info</string>
+    <string name="offline_info_heading">Emergency Preparedness Resources</string>
+    <string name="offline_info_desc">Access critical offline information to prepare for emergencies and protect yourself and your community.</string>
+    <string name="offline_info_tips_title">Key Resources</string>
+    <string name="offline_info_tips">• Emergency contact numbers\n• First aid basics\n• Evacuation procedures\n• Safety checklists\n• Community resources</string>
+    <string name="back">Back</string>
+    <string name="hub_city">Hub (City)</string>
+    <string name="select_hub">Select a hub</string>
+
+    <!-- Notification Preferences -->
+    <string name="notification_preferences">Notification Preferences</string>
+    <string name="help_request_notifications">Help Request Notifications</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Your Profile</string>
+    <string name="back_arrow">← Back</string>
+    <string name="profile_personal_info">Personal Information</string>
+    <string name="profile_phone">Phone</string>
+    <string name="profile_blood_type">Blood Type</string>
+    <string name="profile_emergency_contact">Emergency Contact</string>
+    <string name="profile_emergency_phone">Emergency Phone</string>
+    <string name="profile_bio">Bio</string>
+    <string name="profile_special_needs_label">Special Needs</string>
+    <string name="profile_has_disability">Has Disability</string>
+    <string name="profile_availability">Availability Status</string>
+    <string name="status_safe">Safe</string>
+    <string name="status_needs_help">Needs Help</string>
+    <string name="status_available">Available</string>
+    <string name="profile_resources">Resources</string>
+    <string name="profile_expertise">Expertise Fields</string>
+    <string name="profile_add">+ Add</string>
+    <string name="profile_save">Save</string>
+    <string name="profile_resource_name">Resource name</string>
+    <string name="profile_resource_category">Category</string>
+    <string name="profile_resource_qty">Quantity</string>
+    <string name="profile_no_resources">No resources added yet.</string>
+    <string name="profile_expertise_field">Field (e.g. First Aid)</string>
+    <string name="profile_cert_url">Certificate URL (optional)</string>
+    <string name="profile_no_expertise">No expertise fields added yet.</string>
+
+    <!-- Forum -->
+    <string name="forum_title">Forum</string>
+    <string name="forum_hub_all">All hubs — everyone</string>
+    <string name="new_post">+ New Post</string>
+    <string name="tab_global">Global</string>
+    <string name="tab_standard">Standard</string>
+    <string name="tab_urgent">Urgent</string>
+    <string name="sort_newest">Newest</string>
+    <string name="sort_most_liked">Most Liked</string>
+    <string name="sort_hot">Hot</string>
+    <string name="forum_loading">Loading posts…</string>
+    <string name="forum_empty_global">No global posts yet.</string>
+    <string name="forum_empty_hub">No %1$s posts yet.</string>
+    <string name="forum_select_hub">Select a hub to see posts.</string>
+    <string name="back_to_dashboard">← Back to Dashboard</string>
+    <string name="comment_count">%1$d %2$s</string>
+
+    <!-- Create Post -->
+    <string name="create_post_title">New Post</string>
+    <string name="create_post_subtitle_global">Visible to everyone (all hubs)</string>
+    <string name="create_post_subtitle_hub">Posting to %1$s</string>
+    <string name="post_title_hint">What\'s happening?</string>
+    <string name="post_content_hint">Describe the situation, share info, or ask for help…</string>
+    <string name="title_label">Title</string>
+    <string name="content_label">Content</string>
+    <string name="create_post">Create Post</string>
+    <string name="creating_post">Creating…</string>
+    <string name="back_to_forum">← Back to Forum</string>
+    <string name="title_required">Title is required.</string>
+    <string name="content_required">Content is required.</string>
 </resources>

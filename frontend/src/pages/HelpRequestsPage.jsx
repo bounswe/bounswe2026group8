@@ -1,0 +1,536 @@
+/**
+ * HelpRequestsPage — tabbed page showing help requests and help offers.
+ *
+ * Two tabs:
+ *   "Requests" — fetches GET /help-requests/ and shows clickable cards.
+ *   "Offers"   — fetches GET /help-offers/, shows offer cards with delete,
+ *                and includes an inline creation form.
+ *
+ * Both tabs support category filtering via a shared filter bar.
+ */
+
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import {
+  getHelpRequests,
+  getHelpOffers,
+  createHelpOffer,
+  deleteHelpOffer,
+} from '../services/api';
+
+/** Category options for the filter bar — matches backend Category.choices. */
+const CATEGORIES = [
+  { value: '', label: 'All Categories' },
+  { value: 'MEDICAL', label: 'Medical' },
+  { value: 'FOOD', label: 'Food' },
+  { value: 'SHELTER', label: 'Shelter' },
+  { value: 'TRANSPORT', label: 'Transport' },
+];
+
+/** Category options for forms (no "All" option). */
+const FORM_CATEGORIES = CATEGORIES.filter((c) => c.value !== '');
+
+/** Maps urgency values to badge CSS classes for visual distinction. */
+const URGENCY_CLASSES = {
+  LOW: 'badge-muted',
+  MEDIUM: 'badge-accent',
+  HIGH: 'badge-urgency-high',
+};
+
+const URGENCY_LABELS = { LOW: 'Low', MEDIUM: 'Medium', HIGH: 'High' };
+
+const STATUS_LABELS = {
+  OPEN: 'Open',
+  EXPERT_RESPONDING: 'Expert Responding',
+  RESOLVED: 'Resolved',
+};
+
+/**
+ * Formats an ISO date string into a human-readable relative time.
+ * Shows "Just now", "5m ago", "3h ago", "2d ago", or a locale date.
+ */
+function formatDate(isoString) {
+  const date = new Date(isoString);
+  const diffMs = Date.now() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString();
+}
+
+const STATUS_COLORS = { SAFE: '#34d399', NEEDS_HELP: '#f87171', AVAILABLE_TO_HELP: '#38bdf8' };
+const STATUS_LABELS_MAP = { SAFE: 'Safe', NEEDS_HELP: 'Needs Help', AVAILABLE_TO_HELP: 'Available' };
+
+function AuthorStatus({ profile }) {
+  const s = profile?.availability_status;
+  if (!s || !STATUS_COLORS[s]) return null;
+  const c = STATUS_COLORS[s];
+  return <span className="badge" style={{ color: c, borderColor: c + '44', background: c + '11', fontSize: '0.7rem', padding: '1px 6px' }}>● {STATUS_LABELS_MAP[s]}</span>;
+}
+
+export default function HelpRequestsPage() {
+  const { user } = useAuth();
+  const selectedHub = user?.hub;
+  const navigate = useNavigate();
+
+  /* ── Tab state — "requests" or "offers" ─────────────────────────────────── */
+  const [activeTab, setActiveTab] = useState('requests');
+
+  /* ── Shared filter ──────────────────────────────────────────────────────── */
+  const [category, setCategory] = useState('');
+
+  /* ── Requests tab state ���────────────────────────────────────────────────── */
+  const [requests, setRequests] = useState([]);
+  const [reqLoading, setReqLoading] = useState(true);
+  const [reqError, setReqError] = useState('');
+
+  /* ── Offers tab state ──────────────────────────────────────────��────────── */
+  const [offers, setOffers] = useState([]);
+  const [offLoading, setOffLoading] = useState(true);
+  const [offError, setOffError] = useState('');
+  const [deleting, setDeleting] = useState(null);
+  const [selectedOffer, setSelectedOffer] = useState(null); // offer detail modal
+
+  /* ── Offer creation form state ──────────────────────────────────────────── */
+  const [showOfferForm, setShowOfferForm] = useState(false);
+  const [offerForm, setOfferForm] = useState({
+    category: 'MEDICAL',
+    skill_or_resource: '',
+    description: '',
+    availability: '',
+  });
+  const [offerFormErrors, setOfferFormErrors] = useState({});
+  const [offerFormGlobal, setOfferFormGlobal] = useState('');
+  const [offerSubmitting, setOfferSubmitting] = useState(false);
+
+  /* ── Fetch requests when tab/category/user changes ───���──────────────────── */
+  useEffect(() => {
+    if (!user || activeTab !== 'requests') return;
+
+    setReqLoading(true);
+    setReqError('');
+
+    const params = {};
+    if (selectedHub?.id) params.hub_id = selectedHub.id;
+    if (category) params.category = category;
+
+    getHelpRequests(params)
+      .then(({ ok, data }) => {
+        if (ok) setRequests(data);
+        else setReqError(data.detail || 'Failed to load help requests.');
+      })
+      .catch(() => setReqError('Network error. Please try again.'))
+      .finally(() => setReqLoading(false));
+  }, [user, category, activeTab]);
+
+  /* ── Fetch offers when tab/category/user changes ────────────────────────── */
+  useEffect(() => {
+    if (!user || activeTab !== 'offers') return;
+
+    setOffLoading(true);
+    setOffError('');
+
+    const params = {};
+    if (selectedHub?.id) params.hub_id = selectedHub.id;
+    if (category) params.category = category;
+
+    getHelpOffers(params)
+      .then(({ ok, data }) => {
+        if (ok) setOffers(data);
+        else setOffError(data.detail || 'Failed to load help offers.');
+      })
+      .catch(() => setOffError('Network error. Please try again.'))
+      .finally(() => setOffLoading(false));
+  }, [user, category, activeTab]);
+
+  /* ── Offer form handlers ────────────────────────────────────────────────── */
+
+  const handleOfferChange = (e) => {
+    const { name, value } = e.target;
+    setOfferForm((prev) => ({ ...prev, [name]: value }));
+    if (offerFormErrors[name]) {
+      setOfferFormErrors((prev) => {
+        const copy = { ...prev };
+        delete copy[name];
+        return copy;
+      });
+    }
+  };
+
+  const validateOffer = () => {
+    const errs = {};
+    if (!offerForm.skill_or_resource.trim()) errs.skill_or_resource = 'Skill or resource is required.';
+    if (!offerForm.description.trim()) errs.description = 'Description is required.';
+    if (!offerForm.availability.trim()) errs.availability = 'Availability is required.';
+    return errs;
+  };
+
+  const handleOfferSubmit = async (e) => {
+    e.preventDefault();
+    setOfferFormGlobal('');
+    setOfferFormErrors({});
+
+    const clientErrors = validateOffer();
+    if (Object.keys(clientErrors).length > 0) {
+      setOfferFormErrors(clientErrors);
+      return;
+    }
+
+    setOfferSubmitting(true);
+
+    const payload = {
+      category: offerForm.category,
+      skill_or_resource: offerForm.skill_or_resource.trim(),
+      description: offerForm.description.trim(),
+      availability: offerForm.availability.trim(),
+    };
+
+    const { ok, data } = await createHelpOffer(payload);
+    setOfferSubmitting(false);
+
+    if (ok) {
+      setOffers((prev) => [data, ...prev]);
+      setOfferForm({ category: 'MEDICAL', skill_or_resource: '', description: '', availability: '' });
+      setShowOfferForm(false);
+    } else {
+      if (typeof data === 'object' && data !== null) {
+        const mapped = {};
+        for (const [field, msgs] of Object.entries(data)) {
+          if (field === 'detail' || field === 'non_field_errors') continue;
+          mapped[field] = Array.isArray(msgs) ? msgs.join(' ') : msgs;
+        }
+        if (Object.keys(mapped).length > 0) setOfferFormErrors(mapped);
+      }
+      setOfferFormGlobal(
+        data.detail || data.non_field_errors?.[0] || 'Failed to create help offer.',
+      );
+    }
+  };
+
+  /* ── Delete handler ─────────────────────────────���───────────────────────── */
+  const handleDeleteOffer = async (offerId) => {
+    setDeleting(offerId);
+    const { ok } = await deleteHelpOffer(offerId);
+    if (ok) setOffers((prev) => prev.filter((o) => o.id !== offerId));
+    setDeleting(null);
+  };
+
+  if (!user) return null;
+
+  return (
+    <div className="page help-requests-page">
+      {/* Header */}
+      <header className="help-requests-header">
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={() => navigate('/dashboard')}
+        >
+          &larr; Dashboard
+        </button>
+        <h2 className="gradient-text">Help Center</h2>
+
+        {/* Action button changes based on active tab */}
+        {activeTab === 'requests' ? (
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={() => navigate('/help-requests/new')}
+          >
+            + New Request
+          </button>
+        ) : (
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={() => setShowOfferForm(!showOfferForm)}
+          >
+            {showOfferForm ? 'Cancel' : '+ New Offer'}
+          </button>
+        )}
+      </header>
+
+      {/* Tab switcher */}
+      <div className="help-tabs">
+        <button
+          className={`help-tab ${activeTab === 'requests' ? 'help-tab-active' : ''}`}
+          onClick={() => setActiveTab('requests')}
+        >
+          Requests
+        </button>
+        <button
+          className={`help-tab ${activeTab === 'offers' ? 'help-tab-active' : ''}`}
+          onClick={() => setActiveTab('offers')}
+        >
+          Offers
+        </button>
+      </div>
+
+      {/* Hub context */}
+      {selectedHub && (
+        <p className="help-requests-hub">
+          Showing {activeTab} for <strong>{selectedHub.name}</strong>
+        </p>
+      )}
+
+      {/* Category filter bar — shared between both tabs */}
+      <div className="help-requests-filters">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat.value}
+            className={`btn btn-sm ${category === cat.value ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => setCategory(cat.value)}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ══════════════════════════ REQUESTS TAB ══════════════════════════════ */}
+      {activeTab === 'requests' && (
+        <>
+          {reqError && <div className="alert alert-error">{reqError}</div>}
+
+          {reqLoading && (
+            <div className="help-requests-loading"><p>Loading help requests...</p></div>
+          )}
+
+          {!reqLoading && !reqError && requests.length === 0 && (
+            <div className="help-requests-empty">
+              <span className="help-requests-empty-icon">🔍</span>
+              <h3>No help requests found</h3>
+              <p>
+                {category
+                  ? 'Try selecting a different category.'
+                  : 'There are no help requests in your hub yet.'}
+              </p>
+            </div>
+          )}
+
+          {!reqLoading && !reqError && requests.length > 0 && (
+            <div className="help-requests-list">
+              {requests.map((req) => (
+                <div
+                  className="help-request-card dashboard-card-link"
+                  key={req.id}
+                  onClick={() => navigate(`/help-requests/${req.id}`)}
+                >
+                  <div className="help-request-card-top">
+                    <h3 className="help-request-card-title">{req.title}</h3>
+                    <span className={`badge ${URGENCY_CLASSES[req.urgency] || 'badge-muted'}`}>
+                      {URGENCY_LABELS[req.urgency] || req.urgency}
+                    </span>
+                  </div>
+
+                  <div className="help-request-card-meta">
+                    <span className="badge">{req.category}</span>
+                    <span className={`badge ${req.status === 'RESOLVED' ? 'badge-resolved' : 'badge-muted'}`}>
+                      {STATUS_LABELS[req.status] || req.status}
+                    </span>
+                  </div>
+
+                  <div className="help-request-card-footer">
+                    <Link to={`/users/${req.author.id}`} className="help-request-card-author author-link" onClick={(e) => e.stopPropagation()}>{req.author.full_name}</Link>
+                    {req.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+                    <AuthorStatus profile={req.author.profile} />
+                    <span>{formatDate(req.created_at)}</span>
+                    {req.comment_count > 0 && (
+                      <span className="help-request-card-comments">
+                        💬 {req.comment_count}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ══════════════════════════ OFFERS TAB ════════════════════════════════ */}
+      {activeTab === 'offers' && (
+        <>
+          {/* Inline offer creation form */}
+          {showOfferForm && (
+            <div className="help-offer-form-card">
+              <h3 className="help-detail-section-title">Create an Offer</h3>
+
+              {offerFormGlobal && <div className="alert alert-error">{offerFormGlobal}</div>}
+
+              <form onSubmit={handleOfferSubmit} noValidate>
+                <div className="form-group">
+                  <label htmlFor="offer-category">Category</label>
+                  <select
+                    id="offer-category"
+                    name="category"
+                    value={offerForm.category}
+                    onChange={handleOfferChange}
+                  >
+                    {FORM_CATEGORIES.map((c) => (
+                      <option key={c.value} value={c.value}>{c.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="offer-skill">Skill or Resource</label>
+                  <input
+                    id="offer-skill"
+                    name="skill_or_resource"
+                    type="text"
+                    placeholder="e.g. First Aid, Vehicle, Shelter space"
+                    value={offerForm.skill_or_resource}
+                    onChange={handleOfferChange}
+                    className={offerFormErrors.skill_or_resource ? 'input-error' : ''}
+                  />
+                  {offerFormErrors.skill_or_resource && (
+                    <span className="field-error">{offerFormErrors.skill_or_resource}</span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="offer-description">Description</label>
+                  <textarea
+                    id="offer-description"
+                    name="description"
+                    className={`help-create-textarea${offerFormErrors.description ? ' input-error' : ''}`}
+                    placeholder="Describe what you can provide..."
+                    value={offerForm.description}
+                    onChange={handleOfferChange}
+                    rows={3}
+                  />
+                  {offerFormErrors.description && (
+                    <span className="field-error">{offerFormErrors.description}</span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="offer-availability">Availability</label>
+                  <select
+                    id="offer-availability"
+                    name="availability"
+                    value={offerForm.availability}
+                    onChange={handleOfferChange}
+                    className={offerFormErrors.availability ? 'input-error' : ''}
+                  >
+                    <option value="">— Select availability —</option>
+                    <option value="24/7">24/7</option>
+                    <option value="Weekdays">Weekdays</option>
+                    <option value="Weekends">Weekends</option>
+                    <option value="Mornings">Mornings</option>
+                    <option value="Evenings">Evenings</option>
+                    <option value="On-call">On-call</option>
+                  </select>
+                  {offerFormErrors.availability && (
+                    <span className="field-error">{offerFormErrors.availability}</span>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-sm"
+                  disabled={offerSubmitting}
+                >
+                  {offerSubmitting ? 'Posting...' : 'Post Offer'}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {offError && <div className="alert alert-error">{offError}</div>}
+
+          {offLoading && (
+            <div className="help-requests-loading"><p>Loading help offers...</p></div>
+          )}
+
+          {!offLoading && !offError && offers.length === 0 && (
+            <div className="help-requests-empty">
+              <span className="help-requests-empty-icon">🤝</span>
+              <h3>No help offers found</h3>
+              <p>
+                {category
+                  ? 'Try selecting a different category.'
+                  : 'Be the first to offer help in your hub!'}
+              </p>
+            </div>
+          )}
+
+          {!offLoading && !offError && offers.length > 0 && (
+            <div className="help-requests-list">
+              {offers.map((offer) => (
+                <div
+                  className="help-offer-card dashboard-card-link"
+                  key={offer.id}
+                  onClick={() => setSelectedOffer(offer)}
+                >
+                  <div className="help-request-card-top">
+                    <h3 className="help-request-card-title">{offer.skill_or_resource}</h3>
+                    <span className="badge">{offer.category}</span>
+                  </div>
+
+                  <p className="help-offer-card-desc">{offer.description}</p>
+
+                  <div className="help-offer-card-footer">
+                    <Link to={`/users/${offer.author.id}`} className="help-request-card-author author-link" onClick={(e) => e.stopPropagation()}>{offer.author.full_name}</Link>
+                    {offer.author.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+                    <AuthorStatus profile={offer.author.profile} />
+                    <span className="help-offer-card-avail">{offer.availability}</span>
+                    <span>{formatDate(offer.created_at)}</span>
+
+                    {offer.author.id === user.id && (
+                      <button
+                        className="btn btn-secondary btn-sm help-offer-delete-btn"
+                        onClick={(e) => { e.stopPropagation(); handleDeleteOffer(offer.id); }}
+                        disabled={deleting === offer.id}
+                      >
+                        {deleting === offer.id ? 'Deleting...' : 'Delete'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ══════════════════════════ OFFER DETAIL MODAL ════════════════════════ */}
+      {selectedOffer && (
+        <div className="offer-modal-overlay" onClick={() => setSelectedOffer(null)}>
+          <div className="offer-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="offer-modal-close"
+              onClick={() => setSelectedOffer(null)}
+            >
+              &times;
+            </button>
+
+            <h2 className="offer-modal-title">{selectedOffer.skill_or_resource}</h2>
+
+            <span className="badge">{selectedOffer.category}</span>
+
+            <p className="offer-modal-description">{selectedOffer.description}</p>
+
+            <div className="offer-modal-details">
+              <div className="offer-modal-row">
+                <span className="offer-modal-label">Availability</span>
+                <span className="help-offer-card-avail">{selectedOffer.availability}</span>
+              </div>
+              <div className="offer-modal-row">
+                <span className="offer-modal-label">Offered by</span>
+                <strong>{selectedOffer.author.full_name}</strong>
+              </div>
+              <div className="offer-modal-row">
+                <span className="offer-modal-label">Posted</span>
+                <span>{formatDate(selectedOffer.created_at)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

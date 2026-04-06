@@ -11,7 +11,14 @@ data class RegisterRequest(
     @SerializedName("confirm_password") val confirmPassword: String,
     val role: String,
     @SerializedName("neighborhood_address") val neighborhoodAddress: String? = null,
-    @SerializedName("expertise_field") val expertiseField: String? = null
+    @SerializedName("expertise_field") val expertiseField: String? = null,
+    @SerializedName("hub_id") val hubId: Int? = null
+)
+
+data class Hub(
+    val id: Int,
+    val name: String,
+    val slug: String
 )
 
 data class LoginRequest(
@@ -26,6 +33,7 @@ data class UserData(
     @SerializedName("full_name") val fullName: String,
     val email: String,
     val role: String,
+    val hub: Hub?,
     @SerializedName("neighborhood_address") val neighborhoodAddress: String?,
     @SerializedName("expertise_field") val expertiseField: String?
 )
@@ -45,6 +53,10 @@ data class LoginResponse(
 
 data class LogoutResponse(
     val message: String
+)
+
+data class UpdateMeRequest(
+    @SerializedName("hub_id") val hubId: Int
 )
 
 /** /me returns user data directly (no wrapper) */
