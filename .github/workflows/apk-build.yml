@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  release:
+    types: [published]
 
 jobs:
   build-apk:
@@ -36,21 +38,8 @@ jobs:
           name: app-debug
           path: mobile/app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Create or update pre-release
+      - name: Attach APK to GitHub Release
+        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: mvp-milestone
-          name: 0.1.0-alpha
-          prerelease: true
-          body: |
-            Pre-release build for MVP milestone.
-
-            Requirements covered:
-            - User registration and login
-            - Forum posts, comments, upvotes/downvotes
-            - Help requests and offers with category/urgency filtering
-            - Map and geolocation for help requests
-            - Push notifications for experts on new help requests
-            - User profiles with availability and expertise fields
-            - Offline information and map sections
           files: mobile/app/build/outputs/apk/debug/app-debug.apk
