@@ -198,9 +198,9 @@ class HelpCommentListCreateView(APIView):
                 comment_count=F('comment_count') + 1,
             )
 
-            # If the commenter is an expert, promote the request status.
+            # If a *different* expert comments, promote the request status.
             # This call is safe — it won't overwrite RESOLVED status.
-            if request.user.role == User.Role.EXPERT:
+            if request.user.role == User.Role.EXPERT and request.user != help_request.author:
                 update_status_on_expert_comment(help_request)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
