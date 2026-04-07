@@ -43,6 +43,13 @@
     <string name="feature_offline">Offline Info</string>
     <string name="feature_offline_desc">Critical data access</string>
 
+    <!-- Map -->
+    <string name="nearest_label">Nearest: -</string>
+    <string name="nearest_format">Nearest: %1$s</string>
+    <string name="change_region_button">Change Region</string>
+    <string name="back">Back</string>
+    <string name="map_content_description">Offline Emergency Map</string>
+
     <!-- Help Center (tabbed: Requests + Offers) -->
     <string name="help_center_title">Help Center</string>
     <string name="tab_requests">Requests</string>
@@ -112,7 +119,6 @@
     <string name="offline_info_desc">Access critical offline information to prepare for emergencies and protect yourself and your community.</string>
     <string name="offline_info_tips_title">Key Resources</string>
     <string name="offline_info_tips">• Emergency contact numbers\n• First aid basics\n• Evacuation procedures\n• Safety checklists\n• Community resources</string>
-    <string name="back">Back</string>
     <string name="hub_city">Hub (City)</string>
     <string name="select_hub">Select a hub</string>
 

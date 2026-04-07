@@ -34,7 +34,7 @@ from .serializers import (
     HelpOfferCreateSerializer,
 )
 from .notifications import send_help_request_notification
-from .services import update_status_on_expert_comment
+from .services import update_status_on_expert_comment, revert_status_on_last_expert_comment_delete
 
 
 class HelpRequestListCreateView(APIView):
@@ -198,9 +198,9 @@ class HelpCommentListCreateView(APIView):
                 comment_count=F('comment_count') + 1,
             )
 
-            # If the commenter is an expert, promote the request status.
+            # If a *different* expert comments, promote the request status.
             # This call is safe — it won't overwrite RESOLVED status.
-            if request.user.role == User.Role.EXPERT:
+            if request.user.role == User.Role.EXPERT and request.user != help_request.author:
                 update_status_on_expert_comment(help_request)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -222,12 +222,17 @@ class HelpCommentDeleteView(APIView):
                 {'detail': 'You can only delete your own comments.'},
                 status=status.HTTP_403_FORBIDDEN,
             )
+        help_request = comment.request
         with transaction.atomic():
             # Keep comment_count in sync using F() to avoid race conditions.
             HelpRequest.objects.filter(pk=comment.request_id).update(
                 comment_count=F('comment_count') - 1,
             )
             comment.delete()
+            # If an expert's comment was deleted, revert status to OPEN if no
+            # other expert comments remain (query runs post-delete, same tx).
+            if comment.author.role == User.Role.EXPERT:
+                revert_status_on_last_expert_comment_delete(help_request)
         return Response({'detail': 'Comment deleted.'}, status=status.HTTP_204_NO_CONTENT)
 
 
