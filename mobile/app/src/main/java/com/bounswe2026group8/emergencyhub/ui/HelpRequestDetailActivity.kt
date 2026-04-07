@@ -397,19 +397,28 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     private fun deleteComment(commentId: Int) {
+        // Optimistic UI update: remove immediately
+        commentAdapter.removeComment(commentId)
+        if (commentAdapter.itemCount == 0) {
+            recyclerComments.visibility = View.GONE
+            txtNoComments.visibility = View.VISIBLE
+        }
+
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
                     .deleteHelpRequestComment(commentId)
                 if (response.isSuccessful || response.code() == 204) {
-                    // Re-fetch both comments and detail so the list and count update immediately
-                    fetchComments()
+                    // Refresh detail to sync comment count
                     fetchDetail()
                 } else {
+                    // Deletion failed on server — reload to restore
+                    fetchComments()
                     Toast.makeText(this@HelpRequestDetailActivity, "Failed to delete comment.", Toast.LENGTH_SHORT).show()
                 }
             } catch (_: Exception) {
-                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
+                // Deletion may have succeeded; reload to get the true state
+                fetchComments()
             }
         }
     }

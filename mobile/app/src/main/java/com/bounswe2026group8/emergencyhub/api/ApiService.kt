@@ -130,10 +130,10 @@ interface ApiService {
     ): Response<Comment>
 
     @DELETE("forum/comments/{id}/")
-    suspend fun deleteComment(@Path("id") id: Int): Response<ResponseBody>
+    suspend fun deleteComment(@Path("id") id: Int): Response<ResponseBody?>
 
     @DELETE("forum/posts/{id}/")
-    suspend fun deletePost(@Path("id") id: Int): Response<ResponseBody>
+    suspend fun deletePost(@Path("id") id: Int): Response<ResponseBody?>
 
     @POST("forum/posts/{postId}/vote/")
     suspend fun vote(
