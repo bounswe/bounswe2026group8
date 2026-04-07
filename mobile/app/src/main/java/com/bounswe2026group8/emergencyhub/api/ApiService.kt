@@ -64,6 +64,12 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<ResponseBody?>
 
+    @PATCH("help-requests/{id}/status/")
+    suspend fun updateHelpRequestStatus(
+        @Path("id") id: Int,
+        @Body body: UpdateHelpRequestStatusRequest
+    ): Response<HelpRequestDetail>
+
     // ── Help Request Comments ────────────────────────────────────────────
 
     @GET("help-requests/{id}/comments/")
