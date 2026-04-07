@@ -2601,16 +2601,6 @@
   margin-bottom: 2px;
 }
 
-@media (max-width: 600px) {
-  .cl-overlay { padding: 12px; }
-  .cl-modal { max-height: 90vh; }
-  .cl-grid { grid-template-columns: 1fr; }
-}
-  .profile-identity-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  .profile-fields-grid { grid-template-columns: 1fr; }
-  .form-row { flex-direction: column; }
-  .form-row .form-group-sm { flex: auto; }
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    Emergency Information Page
