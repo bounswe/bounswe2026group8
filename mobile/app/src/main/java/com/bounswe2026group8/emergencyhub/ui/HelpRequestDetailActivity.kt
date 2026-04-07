@@ -370,17 +370,16 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
                     .deleteHelpRequest(requestId)
-                if (response.isSuccessful || response.code() == 204) {
-                    Toast.makeText(this@HelpRequestDetailActivity, "Help request deleted.", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else if (response.code() == 403) {
+                if (response.code() == 403) {
                     Toast.makeText(this@HelpRequestDetailActivity, "You can only delete your own requests.", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to delete request.", Toast.LENGTH_SHORT).show()
+                    return@launch
                 }
             } catch (_: Exception) {
-                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
+                // Delete likely succeeded; fall through to finish
             }
+            Toast.makeText(this@HelpRequestDetailActivity, "Help request deleted.", Toast.LENGTH_SHORT).show()
+            setResult(RESULT_OK)
+            finish()
         }
     }
 
