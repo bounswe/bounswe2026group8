@@ -16,7 +16,6 @@ import HelpRequestCreatePage from './pages/HelpRequestCreatePage';
 import HelpRequestDetailPage from './pages/HelpRequestDetailPage';
 import MyPostsPage from './pages/MyPostsPage';
 import UserProfilePage from './pages/UserProfilePage';
-import OfflineInfoPage from './pages/OfflineInfoPage';
 
 export default function App() {
 return (
@@ -90,14 +89,6 @@ return (
             element={
               <ProtectedRoute>
                 <UserProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/offline-info"
-            element={
-              <ProtectedRoute>
-                <OfflineInfoPage />
               </ProtectedRoute>
             }
           />
