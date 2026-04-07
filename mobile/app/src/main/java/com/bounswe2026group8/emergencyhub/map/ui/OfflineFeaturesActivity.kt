@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bounswe2026group8.emergencyhub.R
+import com.google.android.material.button.MaterialButton
 
 /**
  * Entry screen for offline features.
@@ -22,6 +23,9 @@ class OfflineFeaturesActivity : AppCompatActivity() {
 
         // Load layout
         setContentView(R.layout.activity_offline_features)
+
+        // Back button
+        findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
 
         // Buttons
         val mapButton = findViewById<Button>(R.id.btnOpenMap)
