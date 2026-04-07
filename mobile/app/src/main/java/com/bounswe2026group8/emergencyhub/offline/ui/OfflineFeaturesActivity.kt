@@ -3,8 +3,10 @@ package com.bounswe2026group8.emergencyhub.offline.ui
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bounswe2026group8.emergencyhub.R
+import com.google.android.material.button.MaterialButton
 
 /**
  * Entry screen for offline features.
@@ -22,6 +24,9 @@ class OfflineFeaturesActivity : AppCompatActivity() {
         // Load layout
         setContentView(R.layout.activity_offline_features)
 
+        // Back button
+        findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
+
         // Buttons
         val mapButton = findViewById<Button>(R.id.btnOpenMap)
         val checklistButton = findViewById<Button>(R.id.btnChecklist)
@@ -38,18 +43,22 @@ class OfflineFeaturesActivity : AppCompatActivity() {
          * Placeholder: checklist feature not implemented yet
          */
         checklistButton.setOnClickListener {
-            startActivity(Intent(
+            Toast.makeText(
                 this,
-                FirstAidActivity::class.java))
+                "Emergency Checklist — coming soon!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         /**
          * Placeholder: contacts feature not implemented yet
          */
         contactsButton.setOnClickListener {
-            startActivity(Intent(
+            Toast.makeText(
                 this,
-                EmergencyContactsActivity::class.java))
+                "Offline Contacts — coming soon!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
