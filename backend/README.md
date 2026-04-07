@@ -51,6 +51,23 @@ Protected endpoints require the header: `Authorization: Bearer <your-token>`
 | POST | `/help-offers/` | Bearer | Create a new help offer |
 | DELETE | `/help-offers/{id}/` | Bearer | Delete a help offer (author only) |
 
+
+### Profile
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/profile` | Required | Get the authenticated user's profile |
+| `PATCH` | `/profile` | Required | Update the authenticated user's profile (partial) |
+| `GET` | `/users/<id>/` | Required | Get another user's public profile by ID |
+| `GET` | `/resources` | Required | List the user's resources (shown on profile) |
+| `POST` | `/resources` | Required | Add a resource |
+| `PATCH` | `/resources/<id>` | Required | Update a resource |
+| `DELETE` | `/resources/<id>` | Required | Delete a resource |
+| `GET` | `/expertise` | Required (EXPERT only) | List expertise fields |
+| `POST` | `/expertise` | Required (EXPERT only) | Add an expertise field |
+| `PATCH` | `/expertise/<id>` | Required (EXPERT only) | Update an expertise field |
+| `DELETE` | `/expertise/<id>` | Required (EXPERT only) | Delete an expertise field |
+
 ## Project Structure
 
 ```
