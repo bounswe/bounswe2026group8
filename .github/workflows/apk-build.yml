@@ -2,7 +2,10 @@ name: Build Android APK
 
 on:
   push:
-    pull_request:
+    branches:
+      - main
+  pull_request:
+    branches:
       - main
   release:
     types: [published]
@@ -21,6 +24,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Decode google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > mobile/app/google-services.json
