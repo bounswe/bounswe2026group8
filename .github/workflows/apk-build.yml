@@ -25,8 +25,10 @@ jobs:
       - name: Decode google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > mobile/app/google-services.json
 
-      - name: Make gradlew executable
-        run: chmod +x mobile/gradlew
+      - name: Fix gradlew line endings and permissions
+        run: |
+          sed -i 's/\r//' mobile/gradlew
+          chmod +x mobile/gradlew
 
       - name: Build debug APK
         env:
