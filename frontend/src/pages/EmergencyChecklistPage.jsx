@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
-export const CHECKLIST_TOPICS = [
+const CHECKLIST_TOPICS = [
   {
     slug: 'displacement',
     icon: '🚶',
@@ -72,72 +72,107 @@ The patient must have an open airway — an unobstructed passage that allows air
   },
 ];
 
-export default function EmergencyChecklistPage() {
-  const navigate = useNavigate();
+function DetailView({ topic }) {
+  return (
+    <div className="cl-detail">
+      <div
+        className="cl-detail-card"
+        style={{ borderColor: topic.color + '33' }}
+      >
+        {topic.text.split('\n').map((line, i) => {
+          if (line.trim() === '') return <br key={i} />;
+          const isBullet = line.trim().startsWith('•') || line.trim().startsWith('—');
+          const isStep = /^\d+\./.test(line.trim());
+          const isHeading = line.trim() === line.trim().toUpperCase() && line.trim().length > 4 && !isBullet && !isStep;
+
+          return (
+            <p
+              key={i}
+              className={
+                isHeading ? 'cl-line-heading' : isBullet || isStep ? 'cl-line-step' : 'cl-line-body'
+              }
+              style={isHeading ? { color: topic.color } : undefined}
+            >
+              {line}
+            </p>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default function ChecklistModal({ open, onClose }) {
+  const [activeTopic, setActiveTopic] = useState(null);
+
+  if (!open) return null;
+
+  const handleClose = () => {
+    setActiveTopic(null);
+    onClose();
+  };
+
+  const handleBack = () => setActiveTopic(null);
+
+  const currentTopic = CHECKLIST_TOPICS.find((t) => t.slug === activeTopic);
 
   return (
-    <div className="page">
-      <header style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-        <button className="btn btn-secondary btn-sm" onClick={() => navigate('/emergency-info')}>
-          ← Back
-        </button>
-        <h1 className="gradient-text" style={{ fontSize: '1.5rem' }}>
-          Emergency Checklist
-        </h1>
-      </header>
+    <div className="cl-overlay" onClick={handleClose}>
+      <div className="cl-modal" onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className="cl-modal-header">
+          {currentTopic ? (
+            <>
+              <button className="btn btn-secondary btn-sm" onClick={handleBack}>
+                ← Topics
+              </button>
+              <span className="cl-modal-icon">{currentTopic.icon}</span>
+              <h2 className="cl-modal-title" style={{ color: currentTopic.color }}>
+                {currentTopic.title}
+              </h2>
+            </>
+          ) : (
+            <h2 className="cl-modal-title gradient-text">Emergency Checklist</h2>
+          )}
+          <button className="cl-close-btn" onClick={handleClose}>✕</button>
+        </div>
 
-      <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '24px' }}>
-        Tap a topic to view the step-by-step first aid guide.
-      </p>
-
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-          gap: '16px',
-        }}
-      >
-        {CHECKLIST_TOPICS.map((topic) => (
-          <button
-            key={topic.slug}
-            onClick={() => navigate(`/emergency-info/checklist/${topic.slug}`)}
-            style={{
-              background: 'var(--bg-card)',
-              border: `1px solid ${topic.color}33`,
-              borderRadius: 'var(--radius-lg)',
-              padding: '24px 20px',
-              cursor: 'pointer',
-              textAlign: 'left',
-              transition: 'border-color 0.2s, transform 0.15s',
-              backdropFilter: 'blur(8px)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = topic.color + '99';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = topic.color + '33';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
-          >
-            <span style={{ fontSize: '2rem', display: 'block', marginBottom: '10px' }}>
-              {topic.icon}
-            </span>
-            <h2
-              style={{
-                color: topic.color,
-                fontSize: '1rem',
-                fontWeight: 700,
-                marginBottom: '6px',
-              }}
-            >
-              {topic.title}
-            </h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', lineHeight: 1.5 }}>
-              {topic.summary}
-            </p>
-          </button>
-        ))}
+        {/* Body */}
+        <div className="cl-modal-body">
+          {currentTopic ? (
+            <DetailView topic={currentTopic} />
+          ) : (
+            <>
+              <p className="cl-subtitle">
+                Tap a topic to view the step-by-step first aid guide.
+              </p>
+              <div className="cl-grid">
+                {CHECKLIST_TOPICS.map((topic) => (
+                  <button
+                    key={topic.slug}
+                    className="cl-topic-card"
+                    style={{ borderColor: topic.color + '33' }}
+                    onClick={() => setActiveTopic(topic.slug)}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = topic.color + '99';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = topic.color + '33';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <span className="cl-topic-icon">{topic.icon}</span>
+                    <h3 className="cl-topic-title" style={{ color: topic.color }}>
+                      {topic.title}
+                    </h3>
+                    <p className="cl-topic-summary">{topic.summary}</p>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,14 +1,17 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ChecklistModal from './EmergencyChecklistPage';
 
 const SECTIONS = [
   {
-    icon: '',
+    id: 'checklist',
+    icon: '📋',
     title: 'Emergency Checklist',
     desc: 'First aid guides: displacement, checking vitals, CPR, and ABC protocol',
-    path: '/emergency-info/checklist',
     color: '#34d399',
   },
   {
+    id: 'map',
     icon: '🗺️',
     title: 'Map',
     desc: 'View nearby help resources and danger zones on the map',
@@ -19,6 +22,15 @@ const SECTIONS = [
 
 export default function EmergencyInfoPage() {
   const navigate = useNavigate();
+  const [checklistOpen, setChecklistOpen] = useState(false);
+
+  const handleCardClick = (s) => {
+    if (s.id === 'checklist') {
+      setChecklistOpen(true);
+    } else if (s.path) {
+      navigate(s.path);
+    }
+  };
 
   return (
     <div className="page">
@@ -50,8 +62,8 @@ export default function EmergencyInfoPage() {
       >
         {SECTIONS.map((s) => (
           <button
-            key={s.path}
-            onClick={() => navigate(s.path)}
+            key={s.id}
+            onClick={() => handleCardClick(s)}
             style={{
               background: 'var(--bg-card)',
               border: `1px solid ${s.color}33`,
@@ -90,6 +102,8 @@ export default function EmergencyInfoPage() {
           </button>
         ))}
       </div>
+
+      <ChecklistModal open={checklistOpen} onClose={() => setChecklistOpen(false)} />
     </div>
   );
 }
