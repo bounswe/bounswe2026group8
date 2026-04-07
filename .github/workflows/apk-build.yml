@@ -30,6 +30,9 @@ jobs:
           sed -i 's/\r//' mobile/gradlew
           chmod +x mobile/gradlew
 
+      - name: Set production API URL for debug build
+        run: sed -i 's|http://10.0.2.2:8000/|https://emergencyhub.duckdns.org/api/|' mobile/app/build.gradle.kts
+
       - name: Build debug APK
         env:
           JAVA_TOOL_OPTIONS: "-Xmx2048m"
