@@ -6,6 +6,7 @@ on:
       - main
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   build-apk:
@@ -28,6 +29,8 @@ jobs:
         run: chmod +x mobile/gradlew
 
       - name: Build debug APK
+        env:
+          JAVA_TOOL_OPTIONS: "-Xmx2048m"
         run: |
           cd mobile
           ./gradlew assembleDebug --no-daemon
