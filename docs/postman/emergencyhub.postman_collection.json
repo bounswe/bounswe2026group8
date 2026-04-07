@@ -1,0 +1,472 @@
+{
+  "info": {
+    "name": "EmergencyHub API",
+    "description": "Complete API collection for the EmergencyHub backend. Set the `base_url` variable to your server (e.g. http://localhost:8000 for local dev). After login, copy the `token` from the response and set it as the `token` collection variable.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "refresh", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register (Standard)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"StrongPass123!\",\n  \"confirm_password\": \"StrongPass123!\",\n  \"role\": \"STANDARD\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register (Expert)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Dr. Expert\",\n  \"email\": \"expert@example.com\",\n  \"password\": \"StrongPass123!\",\n  \"confirm_password\": \"StrongPass123!\",\n  \"role\": \"EXPERT\",\n  \"expertise_field\": \"Medical Doctor\",\n  \"neighborhood_address\": \"Sariyer, Istanbul\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "  pm.collectionVariables.set('refresh', json.refresh);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"StrongPass123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/logout",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Current User (me)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Update Hub (PATCH me)",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/me",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"hub_id\": 1\n}" }
+          }
+        },
+        {
+          "name": "List Hubs (public)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/hubs/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/profile",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/profile",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bio\": \"Emergency responder in Istanbul\",\n  \"phone_number\": \"+90 555 123 4567\",\n  \"availability_status\": \"AVAILABLE_TO_HELP\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Public Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resources",
+      "item": [
+        {
+          "name": "List Resources",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/resources",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Resource",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/resources",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"First Aid Kit\",\n  \"category\": \"MEDICAL\",\n  \"quantity\": 2,\n  \"condition\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Resource",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/resources/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expertise Fields",
+      "item": [
+        {
+          "name": "List Expertise Fields",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/expertise",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Expertise Field (Expert only)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/expertise",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"field\": \"Cardiology\",\n  \"certification_level\": \"ADVANCED\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Expertise Field",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/expertise/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forum",
+      "item": [
+        {
+          "name": "List Posts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/forum/posts/",
+              "query": [
+                { "key": "forum_type", "value": "GLOBAL", "disabled": true },
+                { "key": "hub", "value": "1", "disabled": true },
+                { "key": "author", "value": "1", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Post",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/forum/posts/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/forum/posts/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"forum_type\": \"STANDARD\",\n  \"title\": \"Test post\",\n  \"content\": \"This is a test post\",\n  \"hub\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/forum/posts/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "List Comments",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/forum/posts/1/comments/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Comment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/forum/posts/1/comments/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"This is a comment\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/forum/comments/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Vote on Post (Upvote)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/forum/posts/1/vote/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"vote_type\": \"UP\"\n}" }
+          }
+        },
+        {
+          "name": "Vote on Post (Downvote)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/forum/posts/1/vote/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"vote_type\": \"DOWN\"\n}" }
+          }
+        },
+        {
+          "name": "Report Post",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/forum/posts/1/report/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"SPAM\"\n}" }
+          }
+        },
+        {
+          "name": "Repost to Hub",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/forum/posts/1/repost/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"hub\": 2\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Help Requests",
+      "item": [
+        {
+          "name": "List Help Requests",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/help-requests/",
+              "query": [
+                { "key": "hub_id", "value": "1", "disabled": true },
+                { "key": "category", "value": "MEDICAL", "disabled": true },
+                { "key": "author", "value": "1", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Help Request",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/help-requests/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Help Request",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/help-requests/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"MEDICAL\",\n  \"urgency\": \"HIGH\",\n  \"title\": \"Need medical help\",\n  \"description\": \"Injured, please respond\",\n  \"hub\": 1,\n  \"latitude\": \"41.0369\",\n  \"longitude\": \"28.9850\",\n  \"location_text\": \"Near Taksim Square\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Help Request Status (RESOLVED)",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/help-requests/1/status/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"RESOLVED\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Help Request",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/help-requests/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "List Help Request Comments",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/help-requests/1/comments/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Help Request Comment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/help-requests/1/comments/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"I can help, on my way\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Help Request Comment",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/help-requests/comments/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Help Offers",
+      "item": [
+        {
+          "name": "List Help Offers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/help-offers/",
+              "query": [
+                { "key": "hub_id", "value": "1", "disabled": true },
+                { "key": "category", "value": "FOOD", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Help Offer",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/help-offers/",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"FOOD\",\n  \"skill_or_resource\": \"Canned goods\",\n  \"description\": \"I have extra food to share\",\n  \"availability\": \"Available now\",\n  \"hub\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Help Offer",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/help-offers/1/",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -76,4 +76,7 @@ dependencies {
     // Firebase Cloud Messaging
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-messaging")
+
+    // Unit testing
+    testImplementation("junit:junit:4.13.2")
 }
