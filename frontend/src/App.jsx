@@ -16,6 +16,10 @@ import HelpRequestCreatePage from './pages/HelpRequestCreatePage';
 import HelpRequestDetailPage from './pages/HelpRequestDetailPage';
 import MyPostsPage from './pages/MyPostsPage';
 import UserProfilePage from './pages/UserProfilePage';
+import EmergencyInfoPage from './pages/EmergencyInfoPage';
+import EmergencyChecklistPage from './pages/EmergencyChecklistPage';
+import EmergencyChecklistDetailPage from './pages/EmergencyChecklistDetailPage';
+import EmergencyMapPage from './pages/EmergencyMapPage';
 
 export default function App() {
 return (
@@ -92,6 +96,10 @@ return (
               </ProtectedRoute>
             }
           />
+          <Route path="/emergency-info" element={<EmergencyInfoPage />} />
+          <Route path="/emergency-info/checklist" element={<EmergencyChecklistPage />} />
+          <Route path="/emergency-info/checklist/:slug" element={<EmergencyChecklistDetailPage />} />
+          <Route path="/emergency-info/map" element={<EmergencyMapPage />} />
         </Routes>
     </AuthProvider>
   </BrowserRouter>
