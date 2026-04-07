@@ -2,7 +2,7 @@ name: Build Android APK
 
 on:
   push:
-    branches:
+    pull_request:
       - main
   release:
     types: [published]
@@ -30,7 +30,8 @@ jobs:
 
       - name: Build debug APK
         env:
-          JAVA_TOOL_OPTIONS: "-Xmx2048m"
+          JAVA_TOOL_OPTIONS: ""
+          _JAVA_OPTIONS: ""
         run: |
           cd mobile
           ./gradlew assembleDebug --no-daemon
