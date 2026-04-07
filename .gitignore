@@ -55,9 +55,9 @@ ehthumbs.db
 
 # ── Firebase ────────────────────────────────────
 backend/firebase-credentials.json
+backend/emergencyhub-b470b-firebase-adminsdk-fbsvc-c8c7a20e37.json
 
 # ── Environment variables ───────────────────────
 .env
 .env.local
 .env.*.local
-backend/emergencyhub-b470b-firebase-adminsdk-fbsvc-c8c7a20e37.json

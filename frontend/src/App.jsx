@@ -94,8 +94,22 @@ return (
               </ProtectedRoute>
             }
           />
-          <Route path="/emergency-info" element={<EmergencyInfoPage />} />
-          <Route path="/emergency-info/map" element={<EmergencyMapPage />} />
+          <Route
+            path="/emergency-info"
+            element={
+              <ProtectedRoute>
+                <EmergencyInfoPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/emergency-info/map"
+            element={
+              <ProtectedRoute>
+                <EmergencyMapPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
     </AuthProvider>
   </BrowserRouter>

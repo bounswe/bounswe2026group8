@@ -11,7 +11,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Hub, User
+from .models import Hub, User, Resource, ExpertiseField
 
 
 class RegisterTests(TestCase):
@@ -319,3 +319,203 @@ class UserPublicProfileTests(TestCase):
         """Requesting a non-existent user returns 404."""
         response = self.client.get('/users/99999/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class ResourceTests(TestCase):
+    """Tests for GET/POST /resources and DELETE /resources/<pk>."""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            email='user@example.com',
+            full_name='Test User',
+            password='StrongPass123!',
+        )
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
+
+    def _create_payload(self, **overrides):
+        payload = {
+            'name': 'First Aid Kit',
+            'category': 'MEDICAL',
+            'quantity': 2,
+            'condition': True,
+        }
+        payload.update(overrides)
+        return payload
+
+    # ── Happy paths ────────────────────────────────────────────────────────────
+
+    def test_create_resource(self):
+        """Authenticated user can create a resource."""
+        response = self.client.post('/resources', self._create_payload(), format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['name'], 'First Aid Kit')
+        self.assertEqual(response.data['category'], 'MEDICAL')
+
+    def test_list_resources_returns_own_resources(self):
+        """GET /resources returns only the authenticated user's resources."""
+        Resource.objects.create(
+            user=self.user, name='Water', category='FOOD', quantity=10, condition=True
+        )
+        # Another user's resource should not appear
+        other = User.objects.create_user(
+            email='other@example.com', full_name='Other', password='Pass123!'
+        )
+        Resource.objects.create(
+            user=other, name='Tent', category='SHELTER', quantity=1, condition=True
+        )
+
+        response = self.client.get('/resources')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        names = [r['name'] for r in response.data]
+        self.assertIn('Water', names)
+        self.assertNotIn('Tent', names)
+
+    def test_delete_resource(self):
+        """User can delete their own resource."""
+        resource = Resource.objects.create(
+            user=self.user, name='Blanket', category='SHELTER', quantity=3, condition=True
+        )
+        response = self.client.delete(f'/resources/{resource.pk}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Resource.objects.filter(pk=resource.pk).exists())
+
+    # ── Validation failures ────────────────────────────────────────────────────
+
+    def test_create_resource_missing_name_rejected(self):
+        """Resource without a name is rejected."""
+        payload = self._create_payload()
+        del payload['name']
+        response = self.client.post('/resources', payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_resource_missing_category_rejected(self):
+        """Resource without a category is rejected."""
+        payload = self._create_payload()
+        del payload['category']
+        response = self.client.post('/resources', payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # ── Authorization ──────────────────────────────────────────────────────────
+
+    def test_create_resource_unauthenticated_returns_401(self):
+        """Unauthenticated request to create resource returns 401."""
+        anon = APIClient()
+        response = anon.post('/resources', self._create_payload(), format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_other_users_resource_returns_403(self):
+        """User cannot delete another user's resource."""
+        other = User.objects.create_user(
+            email='other@example.com', full_name='Other', password='Pass123!'
+        )
+        resource = Resource.objects.create(
+            user=other, name='Tent', category='SHELTER', quantity=1, condition=True
+        )
+        response = self.client.delete(f'/resources/{resource.pk}')
+        self.assertIn(response.status_code, [status.HTTP_403_FORBIDDEN, status.HTTP_404_NOT_FOUND])
+
+
+class ExpertiseFieldTests(TestCase):
+    """Tests for GET/POST /expertise and role-based access control."""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.expert = User.objects.create_user(
+            email='expert@example.com',
+            full_name='Expert User',
+            password='StrongPass123!',
+            role='EXPERT',
+            expertise_field='Medical Doctor',
+        )
+        self.standard = User.objects.create_user(
+            email='standard@example.com',
+            full_name='Standard User',
+            password='StrongPass123!',
+            role='STANDARD',
+        )
+        expert_refresh = RefreshToken.for_user(self.expert)
+        self.expert_client = APIClient()
+        self.expert_client.credentials(
+            HTTP_AUTHORIZATION=f'Bearer {str(expert_refresh.access_token)}'
+        )
+        standard_refresh = RefreshToken.for_user(self.standard)
+        self.standard_client = APIClient()
+        self.standard_client.credentials(
+            HTTP_AUTHORIZATION=f'Bearer {str(standard_refresh.access_token)}'
+        )
+
+    def _create_payload(self, **overrides):
+        payload = {
+            'field': 'Cardiology',
+            'certification_level': 'ADVANCED',
+        }
+        payload.update(overrides)
+        return payload
+
+    # ── Expert user happy paths ────────────────────────────────────────────────
+
+    def test_expert_can_create_expertise_field(self):
+        """Expert user can add an expertise field."""
+        response = self.expert_client.post('/expertise', self._create_payload(), format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['field'], 'Cardiology')
+        self.assertEqual(response.data['certification_level'], 'ADVANCED')
+
+    def test_expert_can_list_own_expertise_fields(self):
+        """Expert user can list their own expertise fields."""
+        ExpertiseField.objects.create(
+            user=self.expert, field='Neurology', certification_level='BEGINNER'
+        )
+        response = self.expert_client.get('/expertise')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        fields = [e['field'] for e in response.data]
+        self.assertIn('Neurology', fields)
+
+    def test_expert_can_delete_expertise_field(self):
+        """Expert user can delete their own expertise field."""
+        ef = ExpertiseField.objects.create(
+            user=self.expert, field='Radiology', certification_level='BEGINNER'
+        )
+        response = self.expert_client.delete(f'/expertise/{ef.pk}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(ExpertiseField.objects.filter(pk=ef.pk).exists())
+
+    def test_expertise_defaults_certification_level_to_beginner(self):
+        """Omitting certification_level defaults to BEGINNER."""
+        payload = {'field': 'Surgery'}
+        response = self.expert_client.post('/expertise', payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['certification_level'], 'BEGINNER')
+
+    # ── Standard user restrictions ─────────────────────────────────────────────
+
+    def test_standard_user_cannot_create_expertise_field(self):
+        """Standard user is forbidden from creating expertise fields."""
+        response = self.standard_client.post('/expertise', self._create_payload(), format='json')
+        self.assertIn(response.status_code, [status.HTTP_403_FORBIDDEN, status.HTTP_400_BAD_REQUEST])
+
+    # ── Authorization ──────────────────────────────────────────────────────────
+
+    def test_create_expertise_unauthenticated_returns_401(self):
+        """Unauthenticated request to create expertise returns 401."""
+        anon = APIClient()
+        response = anon.post('/expertise', self._create_payload(), format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_expertise_fields_not_visible_across_users(self):
+        """Expert can only see their own expertise fields, not other users'."""
+        other_expert = User.objects.create_user(
+            email='other_expert@example.com',
+            full_name='Other Expert',
+            password='Pass123!',
+            role='EXPERT',
+            expertise_field='Nurse',
+        )
+        ExpertiseField.objects.create(
+            user=other_expert, field='Oncology', certification_level='ADVANCED'
+        )
+        response = self.expert_client.get('/expertise')
+        fields = [e['field'] for e in response.data]
+        self.assertNotIn('Oncology', fields)

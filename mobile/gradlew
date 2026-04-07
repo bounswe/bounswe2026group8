@@ -120,7 +120,7 @@ if "$cygwin" || "$msys" ; then
 fi
 
 # Collect all arguments for the java command
-DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
+DEFAULT_JVM_OPTS='-Xmx512m -Xms256m'
 
 # shellcheck disable=SC2086
 exec "$JAVACMD" \

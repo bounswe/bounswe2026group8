@@ -51,9 +51,49 @@ jobs:
           python manage.py migrate --noinput
           python manage.py test accounts forum help_requests --verbosity=2
 
+  frontend-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: cd frontend && npm ci
+
+      - name: Run tests
+        run: cd frontend && npm test -- --ci
+
+  android-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Write google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > mobile/app/google-services.json
+
+      - name: Run unit tests
+        run: |
+          cd mobile
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          ./gradlew testDebugUnitTest --no-daemon
+
   deploy:
     runs-on: ubuntu-latest
-    needs: test   # only deploy if tests pass
+    needs: [test, frontend-test, android-test]
 
     steps:
       - name: Deploy via SSH

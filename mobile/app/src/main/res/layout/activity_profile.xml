@@ -157,10 +157,29 @@
                     android:layout_height="wrap_content" />
 
                 <!-- Blood Type -->
-                <include layout="@layout/include_profile_field"
+                <LinearLayout
                     android:id="@+id/fieldBloodType"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/profile_blood_type"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <Spinner
+                        android:id="@+id/spinnerBloodType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="72dp"
+                        android:gravity="end" />
+                </LinearLayout>
 
                 <!-- Emergency Contact -->
                 <include layout="@layout/include_profile_field"
