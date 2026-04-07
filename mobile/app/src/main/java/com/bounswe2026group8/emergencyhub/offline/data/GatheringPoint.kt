@@ -1,4 +1,4 @@
-package com.bounswe2026group8.emergencyhub.offline.ui
+package com.bounswe2026group8.emergencyhub.offline.data
 
 /**
  * Represents a gathering point (e.g., shelter, hospital, meeting area)

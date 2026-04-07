@@ -1,4 +1,4 @@
-package com.bounswe2026group8.emergencyhub.offline.ui
+package com.bounswe2026group8.emergencyhub.offline.rendering
 
 import android.content.Context
 import android.graphics.BitmapFactory

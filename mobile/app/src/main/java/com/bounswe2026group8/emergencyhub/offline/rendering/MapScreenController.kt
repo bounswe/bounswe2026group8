@@ -10,6 +10,7 @@ import java.io.File
 import java.util.Locale
 import com.bounswe2026group8.emergencyhub.offline.data.PreferencesManager
 import com.bounswe2026group8.emergencyhub.offline.data.MapRepository
+import com.bounswe2026group8.emergencyhub.offline.data.GatheringPoint
 
 /**
  * Controls what is shown on the map screen.

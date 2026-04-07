@@ -17,21 +17,10 @@ import com.google.android.material.card.MaterialCardView
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 import com.bounswe2026group8.emergencyhub.offline.ui.OfflineFeaturesActivity
-import com.bounswe2026group8.emergencyhub.offline.ui.OfflineFeaturesActivity
 import kotlinx.coroutines.tasks.await
 
 /**
  * Dashboard screen — the post-login home page.
- *
- * Displays:
- *   - Welcome message with user name
- *   - Role badge (STANDARD / EXPERT)
- *   - Expertise badge (if EXPERT)
- *   - Neighborhood badge (if provided)
- *   - Feature cards (Forum, Help Requests, Profile, Offline Info)
- *   - Logout button
- *
- * Feature cards are UI-only placeholders — they show a Toast when tapped.
  */
 class DashboardActivity : AppCompatActivity() {
 
@@ -127,13 +116,6 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureCards() {
-        val cards = mapOf(
-            R.id.cardForum to "Forum",
-            R.id.cardHelpRequests to "Help Requests",
-            R.id.cardProfile to "Profile"
-        )
-
-        for ((id, name) in cards) {
         // Forum — navigate to forum screen
         findViewById<MaterialCardView>(R.id.cardForum).setOnClickListener {
             startActivity(Intent(this, ForumActivity::class.java))
@@ -146,15 +128,6 @@ class DashboardActivity : AppCompatActivity() {
 
         findViewById<MaterialCardView>(R.id.cardProfile).setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
-        }
-
-        val placeholders = mapOf(
-            R.id.cardOfflineInfo to "Offline Info"
-        )
-        for ((id, name) in placeholders) {
-            findViewById<MaterialCardView>(id).setOnClickListener {
-                Toast.makeText(this, "$name — coming soon!", Toast.LENGTH_SHORT).show()
-            }
         }
 
         findViewById<MaterialCardView>(R.id.cardOfflineInfo).setOnClickListener {

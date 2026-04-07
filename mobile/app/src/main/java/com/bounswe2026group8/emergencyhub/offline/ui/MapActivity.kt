@@ -30,10 +30,11 @@ import android.os.Build
 import android.os.Environment
 import java.io.File
 import java.util.Locale
-import com.bounswe2026group8.emergencyhub.map.data.PreferencesManager
-import com.bounswe2026group8.emergencyhub.map.data.MapRepository
-import com.bounswe2026group8.emergencyhub.map.rendering.MapRenderer
-import com.bounswe2026group8.emergencyhub.map.rendering.MapScreenController
+import com.bounswe2026group8.emergencyhub.offline.data.PreferencesManager
+import com.bounswe2026group8.emergencyhub.offline.data.MapRepository
+import com.bounswe2026group8.emergencyhub.offline.data.GatheringPoint
+import com.bounswe2026group8.emergencyhub.offline.rendering.MapRenderer
+import com.bounswe2026group8.emergencyhub.offline.rendering.MapScreenController
 /**
  * Main screen responsible for:
  * - getting user location
