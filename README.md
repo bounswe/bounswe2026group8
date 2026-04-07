@@ -133,8 +133,8 @@ Production is deployed on EC2 via Docker Compose and served through Nginx with H
 ### Deploying
 
 Deployment is automatic — push to `main` triggers the CI/CD pipeline:
-1. Runs Django tests
-2. SSHes into EC2 and runs `docker-compose up --build -d`
+1. Runs backend, frontend, and Android unit tests in parallel
+2. SSHes into EC2 and runs `docker-compose up --build -d` (only if all tests pass)
 
 To deploy manually:
 
@@ -161,9 +161,35 @@ DJANGO_DEBUG=False
 
 ## Running Tests
 
+### Backend (Django — 136 tests)
+
 ```bash
-cd backend
-python manage.py test accounts forum help_requests
+docker-compose run --rm backend python manage.py test accounts forum help_requests
+```
+
+### Frontend (Jest + React Testing Library — 52 tests)
+
+```bash
+cd frontend
+npm test
+```
+
+### Android (JUnit 4 — 51 tests)
+
+**macOS / Linux:**
+```bash
+cd mobile
+echo "sdk.dir=$ANDROID_HOME" > local.properties
+./gradlew testDebugUnitTest --no-daemon
+```
+
+**Windows (PowerShell):**
+```powershell
+docker run --rm `
+  -v "C:/path/to/repo/mobile:/app" `
+  -w /app `
+  mingc/android-build-box:latest `
+  bash -c "echo 'sdk.dir=`$ANDROID_HOME' > local.properties && ./gradlew testDebugUnitTest --no-daemon"
 ```
 
 ---
