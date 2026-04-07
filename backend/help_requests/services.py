@@ -35,36 +35,3 @@ def update_status_on_expert_comment(help_request):
         help_request.status = HelpRequest.Status.EXPERT_RESPONDING
         return True
     return False
-
-
-def revert_status_on_last_expert_comment_delete(help_request):
-    """
-    If the request is EXPERT_RESPONDING and no expert comments remain after
-    a deletion, revert the status back to OPEN.
-
-    Called after an expert's comment is deleted. The rule is:
-      - EXPERT_RESPONDING -> OPEN  (no expert comments left)
-      - EXPERT_RESPONDING -> no change  (other expert comments still exist)
-      - RESOLVED -> no change  (never revert a resolved request)
-      - OPEN -> no change  (already open)
-
-    Must be called inside the same transaction as the delete so the query
-    reflects the post-deletion state of comments.
-
-    Returns True if the status was changed, False otherwise.
-    """
-    if help_request.status != HelpRequest.Status.EXPERT_RESPONDING:
-        return False
-
-    from accounts.models import User
-    has_expert_comment = help_request.comments.filter(
-        author__role=User.Role.EXPERT
-    ).exists()
-
-    if not has_expert_comment:
-        HelpRequest.objects.filter(pk=help_request.pk).update(
-            status=HelpRequest.Status.OPEN,
-        )
-        help_request.status = HelpRequest.Status.OPEN
-        return True
-    return False
