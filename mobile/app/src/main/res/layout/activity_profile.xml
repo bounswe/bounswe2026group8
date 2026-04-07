@@ -168,19 +168,17 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.4"
+                        android:layout_weight="1"
                         android:text="@string/profile_blood_type"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
                     <Spinner
                         android:id="@+id/spinnerBloodType"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="0.6"
-                        android:background="@drawable/sort_pill_active_bg"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="8dp" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="72dp"
+                        android:gravity="end" />
                 </LinearLayout>
 
                 <!-- Emergency Contact -->
