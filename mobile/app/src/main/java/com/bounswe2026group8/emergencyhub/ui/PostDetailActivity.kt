@@ -461,21 +461,24 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun deleteComment(commentId: Int) {
+        // Optimistic UI update: remove immediately
+        commentAdapter.removeComment(commentId)
+        commentCount = maxOf(0, commentCount - 1)
+        updateCommentsUI()
+
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@PostDetailActivity)
                     .deleteComment(commentId)
-                response.body()?.close()
 
-                if (response.isSuccessful || response.code() == 204) {
-                    commentAdapter.removeComment(commentId)
-                    commentCount = maxOf(0, commentCount - 1)
-                    updateCommentsUI()
-                } else {
+                if (!response.isSuccessful && response.code() != 204) {
+                    // Deletion failed on server — reload to restore
+                    loadPostAndComments()
                     Toast.makeText(this@PostDetailActivity, "Failed to delete comment", Toast.LENGTH_SHORT).show()
                 }
             } catch (_: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
+                // Deletion may have succeeded; reload to get the true state
+                loadPostAndComments()
             }
         }
     }

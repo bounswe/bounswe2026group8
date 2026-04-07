@@ -64,6 +64,12 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<ResponseBody?>
 
+    @PATCH("help-requests/{id}/status/")
+    suspend fun updateHelpRequestStatus(
+        @Path("id") id: Int,
+        @Body body: UpdateHelpRequestStatusRequest
+    ): Response<HelpRequestDetail>
+
     // ── Help Request Comments ────────────────────────────────────────────
 
     @GET("help-requests/{id}/comments/")
@@ -130,10 +136,10 @@ interface ApiService {
     ): Response<Comment>
 
     @DELETE("forum/comments/{id}/")
-    suspend fun deleteComment(@Path("id") id: Int): Response<ResponseBody>
+    suspend fun deleteComment(@Path("id") id: Int): Response<ResponseBody?>
 
     @DELETE("forum/posts/{id}/")
-    suspend fun deletePost(@Path("id") id: Int): Response<ResponseBody>
+    suspend fun deletePost(@Path("id") id: Int): Response<ResponseBody?>
 
     @POST("forum/posts/{postId}/vote/")
     suspend fun vote(

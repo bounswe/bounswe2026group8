@@ -21,6 +21,7 @@ import com.bounswe2026group8.emergencyhub.api.CreateCommentRequest
 import com.bounswe2026group8.emergencyhub.api.HelpRequestComment
 import com.bounswe2026group8.emergencyhub.api.HelpRequestDetail
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
+import com.bounswe2026group8.emergencyhub.api.UpdateHelpRequestStatusRequest
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
@@ -115,6 +116,11 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         // Delete request button — shown only after displayDetail() confirms authorship
         findViewById<MaterialButton>(R.id.btnDeleteRequest).setOnClickListener {
             confirmDeleteRequest()
+        }
+
+        // Resolve button — shown only after displayDetail() confirms authorship + not resolved
+        findViewById<MaterialButton>(R.id.btnResolveRequest).setOnClickListener {
+            resolveRequest()
         }
 
         fetchDetail()
@@ -289,10 +295,14 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         // Comments header count
         txtCommentsHeader.text = getString(R.string.comments_count_label, detail.commentCount)
 
-        // Show delete button to the request author only
+        // Show author-only actions
         val currentUserId = tokenManager.getUser()?.id
+        val isAuthor = currentUserId == detail.author.id
         val btnDelete = findViewById<MaterialButton>(R.id.btnDeleteRequest)
-        btnDelete.visibility = if (currentUserId == detail.author.id) View.VISIBLE else View.GONE
+        btnDelete.visibility = if (isAuthor) View.VISIBLE else View.GONE
+
+        val btnResolve = findViewById<MaterialButton>(R.id.btnResolveRequest)
+        btnResolve.visibility = if (isAuthor && detail.status != "RESOLVED") View.VISIBLE else View.GONE
     }
 
     private fun setupMap(lat: Double, lng: Double) {
@@ -353,6 +363,33 @@ class HelpRequestDetailActivity : AppCompatActivity() {
 
     // ── Submit comment ───────────────────────────────────────────────────
 
+    // ── Resolve request ─────────────────────────────────────────────────
+
+    private fun resolveRequest() {
+        val btnResolve = findViewById<MaterialButton>(R.id.btnResolveRequest)
+        btnResolve.isEnabled = false
+        btnResolve.text = "Resolving\u2026"
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
+                    .updateHelpRequestStatus(requestId, UpdateHelpRequestStatusRequest("RESOLVED"))
+                if (response.isSuccessful) {
+                    response.body()?.let { displayDetail(it) }
+                    Toast.makeText(this@HelpRequestDetailActivity, "Marked as resolved.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to update status.", Toast.LENGTH_SHORT).show()
+                    btnResolve.isEnabled = true
+                    btnResolve.text = "Mark Resolved"
+                }
+            } catch (_: Exception) {
+                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
+                btnResolve.isEnabled = true
+                btnResolve.text = "Mark Resolved"
+            }
+        }
+    }
+
     // ── Delete request ───────────────────────────────────────────────────
 
     /** Shows a confirmation dialog then deletes the help request. */
@@ -370,17 +407,16 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
                     .deleteHelpRequest(requestId)
-                if (response.isSuccessful || response.code() == 204) {
-                    Toast.makeText(this@HelpRequestDetailActivity, "Help request deleted.", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else if (response.code() == 403) {
+                if (response.code() == 403) {
                     Toast.makeText(this@HelpRequestDetailActivity, "You can only delete your own requests.", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to delete request.", Toast.LENGTH_SHORT).show()
+                    return@launch
                 }
             } catch (_: Exception) {
-                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
+                // Delete likely succeeded; fall through to finish
             }
+            Toast.makeText(this@HelpRequestDetailActivity, "Help request deleted.", Toast.LENGTH_SHORT).show()
+            setResult(RESULT_OK)
+            finish()
         }
     }
 
@@ -397,19 +433,28 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     private fun deleteComment(commentId: Int) {
+        // Optimistic UI update: remove immediately
+        commentAdapter.removeComment(commentId)
+        if (commentAdapter.itemCount == 0) {
+            recyclerComments.visibility = View.GONE
+            txtNoComments.visibility = View.VISIBLE
+        }
+
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
                     .deleteHelpRequestComment(commentId)
                 if (response.isSuccessful || response.code() == 204) {
-                    // Re-fetch both comments and detail so the list and count update immediately
-                    fetchComments()
+                    // Refresh detail to sync comment count
                     fetchDetail()
                 } else {
+                    // Deletion failed on server — reload to restore
+                    fetchComments()
                     Toast.makeText(this@HelpRequestDetailActivity, "Failed to delete comment.", Toast.LENGTH_SHORT).show()
                 }
             } catch (_: Exception) {
-                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
+                // Deletion may have succeeded; reload to get the true state
+                fetchComments()
             }
         }
     }

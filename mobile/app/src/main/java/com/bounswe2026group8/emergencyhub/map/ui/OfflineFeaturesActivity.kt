@@ -6,6 +6,8 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.offline.ui.EmergencyContactsActivity
+import com.bounswe2026group8.emergencyhub.offline.ui.FirstAidActivity
 import com.google.android.material.button.MaterialButton
 
 /**
@@ -39,26 +41,18 @@ class OfflineFeaturesActivity : AppCompatActivity() {
             startActivity(Intent(this, MapActivity::class.java))
         }
 
-        /**
-         * Placeholder: checklist feature not implemented yet
-         */
+        // First aid page
         checklistButton.setOnClickListener {
-            Toast.makeText(
+            startActivity(Intent(
                 this,
-                "Emergency Checklist — coming soon!",
-                Toast.LENGTH_SHORT
-            ).show()
+                FirstAidActivity::class.java))
         }
 
-        /**
-         * Placeholder: contacts feature not implemented yet
-         */
+        // Contacts page
         contactsButton.setOnClickListener {
-            Toast.makeText(
+            startActivity(Intent(
                 this,
-                "Offline Contacts — coming soon!",
-                Toast.LENGTH_SHORT
-            ).show()
+                EmergencyContactsActivity::class.java))
         }
     }
 }
