@@ -3,6 +3,7 @@ package com.bounswe2026group8.emergencyhub.api
 import android.content.Context
 import com.bounswe2026group8.emergencyhub.BuildConfig
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.util.ImageUrlResolver
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,13 +23,9 @@ object RetrofitClient {
 
     /**
      * Resolves an image URL so it is loadable from the mobile client.
-     * - Relative paths (e.g. "/media/uploads/abc.png") get the base URL prepended.
-     * - All other URLs (external) are returned as-is.
+     * Delegates to [ImageUrlResolver] for testable logic.
      */
-    fun resolveImageUrl(url: String): String {
-        if (url.startsWith("/")) return "$BASE_URL$url"
-        return url
-    }
+    fun resolveImageUrl(url: String): String = ImageUrlResolver.resolve(url, BASE_URL)
 
     private var apiService: ApiService? = null
 

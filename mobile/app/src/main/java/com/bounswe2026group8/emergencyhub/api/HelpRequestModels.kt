@@ -75,6 +75,9 @@ data class HelpRequestDetail(
     @SerializedName("updated_at") val updatedAt: String
 )
 
+/** Request body for PATCH /help-requests/{id}/status/. */
+data class UpdateHelpRequestStatusRequest(val status: String)
+
 /** Single comment from GET /help-requests/{id}/comments/. */
 data class HelpRequestComment(
     val id: Int,

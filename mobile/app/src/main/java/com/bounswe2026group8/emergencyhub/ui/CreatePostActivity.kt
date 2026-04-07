@@ -19,7 +19,6 @@ import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.CreatePostRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
-import com.bounswe2026group8.emergencyhub.auth.HubManager
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
@@ -252,7 +251,7 @@ class CreatePostActivity : AppCompatActivity() {
         btnCreate.text = getString(R.string.creating_post)
 
         val hubId = if (selectedForumType != "GLOBAL") {
-            HubManager(this).getSelectedHub()?.id
+            tokenManager.getUser()?.hub?.id
         } else null
 
         val pastedUrls = inputImageUrls.text.toString()

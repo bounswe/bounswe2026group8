@@ -185,6 +185,17 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Resolve button — shown only to author when not resolved -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnResolveRequest"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Mark as Resolved"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                style="@style/Widget.EmergencyHub.Button.Primary" />
+
             <!-- ── Map card (hidden when no coords) ────────────────────── -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardMap"

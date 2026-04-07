@@ -3,6 +3,7 @@ package com.bounswe2026group8.emergencyhub.ui
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
@@ -27,8 +28,11 @@ import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity() {
 
+    private val bloodTypeOptions = arrayOf("—", "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
+
     private lateinit var tokenManager: TokenManager
     private var currentProfile: ProfileData? = null
+    private var ignoreBloodTypeSelection = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,11 +83,12 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun displayProfile(p: ProfileData) {
         setField(R.id.fieldPhone, getString(R.string.profile_phone), p.phoneNumber)
-        setField(R.id.fieldBloodType, getString(R.string.profile_blood_type), p.bloodType)
         setField(R.id.fieldEmergencyContact, getString(R.string.profile_emergency_contact), p.emergencyContact)
         setField(R.id.fieldEmergencyPhone, getString(R.string.profile_emergency_phone), p.emergencyContactPhone)
         setField(R.id.fieldBio, getString(R.string.profile_bio), p.bio)
         setField(R.id.fieldSpecialNeeds, getString(R.string.profile_special_needs_label), p.specialNeeds)
+
+        setupBloodTypeSpinner(p.bloodType)
 
         val switchDisability = findViewById<MaterialSwitch>(R.id.switchDisability)
         switchDisability.isChecked = p.hasDisability
@@ -98,6 +103,29 @@ class ProfileActivity : AppCompatActivity() {
         updateStatusBadgeText(statusBadge, p.availabilityStatus)
     }
 
+    private fun setupBloodTypeSpinner(currentValue: String?) {
+        val spinner = findViewById<Spinner>(R.id.spinnerBloodType)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, bloodTypeOptions)
+        spinner.adapter = adapter
+
+        val idx = bloodTypeOptions.indexOf(currentValue ?: "").coerceAtLeast(0)
+        ignoreBloodTypeSelection = true
+        spinner.setSelection(idx)
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                if (ignoreBloodTypeSelection) {
+                    ignoreBloodTypeSelection = false
+                    return
+                }
+                val selected = bloodTypeOptions[pos]
+                val value = if (selected == "—") null else selected
+                updateProfile(ProfileUpdateRequest(bloodType = value))
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
     private fun setField(includeId: Int, label: String, value: String?) {
         val view = findViewById<View>(includeId)
         view.findViewById<TextView>(R.id.fieldLabel).text = label
@@ -108,7 +136,6 @@ class ProfileActivity : AppCompatActivity() {
     private fun onFieldEdited(includeId: Int, label: String, newVal: String) {
         val req = when (includeId) {
             R.id.fieldPhone -> ProfileUpdateRequest(phoneNumber = newVal.ifBlank { null })
-            R.id.fieldBloodType -> ProfileUpdateRequest(bloodType = newVal.ifBlank { null })
             R.id.fieldEmergencyContact -> ProfileUpdateRequest(emergencyContact = newVal.ifBlank { null })
             R.id.fieldEmergencyPhone -> ProfileUpdateRequest(emergencyContactPhone = newVal.ifBlank { null })
             R.id.fieldBio -> ProfileUpdateRequest(bio = newVal.ifBlank { null })
