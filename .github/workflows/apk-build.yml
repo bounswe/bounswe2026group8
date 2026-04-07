@@ -28,6 +28,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x mobile/gradlew
 
+      - name: Fix gradlew JVM opts quoting
+        run: sed -i "s/DEFAULT_JVM_OPTS='\".*\"'/DEFAULT_JVM_OPTS=\"-Xmx64m -Xms64m\"/" mobile/gradlew
+
       - name: Build debug APK
         env:
           JAVA_TOOL_OPTIONS: ""
