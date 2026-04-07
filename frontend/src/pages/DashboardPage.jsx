@@ -22,7 +22,7 @@ export default function DashboardPage() {
     { icon: '💬', title: 'Forum', desc: 'Community discussions', path: '/forum' },
     { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help', path: '/help-requests' },
     { icon: '👤', title: 'Profile', desc: 'Manage your account', path: '/profile' },
-    { icon: '🚨', title: 'Emergency Info', desc: 'Nearby facilities & shelters', path: '/emergency-info' },
+    { icon: '📶', title: 'Emergency Info', desc: 'Critical data access', path: '/emergency-info' },
   ];
 
   return (

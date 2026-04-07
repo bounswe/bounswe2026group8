@@ -17,6 +17,7 @@ import HelpRequestDetailPage from './pages/HelpRequestDetailPage';
 import MyPostsPage from './pages/MyPostsPage';
 import UserProfilePage from './pages/UserProfilePage';
 import EmergencyInfoPage from './pages/EmergencyInfoPage';
+import EmergencyMapPage from './pages/EmergencyMapPage';
 
 export default function App() {
 return (
@@ -98,6 +99,14 @@ return (
             element={
               <ProtectedRoute>
                 <EmergencyInfoPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/emergency-info/map"
+            element={
+              <ProtectedRoute>
+                <EmergencyMapPage />
               </ProtectedRoute>
             }
           />
