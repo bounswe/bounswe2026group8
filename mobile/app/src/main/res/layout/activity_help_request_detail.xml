@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_base">
+
+    <!-- ── Scrollable content ──────────────────────────────────────────── -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- ── Header bar ──────────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="←"
+                    android:textSize="16sp"
+                    android:minWidth="48dp"
+                    android:layout_marginEnd="8dp"
+                    style="@style/Widget.EmergencyHub.Button.Secondary" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/help_request_detail_title"
+                    android:textColor="@color/accent"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!-- Delete button — shown only to the request author -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDeleteRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Delete"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    style="@style/Widget.EmergencyHub.Button.Secondary" />
+
+            </LinearLayout>
+
+            <!-- ── Detail card ─────────────────────────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/bg_surface"
+                app:cardCornerRadius="14dp"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Title -->
+                    <TextView
+                        android:id="@+id/txtDetailTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+
+                    <!-- Badge row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:id="@+id/txtDetailCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:background="@drawable/badge_category_bg"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/txtDetailUrgency"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:background="@drawable/badge_category_bg"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/txtDetailStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:background="@drawable/badge_muted_bg"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp" />
+
+                    </LinearLayout>
+
+                    <!-- Description -->
+                    <TextView
+                        android:id="@+id/txtDetailDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:lineSpacingExtra="4dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Images (hidden when none) -->
+                    <HorizontalScrollView
+                        android:id="@+id/imageGalleryScroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:id="@+id/imageGallery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="140dp"
+                            android:orientation="horizontal" />
+
+                    </HorizontalScrollView>
+
+                    <!-- Author + time -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/txtDetailAuthor"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/text_muted"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtDetailTimeAgo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_muted"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ── Map card (hidden when no coords) ────────────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardMap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/bg_surface"
+                app:cardCornerRadius="14dp"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/location_label"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp" />
+
+                    <org.osmdroid.views.MapView
+                        android:id="@+id/mapView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/txtMapLocationText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Location text only (no map, when coords are missing) -->
+            <TextView
+                android:id="@+id/txtLocationOnly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:background="@drawable/badge_muted_bg"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
+
+            <!-- ── Comments section ────────────────────────────────────── -->
+            <TextView
+                android:id="@+id/txtCommentsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/comments_label"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <ProgressBar
+                android:id="@+id/progressComments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtNoComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_comments_yet"
+                android:textColor="@color/text_muted"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:padding="20dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ── Divider ─────────────────────────────────────────────────────── -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/border" />
+
+    <!-- ── Comment input bar (fixed at bottom) ─────────────────────────── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/bg_surface"
+        android:padding="12dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/comment_hint"
+            style="@style/Widget.EmergencyHub.TextInput">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textCapSentences"
+                android:maxLines="3"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSendComment"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/send"
+            android:textSize="14sp"
+            style="@style/Widget.EmergencyHub.Button.Primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

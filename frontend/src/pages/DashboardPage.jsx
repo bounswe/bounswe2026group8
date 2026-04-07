@@ -15,18 +15,18 @@ export default function DashboardPage() {
   if (!user) return null; // guarded by ProtectedRoute, but just in case
 
   const roleLabel = user.role === 'EXPERT' ? '🎓 Expert' : '👤 Standard';
+  const statusLabels = { SAFE: { label: 'Safe', color: '#34d399' }, NEEDS_HELP: { label: 'Needs Help', color: '#f87171' }, AVAILABLE_TO_HELP: { label: 'Available to Help', color: '#38bdf8' } };
+  const avail = statusLabels[user.profile?.availability_status] || statusLabels.SAFE;
 
-  // Placeholder feature cards for future subgroup work
   const features = [
-    { icon: '💬', title: 'Forum', desc: 'Community discussions' },
-    { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help' },
-    { icon: '👤', title: 'Profile', desc: 'Manage your account' },
-    { icon: '📶', title: 'Offline Info', desc: 'Critical data access' },
+    { icon: '💬', title: 'Forum', desc: 'Community discussions', path: '/forum' },
+    { icon: '🆘', title: 'Help Requests', desc: 'Ask for or offer help', path: '/help-requests' },
+    { icon: '👤', title: 'Profile', desc: 'Manage your account', path: '/profile' },
+    { icon: '📶', title: 'Offline Info', desc: 'Critical data access', path: null },
   ];
 
   return (
     <div className="page dashboard-page">
-      {/* Top bar */}
       <header className="dashboard-header">
         <h2 className="gradient-text">Emergency Hub</h2>
         <button className="btn btn-secondary btn-sm" onClick={handleLogout}>
@@ -34,11 +34,13 @@ export default function DashboardPage() {
         </button>
       </header>
 
-      {/* Welcome card */}
       <div className="welcome-card">
         <h1>Welcome, {user.full_name}!</h1>
         <div className="welcome-meta">
           <span className="badge">{roleLabel}</span>
+          <span className="badge" style={{ color: avail.color, borderColor: avail.color + '44', background: avail.color + '11' }}>
+            ● {avail.label}
+          </span>
           {user.expertise_field && (
             <span className="badge badge-accent">
               {user.expertise_field}
@@ -52,10 +54,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Feature grid */}
       <div className="dashboard-grid">
         {features.map((f) => (
-          <div className="dashboard-card" key={f.title}>
+          <div
+            className={`dashboard-card ${f.path ? 'dashboard-card--clickable' : ''}`}
+            key={f.title}
+            onClick={() => f.path && navigate(f.path)}
+            role={f.path ? 'link' : undefined}
+          >
             <span className="dashboard-card-icon">{f.icon}</span>
             <h3>{f.title}</h3>
             <p>{f.desc}</p>

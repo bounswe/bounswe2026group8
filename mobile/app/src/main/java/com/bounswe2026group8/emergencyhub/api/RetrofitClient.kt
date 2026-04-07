@@ -1,6 +1,7 @@
 package com.bounswe2026group8.emergencyhub.api
 
 import android.content.Context
+import com.bounswe2026group8.emergencyhub.BuildConfig
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -11,17 +12,24 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Singleton providing the configured Retrofit [ApiService] instance.
  *
- * Uses OkHttp interceptors to:
- *   1. Automatically attach `Authorization: Bearer <token>` when a token exists
- *   2. Log HTTP traffic for debugging
- *
- * The base URL defaults to 10.0.2.2:8000 which is the Android emulator alias
- * for the host machine's localhost. Change this if testing on a physical device.
+ * BASE_URL is set per build type via BuildConfig:
+ *   - debug:   http://10.0.2.2:8000  (Android emulator → localhost)
+ *   - release: https://emergencyhub.duckdns.org
  */
 object RetrofitClient {
 
-    // For emulator → host-machine localhost
-    private const val BASE_URL = "http://10.0.2.2:8000"
+    private val BASE_URL = BuildConfig.BASE_URL
+
+    /**
+     * Resolves an image URL so it is loadable from the mobile client.
+     * - Relative paths (e.g. "/media/uploads/abc.png") get the base URL prepended.
+     * - All other URLs (external) are returned as-is.
+     */
+    fun resolveImageUrl(url: String): String {
+        if (url.startsWith("/")) return "$BASE_URL$url"
+        return url
+    }
+
     private var apiService: ApiService? = null
 
     fun getService(context: Context): ApiService {
@@ -37,14 +45,15 @@ object RetrofitClient {
                 chain.proceed(requestBuilder.build())
             }
 
-            // Logging interceptor for debug builds
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
-
             val client = OkHttpClient.Builder()
                 .addInterceptor(authInterceptor)
-                .addInterceptor(loggingInterceptor)
+                .apply {
+                    if (BuildConfig.DEBUG) {
+                        addInterceptor(HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        })
+                    }
+                }
                 .build()
 
             apiService = Retrofit.Builder()

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardHelpRequest"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="@color/bg_surface"
+    app:cardCornerRadius="14dp"
+    app:strokeColor="@color/border"
+    app:strokeWidth="1dp"
+    app:cardElevation="0dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <!-- Badge row: category, urgency, status -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/txtCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:background="@drawable/badge_category_bg"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/txtUrgency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:background="@drawable/badge_category_bg"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:background="@drawable/badge_muted_bg"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp" />
+
+        </LinearLayout>
+
+        <!-- Bottom row: author, comment count, time ago -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/txtAuthor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/txtCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_muted"
+                android:textSize="13sp"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/txtTimeAgo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_muted"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

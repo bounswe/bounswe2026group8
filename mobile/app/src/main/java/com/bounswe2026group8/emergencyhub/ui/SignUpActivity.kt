@@ -3,25 +3,21 @@ package com.bounswe2026group8.emergencyhub.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.RegisterRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.android.material.button.MaterialButtonToggleGroup
 import kotlinx.coroutines.launch
 
-/**
- * Sign Up screen.
- *
- * Collects registration data matching the backend POST /register contract.
- * The expertise field is only shown when the EXPERT role is selected.
- * On success, navigates to Sign In.
- */
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var inputFullName: TextInputEditText
@@ -33,14 +29,15 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var expertiseLayout: TextInputLayout
     private lateinit var toggleGroup: MaterialButtonToggleGroup
     private lateinit var btnSubmit: MaterialButton
+    private lateinit var spinnerHub: Spinner
 
     private var selectedRole = "STANDARD"
+    private var hubs: List<Hub> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        // Bind views
         inputFullName = findViewById(R.id.inputFullName)
         inputEmail = findViewById(R.id.inputEmail)
         inputPassword = findViewById(R.id.inputPassword)
@@ -50,8 +47,8 @@ class SignUpActivity : AppCompatActivity() {
         expertiseLayout = findViewById(R.id.expertiseLayout)
         toggleGroup = findViewById(R.id.roleToggleGroup)
         btnSubmit = findViewById(R.id.btnSignUp)
+        spinnerHub = findViewById(R.id.spinnerHub)
 
-        // Role toggle — show expertise field only for EXPERT
         toggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
                 selectedRole = if (checkedId == R.id.btnRoleExpert) "EXPERT" else "STANDARD"
@@ -61,11 +58,38 @@ class SignUpActivity : AppCompatActivity() {
 
         btnSubmit.setOnClickListener { attemptRegister() }
 
-        // Navigate to Sign In
         findViewById<View>(R.id.linkSignIn).setOnClickListener {
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
         }
+
+        loadHubs()
+    }
+
+    private fun loadHubs() {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@SignUpActivity).getHubs()
+                if (response.isSuccessful) {
+                    hubs = response.body() ?: emptyList()
+                    val hubNames = listOf(getString(R.string.select_hub)) + hubs.map { it.name }
+                    val adapter = ArrayAdapter(
+                        this@SignUpActivity,
+                        android.R.layout.simple_spinner_item,
+                        hubNames
+                    )
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinnerHub.adapter = adapter
+                }
+            } catch (_: Exception) {
+                // Hub list failed to load — user can still sign up without hub
+            }
+        }
+    }
+
+    private fun getSelectedHubId(): Int? {
+        val pos = spinnerHub.selectedItemPosition
+        return if (pos > 0 && pos <= hubs.size) hubs[pos - 1].id else null
     }
 
     private fun attemptRegister() {
@@ -75,8 +99,8 @@ class SignUpActivity : AppCompatActivity() {
         val confirmPassword = inputConfirmPassword.text.toString()
         val neighborhood = inputNeighborhood.text.toString().trim().ifEmpty { null }
         val expertise = inputExpertise.text.toString().trim().ifEmpty { null }
+        val hubId = getSelectedHubId()
 
-        // ── Client-side validation ──────────────────────────────────────────
         if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show()
             return
@@ -90,7 +114,6 @@ class SignUpActivity : AppCompatActivity() {
             return
         }
 
-        // ── API call ────────────────────────────────────────────────────────
         btnSubmit.isEnabled = false
         btnSubmit.text = getString(R.string.signing_up)
 
@@ -101,7 +124,8 @@ class SignUpActivity : AppCompatActivity() {
             confirmPassword = confirmPassword,
             role = selectedRole,
             neighborhoodAddress = neighborhood,
-            expertiseField = if (selectedRole == "EXPERT") expertise else null
+            expertiseField = if (selectedRole == "EXPERT") expertise else null,
+            hubId = hubId
         )
 
         lifecycleScope.launch {

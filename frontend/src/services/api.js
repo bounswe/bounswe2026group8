@@ -1,4 +1,21 @@
-const API_BASE = 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+
+/**
+ * Resolves an image URL so relative paths served by the backend are loadable.
+ * - Relative paths (e.g. "/media/uploads/abc.png") get the API base prepended.
+ * - Absolute URLs are returned as-is.
+ */
+export function resolveImageUrl(url) {
+  if (!url) return url;
+  if (!url.startsWith('/')) return url;
+  // API_BASE may be a relative path like '/api' (production) or an absolute URL
+  // like 'http://localhost:8000' (local dev). Media is always served from the
+  // same origin, so we must NOT prepend '/api' to '/media/...' paths.
+  if (API_BASE.startsWith('http')) {
+    return `${new URL(API_BASE).origin}${url}`;
+  }
+  return url;
+}
 
 /**
  * Generic fetch wrapper that handles JSON and auth headers.
@@ -16,8 +33,15 @@ async function request(endpoint, options = {}) {
     headers,
   });
 
-  const data = await response.json();
+  // 204 No Content has no body — skip JSON parsing
+  if (response.status === 204) {
+    return { ok: true, status: 204, data: null };
+  }
+
+ // 204 No Content — no body to parse.
+  const data = response.status === 204 ? null : await response.json();
   return { ok: response.ok, status: response.status, data };
+
 }
 
 /**
@@ -40,7 +64,7 @@ export function register(payload) {
  * POST /login
  * Request body: { email, password }
  *
- * Success → { message, token, user: { id, full_name, email, role, neighborhood_address, expertise_field } }
+ * Success → { message, token, refresh, user: { ... } }
  * Failure → { message: "Invalid email or password" }
  */
 export function login(payload) {
@@ -72,4 +96,278 @@ export function getMe() {
   return request('/me', {
     method: 'GET',
   });
+}
+
+export function getProfile() {
+  return request('/profile', {
+    method: 'GET',
+  });
+}
+
+export function updateProfile(payload) {
+  return request('/profile', {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+// --------------- Resources ---------------
+
+export function getResources() {
+  return request('/resources', { method: 'GET' });
+}
+
+export function createResource(payload) {
+  return request('/resources', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateResource(id, payload) {
+  return request(`/resources/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteResource(id) {
+  return request(`/resources/${id}`, { method: 'DELETE' });
+}
+
+// --------------- Expertise Fields (EXPERT only) ---------------
+
+export function getExpertiseFields() {
+  return request('/expertise', { method: 'GET' });
+}
+
+export function createExpertiseField(payload) {
+  return request('/expertise', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateExpertiseField(id, payload) {
+  return request(`/expertise/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteExpertiseField(id) {
+  return request(`/expertise/${id}`, { method: 'DELETE' });
+}
+
+export function getUserProfile(id) {
+  return request(`/users/${id}/`, { method: 'GET' });
+}
+
+export function updateMe(data) {
+  return request('/me', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * GET /hubs/
+ * Public — returns list of all hubs.
+ */
+export function getHubs() {
+  return request('/hubs/', {
+    method: 'GET',
+  });
+}
+
+// ── Help Requests ────────────────────────────────────────────────────────────
+
+/**
+ * GET /help-requests/
+ * Fetches help requests, optionally filtered by hub and/or category.
+ *
+ * @param {Object} params
+ * @param {number} [params.hub_id]   — filter by hub ID
+ * @param {string} [params.category] — filter by category (MEDICAL|FOOD|SHELTER|TRANSPORT)
+ *
+ * Success → array of help request objects
+ */
+export function getHelpRequests(params = {}) {
+  const query = new URLSearchParams();
+  if (params.hub_id) query.append('hub_id', params.hub_id);
+  if (params.category) query.append('category', params.category);
+  if (params.author) query.append('author', params.author);
+  const qs = query.toString();
+  return request(`/help-requests/${qs ? `?${qs}` : ''}`, {
+    method: 'GET',
+  });
+}
+
+/** POST /help-requests/ — create a new help request. */
+export function createHelpRequest(payload) {
+  return request('/help-requests/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+/** PATCH /help-requests/{id}/status/ — update the status of a help request. */
+export function updateHelpRequestStatus(id, newStatus) {
+  return request(`/help-requests/${id}/status/`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: newStatus }),
+  });
+}
+
+/** GET /help-requests/{id}/ — full detail of a single help request. */
+export function getHelpRequest(id) {
+  return request(`/help-requests/${id}/`, { method: 'GET' });
+}
+
+/** GET /help-requests/{id}/comments/ — list comments on a help request. */
+export function getHelpComments(requestId) {
+  return request(`/help-requests/${requestId}/comments/`, { method: 'GET' });
+}
+
+/** POST /help-requests/{id}/comments/ — add a comment to a help request. */
+export function createHelpComment(requestId, content) {
+  return request(`/help-requests/${requestId}/comments/`, {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  });
+}
+
+/**
+ * GET /help-offers/
+ * Fetches help offers, optionally filtered by hub and/or category.
+ */
+export function getHelpOffers(params = {}) {
+  const query = new URLSearchParams();
+  if (params.hub_id) query.append('hub_id', params.hub_id);
+  if (params.category) query.append('category', params.category);
+  if (params.author) query.append('author', params.author);
+  const qs = query.toString();
+  return request(`/help-offers/${qs ? `?${qs}` : ''}`, { method: 'GET' });
+}
+
+/** POST /help-offers/ — create a new help offer. */
+export function createHelpOffer(payload) {
+  return request('/help-offers/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+/** DELETE /help-offers/{id}/ — delete a help offer (author only). */
+export function deleteHelpOffer(id) {
+  return request(`/help-offers/${id}/`, { method: 'DELETE' });
+}
+
+/** DELETE /help-requests/{id}/ — delete a help request (author only). */
+export function deleteHelpRequest(id) {
+  return request(`/help-requests/${id}/`, { method: 'DELETE' });
+}
+
+/** DELETE /help-requests/comments/{id}/ — delete a help request comment (author only). */
+export function deleteHelpComment(commentId) {
+  return request(`/help-requests/comments/${commentId}/`, { method: 'DELETE' });
+}
+
+// ── Forum ─────────────────────────────────────────────────────────────────────
+
+export function getPosts({ hub, forumType, author } = {}) {
+  const params = new URLSearchParams();
+  if (hub) params.set('hub', hub);
+  if (forumType) params.set('forum_type', forumType);
+  if (author) params.set('author', author);
+  const qs = params.toString();
+  return request(`/forum/posts/${qs ? `?${qs}` : ''}`, { method: 'GET' });
+}
+
+export function getPost(id) {
+  return request(`/forum/posts/${id}/`, { method: 'GET' });
+}
+
+export function createPost(payload) {
+  return request('/forum/posts/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updatePost(id, payload) {
+  return request(`/forum/posts/${id}/`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deletePost(id) {
+  return request(`/forum/posts/${id}/`, { method: 'DELETE' });
+}
+
+export function getComments(postId) {
+  return request(`/forum/posts/${postId}/comments/`, { method: 'GET' });
+}
+
+export function createComment(postId, content) {
+  return request(`/forum/posts/${postId}/comments/`, {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  });
+}
+
+export function deleteComment(commentId) {
+  return request(`/forum/comments/${commentId}/`, { method: 'DELETE' });
+}
+
+export function vote(postId, voteType) {
+  return request(`/forum/posts/${postId}/vote/`, {
+    method: 'POST',
+    body: JSON.stringify({ vote_type: voteType }),
+  });
+}
+
+export function reportPost(postId, reason) {
+  return request(`/forum/posts/${postId}/report/`, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export function repost(postId, hubId) {
+  return request(`/forum/posts/${postId}/repost/`, {
+    method: 'POST',
+    body: JSON.stringify(hubId ? { hub: hubId } : {}),
+  });
+}
+
+export async function uploadImages(files) {
+  const token = localStorage.getItem('token');
+  const formData = new FormData();
+  files.forEach((f) => formData.append('images', f));
+
+  const response = await fetch(`${API_BASE}/forum/upload/`, {
+    method: 'POST',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: formData,
+  });
+
+  const data = await response.json();
+  return { ok: response.ok, status: response.status, data };
+}
+
+export async function uploadHelpRequestImages(files) {
+  const token = localStorage.getItem('token');
+  const formData = new FormData();
+  files.forEach((f) => formData.append('images', f));
+
+  const response = await fetch(`${API_BASE}/help-requests/upload/`, {
+    method: 'POST',
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: formData,
+  });
+
+  const data = await response.json();
+  return { ok: response.ok, status: response.status, data };
 }

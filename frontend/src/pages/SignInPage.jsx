@@ -1,20 +1,27 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function SignInPage() {
   const navigate = useNavigate();
-  const { loginUser, isAuthenticated } = useAuth();
+  const { loginUser, isAuthenticated, loading } = useAuth();
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  // If already authenticated, redirect immediately
+  if (loading) {
+    return (
+      <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>Loading…</p>
+      </div>
+    );
+  }
+
   if (isAuthenticated) {
-    navigate('/dashboard', { replace: true });
-    return null;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const handleChange = (e) => {
@@ -39,7 +46,7 @@ export default function SignInPage() {
     setSubmitting(false);
 
     if (ok) {
-      // Backend returns { message, token, user }
+      // Backend returns { message, token, refresh, user }
       loginUser(data.token, data.user);
       navigate('/dashboard', { replace: true });
     } else {
@@ -71,14 +78,24 @@ export default function SignInPage() {
 
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Your password"
-              value={form.password}
-              onChange={handleChange}
-            />
+            <div className="password-input-wrapper">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Your password"
+                value={form.password}
+                onChange={handleChange}
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
 
           <button

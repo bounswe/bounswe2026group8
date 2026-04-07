@@ -20,4 +20,11 @@
         <item name="textInputStyle">@style/Widget.EmergencyHub.TextInput</item>
     </style>
 
+    <style name="Theme.EmergencyHub.Lightbox" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
 </resources>

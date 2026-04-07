@@ -30,20 +30,38 @@ import android.os.Build
 import android.os.Environment
 import java.io.File
 import java.util.Locale
-
+import com.bounswe2026group8.emergencyhub.map.data.PreferencesManager
+import com.bounswe2026group8.emergencyhub.map.data.MapRepository
+import com.bounswe2026group8.emergencyhub.map.rendering.MapRenderer
+import com.bounswe2026group8.emergencyhub.map.rendering.MapScreenController
+/**
+ * Main screen responsible for:
+ * - getting user location
+ * - resolving country/state
+ * - downloading correct map if needed
+ * - rendering map
+ */
 class MapActivity : AppCompatActivity() {
 
+    // Core components
     private lateinit var preferencesManager: PreferencesManager
     private lateinit var mapRepository: MapRepository
     private lateinit var mapRenderer: MapRenderer
     private lateinit var mapScreenController: MapScreenController
+
+    // Location service
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    // UI
     private lateinit var mapView: MapView
     private lateinit var infoText: TextView
 
-    private val defaultRegion = "europe"
+    // Tracks current download
     private var activeDownloadId: Long = -1L
 
+    /**
+     * Handles permission result
+     */
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val fineGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
@@ -56,15 +74,22 @@ class MapActivity : AppCompatActivity() {
             }
         }
 
+    /**
+     * Triggered when download finishes
+     */
     private val downloadCompleteReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val completedId = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1L) ?: -1L
+
+            // Only react to our own download
             if (completedId == activeDownloadId) {
                 Toast.makeText(
                     this@MapActivity,
                     "Map download completed.",
                     Toast.LENGTH_LONG
                 ).show()
+
+                // Render newly downloaded map
                 renderMap()
             }
         }
@@ -73,9 +98,12 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Required for Mapsforge
         AndroidGraphicFactory.createInstance(application)
+
         setContentView(R.layout.activity_map)
 
+        // Initialize core components
         preferencesManager = PreferencesManager(this)
         mapRepository = MapRepository(this)
         mapRenderer = MapRenderer(this)
@@ -85,19 +113,24 @@ class MapActivity : AppCompatActivity() {
             mapRepository,
             mapRenderer
         )
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        // UI bindings
         infoText = findViewById(R.id.infoText)
         mapView = findViewById(R.id.mapView)
 
+        // Map settings
         mapView.isClickable = true
         mapView.setBuiltInZoomControls(true)
         mapView.setZoomLevel(12.toByte())
 
+        // Back button
         findViewById<Button>(R.id.btnBack).setOnClickListener {
             finish()
         }
 
+        // Listen for download completion
         ContextCompat.registerReceiver(
             this,
             downloadCompleteReceiver,
@@ -105,10 +138,16 @@ class MapActivity : AppCompatActivity() {
             ContextCompat.RECEIVER_EXPORTED
         )
 
+        // IMPORTANT:
+        // 1. Try to render existing map immediately
+        // 2. Then update with real location
         renderMap()
         checkLocationPermissionAndFetch()
     }
 
+    /**
+     * Checks permission before requesting location
+     */
     private fun checkLocationPermissionAndFetch() {
         val fineGranted = ContextCompat.checkSelfPermission(
             this,
@@ -132,6 +171,9 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Gets current GPS location
+     */
     @SuppressLint("MissingPermission")
     private fun fetchAndShowCurrentLocation() {
         val fineGranted = ContextCompat.checkSelfPermission(
@@ -203,10 +245,14 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun renderMap() {
-        mapScreenController.updateMap(mapView, infoText, defaultRegion)
+        mapScreenController.updateMap(mapView, infoText)
     }
 
+    /**
+     * Converts location → country/state → ensures correct map is available
+     */
     private fun resolveCountryAndEnsureMap(userLocation: LatLong) {
+        // If geocoder is not available, just use existing map
         if (!Geocoder.isPresent()) {
             Toast.makeText(
                 this,
@@ -240,7 +286,7 @@ class MapActivity : AppCompatActivity() {
 
                         if (mapRepository.isUnitedStates(countryName)) {
                             val stateName = address?.adminArea
-
+                            // USA requires state-level maps (e.g., california.map)
                             if (stateName.isNullOrBlank()) {
                                 Toast.makeText(
                                     this@MapActivity,
