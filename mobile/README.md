@@ -20,27 +20,13 @@ mobile/
 │       │   │   └── RetrofitClient.kt   # Retrofit singleton + OkHttp interceptor
 │       │   ├── auth/
 │       │   │   └── TokenManager.kt     # SharedPreferences token storage
-│       │   ├── ui/
-│       │   │   ├── LandingActivity.kt  # Welcome screen
-│       │   │   ├── SignUpActivity.kt   # Registration form
-│       │   │   ├── SignInActivity.kt   # Login form
-│       │   │   └── DashboardActivity.kt # Post-login dashboard
-│       │   └── map/
-│       │       ├── data/
-│       │       │   ├── GatheringPoint.kt        # Data model for map points
-│       │       │   ├── MapRepository.kt        # Region + URL + data logic
-│       │       │   └── PreferencesManager.kt   # SharedPreferences (location, map file)
-│       │       │
-│       │       ├── rendering/
-│       │       │   ├── MapRenderer.kt          # Loads map + draws markers
-│       │       │   └── MapScreenController.kt  # Connects UI with logic
-│       │       │
-│       │       └── ui/
-│       │           ├── MapActivity.kt          # Main map screen
-│       │           └── OfflineFeaturesActivity.kt  # Entry point for offline features
+│       │   └── ui/
+│       │       ├── LandingActivity.kt  # Welcome screen
+│       │       ├── SignUpActivity.kt   # Registration form
+│       │       ├── SignInActivity.kt   # Login form
+│       │       └── DashboardActivity.kt # Post-login dashboard
 │       └── res/
 │           ├── layout/                 # XML layouts for each screen
-│           ├── raw/                    # static data
 │           ├── values/                 # Colors, strings, themes, styles
 │           └── drawable/               # Badge backgrounds
 ├── build.gradle.kts               # Root Gradle config
@@ -100,64 +86,6 @@ All endpoints are served by the Django backend at `http://10.0.2.2:8000` (emulat
 }
 ```
 
-
-## Map Flow
-```
-┌──────────────┐
-│ Open Map     │
-│ (MapActivity)│
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│ Render Cached│
-│ Map (if any) │
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│ Get Location │
-│ (GPS)        │
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│ Geocoder     │
-│ (country/state)
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│ Map Exists ? │
-└──────┬───────┘
-       │
-   ┌───┴───────────────┐
-   │                   │
-   ▼                   ▼
-┌──────────────┐   ┌──────────────┐
-│ Use Existing │   │ Download Map │
-│ .map file    │   │ (background) │
-└──────┬───────┘   └──────┬───────┘
-       │                  │
-       └──────────┬───────┘
-                  ▼
-           ┌──────────────┐
-           │ Render Map   │
-           │ (Mapsforge)  │
-           └──────┬───────┘
-                  │
-                  ▼
-           ┌──────────────┐
-           │ Get Nearby   │
-           │ Points       │
-           └──────┬───────┘
-                  │
-                  ▼
-           ┌──────────────┐
-           │ Show Markers │
-           │ + Nearest    │
-           └──────────────┘
-```
 ---
 
 ## How to Run
@@ -203,4 +131,4 @@ Change `BASE_URL` in `RetrofitClient.kt` from `http://10.0.2.2:8000` to your mac
 | Forum card | 🔲 UI placeholder |
 | Help Requests card | 🔲 UI placeholder |
 | Profile card | 🔲 UI placeholder |
-| Offline Info card | ✅ Implemented |
+| Offline Info card | 🔲 UI placeholder |
