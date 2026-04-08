@@ -1,21 +1,31 @@
 package com.bounswe2026group8.emergencyhub.ui
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.FcmTokenRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.api.UserData
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.map.cache.MapTileCacheHelper
+import com.bounswe2026group8.emergencyhub.map.data.GatheringPointCache
+import com.bounswe2026group8.emergencyhub.map.data.PreferencesManager
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
+import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -66,6 +76,7 @@ class DashboardActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hubSelectorHelper.load()
+        preCacheOfflineData()
     }
 
     private fun fetchMe() {
@@ -123,12 +134,10 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun setupFeatureCards() {
-        // Forum — navigate to forum screen
         findViewById<MaterialCardView>(R.id.cardForum).setOnClickListener {
             startActivity(Intent(this, ForumActivity::class.java))
         }
 
-        // Help Requests — navigate to the help center (tabbed list)
         findViewById<MaterialCardView>(R.id.cardHelpRequests).setOnClickListener {
             startActivity(Intent(this, HelpRequestListActivity::class.java))
         }
@@ -137,13 +146,8 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
 
-        val placeholders = mapOf(
-            R.id.cardOfflineInfo to "Offline Info"
-        )
-        for ((id, name) in placeholders) {
-            findViewById<MaterialCardView>(id).setOnClickListener {
-                Toast.makeText(this, "$name — coming soon!", Toast.LENGTH_SHORT).show()
-            }
+        findViewById<MaterialCardView>(R.id.cardOfflineInfo).setOnClickListener {
+            startActivity(Intent(this, OfflineFeaturesActivity::class.java))
         }
     }
 
@@ -155,6 +159,70 @@ class DashboardActivity : AppCompatActivity() {
                     .updateFcmToken(FcmTokenRequest(fcmToken))
             } catch (_: Exception) {
                 // FCM token registration failed — will retry on next launch
+            }
+        }
+    }
+
+    /**
+     * Silently pre-caches map tiles and gathering points in the background.
+     * Uses current GPS if location permission is already granted, otherwise
+     * falls back to the last saved location. Never prompts for permission.
+     */
+    @Suppress("MissingPermission")
+    private fun preCacheOfflineData() {
+        val hasPermission = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (hasPermission) {
+            val client = LocationServices.getFusedLocationProviderClient(this)
+            client.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, CancellationTokenSource().token)
+                .addOnSuccessListener { location ->
+                    val lat = location?.latitude ?: return@addOnSuccessListener
+                    val lon = location.longitude
+                    PreferencesManager(this).saveUserLocation(lat, lon)
+                    runOfflineCache(lat, lon)
+                }
+                .addOnFailureListener {
+                    // GPS failed — use last saved location
+                    runOfflineCacheFromSaved()
+                }
+        } else {
+            // No permission — use last saved location (default: Istanbul)
+            runOfflineCacheFromSaved()
+        }
+    }
+
+    private fun runOfflineCacheFromSaved() {
+        val (lat, lon) = PreferencesManager(this).loadUserLocation()
+        runOfflineCache(lat, lon)
+    }
+
+    private fun runOfflineCache(lat: Double, lon: Double) {
+        Log.d("Dashboard", "Pre-caching offline data for ($lat, $lon)")
+
+        // Initialize OSMDroid config so tile downloads have proper User-Agent and cache path
+        org.osmdroid.config.Configuration.getInstance().load(
+            this, getSharedPreferences("osmdroid", MODE_PRIVATE)
+        )
+        org.osmdroid.config.Configuration.getInstance().userAgentValue = packageName
+        org.osmdroid.config.Configuration.getInstance().osmdroidTileCache = cacheDir
+        org.osmdroid.config.Configuration.getInstance().tileFileSystemCacheMaxBytes = 50L * 1024 * 1024
+        org.osmdroid.config.Configuration.getInstance().tileFileSystemCacheTrimBytes = 40L * 1024 * 1024
+
+        // Cache map tiles (runs on OSMDroid's internal thread pool)
+        MapTileCacheHelper.cacheUserArea(this, lat, lon)
+
+        // Cache gathering points from Overpass API
+        lifecycleScope.launch {
+            try {
+                val cache = GatheringPointCache(this@DashboardActivity)
+                val points = cache.getPoints(lat, lon)
+                Log.d("Dashboard", "Pre-cached ${points.size} gathering points for ($lat, $lon)")
+            } catch (e: Exception) {
+                Log.e("Dashboard", "Failed to pre-cache gathering points: ${e.message}")
             }
         }
     }
