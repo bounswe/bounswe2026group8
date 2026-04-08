@@ -3,9 +3,9 @@ package com.bounswe2026group8.emergencyhub.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Toast
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
 import com.google.android.material.button.MaterialButton
 
 /**
@@ -40,7 +40,7 @@ class LandingActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.btnOfflineInfo).setOnClickListener {
-            Toast.makeText(this, "Offline Info — coming soon!", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, OfflineFeaturesActivity::class.java))
         }
     }
 }
