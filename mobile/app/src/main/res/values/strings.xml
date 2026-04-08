@@ -176,4 +176,10 @@
     <string name="back_to_forum">← Back to Forum</string>
     <string name="title_required">Title is required.</string>
     <string name="content_required">Content is required.</string>
+
+    <!-- Map -->
+    <string name="map_content_description">Map showing nearby gathering points</string>
+    <string name="nearest_label">Nearest gathering point</string>
+    <string name="nearest_format">Nearest: %1$s</string>
+    <string name="back">Back</string>
 </resources>
