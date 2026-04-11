@@ -51,9 +51,9 @@ jobs:
           DB_PASSWORD: testpass
           DB_HOST: localhost
           DB_PORT: 5432
-          TEST_OUTPUT_DIR: test-reports
+          TEST_OUTPUT_DIR: ${{ github.workspace }}/test-reports/backend
         run: |
-          mkdir -p backend/test-reports
+          mkdir -p ${{ github.workspace }}/test-reports/backend
           cd backend
           python manage.py migrate --noinput
           python manage.py test accounts forum help_requests \
@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-test-reports
-          path: backend/test-reports/
+          path: test-reports/backend/
 
   frontend-test:
     runs-on: ubuntu-latest
