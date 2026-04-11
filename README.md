@@ -176,14 +176,16 @@ npm test
 
 ### Android (JUnit 4 — 51 tests)
 
-**macOS / Linux:**
+Requires Android Studio installed (sets up JDK and `ANDROID_HOME` automatically).
+
+**macOS / Linux / WSL:**
 ```bash
 cd mobile
 echo "sdk.dir=$ANDROID_HOME" > local.properties
 ./gradlew testDebugUnitTest --no-daemon
 ```
 
-**Windows (PowerShell):**
+**Windows — without Android Studio (Docker required):**
 ```powershell
 docker run --rm `
   -v "C:/path/to/repo/mobile:/app" `
@@ -191,6 +193,7 @@ docker run --rm `
   mingc/android-build-box:latest `
   bash -c "echo 'sdk.dir=`$ANDROID_HOME' > local.properties && ./gradlew testDebugUnitTest --no-daemon"
 ```
+Replace `C:/path/to/repo` with the actual path to your clone.
 
 ---
 
