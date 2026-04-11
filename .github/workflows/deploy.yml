@@ -12,6 +12,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
 
     services:
       postgres:
@@ -62,9 +65,13 @@ jobs:
           # xmlrunner writes TEST-*.xml into cwd; move them to the expected location
           mv TEST-*.xml ${{ github.workspace }}/test-reports/backend/ 2>/dev/null || true
 
-      - name: Debug report paths
+      - name: Publish backend test report
         if: always()
-        run: ls -la ${{ github.workspace }}/test-reports/backend/ || echo "Directory not found"
+        uses: dorny/test-reporter@v1
+        with:
+          name: Backend Test Results
+          path: test-reports/backend/TEST-*.xml
+          reporter: java-junit
 
       - name: Upload backend test reports
         if: always()
@@ -75,6 +82,9 @@ jobs:
 
   frontend-test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -102,6 +112,14 @@ jobs:
             --reporters=default \
             --reporters=jest-junit
 
+      - name: Publish frontend test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Frontend Test Results
+          path: test-reports/frontend/results.xml
+          reporter: java-junit
+
       - name: Upload frontend test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -111,6 +129,9 @@ jobs:
 
   android-test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -129,6 +150,14 @@ jobs:
           cd mobile
           echo "sdk.dir=$ANDROID_HOME" > local.properties
           ./gradlew testDebugUnitTest --no-daemon
+
+      - name: Publish Android test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Android Test Results
+          path: mobile/app/build/test-results/testDebugUnitTest/*.xml
+          reporter: java-junit
 
       - name: Upload Android test reports
         if: always()
