@@ -51,13 +51,13 @@ jobs:
           DB_PASSWORD: testpass
           DB_HOST: localhost
           DB_PORT: 5432
+          TEST_OUTPUT_DIR: ../test-reports/backend
         run: |
           mkdir -p test-reports/backend
           cd backend
           python manage.py migrate --noinput
           python manage.py test accounts forum help_requests \
             --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner \
-            --output-file=../test-reports/backend/results.xml \
             --verbosity=2
 
       - name: Upload backend test reports
@@ -116,9 +116,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Write google-services.json
-        env:
-          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: echo "$GOOGLE_SERVICES_JSON" > mobile/app/google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' | base64 -d > mobile/app/google-services.json
 
       - name: Run unit tests
         run: |
