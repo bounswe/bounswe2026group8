@@ -59,6 +59,12 @@ jobs:
           python manage.py test accounts forum help_requests \
             --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner \
             --verbosity=2
+          # xmlrunner writes TEST-*.xml into cwd; move them to the expected location
+          mv TEST-*.xml ${{ github.workspace }}/test-reports/backend/ 2>/dev/null || true
+
+      - name: Debug report paths
+        if: always()
+        run: ls -la ${{ github.workspace }}/test-reports/backend/ || echo "Directory not found"
 
       - name: Upload backend test reports
         if: always()
