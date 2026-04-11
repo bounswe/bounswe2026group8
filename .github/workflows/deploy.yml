@@ -40,7 +40,7 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt
-          pip install unittest-xml-reporting pytest pytest-html pytest-django
+          pip install unittest-xml-reporting
 
       - name: Run tests
         env:
@@ -51,16 +51,14 @@ jobs:
           DB_PASSWORD: testpass
           DB_HOST: localhost
           DB_PORT: 5432
-          DJANGO_SETTINGS_MODULE: backend.settings
         run: |
           mkdir -p test-reports/backend
           cd backend
           python manage.py migrate --noinput
-          pytest accounts forum help_requests \
-            --junitxml=../test-reports/backend/results.xml \
-            --html=../test-reports/backend/report.html \
-            --self-contained-html \
-            -p no:cacheprovider
+          python manage.py test accounts forum help_requests \
+            --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner \
+            --output-file=../test-reports/backend/results.xml \
+            --verbosity=2
 
       - name: Upload backend test reports
         if: always()
@@ -118,7 +116,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Write google-services.json
-        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > mobile/app/google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo "$GOOGLE_SERVICES_JSON" > mobile/app/google-services.json
 
       - name: Run unit tests
         run: |
