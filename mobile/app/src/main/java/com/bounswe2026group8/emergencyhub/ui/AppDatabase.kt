@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.bounswe2026group8.emergencyhub.mesh.db.MeshMessage
+import com.bounswe2026group8.emergencyhub.mesh.db.MeshMessageDao
 
 // Define the entities (tables) that belong in this database and the version number
-@Database(entities = [EmergencyContact::class], version = 1, exportSchema = false)
+@Database(entities = [EmergencyContact::class, MeshMessage::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     // Connects the DAO to the database
     abstract fun contactDao(): ContactDao
+    abstract fun meshMessageDao(): MeshMessageDao
 
     companion object {
         @Volatile
@@ -23,7 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "emergency_database"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

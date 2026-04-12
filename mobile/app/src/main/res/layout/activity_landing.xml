@@ -81,6 +81,16 @@
             android:layout_marginTop="12dp"
             style="@style/Widget.EmergencyHub.Button.Secondary" />
 
+        <!-- Offline Messaging button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMeshMessaging"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/mesh_landing_button"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp"
+            style="@style/Widget.EmergencyHub.Button.Secondary" />
+
         <!-- Spacer -->
         <View
             android:layout_width="0dp"

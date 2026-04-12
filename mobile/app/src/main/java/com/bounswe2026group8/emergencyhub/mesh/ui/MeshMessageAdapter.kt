@@ -1,0 +1,57 @@
+package com.bounswe2026group8.emergencyhub.mesh.ui
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.mesh.db.MeshMessage
+import java.util.Date
+
+class MeshMessageAdapter(
+    private var messages: List<MeshMessage> = emptyList()
+) : RecyclerView.Adapter<MeshMessageAdapter.ViewHolder>() {
+
+    fun submitList(newMessages: List<MeshMessage>) {
+        messages = newMessages
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_mesh_message, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(messages[position])
+    }
+
+    override fun getItemCount(): Int = messages.size
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val txtAuthor: TextView = itemView.findViewById(R.id.txtAuthor)
+        private val txtHops: TextView = itemView.findViewById(R.id.txtHops)
+        private val txtTime: TextView = itemView.findViewById(R.id.txtTime)
+        private val txtBody: TextView = itemView.findViewById(R.id.txtBody)
+
+        fun bind(message: MeshMessage) {
+            txtAuthor.text = message.authorDisplayName
+                ?: "device-${message.authorDeviceId}"
+            txtHops.text = if (message.hopCount == 0) "direct" else "${message.hopCount} hop(s)"
+            txtTime.text = timeAgo(message.createdAt)
+            txtBody.text = message.body
+        }
+
+        private fun timeAgo(epochMillis: Long): String {
+            val seconds = (Date().time - epochMillis) / 1000
+            return when {
+                seconds < 60 -> "just now"
+                seconds < 3600 -> "${seconds / 60}m ago"
+                seconds < 86400 -> "${seconds / 3600}h ago"
+                else -> "${seconds / 86400}d ago"
+            }
+        }
+    }
+}
