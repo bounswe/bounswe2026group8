@@ -9,9 +9,9 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldData
@@ -19,17 +19,17 @@ import com.bounswe2026group8.emergencyhub.api.ProfileData
 import com.bounswe2026group8.emergencyhub.api.ProfileUpdateRequest
 import com.bounswe2026group8.emergencyhub.api.ResourceCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ResourceData
-import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.viewmodel.ProfileViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity() {
 
     private val bloodTypeOptions = arrayOf("—", "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
 
+    private val viewModel: ProfileViewModel by viewModels()
     private lateinit var tokenManager: TokenManager
     private var currentProfile: ProfileData? = null
     private var ignoreBloodTypeSelection = false
@@ -43,15 +43,34 @@ class ProfileActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
 
         loadIdentity()
-        loadProfile()
-        loadResources()
         setupResourceForm()
 
         val user = tokenManager.getUser()
         if (user?.role == "EXPERT") {
             findViewById<View>(R.id.cardExpertise).visibility = View.VISIBLE
-            loadExpertise()
             setupExpertiseForm()
+        }
+
+        observeViewModel()
+        viewModel.loadProfile()
+        viewModel.loadResources()
+        if (user?.role == "EXPERT") viewModel.loadExpertise()
+    }
+
+    private fun observeViewModel() {
+        viewModel.profile.observe(this) { profile ->
+            profile?.let {
+                currentProfile = it
+                displayProfile(it)
+            }
+        }
+        viewModel.resources.observe(this) { displayResources(it) }
+        viewModel.expertise.observe(this) { displayExpertise(it) }
+        viewModel.message.observe(this) { msg ->
+            msg?.let {
+                toast(it)
+                viewModel.clearMessage()
+            }
         }
     }
 
@@ -68,18 +87,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     // ── Profile ─────────────────────────────────────────────────────────────────
-
-    private fun loadProfile() {
-        lifecycleScope.launch {
-            try {
-                val res = RetrofitClient.getService(this@ProfileActivity).getProfile()
-                if (res.isSuccessful) {
-                    currentProfile = res.body()!!
-                    displayProfile(currentProfile!!)
-                }
-            } catch (_: Exception) { }
-        }
-    }
 
     private fun displayProfile(p: ProfileData) {
         setField(R.id.fieldPhone, getString(R.string.profile_phone), p.phoneNumber)
@@ -215,31 +222,10 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateProfile(req: ProfileUpdateRequest) {
-        lifecycleScope.launch {
-            try {
-                val res = RetrofitClient.getService(this@ProfileActivity).updateProfile(req)
-                if (res.isSuccessful) {
-                    currentProfile = res.body()
-                    toast("Saved")
-                } else {
-                    toast("Update failed")
-                }
-            } catch (_: Exception) {
-                toast("Network error")
-            }
-        }
+        viewModel.updateProfile(req)
     }
 
     // ── Resources ───────────────────────────────────────────────────────────────
-
-    private fun loadResources() {
-        lifecycleScope.launch {
-            try {
-                val res = RetrofitClient.getService(this@ProfileActivity).getResources()
-                if (res.isSuccessful) displayResources(res.body() ?: emptyList())
-            } catch (_: Exception) { }
-        }
-    }
 
     private fun displayResources(list: List<ResourceData>) {
         val container = findViewById<LinearLayout>(R.id.resourceList)
@@ -314,47 +300,18 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun createResource(req: ResourceCreateRequest) {
-        lifecycleScope.launch {
-            try {
-                val res = RetrofitClient.getService(this@ProfileActivity).createResource(req)
-                if (res.isSuccessful) {
-                    toast("Resource added")
-                    findViewById<TextInputEditText>(R.id.inputResourceName).text?.clear()
-                    findViewById<TextInputEditText>(R.id.inputResourceCategory).text?.clear()
-                    findViewById<TextInputEditText>(R.id.inputResourceQty).setText("1")
-                    findViewById<LinearLayout>(R.id.formAddResource).visibility = View.GONE
-                    loadResources()
-                } else {
-                    toast("Failed to add resource")
-                }
-            } catch (_: Exception) {
-                toast("Network error")
-            }
-        }
+        viewModel.createResource(req)
+        findViewById<TextInputEditText>(R.id.inputResourceName).text?.clear()
+        findViewById<TextInputEditText>(R.id.inputResourceCategory).text?.clear()
+        findViewById<TextInputEditText>(R.id.inputResourceQty).setText("1")
+        findViewById<LinearLayout>(R.id.formAddResource).visibility = View.GONE
     }
 
     private fun deleteResource(id: Int) {
-        lifecycleScope.launch {
-            try {
-                val res = RetrofitClient.getService(this@ProfileActivity).deleteResource(id)
-                if (res.isSuccessful) {
-                    toast("Removed")
-                    loadResources()
-                }
-            } catch (_: Exception) { }
-        }
+        viewModel.deleteResource(id)
     }
 
     // ── Expertise ───────────────────────────────────────────────────────────────
-
-    private fun loadExpertise() {
-        lifecycleScope.launch {
-            try {
-                val res = RetrofitClient.getService(this@ProfileActivity).getExpertiseFields()
-                if (res.isSuccessful) displayExpertise(res.body() ?: emptyList())
-            } catch (_: Exception) { }
-        }
-    }
 
     private fun displayExpertise(list: List<ExpertiseFieldData>) {
         val container = findViewById<LinearLayout>(R.id.expertiseList)
@@ -420,34 +377,14 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun createExpertise(req: ExpertiseFieldCreateRequest) {
-        lifecycleScope.launch {
-            try {
-                val res = RetrofitClient.getService(this@ProfileActivity).createExpertiseField(req)
-                if (res.isSuccessful) {
-                    toast("Expertise added")
-                    findViewById<TextInputEditText>(R.id.inputExpertiseField).text?.clear()
-                    findViewById<TextInputEditText>(R.id.inputCertUrl).text?.clear()
-                    findViewById<LinearLayout>(R.id.formAddExpertise).visibility = View.GONE
-                    loadExpertise()
-                } else {
-                    toast("Failed to add expertise")
-                }
-            } catch (_: Exception) {
-                toast("Network error")
-            }
-        }
+        viewModel.createExpertise(req)
+        findViewById<TextInputEditText>(R.id.inputExpertiseField).text?.clear()
+        findViewById<TextInputEditText>(R.id.inputCertUrl).text?.clear()
+        findViewById<LinearLayout>(R.id.formAddExpertise).visibility = View.GONE
     }
 
     private fun deleteExpertise(id: Int) {
-        lifecycleScope.launch {
-            try {
-                val res = RetrofitClient.getService(this@ProfileActivity).deleteExpertiseField(id)
-                if (res.isSuccessful) {
-                    toast("Removed")
-                    loadExpertise()
-                }
-            } catch (_: Exception) { }
-        }
+        viewModel.deleteExpertise(id)
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────────

@@ -11,28 +11,24 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
-import com.bounswe2026group8.emergencyhub.api.CreateCommentRequest
 import com.bounswe2026group8.emergencyhub.api.Post
-import com.bounswe2026group8.emergencyhub.api.ReportRequest
-import com.bounswe2026group8.emergencyhub.api.RepostRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
-import com.bounswe2026group8.emergencyhub.api.VoteRequest
-import com.bounswe2026group8.emergencyhub.auth.HubManager
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.viewmodel.PostDetailViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.launch
 import com.bounswe2026group8.emergencyhub.util.TimeUtils
 
 class PostDetailActivity : AppCompatActivity() {
 
+    private val viewModel: PostDetailViewModel by viewModels()
     private lateinit var tokenManager: TokenManager
     private lateinit var commentAdapter: CommentAdapter
 
@@ -51,7 +47,7 @@ class PostDetailActivity : AppCompatActivity() {
         val currentUserId = tokenManager.getUser()?.id
         commentAdapter = CommentAdapter(
             currentUserId = currentUserId,
-            onDeleteClick = { comment -> deleteComment(comment.id) }
+            onDeleteClick = { comment -> viewModel.deleteComment(postId, comment.id) }
         )
 
         val recyclerComments = findViewById<RecyclerView>(R.id.recyclerComments)
@@ -68,32 +64,35 @@ class PostDetailActivity : AppCompatActivity() {
         HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector)).load()
 
         setupVoteButtons()
-        loadPostAndComments()
+        observeViewModel()
+        viewModel.loadPost(postId)
     }
 
-    private fun loadPostAndComments() {
-        lifecycleScope.launch {
-            try {
-                val api = RetrofitClient.getService(this@PostDetailActivity)
-                val postResponse = api.getPost(postId)
-                val commentsResponse = api.getComments(postId)
-
-                if (postResponse.isSuccessful) {
-                    post = postResponse.body()
-                    post?.let { displayPost(it) }
-                } else {
-                    Toast.makeText(this@PostDetailActivity, "Post not found", Toast.LENGTH_SHORT).show()
-                    finish()
-                    return@launch
-                }
-
-                if (commentsResponse.isSuccessful) {
-                    val comments = commentsResponse.body() ?: emptyList()
-                    commentAdapter.submitList(comments)
-                    updateCommentsUI()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+    private fun observeViewModel() {
+        viewModel.post.observe(this) { p ->
+            post = p
+            p?.let { displayPost(it) }
+        }
+        viewModel.comments.observe(this) { comments ->
+            commentAdapter.submitList(comments)
+            updateCommentsUI()
+        }
+        viewModel.commentCount.observe(this) { count ->
+            commentCount = count
+            updateCommentsUI()
+        }
+        viewModel.message.observe(this) { msg ->
+            msg?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.clearMessage()
+            }
+        }
+        viewModel.postDeleted.observe(this) { deleted ->
+            if (deleted) {
+                Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
+                val resultIntent = Intent().putExtra("deleted_post_id", postId)
+                setResult(RESULT_OK, resultIntent)
+                finish()
             }
         }
     }
@@ -202,21 +201,7 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun deletePost() {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@PostDetailActivity).deletePost(postId)
-                if (response.isSuccessful || response.code() == 204) {
-                    Toast.makeText(this@PostDetailActivity, "Post deleted", Toast.LENGTH_SHORT).show()
-                    val resultIntent = Intent().putExtra("deleted_post_id", postId)
-                    setResult(RESULT_OK, resultIntent)
-                    finish()
-                } else {
-                    Toast.makeText(this@PostDetailActivity, "Failed to delete post", Toast.LENGTH_SHORT).show()
-                }
-            } catch (_: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
-            }
-        }
+        viewModel.deletePost(postId)
     }
 
     // ── Report ──────────────────────────────────────────────────────────────
@@ -246,24 +231,7 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun reportPost(reason: String) {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@PostDetailActivity)
-                    .reportPost(postId, ReportRequest(reason))
-                if (response.isSuccessful) {
-                    Toast.makeText(this@PostDetailActivity, "Report submitted. Thank you.", Toast.LENGTH_SHORT).show()
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    val message = if (errorBody?.contains("already reported") == true)
-                        "You have already reported this post."
-                    else
-                        "Could not submit report."
-                    Toast.makeText(this@PostDetailActivity, message, Toast.LENGTH_SHORT).show()
-                }
-            } catch (_: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
-            }
-        }
+        viewModel.reportPost(postId, reason)
     }
 
     // ── Share & Repost ──────────────────────────────────────────────────────
@@ -304,40 +272,7 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun handleRepost() {
-        lifecycleScope.launch {
-            try {
-                val hubId = HubManager(this@PostDetailActivity).getSelectedHub()?.id
-                val response = RetrofitClient.getService(this@PostDetailActivity)
-                    .repost(postId, RepostRequest(hub = hubId))
-
-                if (response.isSuccessful) {
-                    post = post?.copy(
-                        userHasReposted = true,
-                        repostCount = (post?.repostCount ?: 0) + 1
-                    )
-                    post?.let {
-                        // Update repost count display
-                        val txtRepost = findViewById<TextView>(R.id.txtRepostCount)
-                        if (it.repostedFrom == null && it.repostCount > 0) {
-                            val word = if (it.repostCount == 1) "repost" else "reposts"
-                            txtRepost.text = "${it.repostCount} $word"
-                            txtRepost.visibility = View.VISIBLE
-                        }
-                        updateShareRepostButtons(it)
-                    }
-                    Toast.makeText(this@PostDetailActivity, "Reposted!", Toast.LENGTH_SHORT).show()
-                } else {
-                    val errorBody = response.errorBody()?.string() ?: ""
-                    val msg = try {
-                        com.google.gson.JsonParser().parse(errorBody).asJsonObject
-                            .get("detail")?.asString ?: "Could not repost."
-                    } catch (_: Exception) { "Could not repost." }
-                    Toast.makeText(this@PostDetailActivity, msg, Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
-            }
-        }
+        viewModel.repost(postId)
     }
 
     // ── Voting ──────────────────────────────────────────────────────────────
@@ -352,40 +287,7 @@ class PostDetailActivity : AppCompatActivity() {
             Toast.makeText(this, "Sign in to vote", Toast.LENGTH_SHORT).show()
             return
         }
-
-        val p = post ?: return
-        val prevPost = p
-
-        var newUp = p.upvoteCount
-        var newDown = p.downvoteCount
-        var newUserVote: String? = type
-
-        if (p.userVote == type) {
-            if (type == "UP") newUp-- else newDown--
-            newUserVote = null
-        } else if (p.userVote != null) {
-            if (p.userVote == "UP") { newUp--; newDown++ }
-            else { newDown--; newUp++ }
-        } else {
-            if (type == "UP") newUp++ else newDown++
-        }
-
-        post = p.copy(upvoteCount = newUp, downvoteCount = newDown, userVote = newUserVote)
-        updateVoteDisplay()
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@PostDetailActivity)
-                    .vote(postId, VoteRequest(type))
-                if (!response.isSuccessful) {
-                    post = prevPost
-                    updateVoteDisplay()
-                }
-            } catch (_: Exception) {
-                post = prevPost
-                updateVoteDisplay()
-            }
-        }
+        viewModel.vote(postId, type)
     }
 
     private fun updateVoteDisplay() {
@@ -430,54 +332,7 @@ class PostDetailActivity : AppCompatActivity() {
         val text = input.text.toString().trim()
         if (text.isEmpty()) return
 
-        val btn = findViewById<MaterialButton>(R.id.btnPostComment)
-        btn.isEnabled = false
-        btn.text = "Posting…"
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@PostDetailActivity)
-                    .createComment(postId, CreateCommentRequest(text))
-
-                if (response.isSuccessful) {
-                    val comment = response.body()!!
-                    commentAdapter.addComment(comment)
-                    commentCount++
-                    input.text?.clear()
-                    updateCommentsUI()
-                } else {
-                    Toast.makeText(this@PostDetailActivity, "Failed to post comment", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
-            } finally {
-                btn.isEnabled = true
-                btn.text = "Post Comment"
-            }
-        }
+        viewModel.submitComment(postId, text)
+        input.text?.clear()
     }
-
-    private fun deleteComment(commentId: Int) {
-        // Optimistic UI update: remove immediately
-        commentAdapter.removeComment(commentId)
-        commentCount = maxOf(0, commentCount - 1)
-        updateCommentsUI()
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@PostDetailActivity)
-                    .deleteComment(commentId)
-
-                if (!response.isSuccessful && response.code() != 204) {
-                    // Deletion failed on server — reload to restore
-                    loadPostAndComments()
-                    Toast.makeText(this@PostDetailActivity, "Failed to delete comment", Toast.LENGTH_SHORT).show()
-                }
-            } catch (_: Exception) {
-                // Deletion may have succeeded; reload to get the true state
-                loadPostAndComments()
-            }
-        }
-    }
-
 }

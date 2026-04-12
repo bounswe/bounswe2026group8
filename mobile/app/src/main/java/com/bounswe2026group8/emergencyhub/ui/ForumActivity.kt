@@ -10,22 +10,20 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.Post
-import com.bounswe2026group8.emergencyhub.api.RepostRequest
-import com.bounswe2026group8.emergencyhub.api.RetrofitClient
-import com.bounswe2026group8.emergencyhub.api.VoteRequest
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
-import kotlinx.coroutines.launch
+import com.bounswe2026group8.emergencyhub.viewmodel.ForumViewModel
 
 class ForumActivity : AppCompatActivity() {
 
+    private val viewModel: ForumViewModel by viewModels()
     private lateinit var tokenManager: TokenManager
     private lateinit var postAdapter: PostAdapter
     private lateinit var recyclerView: RecyclerView
@@ -45,8 +43,7 @@ class ForumActivity : AppCompatActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             val deletedPostId = result.data?.getIntExtra("deleted_post_id", -1) ?: -1
             if (deletedPostId != -1) {
-                posts = posts.filter { it.id != deletedPostId }
-                applySortAndDisplay()
+                viewModel.removePost(deletedPostId)
             }
         }
     }
@@ -64,8 +61,14 @@ class ForumActivity : AppCompatActivity() {
         postAdapter = PostAdapter(
             currentUserId = tokenManager.getUser()?.id,
             isLoggedIn = tokenManager.isLoggedIn(),
-            onVoteClick = { postId, voteType -> handleVote(postId, voteType) },
-            onRepostClick = { postId -> handleRepost(postId) },
+            onVoteClick = { postId, voteType ->
+                if (!tokenManager.isLoggedIn()) {
+                    Toast.makeText(this, "Sign in to vote", Toast.LENGTH_SHORT).show()
+                } else {
+                    viewModel.vote(postId, voteType)
+                }
+            },
+            onRepostClick = { postId -> viewModel.repost(postId, selectedHub?.id) },
             onDeleteClick = { postId -> confirmAndDeletePost(postId) },
             onPostClick = { postId ->
                 val intent = Intent(this, PostDetailActivity::class.java)
@@ -97,7 +100,49 @@ class ForumActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.linkDashboard).setOnClickListener { finish() }
 
+        observeViewModel()
         loadPosts()
+    }
+
+    private fun observeViewModel() {
+        viewModel.posts.observe(this) { posts ->
+            this.posts = posts
+            applySortAndDisplay()
+            if (posts.isEmpty()) {
+                txtEmptyState.text = if (currentTab == "GLOBAL") {
+                    getString(R.string.forum_empty_global)
+                } else {
+                    getString(R.string.forum_empty_hub, currentTab.lowercase())
+                }
+                txtEmptyState.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.isLoading.observe(this) { loading ->
+            swipeRefresh.isRefreshing = loading
+        }
+
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.clearError()
+            }
+        }
+
+        viewModel.postDeleted.observe(this) { postId ->
+            postId?.let {
+                Toast.makeText(this, "Post deleted", Toast.LENGTH_SHORT).show()
+                viewModel.clearPostDeleted()
+            }
+        }
+
+        viewModel.repostResult.observe(this) { msg ->
+            msg?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                if (it == "Reposted!") loadPosts()
+                viewModel.clearRepostResult()
+            }
+        }
     }
 
     private data class TabInfo(
@@ -217,110 +262,8 @@ class ForumActivity : AppCompatActivity() {
 
     private fun loadPosts() {
         txtEmptyState.visibility = View.GONE
-
         val hubId = if (currentTab == "GLOBAL") null else selectedHub?.id
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@ForumActivity)
-                    .getPosts(forumType = currentTab, hub = hubId)
-
-                swipeRefresh.isRefreshing = false
-
-                if (response.isSuccessful) {
-                    posts = response.body() ?: emptyList()
-                    applySortAndDisplay()
-
-                    if (posts.isEmpty()) {
-                        txtEmptyState.text = if (currentTab == "GLOBAL") {
-                            getString(R.string.forum_empty_global)
-                        } else {
-                            getString(R.string.forum_empty_hub, currentTab.lowercase())
-                        }
-                        txtEmptyState.visibility = View.VISIBLE
-                    }
-                } else {
-                    Toast.makeText(
-                        this@ForumActivity,
-                        "Failed to load posts",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } catch (e: Exception) {
-                swipeRefresh.isRefreshing = false
-                Toast.makeText(
-                    this@ForumActivity,
-                    "Network error: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    private fun handleVote(postId: Int, voteType: String) {
-        if (!tokenManager.isLoggedIn()) {
-            Toast.makeText(this, "Sign in to vote", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val idx = posts.indexOfFirst { it.id == postId }
-        if (idx == -1) return
-        val post = posts[idx]
-
-        var newUp = post.upvoteCount
-        var newDown = post.downvoteCount
-        var newUserVote: String? = voteType
-
-        if (post.userVote == voteType) {
-            if (voteType == "UP") newUp-- else newDown--
-            newUserVote = null
-        } else if (post.userVote != null) {
-            if (post.userVote == "UP") { newUp--; newDown++ }
-            else { newDown--; newUp++ }
-        } else {
-            if (voteType == "UP") newUp++ else newDown++
-        }
-
-        val updated = post.copy(upvoteCount = newUp, downvoteCount = newDown, userVote = newUserVote)
-        posts = posts.toMutableList().also { it[idx] = updated }
-        postAdapter.updatePost(postId) { updated }
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@ForumActivity)
-                    .vote(postId, VoteRequest(voteType))
-                if (!response.isSuccessful) {
-                    posts = posts.toMutableList().also { it[idx] = post }
-                    postAdapter.updatePost(postId) { post }
-                }
-            } catch (_: Exception) {
-                posts = posts.toMutableList().also { it[idx] = post }
-                postAdapter.updatePost(postId) { post }
-            }
-        }
-    }
-
-    private fun handleRepost(postId: Int) {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@ForumActivity)
-                    .repost(postId, RepostRequest(hub = selectedHub?.id))
-
-                if (response.isSuccessful) {
-                    Toast.makeText(this@ForumActivity, "Reposted!", Toast.LENGTH_SHORT).show()
-                    loadPosts()
-                } else {
-                    val errorBody = response.errorBody()?.string() ?: ""
-                    val msg = try {
-                        com.google.gson.JsonParser().parse(errorBody).asJsonObject
-                            .get("detail")?.asString ?: "Could not repost."
-                    } catch (_: Exception) { "Could not repost." }
-                    Toast.makeText(this@ForumActivity, msg, Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@ForumActivity, "Network error", Toast.LENGTH_SHORT).show()
-            }
-        }
+        viewModel.loadPosts(currentTab, hubId)
     }
 
     private fun confirmAndDeletePost(postId: Int) {
@@ -333,20 +276,7 @@ class ForumActivity : AppCompatActivity() {
     }
 
     private fun deletePost(postId: Int) {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@ForumActivity).deletePost(postId)
-                if (response.isSuccessful || response.code() == 204) {
-                    posts = posts.filter { it.id != postId }
-                    applySortAndDisplay()
-                    Toast.makeText(this@ForumActivity, "Post deleted", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@ForumActivity, "Failed to delete post", Toast.LENGTH_SHORT).show()
-                }
-            } catch (_: Exception) {
-                Toast.makeText(this@ForumActivity, "Network error", Toast.LENGTH_SHORT).show()
-            }
-        }
+        viewModel.deletePost(postId)
     }
 
     private fun applySortAndDisplay() {

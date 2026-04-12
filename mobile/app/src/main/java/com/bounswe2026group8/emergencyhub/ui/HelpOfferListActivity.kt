@@ -5,18 +5,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.HelpOfferItem
-import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.viewmodel.HelpCenterViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.launch
 
 /**
  * Displays the list of help offers with category filtering.
@@ -27,6 +26,7 @@ import kotlinx.coroutines.launch
  */
 class HelpOfferListActivity : AppCompatActivity() {
 
+    private val viewModel: HelpCenterViewModel by viewModels()
     private lateinit var tokenManager: TokenManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyState: View
@@ -96,10 +96,41 @@ class HelpOfferListActivity : AppCompatActivity() {
             applyFilter()
         }
 
+        observeViewModel()
         fetchHelpOffers()
     }
 
-    /** Re-fetch on resume so the list updates after creating a new offer. */
+    private fun observeViewModel() {
+        viewModel.offers.observe(this) { offers ->
+            allItems = offers
+            applyFilter()
+        }
+        viewModel.isLoading.observe(this) { loading ->
+            if (loading) {
+                progressBar.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+                emptyState.visibility = View.GONE
+            } else {
+                progressBar.visibility = View.GONE
+            }
+        }
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                showEmpty()
+                viewModel.clearError()
+            }
+        }
+        viewModel.navigateToLanding.observe(this) { if (it) navigateToLanding() }
+        viewModel.offerDeletedMessage.observe(this) { msg ->
+            msg?.let {
+                Toast.makeText(this, getString(R.string.help_offer_deleted), Toast.LENGTH_SHORT).show()
+                if (adapter.itemCount == 0) showEmpty()
+                viewModel.clearOfferDeletedMessage()
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         if (::adapter.isInitialized) {
@@ -107,42 +138,8 @@ class HelpOfferListActivity : AppCompatActivity() {
         }
     }
 
-    /** Fetches all help offers from the backend. */
     private fun fetchHelpOffers() {
-        progressBar.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
-        emptyState.visibility = View.GONE
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpOfferListActivity)
-                    .getHelpOffers()
-
-                if (response.isSuccessful) {
-                    allItems = response.body() ?: emptyList()
-                    applyFilter()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
-                } else {
-                    Toast.makeText(
-                        this@HelpOfferListActivity,
-                        "Failed to load help offers",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    showEmpty()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@HelpOfferListActivity,
-                    "Network error: ${e.localizedMessage}",
-                    Toast.LENGTH_LONG
-                ).show()
-                showEmpty()
-            } finally {
-                progressBar.visibility = View.GONE
-            }
-        }
+        viewModel.fetchHelpOffers(null)
     }
 
     /** Filters [allItems] by [selectedCategory] and updates the UI. */
@@ -190,52 +187,8 @@ class HelpOfferListActivity : AppCompatActivity() {
             .show()
     }
 
-    /** Calls DELETE /help-offers/{id}/ and removes the item from the adapter. */
     private fun deleteOffer(item: HelpOfferItem) {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpOfferListActivity)
-                    .deleteHelpOffer(item.id)
-
-                // Treat 204 No Content (and any 2xx) as success
-                if (response.code() == 204 || response.isSuccessful) {
-                    adapter.removeItem(item.id)
-                    allItems = allItems.filter { it.id != item.id }
-                    Toast.makeText(
-                        this@HelpOfferListActivity,
-                        getString(R.string.help_offer_deleted),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    if (adapter.itemCount == 0) showEmpty()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
-                } else {
-                    Toast.makeText(
-                        this@HelpOfferListActivity,
-                        "Failed to delete offer",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } catch (e: Exception) {
-                if (e.message?.contains("HTTP 204") == true) {
-                    adapter.removeItem(item.id)
-                    allItems = allItems.filter { it.id != item.id }
-                    Toast.makeText(
-                        this@HelpOfferListActivity,
-                        getString(R.string.help_offer_deleted),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    if (adapter.itemCount == 0) showEmpty()
-                } else {
-                    Toast.makeText(
-                        this@HelpOfferListActivity,
-                        "Network error: ${e.localizedMessage}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
+        viewModel.deleteOffer(item.id)
     }
 
     private fun showEmpty() {

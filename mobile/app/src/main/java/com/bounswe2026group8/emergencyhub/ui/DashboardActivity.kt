@@ -7,26 +7,24 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
-import com.bounswe2026group8.emergencyhub.api.FcmTokenRequest
-import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.api.UserData
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.bounswe2026group8.emergencyhub.map.cache.MapTileCacheHelper
 import com.bounswe2026group8.emergencyhub.map.data.GatheringPointCache
 import com.bounswe2026group8.emergencyhub.map.data.PreferencesManager
+import com.bounswe2026group8.emergencyhub.viewmodel.DashboardViewModel
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.coroutines.launch
 import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.launch
 
 /**
  * Dashboard screen — the post-login home page.
@@ -41,30 +39,28 @@ import kotlinx.coroutines.tasks.await
  */
 class DashboardActivity : AppCompatActivity() {
 
-    private lateinit var tokenManager: TokenManager
+    private val viewModel: DashboardViewModel by viewModels()
     private lateinit var hubSelectorHelper: HubSelectorHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-        tokenManager = TokenManager(this)
-
         // If no token, redirect to Landing
-        if (!tokenManager.isLoggedIn()) {
+        if (!viewModel.isLoggedIn()) {
             navigateToLanding()
             return
         }
 
-        // Try cached user first, then refresh from /me
-        tokenManager.getUser()?.let { displayUser(it) }
-        fetchMe()
+        // Observe user data from ViewModel
+        viewModel.user.observe(this) { user -> user?.let { displayUser(it) } }
+        viewModel.navigateToLanding.observe(this) { if (it) navigateToLanding() }
 
-        // Register FCM token for push notifications
-        sendFcmTokenToBackend()
+        viewModel.loadUser()
+        viewModel.sendFcmToken()
 
         // Logout
-        findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { performLogout() }
+        findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { viewModel.logout() }
 
         // Hub selector (load() is called in onResume)
         hubSelectorHelper = HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector))
@@ -77,25 +73,6 @@ class DashboardActivity : AppCompatActivity() {
         super.onResume()
         hubSelectorHelper.load()
         preCacheOfflineData()
-    }
-
-    private fun fetchMe() {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@DashboardActivity).getMe()
-                if (response.isSuccessful) {
-                    val user = response.body()!!
-                    tokenManager.saveUser(user)
-                    displayUser(user)
-                } else if (response.code() == 401) {
-                    // Token expired / invalid
-                    tokenManager.clear()
-                    navigateToLanding()
-                }
-            } catch (e: Exception) {
-                // Network error — use cached data if available
-            }
-        }
     }
 
     private fun displayUser(user: UserData) {
@@ -121,18 +98,6 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun performLogout() {
-        lifecycleScope.launch {
-            try {
-                RetrofitClient.getService(this@DashboardActivity).logout()
-            } catch (_: Exception) {
-                // Even if the server call fails, clear local state
-            }
-            tokenManager.clear()
-            navigateToLanding()
-        }
-    }
-
     private fun setupFeatureCards() {
         findViewById<MaterialCardView>(R.id.cardForum).setOnClickListener {
             startActivity(Intent(this, ForumActivity::class.java))
@@ -148,18 +113,6 @@ class DashboardActivity : AppCompatActivity() {
 
         findViewById<MaterialCardView>(R.id.cardOfflineInfo).setOnClickListener {
             startActivity(Intent(this, OfflineFeaturesActivity::class.java))
-        }
-    }
-
-    private fun sendFcmTokenToBackend() {
-        lifecycleScope.launch {
-            try {
-                val fcmToken = FirebaseMessaging.getInstance().token.await()
-                RetrofitClient.getService(this@DashboardActivity)
-                    .updateFcmToken(FcmTokenRequest(fcmToken))
-            } catch (_: Exception) {
-                // FCM token registration failed — will retry on next launch
-            }
         }
     }
 

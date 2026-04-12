@@ -8,17 +8,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
-import com.bounswe2026group8.emergencyhub.api.LoginRequest
-import com.bounswe2026group8.emergencyhub.api.RetrofitClient
-import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.viewmodel.SignInViewModel
 
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.launch
 
 /**
  * Sign In screen.
@@ -31,7 +28,8 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var inputEmail: TextInputEditText
     private lateinit var inputPassword: TextInputEditText
     private lateinit var btnSignIn: MaterialButton
-    private lateinit var tokenManager: TokenManager
+
+    private val viewModel: SignInViewModel by viewModels()
 
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
@@ -39,8 +37,6 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-
-        tokenManager = TokenManager(this)
 
         inputEmail = findViewById(R.id.inputEmail)
         inputPassword = findViewById(R.id.inputPassword)
@@ -54,7 +50,28 @@ class SignInActivity : AppCompatActivity() {
             finish()
         }
 
+        observeViewModel()
         requestNotificationPermission()
+    }
+
+    private fun observeViewModel() {
+        viewModel.isLoading.observe(this) { loading ->
+            btnSignIn.isEnabled = !loading
+            btnSignIn.text = if (loading) getString(R.string.signing_in) else getString(R.string.sign_in)
+        }
+
+        viewModel.loginResult.observe(this) { result ->
+            when (result) {
+                is SignInViewModel.LoginResult.Success -> {
+                    val intent = Intent(this, DashboardActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                }
+                is SignInViewModel.LoginResult.Error -> {
+                    Toast.makeText(this, result.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     private fun requestNotificationPermission() {
@@ -76,34 +93,6 @@ class SignInActivity : AppCompatActivity() {
             return
         }
 
-        btnSignIn.isEnabled = false
-        btnSignIn.text = getString(R.string.signing_in)
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@SignInActivity)
-                    .login(LoginRequest(email, password))
-
-                if (response.isSuccessful) {
-                    val body = response.body()!!
-                    // Store JWT tokens and cached user data
-                    tokenManager.saveToken(body.token!!, body.refresh)
-                    body.user?.let { tokenManager.saveUser(it) }
-
-                    // Navigate to Dashboard, clear back stack
-                    val intent = Intent(this@SignInActivity, DashboardActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this@SignInActivity, "Invalid email or password", Toast.LENGTH_LONG).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@SignInActivity, "Network error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-            } finally {
-                btnSignIn.isEnabled = true
-                btnSignIn.text = getString(R.string.sign_in)
-            }
-        }
+        viewModel.login(email, password)
     }
-
 }

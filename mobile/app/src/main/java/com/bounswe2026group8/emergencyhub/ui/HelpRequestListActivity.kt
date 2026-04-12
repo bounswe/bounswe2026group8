@@ -7,21 +7,19 @@ import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.HelpOfferItem
 import com.bounswe2026group8.emergencyhub.api.HelpRequestItem
-import com.bounswe2026group8.emergencyhub.api.RetrofitClient
-import com.bounswe2026group8.emergencyhub.auth.HubManager
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.viewmodel.HelpCenterViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.launch
 
 /**
  * Tabbed Help Center screen with "Requests" and "Offers" tabs.
@@ -32,6 +30,7 @@ import kotlinx.coroutines.launch
  */
 class HelpRequestListActivity : AppCompatActivity() {
 
+    private val viewModel: HelpCenterViewModel by viewModels()
     private lateinit var tokenManager: TokenManager
     private lateinit var hubSelectorHelper: HubSelectorHelper
     private var selectedHub: Hub? = null
@@ -152,6 +151,37 @@ class HelpRequestListActivity : AppCompatActivity() {
             }
         )
         hubSelectorHelper.load()
+
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.requests.observe(this) { requests ->
+            allRequests = requests
+            if (activeTab == "requests") applyFilter()
+        }
+        viewModel.offers.observe(this) { offers ->
+            allOffers = offers
+            if (activeTab == "offers") applyFilter()
+        }
+        viewModel.isLoading.observe(this) { loading ->
+            if (loading) showLoading()
+            else progressBar.visibility = View.GONE
+        }
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                showEmpty()
+                viewModel.clearError()
+            }
+        }
+        viewModel.navigateToLanding.observe(this) { if (it) navigateToLanding() }
+        viewModel.offerDeletedMessage.observe(this) { msg ->
+            msg?.let {
+                Toast.makeText(this, getString(R.string.help_offer_deleted), Toast.LENGTH_SHORT).show()
+                viewModel.clearOfferDeletedMessage()
+            }
+        }
     }
 
     /** Re-fetch on resume so lists update after creating or deleting an item. */
@@ -196,76 +226,12 @@ class HelpRequestListActivity : AppCompatActivity() {
 
     // ── Data fetching ────────────────────────────────────────────────────
 
-    /** Fetches all help requests from the backend. */
     private fun fetchHelpRequests() {
-        showLoading()
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestListActivity)
-                    .getHelpRequests(hubId = selectedHub?.id)
-
-                if (response.isSuccessful) {
-                    allRequests = response.body() ?: emptyList()
-                    applyFilter()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
-                } else {
-                    Toast.makeText(
-                        this@HelpRequestListActivity,
-                        "Failed to load help requests",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    showEmpty()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@HelpRequestListActivity,
-                    "Network error: ${e.localizedMessage}",
-                    Toast.LENGTH_LONG
-                ).show()
-                showEmpty()
-            } finally {
-                progressBar.visibility = View.GONE
-            }
-        }
+        viewModel.fetchHelpRequests(selectedHub?.id)
     }
 
-    /** Fetches all help offers from the backend. */
     private fun fetchHelpOffers() {
-        showLoading()
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestListActivity)
-                    .getHelpOffers(hubId = selectedHub?.id)
-
-                if (response.isSuccessful) {
-                    allOffers = response.body() ?: emptyList()
-                    applyFilter()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
-                } else {
-                    Toast.makeText(
-                        this@HelpRequestListActivity,
-                        "Failed to load help offers",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    showEmpty()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@HelpRequestListActivity,
-                    "Network error: ${e.localizedMessage}",
-                    Toast.LENGTH_LONG
-                ).show()
-                showEmpty()
-            } finally {
-                progressBar.visibility = View.GONE
-            }
-        }
+        viewModel.fetchHelpOffers(selectedHub?.id)
     }
 
     // ── Filtering ────────────────────────────────────────────────────────
@@ -324,49 +290,8 @@ class HelpRequestListActivity : AppCompatActivity() {
             .show()
     }
 
-    /** Calls DELETE /help-offers/{id}/ and removes the item from the adapter. */
     private fun deleteOffer(item: HelpOfferItem) {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestListActivity)
-                    .deleteHelpOffer(item.id)
-
-                // Treat 204 No Content (and any 2xx) as success
-                if (response.code() == 204 || response.isSuccessful) {
-                    onOfferDeleted(item.id)
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
-                } else {
-                    Toast.makeText(
-                        this@HelpRequestListActivity,
-                        "Failed to delete offer",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } catch (e: Exception) {
-                // OkHttp throws ProtocolException when a 204 response has a
-                // non-zero Content-Length header. The server did delete the
-                // resource, so treat this specific error as success.
-                if (e.message?.contains("HTTP 204") == true) {
-                    onOfferDeleted(item.id)
-                } else {
-                    Toast.makeText(
-                        this@HelpRequestListActivity,
-                        "Network error: ${e.localizedMessage}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
-
-    /** Removes the deleted offer from both the adapter and backing list. */
-    private fun onOfferDeleted(offerId: Int) {
-        offerAdapter.removeItem(offerId)
-        allOffers = allOffers.filter { it.id != offerId }
-        Toast.makeText(this, getString(R.string.help_offer_deleted), Toast.LENGTH_SHORT).show()
-        if (offerAdapter.itemCount == 0) showEmpty()
+        viewModel.deleteOffer(item.id)
     }
 
     // ── UI helpers ───────────────────────────────────────────────────────

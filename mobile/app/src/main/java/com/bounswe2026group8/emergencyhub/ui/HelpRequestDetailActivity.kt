@@ -12,23 +12,20 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
-import com.bounswe2026group8.emergencyhub.api.CreateCommentRequest
-import com.bounswe2026group8.emergencyhub.api.HelpRequestComment
 import com.bounswe2026group8.emergencyhub.api.HelpRequestDetail
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
-import com.bounswe2026group8.emergencyhub.api.UpdateHelpRequestStatusRequest
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.viewmodel.HelpRequestDetailViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -47,6 +44,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         const val EXTRA_REQUEST_ID = "request_id"
     }
 
+    private val viewModel: HelpRequestDetailViewModel by viewModels()
     private lateinit var tokenManager: TokenManager
     private lateinit var commentAdapter: HelpRequestCommentAdapter
 
@@ -117,8 +115,44 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             resolveRequest()
         }
 
-        fetchDetail()
-        fetchComments()
+        observeViewModel()
+        viewModel.fetchDetail(requestId)
+        viewModel.fetchComments(requestId)
+    }
+
+    private fun observeViewModel() {
+        viewModel.detail.observe(this) { detail -> detail?.let { displayDetail(it) } }
+        viewModel.comments.observe(this) { comments ->
+            if (comments.isEmpty()) {
+                txtNoComments.visibility = View.VISIBLE
+                recyclerComments.visibility = View.GONE
+            } else {
+                commentAdapter.updateItems(comments)
+                recyclerComments.visibility = View.VISIBLE
+                txtNoComments.visibility = View.GONE
+            }
+        }
+        viewModel.commentsLoading.observe(this) { loading ->
+            progressComments.visibility = if (loading) View.VISIBLE else View.GONE
+            if (loading) {
+                recyclerComments.visibility = View.GONE
+                txtNoComments.visibility = View.GONE
+            }
+        }
+        viewModel.message.observe(this) { msg ->
+            msg?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.clearMessage()
+            }
+        }
+        viewModel.navigateToLanding.observe(this) { if (it) navigateToLanding() }
+        viewModel.requestDeleted.observe(this) { deleted ->
+            if (deleted) {
+                Toast.makeText(this, "Help request deleted.", Toast.LENGTH_SHORT).show()
+                setResult(RESULT_OK)
+                finish()
+            }
+        }
     }
 
     override fun onResume() {
@@ -175,34 +209,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     // ── Fetch detail ─────────────────────────────────────────────────────
-
-    private fun fetchDetail() {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
-                    .getHelpRequestDetail(requestId)
-
-                if (response.isSuccessful) {
-                    response.body()?.let { displayDetail(it) }
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
-                } else {
-                    Toast.makeText(
-                        this@HelpRequestDetailActivity,
-                        "Failed to load details",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@HelpRequestDetailActivity,
-                    "Network error: ${e.localizedMessage}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
 
     private fun displayDetail(detail: HelpRequestDetail) {
         txtDetailTitle.text = detail.title
@@ -318,139 +324,26 @@ class HelpRequestDetailActivity : AppCompatActivity() {
 
     // ── Fetch comments ───────────────────────────────────────────────────
 
-    private fun fetchComments() {
-        progressComments.visibility = View.VISIBLE
-        recyclerComments.visibility = View.GONE
-        txtNoComments.visibility = View.GONE
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
-                    .getHelpRequestComments(requestId)
-
-                if (response.isSuccessful) {
-                    val comments = response.body() ?: emptyList()
-                    if (comments.isEmpty()) {
-                        txtNoComments.visibility = View.VISIBLE
-                    } else {
-                        commentAdapter.updateItems(comments)
-                        recyclerComments.visibility = View.VISIBLE
-                    }
-                } else {
-                    Toast.makeText(
-                        this@HelpRequestDetailActivity,
-                        "Failed to load comments",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@HelpRequestDetailActivity,
-                    "Network error: ${e.localizedMessage}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } finally {
-                progressComments.visibility = View.GONE
-            }
-        }
-    }
-
-    // ── Submit comment ───────────────────────────────────────────────────
-
-    // ── Resolve request ─────────────────────────────────────────────────
-
     private fun resolveRequest() {
-        val btnResolve = findViewById<MaterialButton>(R.id.btnResolveRequest)
-        btnResolve.isEnabled = false
-        btnResolve.text = "Resolving\u2026"
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
-                    .updateHelpRequestStatus(requestId, UpdateHelpRequestStatusRequest("RESOLVED"))
-                if (response.isSuccessful) {
-                    response.body()?.let { displayDetail(it) }
-                    Toast.makeText(this@HelpRequestDetailActivity, "Marked as resolved.", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to update status.", Toast.LENGTH_SHORT).show()
-                    btnResolve.isEnabled = true
-                    btnResolve.text = "Mark Resolved"
-                }
-            } catch (_: Exception) {
-                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
-                btnResolve.isEnabled = true
-                btnResolve.text = "Mark Resolved"
-            }
-        }
+        viewModel.resolveRequest(requestId)
     }
 
-    // ── Delete request ───────────────────────────────────────────────────
-
-    /** Shows a confirmation dialog then deletes the help request. */
     private fun confirmDeleteRequest() {
         AlertDialog.Builder(this)
             .setTitle("Delete Help Request")
             .setMessage("Are you sure you want to delete this help request? This cannot be undone.")
-            .setPositiveButton("Delete") { _, _ -> deleteRequest() }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteRequest(requestId) }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    private fun deleteRequest() {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
-                    .deleteHelpRequest(requestId)
-                if (response.code() == 403) {
-                    Toast.makeText(this@HelpRequestDetailActivity, "You can only delete your own requests.", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
-            } catch (_: Exception) {
-                // Delete likely succeeded; fall through to finish
-            }
-            Toast.makeText(this@HelpRequestDetailActivity, "Help request deleted.", Toast.LENGTH_SHORT).show()
-            setResult(RESULT_OK)
-            finish()
-        }
-    }
-
-    // ── Delete comment ───────────────────────────────────────────────────
-
-    /** Shows a confirmation dialog then deletes the comment and updates the UI. */
     private fun confirmDeleteComment(commentId: Int) {
         AlertDialog.Builder(this)
             .setTitle("Delete Comment")
             .setMessage("Are you sure you want to delete this comment?")
-            .setPositiveButton("Delete") { _, _ -> deleteComment(commentId) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteComment(requestId, commentId) }
             .setNegativeButton("Cancel", null)
             .show()
-    }
-
-    private fun deleteComment(commentId: Int) {
-        // Optimistic UI update: remove immediately
-        commentAdapter.removeComment(commentId)
-        if (commentAdapter.itemCount == 0) {
-            recyclerComments.visibility = View.GONE
-            txtNoComments.visibility = View.VISIBLE
-        }
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
-                    .deleteHelpRequestComment(commentId)
-                if (response.isSuccessful || response.code() == 204) {
-                    // Refresh detail to sync comment count
-                    fetchDetail()
-                } else {
-                    // Deletion failed on server — reload to restore
-                    fetchComments()
-                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to delete comment.", Toast.LENGTH_SHORT).show()
-                }
-            } catch (_: Exception) {
-                // Deletion may have succeeded; reload to get the true state
-                fetchComments()
-            }
-        }
     }
 
     private fun submitComment() {
@@ -463,50 +356,10 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         btnSendComment.isEnabled = false
         btnSendComment.text = getString(R.string.sending)
 
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
-                    .createHelpRequestComment(requestId, CreateCommentRequest(content))
-
-                if (response.isSuccessful) {
-                    val comment = response.body()!!
-                    inputComment.text?.clear()
-
-                    // Show the new comment immediately
-                    txtNoComments.visibility = View.GONE
-                    recyclerComments.visibility = View.VISIBLE
-                    commentAdapter.addComment(comment)
-
-                    // Scroll to bottom to show the new comment
-                    recyclerComments.post {
-                        val scrollView = findViewById<androidx.core.widget.NestedScrollView>(R.id.scrollView)
-                        scrollView.fullScroll(View.FOCUS_DOWN)
-                    }
-
-                    // Re-fetch detail — status may have changed to EXPERT_RESPONDING
-                    fetchDetail()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
-                } else {
-                    val errorText = response.errorBody()?.string() ?: "Failed to post comment."
-                    Toast.makeText(
-                        this@HelpRequestDetailActivity,
-                        errorText,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@HelpRequestDetailActivity,
-                    "Network error: ${e.localizedMessage}",
-                    Toast.LENGTH_LONG
-                ).show()
-            } finally {
-                btnSendComment.isEnabled = true
-                btnSendComment.text = getString(R.string.send)
-            }
-        }
+        viewModel.submitComment(requestId, content)
+        inputComment.text?.clear()
+        btnSendComment.isEnabled = true
+        btnSendComment.text = getString(R.string.send)
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────
