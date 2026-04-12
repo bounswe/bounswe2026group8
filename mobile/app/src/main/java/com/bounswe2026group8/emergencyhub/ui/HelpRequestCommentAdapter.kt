@@ -1,6 +1,5 @@
 package com.bounswe2026group8.emergencyhub.ui
 
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.HelpRequestComment
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
 
 /**
  * RecyclerView adapter for the comment list on the help-request detail screen.
@@ -24,10 +21,6 @@ class HelpRequestCommentAdapter(
     private val currentUserId: Int? = null,
     private val onDeleteClick: (HelpRequestComment) -> Unit = {},
 ) : RecyclerView.Adapter<HelpRequestCommentAdapter.ViewHolder>() {
-
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
-        timeZone = TimeZone.getTimeZone("UTC")
-    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val txtCommentAuthor: TextView = view.findViewById(R.id.txtCommentAuthor)
@@ -49,7 +42,7 @@ class HelpRequestCommentAdapter(
 
         holder.txtCommentAuthor.text = comment.author.fullName
         holder.txtCommentContent.text = comment.content
-        holder.txtCommentTime.text = formatTimeAgo(comment.createdAt)
+        holder.txtCommentTime.text = TimeUtils.timeAgo(comment.createdAt)
 
         // Expert badge + expertise field
         if (comment.author.role == "EXPERT") {
@@ -97,18 +90,4 @@ class HelpRequestCommentAdapter(
         }
     }
 
-    private fun formatTimeAgo(iso: String): String {
-        return try {
-            val trimmed = iso.substringBefore(".").substringBefore("Z").substringBefore("+")
-            val millis = dateFormat.parse(trimmed)?.time ?: return iso
-            DateUtils.getRelativeTimeSpanString(
-                millis,
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE
-            ).toString()
-        } catch (_: Exception) {
-            iso
-        }
-    }
 }

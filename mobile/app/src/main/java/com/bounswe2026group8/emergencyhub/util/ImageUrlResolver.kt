@@ -17,7 +17,15 @@ object ImageUrlResolver {
      * @return        a fully-qualified URL loadable by image loading libraries
      */
     fun resolve(url: String, baseUrl: String): String {
-        if (url.startsWith("/")) return baseUrl.trimEnd('/') + url
+        if (url.startsWith("/")) {
+            // Strip any API path prefix (e.g. "/api") so media files at the server
+            // root (e.g. /media/uploads/…) are resolved correctly.
+            val origin = baseUrl.trimEnd('/').let { base ->
+                val apiIndex = base.indexOf("/api")
+                if (apiIndex != -1) base.substring(0, apiIndex) else base
+            }
+            return origin + url
+        }
         return url
     }
 }
