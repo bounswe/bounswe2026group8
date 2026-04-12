@@ -34,6 +34,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 import com.bounswe2026group8.emergencyhub.util.ImageUploadHelper
+import com.bounswe2026group8.emergencyhub.util.VoiceInputManager
 
 /**
  * Form screen for creating a new help request.
@@ -61,6 +62,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
     private lateinit var txtUploadStatus: TextView
     private lateinit var imagePreviewScroll: HorizontalScrollView
     private lateinit var imagePreviewContainer: LinearLayout
+    private lateinit var voiceInputManager: VoiceInputManager
 
     /** GPS coordinates captured via "Use My Location". */
     private var capturedLat: Double? = null
@@ -127,6 +129,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_help_request)
 
         tokenManager = TokenManager(this)
+        voiceInputManager = VoiceInputManager(this)
 
         // Auth guard
         if (!tokenManager.isLoggedIn()) {
@@ -148,6 +151,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         txtUploadStatus = findViewById(R.id.txtUploadStatus)
         imagePreviewScroll = findViewById(R.id.imagePreviewScroll)
         imagePreviewContainer = findViewById(R.id.imagePreviewContainer)
+        voiceInputManager.bind(inputTitle, inputDescription, inputLocationText)
 
         // Back button
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
