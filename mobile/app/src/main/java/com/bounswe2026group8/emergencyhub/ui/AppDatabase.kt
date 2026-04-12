@@ -6,13 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 // Define the entities (tables) that belong in this database and the version number
-@Database(entities = [EmergencyContact::class], version = 1, exportSchema = false)
+@Database(entities = [EmergencyContact::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     // Connects the DAO to the database
     abstract fun contactDao(): ContactDao
 
     companion object {
+        private const val DATABASE_NAME = "offline_contacts_database"
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -22,8 +24,12 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "emergency_database"
-                ).build()
+                    DATABASE_NAME
+                )
+                    // Offline contacts are local-only, so resetting stale schemas is safer than crashing.
+                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigrationOnDowngrade()
+                    .build()
                 INSTANCE = instance
                 instance
             }
