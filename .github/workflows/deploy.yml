@@ -4,10 +4,17 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
 
     services:
       postgres:
@@ -36,6 +43,7 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt
+          pip install unittest-xml-reporting
 
       - name: Run tests
         env:
@@ -46,13 +54,37 @@ jobs:
           DB_PASSWORD: testpass
           DB_HOST: localhost
           DB_PORT: 5432
+          TEST_OUTPUT_DIR: ${{ github.workspace }}/test-reports/backend
         run: |
+          mkdir -p ${{ github.workspace }}/test-reports/backend
           cd backend
           python manage.py migrate --noinput
-          python manage.py test accounts forum help_requests --verbosity=2
+          python manage.py test accounts forum help_requests \
+            --testrunner=xmlrunner.extra.djangotestrunner.XMLTestRunner \
+            --verbosity=2
+          # xmlrunner writes TEST-*.xml into cwd; move them to the expected location
+          mv TEST-*.xml ${{ github.workspace }}/test-reports/backend/ 2>/dev/null || true
+
+      - name: Publish backend test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Backend Test Results
+          path: test-reports/backend/TEST-*.xml
+          reporter: java-junit
+
+      - name: Upload backend test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          path: test-reports/backend/
 
   frontend-test:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -67,12 +99,79 @@ jobs:
       - name: Install dependencies
         run: cd frontend && npm ci
 
+      - name: Install report tools
+        run: cd frontend && npm install jest-junit
+
       - name: Run tests
-        run: cd frontend && npm test -- --ci
+        env:
+          JEST_JUNIT_OUTPUT_DIR: ../test-reports/frontend
+          JEST_JUNIT_OUTPUT_NAME: results.xml
+        run: |
+          mkdir -p test-reports/frontend
+          cd frontend && npm test -- --ci \
+            --reporters=default \
+            --reporters=jest-junit
+
+      - name: Publish frontend test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Frontend Test Results
+          path: test-reports/frontend/results.xml
+          reporter: java-junit
+
+      - name: Upload frontend test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-test-reports
+          path: test-reports/frontend/
+
+  android-test:
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Write google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' | base64 -d > mobile/app/google-services.json
+
+      - name: Run unit tests
+        run: |
+          cd mobile
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          ./gradlew testDebugUnitTest --no-daemon
+
+      - name: Publish Android test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Android Test Results
+          path: mobile/app/build/test-results/testDebugUnitTest/*.xml
+          reporter: java-junit
+
+      - name: Upload Android test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-test-reports
+          path: |
+            mobile/app/build/reports/tests/testDebugUnitTest/
+            mobile/app/build/test-results/testDebugUnitTest/
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [test, frontend-test]
+    needs: [test, frontend-test, android-test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Deploy via SSH

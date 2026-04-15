@@ -47,10 +47,22 @@ class EmergencyContactsActivity : AppCompatActivity() {
     private fun loadSavedContacts() {
         // Run database queries on a background thread (Dispatchers.IO)
         lifecycleScope.launch(Dispatchers.IO) {
-            val savedContacts = database.contactDao().getAllContacts()
+            val savedContacts = try {
+                database.contactDao().getAllContacts()
+            } catch (_: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@EmergencyContactsActivity,
+                        "Offline contacts could not be loaded. Please reopen the page.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                return@launch
+            }
 
             // Switch back to the Main UI thread to draw the cards on the screen
             withContext(Dispatchers.Main) {
+                clearRenderedContacts()
                 for (contact in savedContacts) {
                     renderContactCard(contact)
                 }
@@ -74,16 +86,23 @@ class EmergencyContactsActivity : AppCompatActivity() {
 
                     // Save to the database in the background
                     lifecycleScope.launch(Dispatchers.IO) {
-                        database.contactDao().insertContact(newContact)
+                        try {
+                            database.contactDao().insertContact(newContact)
+                        } catch (_: Exception) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    this@EmergencyContactsActivity,
+                                    "Offline contacts could not be saved.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            return@launch
+                        }
 
                         // After saving, clear the current custom UI list and reload it
                         // so we get the accurate database ID for the new item
                         withContext(Dispatchers.Main) {
-                            // Removes all custom cards (leaves the title, 112 button, and Add button)
-                            val childCount = contactsContainer.childCount
-                            if (childCount > 3) {
-                                contactsContainer.removeViews(2, childCount - 3)
-                            }
+                            clearRenderedContacts()
                             loadSavedContacts()
                         }
                     }
@@ -117,7 +136,18 @@ class EmergencyContactsActivity : AppCompatActivity() {
 
                     // Delete from the database in the background
                     lifecycleScope.launch(Dispatchers.IO) {
-                        database.contactDao().deleteContact(contact)
+                        try {
+                            database.contactDao().deleteContact(contact)
+                        } catch (_: Exception) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    this@EmergencyContactsActivity,
+                                    "Offline contact could not be deleted.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            return@launch
+                        }
 
                         // Remove the visual card from the screen on the main thread
                         withContext(Dispatchers.Main) {
@@ -138,5 +168,13 @@ class EmergencyContactsActivity : AppCompatActivity() {
         val dialIntent = Intent(Intent.ACTION_DIAL)
         dialIntent.data = Uri.parse("tel:$phoneNumber")
         startActivity(dialIntent)
+    }
+
+    private fun clearRenderedContacts() {
+        // Keep the title, 112 card, and "Add Custom Number" button in place.
+        val childCount = contactsContainer.childCount
+        if (childCount > 3) {
+            contactsContainer.removeViews(2, childCount - 3)
+        }
     }
 }

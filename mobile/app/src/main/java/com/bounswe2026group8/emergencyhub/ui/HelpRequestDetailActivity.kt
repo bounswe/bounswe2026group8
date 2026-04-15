@@ -3,7 +3,8 @@ package com.bounswe2026group8.emergencyhub.ui
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.format.DateUtils
+import com.bounswe2026group8.emergencyhub.util.BadgeUtils
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
@@ -33,9 +34,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 
 /**
  * Displays full details of a help request including location map,
@@ -80,10 +78,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     private lateinit var btnSendComment: MaterialButton
 
     private var requestId: Int = -1
-
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).apply {
-        timeZone = TimeZone.getTimeZone("UTC")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -214,17 +208,17 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         txtDetailTitle.text = detail.title
         txtDetailDescription.text = detail.description
         txtDetailAuthor.text = "Posted by ${detail.author.fullName}"
-        txtDetailTimeAgo.text = formatTimeAgo(detail.createdAt)
+        txtDetailTimeAgo.text = TimeUtils.timeAgo(detail.createdAt)
 
         // Category badge
-        txtDetailCategory.text = detail.category.lowercase().replaceFirstChar { it.uppercase() }
-        val (catText, catBg) = categoryColors(detail.category)
+        txtDetailCategory.text = BadgeUtils.formatLabel(detail.category)
+        val (catText, catBg) = BadgeUtils.categoryColors(detail.category)
         txtDetailCategory.setTextColor(ContextCompat.getColor(this, catText))
         txtDetailCategory.background.mutate().setTint(ContextCompat.getColor(this, catBg))
 
         // Urgency badge
-        txtDetailUrgency.text = detail.urgency.lowercase().replaceFirstChar { it.uppercase() }
-        val (urgText, urgBg) = urgencyColors(detail.urgency)
+        txtDetailUrgency.text = BadgeUtils.formatLabel(detail.urgency)
+        val (urgText, urgBg) = BadgeUtils.urgencyColors(detail.urgency)
         txtDetailUrgency.setTextColor(ContextCompat.getColor(this, urgText))
         txtDetailUrgency.background.mutate().setTint(ContextCompat.getColor(this, urgBg))
 
@@ -516,35 +510,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────
-
-    private fun categoryColors(category: String): Pair<Int, Int> = when (category) {
-        "MEDICAL"   -> R.color.category_medical   to R.color.category_medical_bg
-        "FOOD"      -> R.color.category_food       to R.color.category_food_bg
-        "SHELTER"   -> R.color.category_shelter    to R.color.category_shelter_bg
-        "TRANSPORT" -> R.color.category_transport  to R.color.category_transport_bg
-        else        -> R.color.text_secondary      to R.color.badge_muted_bg
-    }
-
-    private fun urgencyColors(urgency: String): Pair<Int, Int> = when (urgency) {
-        "HIGH"   -> R.color.urgency_high   to R.color.urgency_high_bg
-        "MEDIUM" -> R.color.urgency_medium to R.color.urgency_medium_bg
-        else     -> R.color.urgency_low    to R.color.urgency_low_bg
-    }
-
-    private fun formatTimeAgo(iso: String): String {
-        return try {
-            val trimmed = iso.substringBefore(".").substringBefore("Z").substringBefore("+")
-            val millis = dateFormat.parse(trimmed)?.time ?: return iso
-            DateUtils.getRelativeTimeSpanString(
-                millis,
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE
-            ).toString()
-        } catch (_: Exception) {
-            iso
-        }
-    }
 
     private fun navigateToLanding() {
         val intent = Intent(this, LandingActivity::class.java)
