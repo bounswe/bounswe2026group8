@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
  * fetches the relevant data and swaps the visible RecyclerView.
  * Matches the frontend's HelpRequestsPage tabbed layout.
  */
-class HelpRequestListActivity : AppCompatActivity() {
+class HelpRequestListActivity : BaseActivity() {
 
     private lateinit var tokenManager: TokenManager
     private lateinit var hubSelectorHelper: HubSelectorHelper
@@ -208,9 +208,6 @@ class HelpRequestListActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     allRequests = response.body() ?: emptyList()
                     applyFilter()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     Toast.makeText(
                         this@HelpRequestListActivity,
@@ -244,9 +241,6 @@ class HelpRequestListActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     allOffers = response.body() ?: emptyList()
                     applyFilter()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     Toast.makeText(
                         this@HelpRequestListActivity,
@@ -334,9 +328,6 @@ class HelpRequestListActivity : AppCompatActivity() {
                 // Treat 204 No Content (and any 2xx) as success
                 if (response.code() == 204 || response.isSuccessful) {
                     onOfferDeleted(item.id)
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     Toast.makeText(
                         this@HelpRequestListActivity,
@@ -395,10 +386,4 @@ class HelpRequestListActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToLanding() {
-        val intent = Intent(this, LandingActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
 }

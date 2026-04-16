@@ -41,7 +41,7 @@ import org.osmdroid.views.overlay.Marker
  *
  * Receives the request ID via [EXTRA_REQUEST_ID] intent extra.
  */
-class HelpRequestDetailActivity : AppCompatActivity() {
+class HelpRequestDetailActivity : BaseActivity() {
 
     companion object {
         const val EXTRA_REQUEST_ID = "request_id"
@@ -184,9 +184,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     response.body()?.let { displayDetail(it) }
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     Toast.makeText(
                         this@HelpRequestDetailActivity,
@@ -485,9 +482,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
 
                     // Re-fetch detail — status may have changed to EXPERT_RESPONDING
                     fetchDetail()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     val errorText = response.errorBody()?.string() ?: "Failed to post comment."
                     Toast.makeText(
@@ -509,12 +503,4 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         }
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────
-
-    private fun navigateToLanding() {
-        val intent = Intent(this, LandingActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
 }

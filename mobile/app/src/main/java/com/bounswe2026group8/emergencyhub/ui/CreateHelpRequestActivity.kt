@@ -43,7 +43,7 @@ import com.bounswe2026group8.emergencyhub.util.ImageUploadHelper
  * to POST /help-requests/upload/ before the form is submitted; the returned
  * URLs are attached to the request payload.
  */
-class CreateHelpRequestActivity : AppCompatActivity() {
+class CreateHelpRequestActivity : BaseActivity() {
 
     private lateinit var tokenManager: TokenManager
     private lateinit var inputTitle: TextInputEditText
@@ -418,9 +418,6 @@ class CreateHelpRequestActivity : AppCompatActivity() {
                         startActivity(detailIntent)
                     }
                     finish()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     val errorText = response.errorBody()?.string() ?: "Submission failed."
                     Toast.makeText(
@@ -442,10 +439,4 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToLanding() {
-        val intent = Intent(this, LandingActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
 }

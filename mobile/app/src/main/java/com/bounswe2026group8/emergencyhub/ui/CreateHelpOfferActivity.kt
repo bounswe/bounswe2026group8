@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
  * Collects skill/resource name, description, category, and availability.
  * On successful submission the user is returned to the list screen.
  */
-class CreateHelpOfferActivity : AppCompatActivity() {
+class CreateHelpOfferActivity : BaseActivity() {
 
     private lateinit var tokenManager: TokenManager
     private lateinit var inputSkillOrResource: TextInputEditText
@@ -120,9 +120,6 @@ class CreateHelpOfferActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     finish()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     val errorText = response.errorBody()?.string() ?: "Submission failed."
                     Toast.makeText(
@@ -144,10 +141,4 @@ class CreateHelpOfferActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToLanding() {
-        val intent = Intent(this, LandingActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
 }

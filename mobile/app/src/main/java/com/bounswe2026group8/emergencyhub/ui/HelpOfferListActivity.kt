@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
  * via category chips. Tapping a card shows a detail dialog.
  * The logged-in user can delete their own offers.
  */
-class HelpOfferListActivity : AppCompatActivity() {
+class HelpOfferListActivity : BaseActivity() {
 
     private lateinit var tokenManager: TokenManager
     private lateinit var recyclerView: RecyclerView
@@ -121,9 +121,6 @@ class HelpOfferListActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     allItems = response.body() ?: emptyList()
                     applyFilter()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     Toast.makeText(
                         this@HelpOfferListActivity,
@@ -207,9 +204,6 @@ class HelpOfferListActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     if (adapter.itemCount == 0) showEmpty()
-                } else if (response.code() == 401) {
-                    tokenManager.clear()
-                    navigateToLanding()
                 } else {
                     Toast.makeText(
                         this@HelpOfferListActivity,
@@ -243,10 +237,4 @@ class HelpOfferListActivity : AppCompatActivity() {
         emptyState.visibility = View.VISIBLE
     }
 
-    private fun navigateToLanding() {
-        val intent = Intent(this, LandingActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
 }

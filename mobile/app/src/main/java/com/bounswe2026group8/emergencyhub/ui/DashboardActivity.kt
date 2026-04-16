@@ -40,7 +40,7 @@ import kotlinx.coroutines.tasks.await
  *   - Feature cards (Forum, Help Requests, Profile, Offline Info)
  *   - Logout button
  */
-class DashboardActivity : AppCompatActivity() {
+class DashboardActivity : BaseActivity() {
 
     private lateinit var tokenManager: TokenManager
     private lateinit var hubSelectorHelper: HubSelectorHelper
@@ -92,10 +92,6 @@ class DashboardActivity : AppCompatActivity() {
                     val user = response.body()!!
                     tokenManager.saveUser(user)
                     displayUser(user)
-                } else if (response.code() == 401) {
-                    // Token expired / invalid
-                    tokenManager.clear()
-                    navigateToLandingIfVisible()
                 }
             } catch (e: Exception) {
                 // Network error — use cached data if available
@@ -232,16 +228,4 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToLanding() {
-        val intent = Intent(this, LandingActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
-
-    private fun navigateToLandingIfVisible() {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) && !isFinishing) {
-            navigateToLanding()
-        }
-    }
 }
