@@ -10,6 +10,8 @@ version: "3.8"
 
 services:
   backend:
+    ports:
+      - "8000:8000"
     environment:
       DJANGO_DEBUG: ${DJANGO_DEBUG:-True}
 
