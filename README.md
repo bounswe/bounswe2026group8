@@ -18,7 +18,40 @@ A community platform for disaster preparedness, mutual aid, and neighbourhood re
 
 ## Local Development
 
-### Prerequisites
+Two options: **Docker Compose** (easiest, no local installs needed) or **native** setup.
+
+---
+
+### Option A — Docker Compose (recommended)
+
+#### Prerequisites
+
+| Tool | Version |
+|------|---------|
+| Docker | Latest |
+| Android Studio | Latest (for mobile only) |
+
+#### Running
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build
+```
+
+- Frontend: **http://localhost**
+- API: **http://localhost/api/**
+
+To stop:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.local.yml down
+```
+
+> If you have a `backend/firebase-credentials.json` file it will be used for push notifications. Without it the app runs normally — only push notifications to mobile are disabled.
+
+---
+
+### Option B — Native Setup
+
+#### Prerequisites
 
 | Tool | Version |
 |------|---------|
