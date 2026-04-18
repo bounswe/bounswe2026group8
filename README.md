@@ -47,6 +47,8 @@ docker-compose -f docker-compose.yml -f docker-compose.local.yml down
 
 > If you have a `backend/firebase-credentials.json` file it will be used for push notifications. Without it the app runs normally — only push notifications to mobile are disabled.
 
+> **Mobile:** Android emulator debug builds automatically connect to `http://10.0.2.2:8000` — this works out of the box since the local Docker Compose exposes port 8000 directly. Run the emulator from Android Studio while Docker Compose is up.
+
 ---
 
 ### Option B — Native Setup
