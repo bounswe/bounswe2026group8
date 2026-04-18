@@ -11,7 +11,7 @@ val localProps = Properties().apply {
     val f = rootProject.file("local.properties")
     if (f.exists()) load(f.inputStream())
 }
-val localBaseUrl: String = localProps.getProperty("BASE_URL") ?: "https://emergencyhub.duckdns.org/api/"
+val localBaseUrl: String = localProps.getProperty("BASE_URL") ?: "http://10.0.2.2:8000/"
 
 android {
     namespace = "com.bounswe2026group8.emergencyhub"
