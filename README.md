@@ -40,10 +40,17 @@ docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build
 - Frontend: **http://localhost**
 - API: **http://localhost/api/**
 
+Subsequent runs (no code changes):
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.local.yml up
+```
+
 To stop:
 ```bash
 docker-compose -f docker-compose.yml -f docker-compose.local.yml down
 ```
+
+> On first run, sample users, posts, help requests, and offers are automatically populated. Login with `standard1@example.com` / `expert1@example.com` and password `password123`.
 
 > If you have a `backend/firebase-credentials.json` file it will be used for push notifications. Without it the app runs normally — only push notifications to mobile are disabled.
 
