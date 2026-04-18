@@ -9,6 +9,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.FcmTokenRequest
@@ -75,6 +76,10 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (!tokenManager.isLoggedIn()) {
+            navigateToLanding()
+            return
+        }
         hubSelectorHelper.load()
         preCacheOfflineData()
     }
@@ -90,7 +95,7 @@ class DashboardActivity : AppCompatActivity() {
                 } else if (response.code() == 401) {
                     // Token expired / invalid
                     tokenManager.clear()
-                    navigateToLanding()
+                    navigateToLandingIfVisible()
                 }
             } catch (e: Exception) {
                 // Network error — use cached data if available
@@ -232,5 +237,11 @@ class DashboardActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+    }
+
+    private fun navigateToLandingIfVisible() {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) && !isFinishing) {
+            navigateToLanding()
+        }
     }
 }

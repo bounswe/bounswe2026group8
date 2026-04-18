@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -34,9 +33,7 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import com.bounswe2026group8.emergencyhub.util.ImageUploadHelper
 
 /**
  * Form screen for creating a new help request.
@@ -288,14 +285,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         txtUploadStatus.text = "Uploading ${uris.size} image(s)…"
         txtUploadStatus.visibility = View.VISIBLE
 
-        val parts = mutableListOf<MultipartBody.Part>()
-        for (uri in uris) {
-            val bytes = contentResolver.openInputStream(uri)?.readBytes() ?: continue
-            val mimeType = contentResolver.getType(uri) ?: "image/jpeg"
-            val fileName = getFileName(uri) ?: "image.jpg"
-            val requestBody = bytes.toRequestBody(mimeType.toMediaType())
-            parts.add(MultipartBody.Part.createFormData("images", fileName, requestBody))
-        }
+        val parts = ImageUploadHelper.prepareParts(contentResolver, uris)
 
         lifecycleScope.launch {
             try {
@@ -317,15 +307,6 @@ class CreateHelpRequestActivity : AppCompatActivity() {
                 btnCaptureImage.isEnabled = true
             }
         }
-    }
-
-    private fun getFileName(uri: Uri): String? {
-        var name: String? = null
-        contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            val idx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            if (idx >= 0 && cursor.moveToFirst()) name = cursor.getString(idx)
-        }
-        return name
     }
 
     /** Rebuilds the horizontal image preview strip from [uploadedImageUrls]. */

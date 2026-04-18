@@ -16,10 +16,7 @@ import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.Post
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bumptech.glide.Glide
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
 
 class PostAdapter(
     private var posts: MutableList<Post> = mutableListOf(),
@@ -111,7 +108,7 @@ class PostAdapter(
             txtUpvote.text = "▲ ${post.upvoteCount}"
             txtDownvote.text = "▼ ${post.downvoteCount}"
             txtTitle.text = post.title
-            txtTime.text = timeAgo(post.createdAt)
+            txtTime.text = TimeUtils.timeAgo(post.createdAt)
 
             // Image thumbnails
             val images = post.imageUrls
@@ -230,23 +227,5 @@ class PostAdapter(
             }
         }
 
-        private fun timeAgo(dateStr: String): String {
-            return try {
-                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-                format.timeZone = TimeZone.getTimeZone("UTC")
-                val date = format.parse(dateStr.substringBefore(".").substringBefore("Z"))
-                    ?: return dateStr
-                val seconds = (Date().time - date.time) / 1000
-
-                when {
-                    seconds < 60 -> "just now"
-                    seconds < 3600 -> "${seconds / 60}m ago"
-                    seconds < 86400 -> "${seconds / 3600}h ago"
-                    else -> "${seconds / 86400}d ago"
-                }
-            } catch (_: Exception) {
-                dateStr
-            }
-        }
     }
 }

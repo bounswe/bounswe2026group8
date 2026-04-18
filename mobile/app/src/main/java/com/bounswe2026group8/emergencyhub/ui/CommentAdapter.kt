@@ -7,10 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.Comment
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
 
 class CommentAdapter(
     private var comments: MutableList<Comment> = mutableListOf(),
@@ -56,7 +53,7 @@ class CommentAdapter(
 
         fun bind(comment: Comment, currentUserId: Int?, onDeleteClick: (Comment) -> Unit) {
             txtAuthor.text = comment.author.fullName
-            txtTime.text = timeAgo(comment.createdAt)
+            txtTime.text = TimeUtils.timeAgo(comment.createdAt)
             txtBody.text = comment.content
 
             if (currentUserId != null && currentUserId == comment.author.id) {
@@ -67,23 +64,5 @@ class CommentAdapter(
             }
         }
 
-        private fun timeAgo(dateStr: String): String {
-            return try {
-                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-                format.timeZone = TimeZone.getTimeZone("UTC")
-                val date = format.parse(dateStr.substringBefore(".").substringBefore("Z"))
-                    ?: return dateStr
-                val seconds = (Date().time - date.time) / 1000
-
-                when {
-                    seconds < 60 -> "just now"
-                    seconds < 3600 -> "${seconds / 60}m ago"
-                    seconds < 86400 -> "${seconds / 3600}h ago"
-                    else -> "${seconds / 86400}d ago"
-                }
-            } catch (_: Exception) {
-                dateStr
-            }
-        }
     }
 }

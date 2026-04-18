@@ -29,10 +29,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
 
 class PostDetailActivity : AppCompatActivity() {
 
@@ -135,7 +132,7 @@ class PostDetailActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.txtPostTitle).text = p.title
         val displayAuthor = if (p.repostedFrom != null) p.repostedFrom.author.fullName else p.author.fullName
         findViewById<TextView>(R.id.txtPostAuthor).text = displayAuthor
-        findViewById<TextView>(R.id.txtPostTime).text = timeAgo(p.createdAt)
+        findViewById<TextView>(R.id.txtPostTime).text = TimeUtils.timeAgo(p.createdAt)
         findViewById<TextView>(R.id.txtPostContent).text = p.content ?: ""
 
         // Image gallery
@@ -483,22 +480,4 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun timeAgo(dateStr: String): String {
-        return try {
-            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-            format.timeZone = TimeZone.getTimeZone("UTC")
-            val date = format.parse(dateStr.substringBefore(".").substringBefore("Z"))
-                ?: return dateStr
-            val seconds = (Date().time - date.time) / 1000
-
-            when {
-                seconds < 60 -> "just now"
-                seconds < 3600 -> "${seconds / 60}m ago"
-                seconds < 86400 -> "${seconds / 3600}h ago"
-                else -> "${seconds / 86400}d ago"
-            }
-        } catch (_: Exception) {
-            dateStr
-        }
-    }
 }
