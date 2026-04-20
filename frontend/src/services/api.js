@@ -204,6 +204,7 @@ export function getHelpRequests(params = {}) {
   if (params.hub_id) query.append('hub_id', params.hub_id);
   if (params.category) query.append('category', params.category);
   if (params.author) query.append('author', params.author);
+  if (params.expertise_match) query.append('expertise_match', 'true');
   const qs = query.toString();
   return request(`/help-requests/${qs ? `?${qs}` : ''}`, {
     method: 'GET',

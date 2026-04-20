@@ -155,7 +155,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         // Category dropdown
         val categoryAdapter = ArrayAdapter(
             this, android.R.layout.simple_dropdown_item_1line,
-            arrayOf("Medical", "Food", "Shelter", "Transport")
+            arrayOf("Medical", "Food", "Shelter", "Transport", "Other")
         )
         dropdownCategory.setAdapter(categoryAdapter)
 
@@ -371,6 +371,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
             "Food"      -> "FOOD"
             "Shelter"   -> "SHELTER"
             "Transport" -> "TRANSPORT"
+            "Other"     -> "OTHER"
             else        -> "MEDICAL"
         }
 

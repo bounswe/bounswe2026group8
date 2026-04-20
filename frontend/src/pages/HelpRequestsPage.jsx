@@ -26,6 +26,7 @@ const CATEGORIES = [
   { value: 'FOOD', label: 'Food' },
   { value: 'SHELTER', label: 'Shelter' },
   { value: 'TRANSPORT', label: 'Transport' },
+  { value: 'OTHER', label: 'Other' },
 ];
 
 /** Category options for forms (no "All" option). */
@@ -78,12 +79,16 @@ export default function HelpRequestsPage() {
   const { user } = useAuth();
   const selectedHub = user?.hub;
   const navigate = useNavigate();
+  const isExpert = user?.role === 'EXPERT';
 
   /* ── Tab state — "requests" or "offers" ─────────────────────────────────── */
   const [activeTab, setActiveTab] = useState('requests');
 
   /* ── Shared filter ──────────────────────────────────────────────────────── */
   const [category, setCategory] = useState('');
+
+  /* ── Expertise-match toggle (EXPERT users only, default on) ─────────────── */
+  const [expertiseMatch, setExpertiseMatch] = useState(true);
 
   /* ── Requests tab state ���────────────────────────────────────────────────── */
   const [requests, setRequests] = useState([]);
@@ -119,6 +124,7 @@ export default function HelpRequestsPage() {
     const params = {};
     if (selectedHub?.id) params.hub_id = selectedHub.id;
     if (category) params.category = category;
+    if (isExpert && expertiseMatch) params.expertise_match = true;
 
     getHelpRequests(params)
       .then(({ ok, data }) => {
@@ -127,7 +133,7 @@ export default function HelpRequestsPage() {
       })
       .catch(() => setReqError('Network error. Please try again.'))
       .finally(() => setReqLoading(false));
-  }, [user, category, activeTab]);
+  }, [user, category, activeTab, expertiseMatch, isExpert]);
 
   /* ── Fetch offers when tab/category/user changes ────────────────────────── */
   useEffect(() => {
@@ -281,12 +287,20 @@ export default function HelpRequestsPage() {
         {CATEGORIES.map((cat) => (
           <button
             key={cat.value}
-            className={`btn btn-sm ${category === cat.value ? 'btn-primary' : 'btn-secondary'}`}
-            onClick={() => setCategory(cat.value)}
+            className={`btn btn-sm ${!expertiseMatch && category === cat.value ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => { setCategory(cat.value); setExpertiseMatch(false); }}
           >
             {cat.label}
           </button>
         ))}
+        {isExpert && (
+          <button
+            className={`btn btn-sm ${expertiseMatch ? 'btn-primary' : 'btn-secondary'}`}
+            onClick={() => { setExpertiseMatch(true); setCategory(''); }}
+          >
+            My Expertise
+          </button>
+        )}
       </div>
 
       {/* ══════════════════════════ REQUESTS TAB ══════════════════════════════ */}

@@ -18,6 +18,7 @@ const CATEGORIES = [
   { value: 'FOOD', label: 'Food' },
   { value: 'SHELTER', label: 'Shelter' },
   { value: 'TRANSPORT', label: 'Transport' },
+  { value: 'OTHER', label: 'Other' },
 ];
 
 /** Urgency options — matches backend Urgency.choices. */
