@@ -452,6 +452,34 @@ class ExpertiseCategoryTests(TestCase):
         self.assertNotIn(cat.pk, active_ids)
 
 
+class ExpertiseCategoryEndpointTests(TestCase):
+    """Tests for GET /expertise-categories/ — public, unauthenticated."""
+
+    def test_list_is_public(self):
+        """No authentication required."""
+        response = APIClient().get('/expertise-categories/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_returns_all_seeded_categories(self):
+        response = APIClient().get('/expertise-categories/')
+        self.assertEqual(len(response.data), 13)
+
+    def test_response_shape(self):
+        """Each item has id, name, and help_request_category."""
+        response = APIClient().get('/expertise-categories/')
+        item = response.data[0]
+        self.assertIn('id', item)
+        self.assertIn('name', item)
+        self.assertIn('help_request_category', item)
+
+    def test_inactive_category_excluded(self):
+        ExpertiseCategory.objects.filter(name='First Aid').update(is_active=False)
+        response = APIClient().get('/expertise-categories/')
+        names = [c['name'] for c in response.data]
+        self.assertNotIn('First Aid', names)
+        self.assertEqual(len(response.data), 12)
+
+
 class ExpertiseFieldTests(TestCase):
     """Tests for GET/POST /expertise and role-based access control."""
 

@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.ExpertiseCategoryData
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldData
 import com.bounswe2026group8.emergencyhub.api.ProfileData
@@ -33,6 +35,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var tokenManager: TokenManager
     private var currentProfile: ProfileData? = null
     private var ignoreBloodTypeSelection = false
+    private var expertiseCategories: List<ExpertiseCategoryData> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +54,7 @@ class ProfileActivity : AppCompatActivity() {
         if (user?.role == "EXPERT") {
             findViewById<View>(R.id.cardExpertise).visibility = View.VISIBLE
             loadExpertise()
-            setupExpertiseForm()
+            loadExpertiseCategories { setupExpertiseForm() }
         }
     }
 
@@ -377,7 +380,7 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             val label = TextView(this).apply {
-                text = "${item.field} · ${if (item.certificationLevel == "ADVANCED") "★ Advanced" else "◎ Beginner"}"
+                text = "${item.category.name} · ${if (item.certificationLevel == "ADVANCED") "★ Advanced" else "◎ Beginner"}"
                 setTextColor(ContextCompat.getColor(context, R.color.text_primary))
                 textSize = 14f
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -396,6 +399,16 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadExpertiseCategories(onDone: () -> Unit = {}) {
+        lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.getService(this@ProfileActivity).getExpertiseCategories()
+                if (res.isSuccessful) expertiseCategories = res.body() ?: emptyList()
+            } catch (_: Exception) { }
+            onDone()
+        }
+    }
+
     private fun setupExpertiseForm() {
         val form = findViewById<LinearLayout>(R.id.formAddExpertise)
         val btnToggle = findViewById<MaterialButton>(R.id.btnAddExpertise)
@@ -403,19 +416,27 @@ class ProfileActivity : AppCompatActivity() {
             form.visibility = if (form.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
 
+        val dropdown = findViewById<AutoCompleteTextView>(R.id.dropdownExpertiseCategory)
+        val categoryNames = expertiseCategories.map { it.name }
+        dropdown.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categoryNames))
+        var selectedCategoryId: Int? = null
+        dropdown.setOnItemClickListener { _, _, pos, _ ->
+            selectedCategoryId = expertiseCategories[pos].id
+        }
+
         val spinner = findViewById<Spinner>(R.id.spinnerCertLevel)
         val levels = arrayOf("Beginner", "Advanced")
         spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, levels)
 
         findViewById<MaterialButton>(R.id.btnSaveExpertise).setOnClickListener {
-            val field = findViewById<TextInputEditText>(R.id.inputExpertiseField).text?.toString()?.trim() ?: ""
-            val level = if (spinner.selectedItemPosition == 1) "ADVANCED" else "BEGINNER"
-            val url = findViewById<TextInputEditText>(R.id.inputCertUrl).text?.toString()?.trim()
-            if (field.isBlank()) {
-                toast("Field name is required")
+            val catId = selectedCategoryId
+            if (catId == null) {
+                toast("Please select an expertise category")
                 return@setOnClickListener
             }
-            createExpertise(ExpertiseFieldCreateRequest(field, level, url?.ifBlank { null }))
+            val level = if (spinner.selectedItemPosition == 1) "ADVANCED" else "BEGINNER"
+            val url = findViewById<TextInputEditText>(R.id.inputCertUrl).text?.toString()?.trim()
+            createExpertise(ExpertiseFieldCreateRequest(catId, level, url?.ifBlank { null }))
         }
     }
 
@@ -425,7 +446,7 @@ class ProfileActivity : AppCompatActivity() {
                 val res = RetrofitClient.getService(this@ProfileActivity).createExpertiseField(req)
                 if (res.isSuccessful) {
                     toast("Expertise added")
-                    findViewById<TextInputEditText>(R.id.inputExpertiseField).text?.clear()
+                    findViewById<AutoCompleteTextView>(R.id.dropdownExpertiseCategory).text?.clear()
                     findViewById<TextInputEditText>(R.id.inputCertUrl).text?.clear()
                     findViewById<LinearLayout>(R.id.formAddExpertise).visibility = View.GONE
                     loadExpertise()

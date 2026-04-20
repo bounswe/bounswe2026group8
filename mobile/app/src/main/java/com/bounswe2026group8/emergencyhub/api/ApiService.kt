@@ -193,6 +193,11 @@ interface ApiService {
     @DELETE("resources/{id}")
     suspend fun deleteResource(@Path("id") id: Int): Response<Unit>
 
+    // ── Expertise Categories (public) ────────────────────────────────────────────
+
+    @GET("expertise-categories/")
+    suspend fun getExpertiseCategories(): Response<List<ExpertiseCategoryData>>
+
     // ── Expertise Fields ────────────────────────────────────────────────────────
 
     @GET("expertise")

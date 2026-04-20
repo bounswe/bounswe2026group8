@@ -49,11 +49,20 @@ data class ResourceCreateRequest(
     val condition: Boolean = true,
 )
 
+// ── Expertise Category ──────────────────────────────────────────────────────────
+
+data class ExpertiseCategoryData(
+    val id: Int,
+    val name: String,
+    @SerializedName("help_request_category") val helpRequestCategory: String,
+)
+
 // ── Expertise Field ─────────────────────────────────────────────────────────────
 
 data class ExpertiseFieldData(
     val id: Int,
-    val field: String,
+    val category: ExpertiseCategoryData,
+    @SerializedName("is_approved") val isApproved: Boolean,
     @SerializedName("certification_level") val certificationLevel: String,
     @SerializedName("certification_document_url") val certificationDocumentUrl: String?,
     @SerializedName("created_at") val createdAt: String?,
@@ -61,7 +70,7 @@ data class ExpertiseFieldData(
 )
 
 data class ExpertiseFieldCreateRequest(
-    val field: String,
+    @SerializedName("category_id") val categoryId: Int,
     @SerializedName("certification_level") val certificationLevel: String = "BEGINNER",
     @SerializedName("certification_document_url") val certificationDocumentUrl: String? = null,
 )

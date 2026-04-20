@@ -135,6 +135,13 @@ export function deleteResource(id) {
   return request(`/resources/${id}`, { method: 'DELETE' });
 }
 
+// --------------- Expertise Categories (public) ---------------
+
+/** GET /expertise-categories/ — no auth needed. */
+export function getExpertiseCategories() {
+  return request('/expertise-categories/', { method: 'GET' });
+}
+
 // --------------- Expertise Fields (EXPERT only) ---------------
 
 export function getExpertiseFields() {
