@@ -20,8 +20,9 @@ import com.google.firebase.messaging.RemoteMessage
  * Handles incoming FCM messages for both forum posts and help requests.
  *
  * Dispatches based on the `type` field in the data payload:
- *   - "help_request" → [handleHelpRequestNotification] → opens [HelpRequestDetailActivity]
- *   - anything else  → [handlePostNotification] → opens [PostDetailActivity] (forum)
+ *   - "help_request"       → [handleHelpRequestNotification] → opens [HelpRequestDetailActivity]
+ *   - "no_expert_available"→ [handleNoExpertNotification]    → opens [HelpRequestDetailActivity]
+ *   - anything else        → [handlePostNotification]        → opens [PostDetailActivity] (forum)
  *
  * Because the backend sends data-only messages (no `notification` key),
  * [onMessageReceived] is called in both foreground and background states.
@@ -38,8 +39,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         // Dispatch to the correct handler based on notification type.
         when (message.data["type"]) {
-            "help_request" -> handleHelpRequestNotification(message.data)
-            else -> handlePostNotification(message.data)
+            "help_request"        -> handleHelpRequestNotification(message.data)
+            "no_expert_available" -> handleNoExpertNotification(message.data)
+            else                  -> handlePostNotification(message.data)
         }
     }
 
@@ -94,6 +96,40 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
                 .createNotificationChannel(channel)
         }
+    }
+
+    /**
+     * Notifies the requester that no matching expert was found for their help request.
+     * Deep-links to the same [HelpRequestDetailActivity] so they can see their request.
+     */
+    private fun handleNoExpertNotification(data: Map<String, String>) {
+        val requestId = data["request_id"]?.toIntOrNull() ?: return
+        val title = data["title"] ?: "No specialist available"
+        val body = data["body"] ?: ""
+
+        createHelpRequestNotificationChannel()
+
+        val detailIntent = Intent(this, HelpRequestDetailActivity::class.java).apply {
+            putExtra(HelpRequestDetailActivity.EXTRA_REQUEST_ID, requestId)
+        }
+
+        val pendingIntent = TaskStackBuilder.create(this)
+            .addNextIntentWithParentStack(Intent(this, DashboardActivity::class.java))
+            .addNextIntent(Intent(this, HelpRequestListActivity::class.java))
+            .addNextIntent(detailIntent)
+            .getPendingIntent(requestId + 200_000, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val notification = NotificationCompat.Builder(this, HELP_REQUEST_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(requestId + 200_000, notification)
     }
 
     // ── Forum Post Notifications ──────────────────────────────────────────────
