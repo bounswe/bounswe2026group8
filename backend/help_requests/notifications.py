@@ -1,8 +1,12 @@
 """
 FCM push notifications for help requests.
 
-When a new help request is created, all experts in the same hub
-(except the author) receive a push notification via Firebase Cloud Messaging.
+When a new help request is created:
+- Experts whose approved ExpertiseField matches the request's category are
+  notified first (primary targeting).
+- If no matching expert exists in the hub, ALL hub experts are notified as a
+  fallback so the request is never silently ignored. The requester also receives
+  a notification informing them that no specialist was available.
 """
 
 import logging
@@ -17,21 +21,40 @@ logger = logging.getLogger(__name__)
 
 def send_help_request_notification(help_request):
     """
-    Send an FCM notification to experts in the same hub as the help request.
+    Send FCM notifications for a newly created help request.
 
-    - Targets only EXPERT users with a valid FCM token in the request's hub.
-    - Excludes the request author.
-    - Skips silently if Firebase is not initialised or the request has no hub.
-    - Invalid/expired tokens are logged but never raise.
+    Primary path:  matching experts (same hub, approved expertise in request category).
+    Fallback path: all hub experts + requester informed that no specialist was found.
+    Skips silently if Firebase is not initialised or the request has no hub.
     """
     if not firebase_admin._apps:
         return
 
-    # No hub means no targeting — skip to avoid spamming all experts.
     if not help_request.hub_id:
         return
 
-    tokens = list(
+    # Primary: experts with an approved expertise matching the request's category.
+    matching_tokens = list(
+        User.objects.filter(
+            is_active=True,
+            role='EXPERT',
+            hub_id=help_request.hub_id,
+            expertise_fields__category__help_request_category=help_request.category,
+            expertise_fields__is_approved=True,
+        )
+        .exclude(fcm_token__isnull=True)
+        .exclude(fcm_token='')
+        .exclude(pk=help_request.author_id)
+        .values_list('fcm_token', flat=True)
+        .distinct()
+    )
+
+    if matching_tokens:
+        _send_expert_multicast(matching_tokens, help_request)
+        return
+
+    # Fallback: no specialist found — notify all hub experts.
+    fallback_tokens = list(
         User.objects.filter(
             is_active=True,
             role='EXPERT',
@@ -43,9 +66,17 @@ def send_help_request_notification(help_request):
         .values_list('fcm_token', flat=True)
     )
 
-    if not tokens:
-        return
+    if fallback_tokens:
+        _send_expert_multicast(fallback_tokens, help_request)
 
+    # Notify the requester that no specialist was available.
+    requester_token = help_request.author.fcm_token
+    if requester_token:
+        _notify_requester_no_match(requester_token, help_request)
+
+
+def _send_expert_multicast(tokens, help_request):
+    """Multicast the standard help-request notification to a list of FCM tokens."""
     data = {
         'type': 'help_request',
         'request_id': str(help_request.id),
@@ -55,8 +86,6 @@ def send_help_request_notification(help_request):
             f'{help_request.get_urgency_display()} urgency'
         ),
     }
-
-    # FCM supports max 500 tokens per multicast.
     for i in range(0, len(tokens), 500):
         batch = tokens[i:i + 500]
         message = messaging.MulticastMessage(
@@ -74,3 +103,24 @@ def send_help_request_notification(help_request):
                 )
         except Exception:
             logger.exception('FCM help-request: failed to send multicast')
+
+
+def _notify_requester_no_match(fcm_token, help_request):
+    """Send a single FCM message to the requester when no matching expert was found."""
+    message = messaging.Message(
+        data={
+            'type': 'no_expert_available',
+            'request_id': str(help_request.id),
+            'title': 'No specialist available',
+            'body': (
+                'No expert with matching expertise is available right now. '
+                'Other experts in your hub have been notified.'
+            ),
+        },
+        token=fcm_token,
+        android=messaging.AndroidConfig(priority='high'),
+    )
+    try:
+        messaging.send(message)
+    except Exception:
+        logger.exception('FCM help-request: failed to notify requester')
