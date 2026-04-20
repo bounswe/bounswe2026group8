@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 
-from .models import Hub, User, Profile, Resource, ExpertiseField
+from .models import Hub, User, Profile, Resource, ExpertiseField, ExpertiseCategory
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -44,13 +44,32 @@ class ResourceSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'updated_at']
 
 
+class ExpertiseCategorySerializer(serializers.ModelSerializer):
+    """Read serializer for ExpertiseCategory — used nested inside ExpertiseFieldSerializer."""
+
+    class Meta:
+        model = ExpertiseCategory
+        fields = ['id', 'name', 'help_request_category']
+
+
 class ExpertiseFieldSerializer(serializers.ModelSerializer):
     """Serializer for expert-only expertise entries."""
 
+    category = ExpertiseCategorySerializer(read_only=True)
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=ExpertiseCategory.objects.filter(is_active=True),
+        source='category',
+        write_only=True,
+    )
+
     class Meta:
         model = ExpertiseField
-        fields = ['id', 'field', 'certification_level', 'certification_document_url', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = [
+            'id', 'category', 'category_id', 'is_approved',
+            'certification_level', 'certification_document_url',
+            'created_at', 'updated_at',
+        ]
+        read_only_fields = ['id', 'is_approved', 'created_at', 'updated_at']
 
 
 class HubSerializer(serializers.ModelSerializer):
@@ -94,9 +113,6 @@ class RegisterSerializer(serializers.Serializer):
     neighborhood_address = serializers.CharField(
         max_length=255, required=False, allow_blank=True, allow_null=True
     )
-    expertise_field = serializers.CharField(
-        max_length=255, required=False, allow_blank=True, allow_null=True
-    )
 
     def validate_email(self, value):
         if User.objects.filter(email__iexact=value).exists():
@@ -117,16 +133,6 @@ class RegisterSerializer(serializers.Serializer):
             validate_password(data['password'])
         except DjangoValidationError as e:
             raise serializers.ValidationError({'password': e.messages})
-
-        if data['role'] == User.Role.EXPERT:
-            expertise = data.get('expertise_field', '').strip() if data.get('expertise_field') else ''
-            if not expertise:
-                raise serializers.ValidationError(
-                    {'expertise_field': ['Expertise field is required for Expert users.']}
-                )
-
-        if data['role'] == User.Role.STANDARD:
-            data['expertise_field'] = None
 
         return data
 
