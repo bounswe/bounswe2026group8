@@ -1,0 +1,258 @@
+{
+  "hub": "Merkez",
+  "landing": {
+    "title_main": "Çevre",
+    "title_sub": "Acil Durum Merkezi",
+    "subtitle": "Acil durumlara hazırlanın. Çevrenizle iletişime geçin. Karşılıklı destek ile topluluk direncinizi oluşturun - internet bağlantısı olmadığında bile.",
+    "btn_get_started": "Kayıt Ol",
+    "btn_sign_in": "Giriş Yap",
+    "features": [
+      {
+        "icon": "🛡",
+        "title": "Afet Hazırlığı",
+        "desc": "Çevrenizle ilgili acil durum planlarına ve önemli bilgilere erişim sağlayın."
+      },
+      {
+        "icon": "🤝",
+        "title": "Karşılıklı Destek",
+        "desc": "Acil durumlarda çevrenizden yardım talep edin ve çevrenize yardım edin."
+      },
+      {
+        "icon": "📡",
+        "title": "Çevrimdışı Öncelikli",
+        "desc": "Kilit bilgiler internet bağlantısı olmadan bile erişilebilir."
+      }
+    ]
+  },
+  "dashboard": {
+    "header_title": "Acil Durum Merkezi",
+    "btn_logout": "Çıkış",
+    "welcome": "Hoşgeldin, {{name}}!",
+    "roles": {
+      "expert": "Uzman",
+      "standard": "Standart"
+    },
+    "status": {
+      "safe": "Güvenli",
+      "needs_help": "Yardıma İhtiyacı Var",
+      "available_to_help": "Yardım Edebilir"
+    },
+    "features": {
+      "forum": {"title": "Forum", "desc": "Topluluk tartışmaları"},
+      "help_requests": {"title": "Yardım Talepleri", "desc": "Yardım edin / talep edin"},
+      "profile": {"title": "Profil", "desc": "Profilinizi düzenleyin"},
+      "emergency_info": {"title": "Acil Durum Bilgileri", "desc": "Kritik bilgi erişimi"}
+    }
+  },
+  "forum": {
+    "status": {
+      "safe": "Güvenli",
+      "needs_help": "Yardıma İhtiyacı Var",
+      "available_to_help": "Yardım Edebilir"
+    },
+    "time": {
+      "just_now": "şimdi",
+      "m_ago": "{{count}}d önce",
+      "h_ago": "{{count}}s önce",
+      "d_ago": "{{count}}g önce"
+    },
+    "header": {
+      "title": "Forum",
+      "global_hub_label": "Tüm merkezler - herkes",
+      "select_hub_label": "Merkez seçin",
+      "btn_new_post": "+ Yeni Gönderi"
+    },
+    "tabs": {
+      "global": "Global",
+      "standard": "Standart",
+      "urgent": "Acil"
+    },
+    "sort": {
+      "newest": "En Yeni",
+      "most_liked": "En Çok Beğenilen",
+      "hot": "Popüler"
+    },
+    "empty_states": {
+      "loading": "Gönderiler yükleniyor...",
+      "select_hub": "{{tab}} gönderilerini görmek için bir merkez seçin.",
+      "no_global": "Henüz global post yok.",
+      "no_hub_posts": "{{hub}} merkezinde henüz {{tab}} gönderisi yok."
+    },
+    "post": {
+      "upvote": "Beğen",
+      "downvote": "Beğenme",
+      "reposted_from": "{{name}} kişisinden yeniden gönderildi.",
+      "expert": "Uzman",
+      "comment_single": "{{count}} yorum",
+      "comment_plural": "{{count}} yorum",
+      "repost_single": "{{count}} yeniden gönderim",
+      "repost_plural": "{{count}} yeniden gönderim",
+      "copy_link": "Bağlantıyı kopyala",
+      "copied": "Kopyalandı!",
+      "share": "Paylaş",
+      "repost_global": "Yeniden gönder (global)",
+      "repost_hub": "Kendi merkezinde yeniden paylaş",
+      "repost": "Yeniden paylaş"
+    },
+    "actions": {
+      "back_to_top": "Başa Dön",
+      "back_to_dashboard": "Menüye Dön"
+    }
+  },
+  "user_profile": {
+    "status": {
+      "safe": "Güvenli",
+      "needs_help": "Yardıma İhtiyacı var",
+      "available_to_help": "Yardım Edebilir"
+    },
+    "forum_types": {
+      "global": "Global",
+      "standard": "Standart",
+      "urgent": "Acil"
+    },
+    "roles": {
+      "expert": "Uzman",
+      "standard": "Standart"
+    },
+    "time": {
+      "just_now": "şimdi",
+      "m_ago": "{{count}}d önce",
+      "h_ago": "{{count}}s önce",
+      "d_ago": "{{count}}g önce"
+    },
+    "header": {
+      "title": "Kullanıcı Profili",
+      "back": "Geri"
+    },
+    "states": {
+      "loading": "Yükleniyor...",
+      "not_found": "Kullanıcı bulunamadı.",
+      "no_items": "{{tab}} henüz yok."
+    },
+    "sections": {
+      "personal_info": "Kişisel Bilgiler",
+      "expertise": "Uzmanlık",
+      "resources": "Kaynaklar",
+      "activity": "Aktivite"
+    },
+    "fields": {
+      "phone": "Telefon Numarası",
+      "blood_type": "Kan Grubu",
+      "emergency_contact": "Acil Durum Kişileri",
+      "emergency_contact_phone": "Acil Durum Numaraları",
+      "preferred_language": "Tercih Edilen Dil",
+      "location": "Konum",
+      "has_disability": "Engel Durumu",
+      "yes": "Evet",
+      "availability": "Müsaitlik Durumu",
+      "special_needs": "Özel İhtiyaçlar",
+      "bio": "Biyografi"
+    },
+    "expertise_item": {
+      "advanced": "Uzman",
+      "beginner": "Acemi",
+      "certificate": "Sertifika"
+    },
+    "resource_item": {
+      "qty": "qty {{count}}",
+      "functional": "Çalışır durumda",
+      "not_functional": "Çalışır durumda değil"
+    },
+    "tabs": {
+      "posts": "Gönderiler",
+      "requests": "Talepler",
+      "offers": "Teklifler"
+    },
+    "card": {
+      "upvotes": "{{count}} beğeni",
+      "comments": "{{count}} yorum"
+    }
+  },
+  "profile": {
+    "header": {
+      "title": "Sizin Profiliniz",
+      "back": "Geri"
+    },
+    "my_posts": {
+      "title": "Gönderilerim",
+      "desc": "Forum gönderileriniz, yardım talep ve tekliflerinizi görüntüleyin."
+    },
+    "sections": {
+      "personal_info": "Kişisel Bilgiler",
+      "resources": "Kaynaklar",
+      "expertise": "Uzmanlık Alanları"
+    },
+    "fields": {
+      "phone": "Telefon Numarası",
+      "blood_type": "Kan Grubu",
+      "emergency_contact": "Acil Durum Kişileri",
+      "emergency_contact_phone": "Acil Durum Numaraları",
+      "preferred_language": "Tercih Edilen Dil",
+      "has_disability": "Engel Durumu",
+      "availability": "Müsaitlik Durumu",
+      "special_needs": "Özel İhtiyaçlar",
+      "bio": "Biyografi"
+    },
+    "placeholders": {
+      "click_to_add": "Eklemek için tıklayın",
+      "select_blood": "— seç —",
+      "special_needs": "Özel ihtiyaçlarını belirtin…",
+      "bio": "Başkalarına kendinizden bahsedin…",
+      "resource_name": "ör. Jeneratör",
+      "resource_category": "ör. Enerji",
+      "expertise_field": "ör. İlk Yardım",
+      "cert_url": "https://… ya da belge yükleyin"
+    },
+    "actions": {
+      "yes": "Evet",
+      "no": "Hayır",
+      "add_resource": "+ Kaynak Ekleyin",
+      "add_expertise": "+ Uzmanlık Ekleyin",
+      "cancel": "İptal",
+      "save": "Kaydet",
+      "delete": "Sil",
+      "click_to_toggle": "Geçmek için tıklayın",
+      "upload": "Yükle",
+      "uploading": "Yükleniyor…"
+    },
+    "labels": {
+      "name": "İsim",
+      "category": "Kategori",
+      "quantity": "Miktar",
+      "functional": "Çalışır durumda",
+      "not_functional": "Çalışır durumda değil",
+      "field": "Alan",
+      "level": "Seviye",
+      "certificate": "Sertifika",
+      "optional": "(ihtiyari)"
+    },
+    "expertise_item": {
+      "advanced": "Uzman",
+      "beginner": "Acemi",
+      "certificate": "Sertifika"
+    },
+    "resource_item": {
+      "qty": "qty {{count}}",
+      "functional": "Çalışır durumda",
+      "not_functional": "Çalışır durumda değil"
+    },
+    "empty": {
+      "resources": "Henüz kaynak eklenmedi.",
+      "expertise": "Henüz uzmanlık alanı eklenmedi."
+    },
+    "toasts": {
+      "saved": "Kaydedildi",
+      "update_failed": "Güncelleme yapılamadı",
+      "resource_added": "Kaynak eklendi",
+      "resource_removed": "Kaynak kaldırıldı",
+      "expertise_added": "Uzmanlık eklendi",
+      "expertise_removed": "Uzmanlık kaldırıldı",
+      "file_uploaded": "Dosya eklendi",
+      "upload_failed": "Yükleme başarısız"
+    },
+    "phone_validation": {
+      "invalid": "Geçerli bir telefon numarası girin (ör. +90 555 123 4567)",
+      "length": "6–15 karakter arasında olmalı"
+    }
+  }
+}

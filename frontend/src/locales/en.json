@@ -1,0 +1,258 @@
+{
+  "hub": "Hub",
+  "landing": {
+    "title_main": "Neighborhood",
+    "title_sub": "Emergency Hub",
+    "subtitle": "Prepare for emergencies. Connect with neighbours. Build community\nresilience through mutual aid — even when the\ninternet is down.",
+    "btn_get_started": "Get Started",
+    "btn_sign_in": "Sign In",
+    "features": [
+      {
+        "icon": "🛡️",
+        "title": "Disaster Preparedness",
+        "desc": "Access critical information and emergency plans for your neighbourhood."
+      },
+      {
+        "icon": "🤝",
+        "title": "Mutual Aid",
+        "desc": "Offer and request help from neighbours during emergencies."
+      },
+      {
+        "icon": "📡",
+        "title": "Offline-First",
+        "desc": "Key data stays accessible even without an internet connection."
+      }
+    ]
+  },
+  "dashboard": {
+    "header_title": "Emergency Hub",
+    "btn_logout": "Logout",
+    "welcome": "Welcome, {{name}}!",
+    "roles": {
+      "expert": "Expert",
+      "standard": "Standard"
+    },
+    "status": {
+      "safe": "Safe",
+      "needs_help": "Needs Help",
+      "available_to_help": "Available to Help"
+    },
+    "features": {
+      "forum": {"title": "Forum", "desc": "Community discussions"},
+      "help_requests": {"title": "Help Requests", "desc": "Ask for or offer help"},
+      "profile": {"title": "Profile", "desc": "Manage your account"},
+      "emergency_info": {"title": "Emergency Info", "desc": "Critical data access"}
+    }
+  },
+  "forum": {
+    "status": {
+      "safe": "Safe",
+      "needs_help": "Needs Help",
+      "available_to_help": "Available To Help"
+    },
+    "time": {
+      "just_now": "just now",
+      "m_ago": "{{count}}m ago",
+      "h_ago": "{{count}}h ago",
+      "d_ago": "{{count}}d ago"
+    },
+    "header": {
+      "title": "Forum",
+      "global_hub_label": "All hubs — everyone",
+      "select_hub_label": "Select a hub",
+      "btn_new_post": "+ New Post"
+    },
+    "tabs": {
+      "global": "Global",
+      "standard": "Standard",
+      "urgent": "Urgent"
+    },
+    "sort": {
+      "newest": "Newest",
+      "most_liked": "Most Liked",
+      "hot": "Hot"
+    },
+    "empty_states": {
+      "loading": "Loading posts...",
+      "select_hub": "Select a hub to see {{tab}} posts.",
+      "no_global": "No global posts yet.",
+      "no_hub_posts": "No {{tab}} posts in {{hub}} yet."
+    },
+    "post": {
+      "upvote": "Upvote",
+      "downvote": "Downvote",
+      "reposted_from": "Reposted from {{name}}",
+      "expert": "Expert",
+      "comment_single": "{{count}} comment",
+      "comment_plural": "{{count}} comments",
+      "repost_single": "{{count}} repost",
+      "repost_plural": "{{count}} reposts",
+      "copy_link": "Copy link",
+      "copied": "Copied!",
+      "share": "Share",
+      "repost_global": "Repost (global)",
+      "repost_hub": "Repost to your hub",
+      "repost": "Repost"
+    },
+    "actions": {
+      "back_to_top": "Back to Top",
+      "back_to_dashboard": "Back to Dashboard"
+    }
+  },
+  "user_profile": {
+    "status": {
+      "safe": "Safe",
+      "needs_help": "Needs Help",
+      "available_to_help": "Available to Help"
+    },
+    "forum_types": {
+      "global": "Global",
+      "standard": "Standard",
+      "urgent": "Urgent"
+    },
+    "roles": {
+      "expert": "Expert",
+      "standard": "Standard"
+    },
+    "time": {
+      "just_now": "just now",
+      "m_ago": "{{count}}m ago",
+      "h_ago": "{{count}}h ago",
+      "d_ago": "{{count}}d ago"
+    },
+    "header": {
+      "title": "User Profile",
+      "back": "Back"
+    },
+    "states": {
+      "loading": "Loading...",
+      "not_found": "User not found.",
+      "no_items": "No {{tab}} yet."
+    },
+    "sections": {
+      "personal_info": "Personal Information",
+      "expertise": "Expertise",
+      "resources": "Resources",
+      "activity": "Activity"
+    },
+    "fields": {
+      "phone": "Phone",
+      "blood_type": "Blood Type",
+      "emergency_contact": "Emergency Contact",
+      "emergency_contact_phone": "Emergency Contact Phone",
+      "preferred_language": "Preferred Language",
+      "location": "Location",
+      "has_disability": "Has Disability",
+      "yes": "Yes",
+      "availability": "Availability Status",
+      "special_needs": "Special Needs",
+      "bio": "Bio"
+    },
+    "expertise_item": {
+      "advanced": "Advanced",
+      "beginner": "Beginner",
+      "certificate": "Certificate"
+    },
+    "resource_item": {
+      "qty": "qty {{count}}",
+      "functional": "Functional",
+      "not_functional": "Not functional"
+    },
+    "tabs": {
+      "posts": "Posts",
+      "requests": "Requests",
+      "offers": "Offers"
+    },
+    "card": {
+      "upvotes": "{{count}} upvotes",
+      "comments": "{{count}} comments"
+    }
+  },
+  "profile": {
+    "header": {
+      "title": "Your Profile",
+      "back": "Back"
+    },
+    "my_posts": {
+      "title": "My Posts",
+      "desc": "View your forum posts, help requests, and help offers"
+    },
+    "sections": {
+      "personal_info": "Personal Information",
+      "resources": "Resources",
+      "expertise": "Expertise Fields"
+    },
+    "fields": {
+      "phone": "Phone",
+      "blood_type": "Blood Type",
+      "emergency_contact": "Emergency Contact",
+      "emergency_contact_phone": "Emergency Contact Phone",
+      "preferred_language": "Preferred Language",
+      "has_disability": "Has Disability",
+      "availability": "Availability Status",
+      "special_needs": "Special Needs",
+      "bio": "Bio"
+    },
+    "placeholders": {
+      "click_to_add": "Click to add",
+      "select_blood": "— select —",
+      "special_needs": "Describe any special needs…",
+      "bio": "Tell others about yourself…",
+      "resource_name": "e.g. Generator",
+      "resource_category": "e.g. Power",
+      "expertise_field": "e.g. First Aid",
+      "cert_url": "https://… or upload a file"
+    },
+    "actions": {
+      "yes": "Yes",
+      "no": "No",
+      "add_resource": "+ Add Resource",
+      "add_expertise": "+ Add Expertise",
+      "cancel": "Cancel",
+      "save": "Save",
+      "delete": "Delete",
+      "click_to_toggle": "Click to toggle",
+      "upload": "Upload",
+      "uploading": "Uploading…"
+    },
+    "labels": {
+      "name": "Name",
+      "category": "Category",
+      "quantity": "Quantity",
+      "functional": "Functional",
+      "not_functional": "Not functional",
+      "field": "Field",
+      "level": "Level",
+      "certificate": "Certificate",
+      "optional": "(optional)"
+    },
+    "expertise_item": {
+      "advanced": "Advanced",
+      "beginner": "Beginner",
+      "certificate": "Certificate"
+    },
+    "resource_item": {
+      "qty": "qty {{count}}",
+      "functional": "Functional",
+      "not_functional": "Not functional"
+    },
+    "empty": {
+      "resources": "No resources added yet.",
+      "expertise": "No expertise fields added yet."
+    },
+    "toasts": {
+      "saved": "Saved",
+      "update_failed": "Update failed",
+      "resource_added": "Resource added",
+      "resource_removed": "Resource removed",
+      "expertise_added": "Expertise added",
+      "expertise_removed": "Expertise removed",
+      "file_uploaded": "File uploaded",
+      "upload_failed": "Upload failed"
+    },
+    "phone_validation": {
+      "invalid": "Enter a valid phone number (e.g. +90 555 123 4567)",
+      "length": "Must be 6–15 digits"
+    }
+  }
+}
