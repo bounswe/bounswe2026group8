@@ -16,6 +16,8 @@ export default function LanguageSelector() {
             >
                 <option value="en">EN</option>
                 <option value="tr">TR</option>
+                <option value="es">ES</option>
+                <option value="zh">ZH</option>
             </select>
         </div>
     );

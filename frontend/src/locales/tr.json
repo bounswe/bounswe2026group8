@@ -99,6 +99,458 @@
       "back_to_dashboard": "Menüye Dön"
     }
   },
+  "help_request_create": {
+    "header": {
+      "back": "Geri",
+      "title": "Yeni Yardım Talebi"
+    },
+    "labels": {
+      "title": "Başlık",
+      "description": "Açıklama",
+      "images": "Görseller",
+      "category": "Kategori",
+      "urgency": "Aciliyet",
+      "location_text": "Konum tarifi",
+      "coordinates": "Koordinatlar",
+      "optional": "tercihi"
+    },
+    "placeholders": {
+      "title": "Talebinizin özeti",
+      "description": "Ne yardımına ihtiyaç duyduğunuzu belirtin...",
+      "location_text": "ör. AKM karşısı..."
+    },
+    "actions": {
+      "upload": "Cihazdan Yükleyin",
+      "uploading": "Yükleniyor...",
+      "remove": "Kaldır",
+      "use_location": "Konumumu Kullan",
+      "locating": "Tespit Ediliyor...",
+      "submit": "Talep Gönder",
+      "submitting": "Gönderiliyor..."
+    },
+    "categories": {
+      "medical": "Medikal",
+      "food": "Yemek",
+      "shelter": "Sığınak",
+      "transport": "Ulaşım"
+    },
+    "urgencies": {
+      "low": "Düşük",
+      "medium": "Orta",
+      "high": "Yüksek"
+    },
+    "errors": {
+      "title_required": "Başlık Gerekmektedir.",
+      "description_required": "Açıklamak gerekmektedir.",
+      "upload_failed": "Görsel yüklenemedi.",
+      "submit_failed": "Yardım talebi oluşturulamadı."
+    },
+    "location_status": {
+      "not_supported": "Geolokasyon tarayıcınız tarafından desteklenmemektedir.",
+      "captured": "Konumt tespit edildi.",
+      "failed": "Konum tespit edilemedi: {{message}}"
+    }
+  },
+  "help_request_detail": {
+    "header": {
+      "back": "Geri",
+      "title": "Talep Detayı"
+    },
+    "states": {
+      "loading": "Yükleniyor...",
+      "not_found": "Talep bulunamadı.",
+      "fetch_failed": "Talep yüklenemedi.",
+      "network_error": "Bağlantı hatası. Lütfen tekrar deneyin.",
+      "post_failed": "Yorum yüklenemedi."
+    },
+    "time": {
+      "just_now": "Şimdi",
+      "m_ago": "{{count}}d önce",
+      "h_ago": "{{count}}s önce",
+      "d_ago": "{{count}}h önce"
+    },
+    "labels": {
+      "by": "Şu Kişiden: ",
+      "expert": "Uzman",
+      "hub": "Merkez: "
+    },
+    "urgency": {
+      "low": "Düşük",
+      "medium": "Orda",
+      "high": "Yüksek"
+    },
+    "status": {
+      "open": "Açık",
+      "expert_responding": "Uzman İlgileniyor",
+      "resolved": "Çözümlendi"
+    },
+    "availability": {
+      "safe": "Güvenli",
+      "needs_help": "Yardıma İhtiyacı Var",
+      "available": "Yarım Etmeye Müsait"
+    },
+    "actions": {
+      "resolving": "Çözümleniyor...",
+      "mark_resolved": "Çözümlendi Olarak İşaretle",
+      "delete": "Sil",
+      "cancel": "İptal Et"
+    },
+    "modal": {
+      "title": "Talebi Sil",
+      "desc": "Bu yardım talebini silmek istediğinize emin misiniz? Bu geri alınamaz."
+    },
+    "location": {
+      "title": "Konum"
+    },
+    "comments": {
+      "title": "Yorumlar ({{count}})",
+      "empty": "Henüz yorum yok. Cevap veren ilk kişi olun.",
+      "delete_title": "Yorumu Sil",
+      "placeholder": "Yorum yazın...",
+      "posting": "GÖndeiriliyor...",
+      "post": "Yorum Gönder"
+    }
+  },
+  "help_requests": {
+    "header": {
+      "back": "Menü",
+      "title": "Yardı Merkezi",
+      "new_request": "+ Yeni Talep",
+      "new_offer": "+ Yeni Teklif",
+      "cancel": "İptal"
+    },
+    "tabs": {
+      "requests": "Talepler",
+      "offers": "Teklifler"
+    },
+    "hub_context": "{{tab}} gösteriliyor",
+    "categories": {
+      "all": "Tüm Kategoriler",
+      "medical": "Medikal",
+      "food": "Yemek",
+      "shelter": "Sığınak",
+      "transport": "Ulaşım"
+    },
+    "time": {
+      "just_now": "Şimdi",
+      "m_ago": "{{count}}d önce",
+      "h_ago": "{{count}}s önce",
+      "d_ago": "{{count}}g önce"
+    },
+    "urgency": {
+      "low": "Düşük",
+      "medium": "Orta",
+      "high": "Yüksek"
+    },
+    "status": {
+      "open": "Açık",
+      "expert_responding": "Uzman İlgileniyor",
+      "resolved": "Çözümlendi"
+    },
+    "availability_status": {
+      "safe": "Güvenli",
+      "needs_help": "Yardıma İhtiyacı var",
+      "available": "Yardım Etmeye Müsait"
+    },
+    "labels": {
+      "expert": "Uzman",
+      "deleting": "Siliniyor...",
+      "delete": "Sil"
+    },
+    "requests_tab": {
+      "loading": "Yardım talepleri yükleniyor...",
+      "error_fetch": "Yardım talepleri yüklenemedi.",
+      "error_network": "Bağlantı hatası. Lütfen tekrar deneyin.",
+      "empty_title": "Yardım talebi bulunamadı",
+      "empty_filter": "Başka bir kategori seçmeyi deneyin.",
+      "empty_hub": "Merkezinizde henüz bir yardım talebi yok."
+    },
+    "offers_tab": {
+      "loading": "Yardım teklifleri yükleniyor...",
+      "error_fetch": "Yardım teklfileri yüklenemedi.",
+      "error_network": "Bağlantı hatası. Lütfen tekrar deneyin.",
+      "empty_title": "Yardım teklifi bulunamadı",
+      "empty_filter": "Başka bir kategori seçmeyi deneyin.",
+      "empty_hub": "İlk yardım teklif eden siz olun!",
+      "form": {
+        "title": "Teklif Oluştur",
+        "category": "Kategori",
+        "skill": "Yetenek ya da Kaynak",
+        "skill_placeholder": "ör. İlk Yardım, Araç, Sığınak",
+        "desc": "Açıklama",
+        "desc_placeholder": "Ne sağlayabileceğinizi açıklayın...",
+        "availability": "Müsaitlik",
+        "avail_placeholder": "— Müsaitlik seçin —",
+        "posting": "Gönderiliyor...",
+        "post": "Teklif Gönder",
+        "error_skill": "Yetenek ya da kaynak gerekli.",
+        "error_desc": "Açıklama gerekli.",
+        "error_avail": "Müsaitlik gerekli.",
+        "error_submit": "Yardım teklifi oluşturulamadı."
+      },
+      "avail_options": {
+        "24_7": "7/24",
+        "weekdays": "Hafta içi",
+        "weekends": "Hafta sonu",
+        "mornings": "Sabahları",
+        "evenings": "Akşamları",
+        "on_call": "Arama ile"
+      },
+      "modal": {
+        "availability": "Müsaitlik",
+        "offered_by": "Teklif eden:",
+        "posted": "Gönderildi"
+      }
+    }
+  },
+  "my_posts": {
+    "header": {
+      "title": "Gönderilerim",
+      "back": "Geri"
+    },
+    "tabs": {
+      "posts": "Forum Gönderileri",
+      "requests": "Yardım Talepleri",
+      "offers": "Yardım Teklifleri"
+    },
+    "tab_names": {
+      "posts": "gönderiler",
+      "requests": "talepler",
+      "offers": "teklifler"
+    },
+    "states": {
+      "loading": "Yükleniyor...",
+      "empty": "{{tab}} henüz yok."
+    },
+    "forum_types": {
+      "global": "Global",
+      "standard": "Standart",
+      "urgent": "Acil"
+    },
+    "urgency": {
+      "low": "Düşük",
+      "medium": "Orta",
+      "high": "Yüksek"
+    },
+    "status": {
+      "open": "Açık",
+      "expert_responding": "Uzman ilgileniyor",
+      "resolved": "Çözümlendi"
+    },
+    "categories": {
+      "medical": "Medikal",
+      "food": "Yemek",
+      "shelter": "Sığınak",
+      "transport": "Ulaşım"
+    },
+    "time": {
+      "just_now": "şimdi",
+      "m_ago": "{{count}}d önce",
+      "h_ago": "{{count}}s önce",
+      "d_ago": "{{count}}g önce"
+    },
+    "meta": {
+      "upvotes": "{{count}} beğeni",
+      "comments": "{{count}} yorum",
+      "reposts": "{{count}} yeniden gönderi"
+    },
+    "modal": {
+      "availability": "Müsaitlik",
+      "posted": "GÖnderildi"
+    }
+  },
+  "post_create": {
+    "types": {
+      "global": "Global",
+      "standard": "Standart",
+      "urgent": "Acil"
+    },
+    "header": {
+      "title": "Yeni {{type}} Gönderi",
+      "subtitle_global": "Herkese görünür (tüm merkezler)",
+      "subtitle_hub": "{{hub}} merkezine göndeirliyor",
+      "subtitle_hub_fallback": "…"
+    },
+    "errors": {
+      "upload_failed": "GÖrsel yüklenemedi.",
+      "title_required": "Başlık gereklidir.",
+      "content_required": "İçerik gereklidir.",
+      "select_hub": "Lütfen önce merkez seçin.",
+      "create_failed": "Gönderi oluşturulamadı."
+    },
+    "labels": {
+      "title": "Başlık",
+      "content": "İçerik",
+      "images": "Görseller",
+      "optional": "tercihi"
+    },
+    "placeholders": {
+      "title": "Ne Oluyor?",
+      "content": "Durumu açıklayın, bilgi paylaşın ya d ayardım isteyin...",
+      "image_urls": "Ya da buraya her satırda bir adet olacak şekilde görsel URL'leri yükleyin"
+    },
+    "actions": {
+      "uploading": "Yükleniyor...",
+      "upload": "Cihazdan yükle",
+      "remove": "Kaldır",
+      "creating": "Oluşturuluyor...",
+      "create": "Gönderi Oluştur",
+      "back": "Foruma Dön"
+    }
+  },
+  "post_detail": {
+    "states": {
+      "loading": "Yükleniyor...",
+      "not_found": "Gönderi bulunamadı.",
+      "edited": "(değiştirildi)",
+      "reposted": "Yeniden Gönderildi"
+    },
+    "actions": {
+      "back": "Geri",
+      "edit": "Değiştir",
+      "delete": "Sil",
+      "cancel": "İptal",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor...",
+      "upload": "Cihazdan Yükle",
+      "uploading": "Yükleniyor...",
+      "remove": "Kaldır",
+      "share": "Paylaş",
+      "copied": "Kopyalandı!",
+      "repost": "Yeniden Gönder",
+      "repost_error": "Yeniden Gönderilemedi.",
+      "report": "Bildir"
+    },
+    "time": {
+      "just_now": "şimdi",
+      "m_ago": "{{count}}d önce",
+      "h_ago": "{{count}}s önce",
+      "d_ago": "{{count}}g önce"
+    },
+    "availability": {
+      "safe": "Güvenli",
+      "needs_help": "Yardıma İhtiyacı Var",
+      "available": "Yardım Etmeye Müsait"
+    },
+    "labels": {
+      "reposted_from": "Şu Kişiden Yeniden Gönderildi:",
+      "expert": "Uzman",
+      "images": "Görseller",
+      "title": "Başlık",
+      "content": "İçerik",
+      "upvote": "Beğen",
+      "downvote": "Beğenme"
+    },
+    "counts": {
+      "repost_single": "{{count}} yeniden gönderi",
+      "repost_plural": "{{count}} yeniden gönderi",
+      "comments": "({{count}}) yorum"
+    },
+    "comments": {
+      "placeholder": "Yorum yaz...",
+      "post": "Yorum Gönder",
+      "posting": "Gönderiliyor...",
+      "empty": "Henüz yorum yok. İlk siz olun!",
+      "delete_title": "Yorumu sil"
+    },
+    "delete_modal": {
+      "title": "Gönderiyi Sil",
+      "desc": "GÖnderiyi silmek istediğinize emin misiniz? Bu geri alınamaz."
+    },
+    "report_modal": {
+      "title": "Bu gönderiyi yeniden gönder",
+      "reason": "Sebep",
+      "submit": "Gönder",
+      "success": "Bildiri göndeirldi. Teşekkürler.",
+      "error": "Bildiri gönderilemedi.",
+      "options": {
+        "spam": "Spam",
+        "misinformation": "Yanlış bilgilendirme",
+        "abuse": "Suistimal",
+        "irrelevant": "Alakasız"
+      }
+    }
+  },
+  "sign_in": {
+    "loading": "Yükleniyor…",
+    "header": {
+      "title": "Tekrar Hoş Geldiniz",
+      "subtitle": "Acil Durum Merkezi hesabınıza giriş yapın"
+    },
+    "labels": {
+      "email": "Email",
+      "password": "Şifre"
+    },
+    "placeholders": {
+      "email": "isim@ornek.com",
+      "password": "Şifreniz"
+    },
+    "actions": {
+      "hide_password": "Şifreyi gizle",
+      "show_password": "Şifreyi göster",
+      "signing_in": "Giriş yapılıyor…",
+      "sign_in": "Giriş Yap",
+      "sign_up": "Kayıt Ol"
+    },
+    "errors": {
+      "empty_fields": "Lütfen hem email hem de şifreyi girin.",
+      "invalid_credentials": "Geçersiz email ya da şifre"
+    },
+    "footer": {
+      "no_account": "Hesabınız yok mu?"
+    }
+  },
+  "sign_up": {
+    "loading": "Yükleniyor…",
+    "header": {
+      "title": "Hesap Oluştur",
+      "subtitle": "Çevre acil durum merkezinize katılın"
+    },
+    "success": "Hesap oluşturuldu! Giriş yap sayfasına yönlendiriliyor…",
+    "labels": {
+      "full_name": "Tam İsim",
+      "email": "Email",
+      "password": "Şifre",
+      "confirm_password": "Şifreyi onayla",
+      "role": "Rol",
+      "hub": "Merkez (Şehir)",
+      "expertise_field": "Uzmanlık Alanı",
+      "neighborhood_address": "Çevre / Adres",
+      "optional": "tercihi"
+    },
+    "placeholders": {
+      "full_name": "ör. Ali Yavuz",
+      "email": "ali@ornek.com",
+      "password": "En az 8 karakter",
+      "confirm_password": "Şifreyi tekrar girin",
+      "select_hub": "Merkez seçin",
+      "expertise_field": "ör. Tıp Doktoru",
+      "neighborhood_address": "ör. Sarıyer, İstanbul"
+    },
+    "roles": {
+      "standard": "Standart",
+      "expert": "Uzman"
+    },
+    "actions": {
+      "hide_password": "Şifreyi gizle",
+      "show_password": "Şifreyi göster",
+      "signing_up": "Hesap Oluştur…",
+      "sign_up": "Kayıt Ol",
+      "sign_in": "Giriş Yap"
+    },
+    "errors": {
+      "full_name_req": "Tam isim gereklidir.",
+      "email_req": "Email gereklidir.",
+      "password_req": "Şifre gereklidir.",
+      "password_min": "Şifre en az  8 karakter olmalıdır.",
+      "password_match": "Şifreler uyuşmuyor.",
+      "expertise_req": "Uzman kullanıcılar uzmanlık alanını belirtmelidir.",
+      "failed": "Kayıt yapılamadı"
+    },
+    "footer": {
+      "already_have_account": "Zaten hesabınız var mı?"
+    }
+  },
   "user_profile": {
     "status": {
       "safe": "Güvenli",
@@ -253,6 +705,103 @@
     "phone_validation": {
       "invalid": "Geçerli bir telefon numarası girin (ör. +90 555 123 4567)",
       "length": "6–15 karakter arasında olmalı"
+    }
+  },
+  "emergency_info": {
+    "header": {
+      "back": "Geri",
+      "title": "Acil Durum Bilgileri",
+      "subtitle": "Çevrimdışı kritik bilgi erişimi"
+    },
+    "sections": {
+      "checklist": {
+        "title": "Acil Durumda Yapılacaklar Listesi",
+        "desc": "İlk yardım kılavuzu: taşıma becerileri, kontrol, kalp masajı, ve ABC kontrolü"
+      },
+      "map": {
+        "title": "Harita",
+        "desc": "Yakınlardaki yardım imkanlarını ve tehlike bölgelerini görüntüleyin"
+      }
+    }
+  },
+  "checklist": {
+    "header": {
+      "title": "Acil Durumda Yapılacaklar Listesi",
+      "back": "Başlıklar"
+    },
+    "subtitle": "Adım adım ilk yardım kılavuzunu görüntülemek için tıklayın.",
+    "topics": {
+      "displacement": {
+        "title": "Taşıma Becerileri",
+        "summary": "Yaralılar güvenli bir noktaya nasıl taşınır",
+        "text": "Eğer etrafta tehlikeler mevcutsa (yangın, elektrik kaçağı vs.) mağdurun gerekli ilk yardımın uygulanabileceği güvenli bir yere taşınması gerekir (ilk yardımı uygulayacak kişinin de güvenliği göz önünde bulundurularak), .\n\n— Ciddi bir omurga hasarı söz konusu ise: mağdurun omurgasında ciddi bir hasar söz konusu ise (sırtta boyun ya da omurga üzerinde), gerekli olmadıkça mağdur hareket ettirilmemelidir. Eğer taşınma gerekliyse olabilidiğince az ve minimal olmalıdır. Bu önlemler mağdurun gelecekte yaşayabileceği bazı hareketsizlik veya felçleri engellemek içindir.\n\nGenel olarak mağdurun yeterince sert bir zeminde sırt üstü, yüzü göğe bakacak şekilde konumlandıırlması gerekmektedir."
+      },
+      "checking": {
+        "title": "Kontrol Becerileri",
+        "summary": "Mağdurun durumunu ve hayati tehlikelerini gözden geçirin",
+        "text": "Hayati tehlikelere öncelik vererek mağdurun durumunu kontorl edin.\n\n• Bilinci Ölçün: Mağdurun omzuna sertçe dokunun ve yüksek sesle seslenin: \"Beni duyabiliyor musun?\"\n\n• Kanamayı Kontrol Edin: Eğer mağdurun ciddi kanamaya sebep olan bir yarası mevcut ise hemen ilgilenilmesi gerekir (yaraya kan akışını engellemek amacıyla basınç uygulayın).\n\n• Nabzı Kontrol Edin: Eğer mağdur tepkisizse, ikişer parmağı boynun her iki yanına koyarak nabzı kontrol edin ya da bilek altından nabzı kontrol edin.\n\n• Solunum Kontrolü: Kulağınızı mağdurun ağzına yaklaştırarak nefes alış verişi dinleyin ve göğüs hareketlerine dikkat edin.\n\nÖNEMLİ: Kontrol ile fazla zaman kaybetmeyin. Gerekli tepkiyi vermeden önce solunum ve dolaşım kontorlğ için 10 saniyeden fazla zaman harcamayın."
+      },
+      "cpr": {
+        "title": "Kalp Masajı",
+        "summary": "Bilinci yerinde olmayan mağdura adım adım kalp masajı rehberi",
+        "text": "1. Bir elin avucunu göğse yerleştirin.\n\n2. Diğer eli elinizin üstüne koyun ve parmakları iç içe geçirin.\n\n3. En az 4cm içeri oalcak şekilde hızlı ve sertçe dakikada 100-120 kez ittirin.\n\n4. İttirmeler arasına göğsün tamamen genleşmesine izin verin.\n\n5. Eğer eğitimliyseniz, her 30 ittirme arasında 2 kere suni teneffüs uygulayın."
+      },
+      "abc": {
+        "title": "ABC Kontrolü",
+        "summary": "Havayolu (Airway), Nefes Alma (Breathing), Kan Dolaşımı (Circulation) — Acil Durumlarda Hayat Kontrolü",
+        "text": "A — HAVAYOLU: Havayolunu açmak için hafifçe kafayı geri yatırın ve ve çeneyi kaldırın.\n\nB — NEFES ALMA: Normal nefes alış-verişi kontrol etmek için 10 saniye kadar nefes alıp vermeyi dinleyin.\n\nC — DOLAŞIM: Ciddi bir kanama olup olmadığını kontrol edin. Eğer mağdur normal bir şekilde nefes almıyorsa hemen kalp masajına başlayın.\n\n\nHAYATI KORUMA\n\nMağdurun havayolu açık olmalı. Bilinçli insanların vücutları bunu istemsizce sağlasa da bilinci kapalı insanların havayolu kapanabilir.\n\n• Kurtarış Pozisyonu: Mağdur sırt yerine yan yatırılabilir Bu kurbanı rahatlatır ve dilin gırtlağa kaçmasını önler Aynı zamanda mağdurun kendi kusmuğunda boğulmasını önler.\n\n• Boğulma: Havayolu yabancı bir madde sebebiyle kapanabilir. Açmak için boğulma karşıtı metotlar uygulanmalıdır (sırta vurma, göğüs ya da karnı ittirme).\n\n• Kalp Masajına Geçiş: Havayolu açıldıktan sonra tekrar mağdurun teneffüsünü kontrol edin. Eğer nefes alıp verilmiyorsa veya anormal bir durum söz konusu ise (e.g., düzensiz nefes alma), havayı ciğerlere yönlendirmek ve kan dolaşımını başlatmak için kalp masajına başlayın."
+      }
+    }
+  },
+  "emergency_map": {
+    "header": {
+      "back": "Menü",
+      "title": "Acil Durum Bilgileri",
+      "subtitle": "{{radius}} km mesafedeki acil durum tesisleri. Yakınınızdaki tesisleri görmek için konum servislerine izin verin."
+    },
+    "types": {
+      "hospital": "Hastane",
+      "gathering": "Toplanma Noktası",
+      "shelter": "Sığınak",
+      "fire_station": "İtfaiye Merkezi",
+      "police": "Polis Merkezi"
+    },
+    "location": {
+      "detecting": "Konum tespit ediliyor…",
+      "refresh": "Konumu Yenile",
+      "gps": "GPS",
+      "hub": "merkez",
+      "resolving": "{{name}} çözümleniyor…",
+      "not_found": "Konum belirlenemedi"
+    },
+    "states": {
+      "fetching": "Yakınlardaki acil durum tesisleri tespit ediliyor…",
+      "rate_limited": "Overpass API tarafından sınırlandırıldı. Birazdan tekrar deneyin.",
+      "timeout": "Overpass API zaman aşımına uğradı (504). Tekrar deneniyor…",
+      "unknown": "Bilinmiyor"
+    },
+    "card": {
+      "nearest": "En yakın {{type}}",
+      "distance": "{{dist}} km",
+      "away": "{{dist}} km uzakta",
+      "directions": "Yön"
+    },
+    "toggles": {
+      "show_map": "Haritayı Göster",
+      "hide_map": "Haritayı Gizle",
+      "show_list": "Listeyi Göster",
+      "hide_list": "Listeyi Gizle",
+      "all": "Hepsi"
+    },
+    "map_popup": {
+      "your_location": "Konumunuz",
+      "get_directions": "Yönü al"
+    },
+    "empty": {
+      "no_filter_match_title": "Bu türde tesis bulunamadı",
+      "no_filter_match_desc": "Başka bir kategori seçmeyi deneyin.",
+      "no_facilities_title": "Yakınlarda tesis bulunamadı.",
+      "no_facilities_desc": "Konumunuza {{radius}} km mesafede acil durum tesisi bulunamadı."
     }
   }
 }

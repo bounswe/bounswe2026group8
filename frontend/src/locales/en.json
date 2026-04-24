@@ -99,6 +99,458 @@
       "back_to_dashboard": "Back to Dashboard"
     }
   },
+  "help_request_create": {
+    "header": {
+      "back": "Back",
+      "title": "New Help Request"
+    },
+    "labels": {
+      "title": "Title",
+      "description": "Description",
+      "images": "Images",
+      "category": "Category",
+      "urgency": "Urgency",
+      "location_text": "Location description",
+      "coordinates": "Coordinates",
+      "optional": "optional"
+    },
+    "placeholders": {
+      "title": "Brief summary of your request",
+      "description": "Describe what help you need...",
+      "location_text": "e.g. Near Central Park entrance"
+    },
+    "actions": {
+      "upload": "Upload from Device",
+      "uploading": "Uploading...",
+      "remove": "Remove",
+      "use_location": "Use my location",
+      "locating": "Locating...",
+      "submit": "Submit Request",
+      "submitting": "Submitting..."
+    },
+    "categories": {
+      "medical": "Medical",
+      "food": "Food",
+      "shelter": "Shelter",
+      "transport": "Transport"
+    },
+    "urgencies": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "errors": {
+      "title_required": "Title is required.",
+      "description_required": "Description is required.",
+      "upload_failed": "Image upload failed.",
+      "submit_failed": "Failed to create help request."
+    },
+    "location_status": {
+      "not_supported": "Geolocation is not supported by your browser.",
+      "captured": "Location captured.",
+      "failed": "Could not get location: {{message}}"
+    }
+  },
+  "help_request_detail": {
+    "header": {
+      "back": "Back",
+      "title": "Request Detail"
+    },
+    "states": {
+      "loading": "Loading...",
+      "not_found": "Request not found.",
+      "fetch_failed": "Failed to load request.",
+      "network_error": "Network error. Please try again.",
+      "post_failed": "Failed to post comment."
+    },
+    "time": {
+      "just_now": "Just now",
+      "m_ago": "{{count}}m ago",
+      "h_ago": "{{count}}h ago",
+      "d_ago": "{{count}}d ago"
+    },
+    "labels": {
+      "by": "By ",
+      "expert": "Expert",
+      "hub": "Hub: "
+    },
+    "urgency": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "status": {
+      "open": "Open",
+      "expert_responding": "Expert Responding",
+      "resolved": "Resolved"
+    },
+    "availability": {
+      "safe": "Safe",
+      "needs_help": "Needs Help",
+      "available": "Available"
+    },
+    "actions": {
+      "resolving": "Resolving...",
+      "mark_resolved": "Mark as Resolved",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "modal": {
+      "title": "Delete Request",
+      "desc": "Are you sure you want to delete this help request? This cannot be undone."
+    },
+    "location": {
+      "title": "Location"
+    },
+    "comments": {
+      "title": "Comments ({{count}})",
+      "empty": "No comments yet. Be the first to respond.",
+      "delete_title": "Delete comment",
+      "placeholder": "Write a comment...",
+      "posting": "Posting...",
+      "post": "Post Comment"
+    }
+  },
+  "help_requests": {
+    "header": {
+      "back": "Dashboard",
+      "title": "Help Center",
+      "new_request": "+ New Request",
+      "new_offer": "+ New Offer",
+      "cancel": "Cancel"
+    },
+    "tabs": {
+      "requests": "Requests",
+      "offers": "Offers"
+    },
+    "hub_context": "Showing {{tab}} for",
+    "categories": {
+      "all": "All Categories",
+      "medical": "Medical",
+      "food": "Food",
+      "shelter": "Shelter",
+      "transport": "Transport"
+    },
+    "time": {
+      "just_now": "Just now",
+      "m_ago": "{{count}}m ago",
+      "h_ago": "{{count}}h ago",
+      "d_ago": "{{count}}d ago"
+    },
+    "urgency": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "status": {
+      "open": "Open",
+      "expert_responding": "Expert Responding",
+      "resolved": "Resolved"
+    },
+    "availability_status": {
+      "safe": "Safe",
+      "needs_help": "Needs Help",
+      "available": "Available"
+    },
+    "labels": {
+      "expert": "Expert",
+      "deleting": "Deleting...",
+      "delete": "Delete"
+    },
+    "requests_tab": {
+      "loading": "Loading help requests...",
+      "error_fetch": "Failed to load help requests.",
+      "error_network": "Network error. Please try again.",
+      "empty_title": "No help requests found",
+      "empty_filter": "Try selecting a different category.",
+      "empty_hub": "There are no help requests in your hub yet."
+    },
+    "offers_tab": {
+      "loading": "Loading help offers...",
+      "error_fetch": "Failed to load help offers.",
+      "error_network": "Network error. Please try again.",
+      "empty_title": "No help offers found",
+      "empty_filter": "Try selecting a different category.",
+      "empty_hub": "Be the first to offer help in your hub!",
+      "form": {
+        "title": "Create an Offer",
+        "category": "Category",
+        "skill": "Skill or Resource",
+        "skill_placeholder": "e.g. First Aid, Vehicle, Shelter space",
+        "desc": "Description",
+        "desc_placeholder": "Describe what you can provide...",
+        "availability": "Availability",
+        "avail_placeholder": "— Select availability —",
+        "posting": "Posting...",
+        "post": "Post Offer",
+        "error_skill": "Skill or resource is required.",
+        "error_desc": "Description is required.",
+        "error_avail": "Availability is required.",
+        "error_submit": "Failed to create help offer."
+      },
+      "avail_options": {
+        "24_7": "24/7",
+        "weekdays": "Weekdays",
+        "weekends": "Weekends",
+        "mornings": "Mornings",
+        "evenings": "Evenings",
+        "on_call": "On-call"
+      },
+      "modal": {
+        "availability": "Availability",
+        "offered_by": "Offered by",
+        "posted": "Posted"
+      }
+    }
+  },
+  "my_posts": {
+    "header": {
+      "title": "My Posts",
+      "back": "Back"
+    },
+    "tabs": {
+      "posts": "Forum Posts",
+      "requests": "Help Requests",
+      "offers": "Help Offers"
+    },
+    "tab_names": {
+      "posts": "posts",
+      "requests": "requests",
+      "offers": "offers"
+    },
+    "states": {
+      "loading": "Loading...",
+      "empty": "No {{tab}} yet."
+    },
+    "forum_types": {
+      "global": "Global",
+      "standard": "Standard",
+      "urgent": "Urgent"
+    },
+    "urgency": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "status": {
+      "open": "Open",
+      "expert_responding": "Expert Responding",
+      "resolved": "Resolved"
+    },
+    "categories": {
+      "medical": "Medical",
+      "food": "Food",
+      "shelter": "Shelter",
+      "transport": "Transport"
+    },
+    "time": {
+      "just_now": "just now",
+      "m_ago": "{{count}}m ago",
+      "h_ago": "{{count}}h ago",
+      "d_ago": "{{count}}d ago"
+    },
+    "meta": {
+      "upvotes": "{{count}} upvotes",
+      "comments": "{{count}} comments",
+      "reposts": "{{count}} reposts"
+    },
+    "modal": {
+      "availability": "Availability",
+      "posted": "Posted"
+    }
+  },
+  "post_create": {
+    "types": {
+      "global": "Global",
+      "standard": "Standard",
+      "urgent": "Urgent"
+    },
+    "header": {
+      "title": "New {{type}} Post",
+      "subtitle_global": "Visible to everyone (all hubs)",
+      "subtitle_hub": "Posting to {{hub}}",
+      "subtitle_hub_fallback": "…"
+    },
+    "errors": {
+      "upload_failed": "Image upload failed.",
+      "title_required": "Title is required.",
+      "content_required": "Content is required.",
+      "select_hub": "Please select a hub first.",
+      "create_failed": "Failed to create post."
+    },
+    "labels": {
+      "title": "Title",
+      "content": "Content",
+      "images": "Images",
+      "optional": "optional"
+    },
+    "placeholders": {
+      "title": "What's happening?",
+      "content": "Describe the situation, share info, or ask for help...",
+      "image_urls": "Or paste image URLs here, one per line"
+    },
+    "actions": {
+      "uploading": "Uploading...",
+      "upload": "Upload from Device",
+      "remove": "Remove",
+      "creating": "Creating...",
+      "create": "Create Post",
+      "back": "Back to Forum"
+    }
+  },
+  "post_detail": {
+    "states": {
+      "loading": "Loading...",
+      "not_found": "Post not found.",
+      "edited": "(edited)",
+      "reposted": "Reposted"
+    },
+    "actions": {
+      "back": "Back",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving...",
+      "upload": "Upload from Device",
+      "uploading": "Uploading...",
+      "remove": "Remove",
+      "share": "Share",
+      "copied": "Copied!",
+      "repost": "Repost",
+      "repost_error": "Could not repost.",
+      "report": "Report"
+    },
+    "time": {
+      "just_now": "just now",
+      "m_ago": "{{count}}m ago",
+      "h_ago": "{{count}}h ago",
+      "d_ago": "{{count}}d ago"
+    },
+    "availability": {
+      "safe": "Safe",
+      "needs_help": "Needs Help",
+      "available": "Available"
+    },
+    "labels": {
+      "reposted_from": "Reposted from",
+      "expert": "Expert",
+      "images": "Images",
+      "title": "Title",
+      "content": "Content",
+      "upvote": "Upvote",
+      "downvote": "Downvote"
+    },
+    "counts": {
+      "repost_single": "{{count}} repost",
+      "repost_plural": "{{count}} reposts",
+      "comments": "Comments ({{count}})"
+    },
+    "comments": {
+      "placeholder": "Write a comment...",
+      "post": "Post Comment",
+      "posting": "Posting...",
+      "empty": "No comments yet. Be the first!",
+      "delete_title": "Delete comment"
+    },
+    "delete_modal": {
+      "title": "Delete Post",
+      "desc": "Are you sure you want to delete this post? This cannot be undone."
+    },
+    "report_modal": {
+      "title": "Report this post",
+      "reason": "Reason",
+      "submit": "Submit",
+      "success": "Report submitted. Thank you.",
+      "error": "Could not submit report.",
+      "options": {
+        "spam": "Spam",
+        "misinformation": "Misinformation",
+        "abuse": "Abuse",
+        "irrelevant": "Irrelevant"
+      }
+    }
+  },
+  "sign_in": {
+    "loading": "Loading…",
+    "header": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your emergency hub account"
+    },
+    "labels": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "placeholders": {
+      "email": "sheila@example.com",
+      "password": "Your password"
+    },
+    "actions": {
+      "hide_password": "Hide password",
+      "show_password": "Show password",
+      "signing_in": "Signing in…",
+      "sign_in": "Sign In",
+      "sign_up": "Sign Up"
+    },
+    "errors": {
+      "empty_fields": "Please enter both email and password.",
+      "invalid_credentials": "Invalid email or password"
+    },
+    "footer": {
+      "no_account": "Don't have an account?"
+    }
+  },
+  "sign_up": {
+    "loading": "Loading…",
+    "header": {
+      "title": "Create Account",
+      "subtitle": "Join your neighbourhood emergency hub"
+    },
+    "success": "Account created! Redirecting to sign in…",
+    "labels": {
+      "full_name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "role": "Role",
+      "hub": "Hub (City)",
+      "expertise_field": "Expertise Field",
+      "neighborhood_address": "Neighbourhood / Address",
+      "optional": "optional"
+    },
+    "placeholders": {
+      "full_name": "e.g. Sheila Davis",
+      "email": "sheila@example.com",
+      "password": "Min. 8 characters",
+      "confirm_password": "Repeat your password",
+      "select_hub": "Select a hub",
+      "expertise_field": "e.g. Medical Doctor",
+      "neighborhood_address": "e.g. Sariyer, Istanbul"
+    },
+    "roles": {
+      "standard": "Standard",
+      "expert": "Expert"
+    },
+    "actions": {
+      "hide_password": "Hide password",
+      "show_password": "Show password",
+      "signing_up": "Creating account…",
+      "sign_up": "Sign Up",
+      "sign_in": "Sign In"
+    },
+    "errors": {
+      "full_name_req": "Full name is required.",
+      "email_req": "Email is required.",
+      "password_req": "Password is required.",
+      "password_min": "Password must be at least 8 characters.",
+      "password_match": "Passwords do not match.",
+      "expertise_req": "Expertise field is required for Expert users.",
+      "failed": "Registration failed"
+    },
+    "footer": {
+      "already_have_account": "Already have an account?"
+    }
+  },
   "user_profile": {
     "status": {
       "safe": "Safe",
@@ -253,6 +705,103 @@
     "phone_validation": {
       "invalid": "Enter a valid phone number (e.g. +90 555 123 4567)",
       "length": "Must be 6–15 digits"
+    }
+  },
+  "emergency_info": {
+    "header": {
+      "back": "Back",
+      "title": "Emergency Info",
+      "subtitle": "Critical information available offline"
+    },
+    "sections": {
+      "checklist": {
+        "title": "Emergency Checklist",
+        "desc": "First aid guides: displacement, checking vitals, CPR, and ABC protocol"
+      },
+      "map": {
+        "title": "Map",
+        "desc": "View nearby help resources and danger zones on the map"
+      }
+    }
+  },
+  "checklist": {
+    "header": {
+      "title": "Emergency Checklist",
+      "back": "Topics"
+    },
+    "subtitle": "Tap a topic to view the step-by-step first aid guide.",
+    "topics": {
+      "displacement": {
+        "title": "Displacement Skills",
+        "summary": "How to safely move an injured patient to a safe area",
+        "text": "If there are dangers around (such as fire, electric dangers or others) the patient has to be moved to a safe place (if it is safe for the first aid provider to do so), where providing the required first aid procedures is possible.\n\n— In case of a possible severe spinal injury: when a patient seems to have a possible serious injury in the spinal cord (in the backbone, either at the neck part or the back part), that patient must not be moved except if that is necessary. When necessary, it must be done as little as possible and very carefully. These precautions avoid many risks of causing further damages for the patient's mobility in the future.\n\nUsually, the patient needs to end up lying down, in a face-up position, on a sufficiently firm surface (for example, on the floor, which allows you to perform the chest compressions of cardiopulmonary resuscitation)."
+      },
+      "checking": {
+        "title": "Checking Skills",
+        "summary": "Evaluate the victim's condition and identify main threats to life",
+        "text": "Evaluate the condition of the victim, first attending to the main threats to life.\n\n• Check Responsiveness: Tap the patient firmly on the shoulder and shout loudly, such as: \"Can you hear me?\"\n\n• Control Severe Bleeding: If the victim has a wound that bleeds abundantly, this requires immediate treatment (begin by applying direct pressure to the wound).\n\n• Check Pulse: If the patient does not react, check the carotid pulse by placing two fingers on either side of the neck. Alternatively, check the radial pulse on the wrist, under the thumb.\n\n• Check Breathing: Place your ear near their mouth to listen/feel for air, while watching their chest to see if it rises and falls.\n\nCRITICAL: Do not waste too much time checking. You should take no more than 10 seconds to check for breathing and a pulse before taking further action."
+      },
+      "cpr": {
+        "title": "Cardiopulmonary Resuscitation",
+        "summary": "Step-by-step CPR procedure for an unresponsive victim",
+        "text": "1. Place the heel of one hand on the center of the chest.\n\n2. Place the other hand on top and interlace fingers.\n\n3. Push hard and fast — at least 2 inches deep, 100–120 compressions per minute.\n\n4. Let the chest rise completely between pushes.\n\n5. If trained, provide 2 rescue breaths after every 30 compressions."
+      },
+      "abc": {
+        "title": "ABC Protocol",
+        "summary": "Airway, Breathing, Circulation — preserve life in emergencies",
+        "text": "A — AIRWAY: Gently tilt the head back and lift the chin to open the airway.\n\nB — BREATHING: Look, listen, and feel for normal breathing for no more than 10 seconds.\n\nC — CIRCULATION: Check for severe bleeding. If the person is not breathing normally, begin CPR immediately.\n\n\nPRESERVING LIFE\n\nThe patient must have an open airway — an unobstructed passage that allows air to travel from the mouth/nose into the lungs. Conscious people maintain this automatically, but unconscious patients may be unable to do so.\n\n• The Recovery Position: The patient may be placed laying on their side. This relaxes the patient, clears the tongue from the pharynx, and avoids a common cause of death: choking on regurgitated stomach contents.\n\n• Choking: The airway can become blocked by a foreign object. To dislodge it, use anti-choking methods (such as back slaps, chest thrusts, or abdominal thrusts).\n\n• Transition to CPR: Once the airway has been opened, reassess the patient's breathing. If there is no breathing, or it is abnormal (e.g., agonal breathing), initiate CPR to force air into the lungs and manually pump blood around the body."
+      }
+    }
+  },
+  "emergency_map": {
+    "header": {
+      "back": "Dashboard",
+      "title": "Emergency Information",
+      "subtitle": "Nearby emergency facilities within {{radius}} km of your location. Allow location access to see facilities near you."
+    },
+    "types": {
+      "hospital": "Hospital",
+      "gathering": "Assembly Point",
+      "shelter": "Shelter",
+      "fire_station": "Fire Station",
+      "police": "Police Station"
+    },
+    "location": {
+      "detecting": "Detecting location…",
+      "refresh": "Refresh Location",
+      "gps": "GPS",
+      "hub": "hub",
+      "resolving": "Resolving {{name}}…",
+      "not_found": "Could not determine location"
+    },
+    "states": {
+      "fetching": "Fetching nearby emergency facilities…",
+      "rate_limited": "Rate limited by Overpass API. Try again in a minute.",
+      "timeout": "Overpass API timed out (504). Retrying…",
+      "unknown": "Unknown"
+    },
+    "card": {
+      "nearest": "Nearest {{type}}",
+      "distance": "{{dist}} km",
+      "away": "{{dist}} km away",
+      "directions": "Directions"
+    },
+    "toggles": {
+      "show_map": "Show Map",
+      "hide_map": "Hide Map",
+      "show_list": "Show List",
+      "hide_list": "Hide List",
+      "all": "All"
+    },
+    "map_popup": {
+      "your_location": "Your location",
+      "get_directions": "Get directions"
+    },
+    "empty": {
+      "no_filter_match_title": "No facilities of this type found",
+      "no_filter_match_desc": "Try selecting a different category.",
+      "no_facilities_title": "No facilities found nearby",
+      "no_facilities_desc": "No emergency facilities found within {{radius}} km of your location."
     }
   }
 }

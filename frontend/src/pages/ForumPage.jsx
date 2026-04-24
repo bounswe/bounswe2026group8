@@ -2,11 +2,11 @@ import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { getPosts, vote, repost, resolveImageUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { useTranslation } from 'react-i18next'; // 1. Import Hook
+import { useTranslation } from 'react-i18next';
 
 const STATUS_COLORS = { SAFE: '#34d399', NEEDS_HELP: '#f87171', AVAILABLE_TO_HELP: '#38bdf8' };
 
-// 2. Pass 't' into the helper component
+// Pass 't' into the helper component
 function AuthorStatus({ profile, t }) {
   const s = profile?.availability_status;
   if (!s || !STATUS_COLORS[s]) return null;
@@ -22,7 +22,7 @@ function AuthorStatus({ profile, t }) {
   return <span className="badge" style={{ color: c, borderColor: c + '44', background: c + '11', fontSize: '0.7rem', padding: '1px 6px' }}>● {STATUS_LABELS[s]}</span>;
 }
 
-// 3. Pass 't' into the time function
+// Pass 't' into the time function
 function timeAgo(dateStr, t) {
   const seconds = Math.floor((Date.now() - new Date(dateStr)) / 1000);
   if (seconds < 60) return t('forum.time.just_now');
