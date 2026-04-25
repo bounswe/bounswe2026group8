@@ -187,7 +187,7 @@
     "availability": {
       "safe": "Güvenli",
       "needs_help": "Yardıma İhtiyacı Var",
-      "available": "Yarım Etmeye Müsait"
+      "available": "Yardım Etmeye Müsait"
     },
     "actions": {
       "resolving": "Çözümleniyor...",
@@ -214,7 +214,7 @@
   "help_requests": {
     "header": {
       "back": "Menü",
-      "title": "Yardı Merkezi",
+      "title": "Yardım Merkezi",
       "new_request": "+ Yeni Talep",
       "new_offer": "+ Yeni Teklif",
       "cancel": "İptal"
