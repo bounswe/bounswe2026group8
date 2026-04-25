@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-le
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const RADIUS_KM = 5;
 const DEFAULT_LAT = 41.0105;
@@ -11,12 +12,13 @@ const DEFAULT_LON = 28.985;
 const CACHE_KEY = 'ei_cache';
 const CACHE_TTL_MS = 30 * 60 * 1000;
 
+// Extract the labels out of this metadata object and will map them dynamically in the component
 const TYPE_META = {
-  hospital:     { icon: '🏥', label: 'Hospital',       color: '#f87171' },
-  gathering:    { icon: '📍', label: 'Assembly Point',  color: '#38bdf8' },
-  shelter:      { icon: '🏠', label: 'Shelter',         color: '#34d399' },
-  fire_station: { icon: '🚒', label: 'Fire Station',    color: '#fb923c' },
-  police:       { icon: '🚔', label: 'Police Station',  color: '#a78bfa' },
+  hospital:     { icon: '🏥', color: '#f87171' },
+  gathering:    { icon: '📍', color: '#38bdf8' },
+  shelter:      { icon: '🏠', color: '#34d399' },
+  fire_station: { icon: '🚒', color: '#fb923c' },
+  police:       { icon: '🚔', color: '#a78bfa' },
 };
 
 const hubCoordsCache = {};
@@ -25,8 +27,8 @@ async function geocodeHub(name) {
   if (hubCoordsCache[name]) return hubCoordsCache[name];
   try {
     const resp = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(name)}`,
-      { headers: { 'User-Agent': 'EmergencyHub/1.0' } }
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(name)}`,
+        { headers: { 'User-Agent': 'EmergencyHub/1.0' } }
     );
     const data = await resp.json();
     if (data.length === 0) return null;
@@ -59,35 +61,39 @@ function haversineKm(lat1, lon1, lat2, lon2) {
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) *
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) *
       Math.cos((lat2 * Math.PI) / 180) *
       Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function parseOverpassResponse(json) {
+// Pass 't' down to translate the 'Unknown' fallback
+function parseOverpassResponse(json, t) {
   return (json?.elements ?? [])
-    .map((el) => {
-      try {
-        let lat, lon;
-        if (el.lat != null) { lat = el.lat; lon = el.lon; }
-        else if (el.center) { lat = el.center.lat; lon = el.center.lon; }
-        else return null;
-        const tags = el.tags || {};
-        const name = tags.name || tags['name:en'];
-        const amenity = tags.amenity;
-        const emergency = tags.emergency;
-        let type;
-        if (emergency === 'assembly_point') type = 'gathering';
-        else if (amenity === 'hospital' || amenity === 'clinic') type = 'hospital';
-        else if (amenity === 'fire_station') type = 'fire_station';
-        else if (amenity === 'police') type = 'police';
-        else type = 'shelter';
-        return { name: name || TYPE_META[type]?.label || 'Unknown', lat, lon, type };
-      } catch { return null; }
-    })
-    .filter(Boolean);
+      .map((el) => {
+        try {
+          let lat, lon;
+          if (el.lat != null) { lat = el.lat; lon = el.lon; }
+          else if (el.center) { lat = el.center.lat; lon = el.center.lon; }
+          else return null;
+          const tags = el.tags || {};
+          const name = tags.name || tags['name:en'];
+          const amenity = tags.amenity;
+          const emergency = tags.emergency;
+          let type;
+          if (emergency === 'assembly_point') type = 'gathering';
+          else if (amenity === 'hospital' || amenity === 'clinic') type = 'hospital';
+          else if (amenity === 'fire_station') type = 'fire_station';
+          else if (amenity === 'police') type = 'police';
+          else type = 'shelter';
+
+          // Dynamically fetch label from JSON
+          const typeLabel = t(`emergency_map.types.${type}`);
+          return { name: name || typeLabel || t('emergency_map.states.unknown'), lat, lon, type };
+        } catch { return null; }
+      })
+      .filter(Boolean);
 }
 
 function getCachedPoints(lat, lon) {
@@ -110,7 +116,8 @@ function setCachedPoints(lat, lon, points) {
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 3000;
 
-async function fetchGatheringPoints(lat, lon) {
+// 4. Pass 't' down to translate the API errors
+async function fetchGatheringPoints(lat, lon, t) {
   const cached = getCachedPoints(lat, lon);
   if (cached) return cached;
 
@@ -137,10 +144,10 @@ out center;`;
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `data=${encodeURIComponent(query)}`,
       });
-      if (resp.status === 429) { lastError = new Error('Rate limited by Overpass API. Try again in a minute.'); continue; }
-      if (resp.status === 504) { lastError = new Error('Overpass API timed out (504). Retrying…'); continue; }
+      if (resp.status === 429) { lastError = new Error(t('emergency_map.states.rate_limited')); continue; }
+      if (resp.status === 504) { lastError = new Error(t('emergency_map.states.timeout')); continue; }
       if (!resp.ok) throw new Error(`Overpass HTTP ${resp.status}`);
-      const points = parseOverpassResponse(await resp.json());
+      const points = parseOverpassResponse(await resp.json(), t);
       setCachedPoints(lat, lon, points);
       return points;
     } catch (e) {
@@ -150,33 +157,35 @@ out center;`;
   throw lastError;
 }
 
-
 function FlyTo({ lat, lon }) {
   const map = useMap();
   useEffect(() => { map.flyTo([lat, lon], 14, { duration: 1 }); }, [lat, lon, map]);
   return null;
 }
 
-function PointCard({ point, userLat, userLon }) {
+// 5. Pass 't' down to translate the card details
+function PointCard({ point, userLat, userLon, t }) {
   const dist = haversineKm(userLat, userLon, point.lat, point.lon);
-  const meta = TYPE_META[point.type] || { icon: '📌', label: point.type };
+  const meta = TYPE_META[point.type] || { icon: '📌' };
   const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${point.lat},${point.lon}`;
   return (
-    <div className="ei-point-card">
-      <span className="ei-point-icon">{meta.icon}</span>
-      <div className="ei-point-body">
-        <span className="ei-point-name">{point.name}</span>
-        <span className="ei-point-dist">{dist.toFixed(2)} km away</span>
+      <div className="ei-point-card">
+        <span className="ei-point-icon">{meta.icon}</span>
+        <div className="ei-point-body">
+          <span className="ei-point-name">{point.name}</span>
+          <span className="ei-point-dist">{t('emergency_map.card.away', { dist: dist.toFixed(2) })}</span>
+        </div>
+        <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-secondary">
+          {t('emergency_map.card.directions')}
+        </a>
       </div>
-      <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-secondary">
-        Directions
-      </a>
-    </div>
   );
 }
 
 export default function EmergencyMapPage() {
   const { user } = useAuth();
+  const { t } = useTranslation(); // 6. Initialize hook
+
   const [points, setPoints] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -188,11 +197,12 @@ export default function EmergencyMapPage() {
   const [showList, setShowList] = useState(false);
   const [showMap, setShowMap] = useState(false);
 
+  // 7. Pass 't' into the load function
   const load = useCallback(async (lat, lon) => {
     setLoading(true);
     setError(null);
     try {
-      const pts = await fetchGatheringPoints(lat, lon);
+      const pts = await fetchGatheringPoints(lat, lon, t);
       pts.sort((a, b) => haversineKm(lat, lon, a.lat, a.lon) - haversineKm(lat, lon, b.lat, b.lon));
       setPoints(pts);
     } catch (e) {
@@ -200,7 +210,7 @@ export default function EmergencyMapPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const applyLocation = useCallback((lat, lon, status) => {
     setUserLat(lat);
@@ -215,28 +225,28 @@ export default function EmergencyMapPage() {
       fallbackToHub();
       return;
     }
-    setLocationStatus('Detecting location…');
+    setLocationStatus(t('emergency_map.location.detecting'));
     navigator.geolocation.getCurrentPosition(
-      (pos) => applyLocation(
-        pos.coords.latitude, pos.coords.longitude,
-        `GPS (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`
-      ),
-      () => fallbackToHub(),
-      { enableHighAccuracy: true, timeout: 10000 }
+        (pos) => applyLocation(
+            pos.coords.latitude, pos.coords.longitude,
+            `${t('emergency_map.location.gps')} (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`
+        ),
+        () => fallbackToHub(),
+        { enableHighAccuracy: true, timeout: 10000 }
     );
 
     async function fallbackToHub() {
       if (user?.hub?.name) {
-        setLocationStatus(`Resolving ${user.hub.name}…`);
+        setLocationStatus(t('emergency_map.location.resolving', { name: user.hub.name }));
         const coords = await geocodeHub(user.hub.name);
         if (coords) {
-          applyLocation(coords.lat, coords.lon, `${user.hub.name} (hub)`);
+          applyLocation(coords.lat, coords.lon, `${user.hub.name} (${t('emergency_map.location.hub')})`);
           return;
         }
       }
-      setLocationStatus('Could not determine location');
+      setLocationStatus(t('emergency_map.location.not_found'));
     }
-  }, [applyLocation]);
+  }, [applyLocation, user, t]);
 
   useEffect(() => { tryGps(); }, [tryGps]);
 
@@ -251,138 +261,132 @@ export default function EmergencyMapPage() {
 
   const markerIcons = useMemo(() => {
     const icons = {};
-    for (const t of Object.keys(TYPE_META)) icons[t] = makeIcon(t);
+    for (const type of Object.keys(TYPE_META)) icons[type] = makeIcon(type);
     return icons;
   }, []);
 
   return (
-    <div className="page ei-page">
-      <Link to="/dashboard" className="post-back-link">← Dashboard</Link>
-      <h1 className="ei-title">Emergency Information</h1>
-      <p className="ei-subtitle">Nearby emergency facilities within {RADIUS_KM} km of your location. Allow location access to see facilities near you.</p>
+      <div className="page ei-page">
+        <Link to="/dashboard" className="post-back-link">← {t('emergency_map.header.back')}</Link>
+        <h1 className="ei-title">{t('emergency_map.header.title')}</h1>
+        <p className="ei-subtitle">{t('emergency_map.header.subtitle', { radius: RADIUS_KM })}</p>
 
-      {/* Location bar */}
-      <div className="ei-location-bar">
-        <span className="ei-location-icon">📍</span>
-        <span className="ei-location-text">{locationStatus || 'Detecting location…'}</span>
-        <button className="btn btn-sm btn-secondary" onClick={tryGps}>Refresh Location</button>
-      </div>
-
-      {/* Loading */}
-      {loading && (
-        <div className="ei-loading">
-          <div className="ei-spinner" />
-          <p>Fetching nearby emergency facilities…</p>
+        <div className="ei-location-bar">
+          <span className="ei-location-icon">📍</span>
+          <span className="ei-location-text">{locationStatus || t('emergency_map.location.detecting')}</span>
+          <button className="btn btn-sm btn-secondary" onClick={tryGps}>{t('emergency_map.location.refresh')}</button>
         </div>
-      )}
 
-      {error && <div className="alert alert-error">{error}</div>}
+        {loading && (
+            <div className="ei-loading">
+              <div className="ei-spinner" />
+              <p>{t('emergency_map.states.fetching')}</p>
+            </div>
+        )}
 
-      {/* Content — after data loads */}
-      {!loading && points.length > 0 && (
-        <>
-          {/* Nearest summary cards */}
-          <div className="ei-nearest-grid">
-            {Object.entries(nearestByType).map(([type, p]) => {
-              const meta = TYPE_META[type] || { icon: '📌', label: type };
-              const dist = haversineKm(userLat, userLon, p.lat, p.lon);
-              return (
-                <div key={type} className="ei-nearest-card">
-                  <span className="ei-nearest-icon">{meta.icon}</span>
-                  <div className="ei-nearest-body">
-                    <span className="ei-nearest-label">Nearest {meta.label}</span>
-                    <span className="ei-nearest-name">{p.name}</span>
-                    <span className="ei-nearest-dist">{dist.toFixed(2)} km</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        {error && <div className="alert alert-error">{error}</div>}
 
-          {/* View toggles */}
-          <div className="ei-view-toggles">
-            <button className={`ei-view-btn ${showMap ? 'ei-view-btn--active' : ''}`}
-              onClick={() => setShowMap(!showMap)}>
-              🗺️ {showMap ? 'Hide Map' : 'Show Map'}
-            </button>
-            <button className={`ei-view-btn ${showList ? 'ei-view-btn--active' : ''}`}
-              onClick={() => setShowList(!showList)}>
-              📋 {showList ? 'Hide List' : 'Show List'}
-            </button>
-          </div>
+        {!loading && points.length > 0 && (
+            <>
+              <div className="ei-nearest-grid">
+                {Object.entries(nearestByType).map(([type, p]) => {
+                  const meta = TYPE_META[type] || { icon: '📌' };
+                  const dist = haversineKm(userLat, userLon, p.lat, p.lon);
+                  // 8. Fetch label dynamically
+                  const typeLabel = t(`emergency_map.types.${type}`);
+                  return (
+                      <div key={type} className="ei-nearest-card">
+                        <span className="ei-nearest-icon">{meta.icon}</span>
+                        <div className="ei-nearest-body">
+                          <span className="ei-nearest-label">{t('emergency_map.card.nearest', { type: typeLabel })}</span>
+                          <span className="ei-nearest-name">{p.name}</span>
+                          <span className="ei-nearest-dist">{t('emergency_map.card.distance', { dist: dist.toFixed(2) })}</span>
+                        </div>
+                      </div>
+                  );
+                })}
+              </div>
 
-          {/* Filter tabs */}
-          <div className="ei-tabs">
-            {types.map((t) => {
-              const label = t === 'all' ? 'All' : TYPE_META[t]?.label;
-              const count = t === 'all' ? points.length : points.filter((p) => p.type === t).length;
-              return (
-                <button key={t} className={`ei-tab ${activeType === t ? 'ei-tab--active' : ''}`}
-                  onClick={() => setActiveType(t)}>
-                  {t !== 'all' && <span>{TYPE_META[t]?.icon}</span>} {label} ({count})
+              <div className="ei-view-toggles">
+                <button className={`ei-view-btn ${showMap ? 'ei-view-btn--active' : ''}`}
+                        onClick={() => setShowMap(!showMap)}>
+                  🗺️ {showMap ? t('emergency_map.toggles.hide_map') : t('emergency_map.toggles.show_map')}
                 </button>
-              );
-            })}
-          </div>
+                <button className={`ei-view-btn ${showList ? 'ei-view-btn--active' : ''}`}
+                        onClick={() => setShowList(!showList)}>
+                  📋 {showList ? t('emergency_map.toggles.hide_list') : t('emergency_map.toggles.show_list')}
+                </button>
+              </div>
 
-          {/* Map — only rendered when toggled on */}
-          {showMap && (
-            <div className="ei-map-wrapper">
-              <MapContainer center={[userLat, userLon]} zoom={14} className="ei-map" scrollWheelZoom>
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <FlyTo lat={userLat} lon={userLon} />
-                <Marker position={[userLat, userLon]} icon={userIcon}>
-                  <Popup>Your location</Popup>
-                </Marker>
-                <Circle
-                  center={[userLat, userLon]}
-                  radius={RADIUS_KM * 1000}
-                  pathOptions={{ color: '#38bdf8', fillColor: '#38bdf8', fillOpacity: 0.06, weight: 1 }}
-                />
-                {filtered.map((p, i) => (
-                  <Marker key={`${p.lat}-${p.lon}-${i}`} position={[p.lat, p.lon]}
-                    icon={markerIcons[p.type] || markerIcons.shelter}>
-                    <Popup>
-                      <strong>{p.name}</strong><br />
-                      {TYPE_META[p.type]?.label} — {haversineKm(userLat, userLon, p.lat, p.lon).toFixed(2)} km<br />
-                      <a href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`}
-                        target="_blank" rel="noopener noreferrer">Get directions</a>
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
-            </div>
-          )}
+              <div className="ei-tabs">
+                {types.map((typeKey) => {
+                  const label = typeKey === 'all' ? t('emergency_map.toggles.all') : t(`emergency_map.types.${typeKey}`);
+                  const count = typeKey === 'all' ? points.length : points.filter((p) => p.type === typeKey).length;
+                  return (
+                      <button key={typeKey} className={`ei-tab ${activeType === typeKey ? 'ei-tab--active' : ''}`}
+                              onClick={() => setActiveType(typeKey)}>
+                        {typeKey !== 'all' && <span>{TYPE_META[typeKey]?.icon}</span>} {label} ({count})
+                      </button>
+                  );
+                })}
+              </div>
 
-          {/* List view */}
-          {showList && filtered.length > 0 && (
-            <div className="ei-list">
-              {filtered.map((p, i) => (
-                <PointCard key={`${p.lat}-${p.lon}-${i}`} point={p} userLat={userLat} userLon={userLon} />
-              ))}
-            </div>
-          )}
+              {showMap && (
+                  <div className="ei-map-wrapper">
+                    <MapContainer center={[userLat, userLon]} zoom={14} className="ei-map" scrollWheelZoom>
+                      <TileLayer
+                          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <FlyTo lat={userLat} lon={userLon} />
+                      <Marker position={[userLat, userLon]} icon={userIcon}>
+                        <Popup>{t('emergency_map.map_popup.your_location')}</Popup>
+                      </Marker>
+                      <Circle
+                          center={[userLat, userLon]}
+                          radius={RADIUS_KM * 1000}
+                          pathOptions={{ color: '#38bdf8', fillColor: '#38bdf8', fillOpacity: 0.06, weight: 1 }}
+                      />
+                      {filtered.map((p, i) => (
+                          <Marker key={`${p.lat}-${p.lon}-${i}`} position={[p.lat, p.lon]}
+                                  icon={markerIcons[p.type] || markerIcons.shelter}>
+                            <Popup>
+                              <strong>{p.name}</strong><br />
+                              {t(`emergency_map.types.${p.type}`)} — {haversineKm(userLat, userLon, p.lat, p.lon).toFixed(2)} km<br />
+                              <a href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`}
+                                 target="_blank" rel="noopener noreferrer">{t('emergency_map.map_popup.get_directions')}</a>
+                            </Popup>
+                          </Marker>
+                      ))}
+                    </MapContainer>
+                  </div>
+              )}
 
-          {filtered.length === 0 && (
+              {showList && filtered.length > 0 && (
+                  <div className="ei-list">
+                    {filtered.map((p, i) => (
+                        <PointCard key={`${p.lat}-${p.lon}-${i}`} point={p} userLat={userLat} userLon={userLon} t={t} />
+                    ))}
+                  </div>
+              )}
+
+              {filtered.length === 0 && (
+                  <div className="ei-empty">
+                    <span className="ei-empty-icon">🔍</span>
+                    <h3>{t('emergency_map.empty.no_filter_match_title')}</h3>
+                    <p>{t('emergency_map.empty.no_filter_match_desc')}</p>
+                  </div>
+              )}
+            </>
+        )}
+
+        {locationSet && !loading && !error && points.length === 0 && (
             <div className="ei-empty">
               <span className="ei-empty-icon">🔍</span>
-              <h3>No facilities of this type found</h3>
-              <p>Try selecting a different category.</p>
+              <h3>{t('emergency_map.empty.no_facilities_title')}</h3>
+              <p>{t('emergency_map.empty.no_facilities_desc', { radius: RADIUS_KM })}</p>
             </div>
-          )}
-        </>
-      )}
-
-      {locationSet && !loading && !error && points.length === 0 && (
-        <div className="ei-empty">
-          <span className="ei-empty-icon">🔍</span>
-          <h3>No facilities found nearby</h3>
-          <p>No emergency facilities found within {RADIUS_KM} km of your location.</p>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
   );
 }
