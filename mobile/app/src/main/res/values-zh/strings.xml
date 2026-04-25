@@ -291,4 +291,8 @@
     <string name="help_offer_detail_availability_format">可用时间：%1$s</string>
     <string name="help_offer_delete_failed">删除帮助提供失败</string>
     <string name="ok">确定</string>
+    <string name="post_type_label">帖子类型</string>
+    <string name="images_label">图片</string>
+    <string name="upload_from_device">从设备上传</string>
+    <string name="image_urls_one_per_line">图片 URL（每行一条）</string>
 </resources>

@@ -324,4 +324,8 @@
     <string name="forum_load_failed">Failed to load posts</string>
     <string name="sign_in_to_vote">Sign in to vote</string>
     <string name="ok">OK</string>
+    <string name="post_type_label">Post Type</string>
+    <string name="images_label">Images</string>
+    <string name="upload_from_device">Upload from Device</string>
+    <string name="image_urls_one_per_line">Image URLs (one per line)</string>
 </resources>

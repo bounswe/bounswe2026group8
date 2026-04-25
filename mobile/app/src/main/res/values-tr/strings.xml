@@ -315,5 +315,9 @@
     <string name="forum_load_failed">Gönderiler yüklenemedi</string>
     <string name="sign_in_to_vote">Oy vermek için giriş yapın</string>
     <string name="ok">Tamam</string>
+    <string name="post_type_label">Gönderi Türü</string>
+    <string name="images_label">Görseller</string>
+    <string name="upload_from_device">Cihazdan Yükle</string>
+    <string name="image_urls_one_per_line">Gorsel URLleri (her satira bir tane)</string>
 </resources>
 
