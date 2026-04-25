@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Emergency Hub</string>
+    <string name="app_title">应急\n准备中心</string>
+    <string name="app_subtitle">为紧急情况做好准备，与邻居建立联系，共同建设社区韧性。</string>
+    <string name="emergency_hub">应急中心</string>
+
+    <!-- Auth actions -->
+    <string name="sign_up">注册</string>
+    <string name="sign_in">登录</string>
+    <string name="signing_up">正在注册…</string>
+    <string name="signing_in">正在登录…</string>
+    <string name="logout">退出登录</string>
+
+    <!-- Sign Up screen -->
+    <string name="create_account">创建账户</string>
+    <string name="join_community">加入您的社区应急中心</string>
+    <string name="full_name">姓名</string>
+    <string name="email">电子邮件</string>
+    <string name="password">密码</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="select_role">选择您的角色</string>
+    <string name="role_standard">标准</string>
+    <string name="role_expert">专家</string>
+    <string name="expertise_field">专业领域</string>
+    <string name="neighborhood_optional">社区 / 地址（可选）</string>
+    <string name="already_have_account">已有账户？登录</string>
+
+    <!-- Sign In screen -->
+    <string name="welcome_back">欢迎回来</string>
+    <string name="sign_in_subtitle">登录您的应急中心账户</string>
+    <string name="no_account">没有账户？注册</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_placeholder">欢迎！</string>
+    <string name="feature_forum">论坛</string>
+    <string name="feature_forum_desc">社区讨论</string>
+    <string name="feature_help">帮助请求</string>
+    <string name="feature_help_desc">请求或提供帮助</string>
+    <string name="feature_profile">个人资料</string>
+    <string name="feature_profile_desc">管理您的账户</string>
+    <string name="feature_offline">离线信息</string>
+    <string name="feature_offline_desc">关键数据访问</string>
+
+    <!-- Help Center -->
+    <string name="help_center_title">帮助中心</string>
+    <string name="tab_requests">请求</string>
+    <string name="tab_offers">提供</string>
+    <string name="help_requests_title">帮助请求</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_medical">医疗</string>
+    <string name="filter_food">食物</string>
+    <string name="filter_shelter">庇护</string>
+    <string name="filter_transport">交通</string>
+    <string name="empty_help_requests">未找到帮助请求</string>
+    <string name="empty_help_requests_hint">尝试更改筛选条件或稍后再来</string>
+    <string name="status_open">开放</string>
+    <string name="status_expert_responding">专家响应中</string>
+    <string name="status_resolved">已解决</string>
+
+    <!-- Create Help Request -->
+    <string name="create_help_request">创建帮助请求</string>
+    <string name="create_help_request_subtitle">描述您需要什么帮助</string>
+    <string name="help_title">标题</string>
+    <string name="help_description">描述</string>
+    <string name="select_category">选择类别</string>
+    <string name="select_urgency">选择紧急程度</string>
+    <string name="location_text_hint">位置描述（可选）</string>
+    <string name="use_my_location">使用我的位置</string>
+    <string name="location_acquired">已获取位置</string>
+    <string name="location_section">位置（可选）</string>
+    <string name="submitting">提交中…</string>
+    <string name="submit">提交</string>
+    <string name="help_request_created">帮助请求已创建！</string>
+    <string name="images_optional">图片（可选）</string>
+    <string name="upload_from_gallery">相册</string>
+    <string name="take_photo">相机</string>
+
+    <!-- Help Request Detail -->
+    <string name="help_request_detail_title">帮助请求</string>
+    <string name="location_label">位置</string>
+    <string name="comments_label">评论</string>
+    <string name="comments_count_label">评论 (%d)</string>
+    <string name="no_comments_yet">暂无评论。成为第一个响应者！</string>
+    <string name="comment_hint">写评论…</string>
+    <string name="send">发送</string>
+    <string name="sending">发送中…</string>
+    <string name="comment_posted">评论已发布</string>
+    <string name="expert_badge">专家</string>
+
+    <!-- Help Offers -->
+    <string name="help_offers_title">帮助提供</string>
+    <string name="feature_help_offers">帮助提供</string>
+    <string name="feature_help_offers_desc">提供您的技能</string>
+    <string name="empty_help_offers">未找到帮助提供</string>
+    <string name="empty_help_offers_hint">成为第一个在社区提供帮助的人</string>
+    <string name="create_help_offer">创建帮助提供</string>
+    <string name="create_help_offer_subtitle">描述您可以提供什么帮助</string>
+    <string name="skill_or_resource">技能或资源</string>
+    <string name="help_availability">可用性</string>
+    <string name="help_offer_created">帮助提供已创建！</string>
+    <string name="delete_offer">删除提供</string>
+    <string name="delete_offer_confirm">您确定要删除此帮助提供吗？</string>
+    <string name="help_offer_deleted">帮助提供已删除</string>
+    <string name="delete">删除</string>
+    <string name="cancel">取消</string>
+
+    <!-- Offline Info screen -->
+    <string name="offline_info_title">离线信息</string>
+    <string name="offline_info_heading">应急准备资源</string>
+    <string name="offline_info_desc">访问关键离线信息，为紧急情况做准备，保护您和您的社区。</string>
+    <string name="offline_info_tips_title">关键资源</string>
+    <string name="offline_info_tips">• 紧急联系电话\n• 急救基础知识\n• 疏散程序\n• 安全清单\n• 社区资源</string>
+    <string name="hub_city">中心（城市）</string>
+    <string name="select_hub">选择中心</string>
+
+    <!-- Notification Preferences -->
+    <string name="notification_preferences">通知偏好</string>
+    <string name="help_request_notifications">帮助请求通知</string>
+
+    <!-- Profile -->
+    <string name="profile_title">您的个人资料</string>
+    <string name="back_arrow">← 返回</string>
+    <string name="profile_personal_info">个人信息</string>
+    <string name="profile_phone">电话</string>
+    <string name="profile_blood_type">血型</string>
+    <string name="profile_emergency_contact">紧急联系人</string>
+    <string name="profile_emergency_phone">紧急电话</string>
+    <string name="profile_bio">简介</string>
+    <string name="profile_special_needs_label">特殊需求</string>
+    <string name="profile_has_disability">有残疾</string>
+    <string name="profile_availability">可用状态</string>
+    <string name="status_safe">安全</string>
+    <string name="status_needs_help">需要帮助</string>
+    <string name="status_available">可用</string>
+    <string name="profile_resources">资源</string>
+    <string name="profile_expertise">专业领域</string>
+    <string name="profile_add">+ 添加</string>
+    <string name="profile_save">保存</string>
+    <string name="profile_resource_name">资源名称</string>
+    <string name="profile_resource_category">类别</string>
+    <string name="profile_resource_qty">数量</string>
+    <string name="profile_no_resources">尚未添加资源。</string>
+    <string name="profile_expertise_field">领域（例如急救）</string>
+    <string name="profile_cert_url">证书URL（可选）</string>
+    <string name="profile_no_expertise">尚未添加专业领域。</string>
+
+    <!-- Forum -->
+    <string name="forum_title">论坛</string>
+    <string name="forum_hub_all">所有中心 — 所有人</string>
+    <string name="new_post">+ 新帖子</string>
+    <string name="tab_global">全局</string>
+    <string name="tab_standard">标准</string>
+    <string name="tab_urgent">紧急</string>
+    <string name="sort_newest">最新</string>
+    <string name="sort_most_liked">最多赞</string>
+    <string name="sort_hot">热门</string>
+    <string name="forum_loading">正在加载帖子…</string>
+    <string name="forum_empty_global">暂无全局帖子。</string>
+    <string name="forum_empty_hub">暂无%1$s的帖子。</string>
+    <string name="forum_select_hub">选择中心以查看帖子。</string>
+    <string name="back_to_dashboard">← 返回仪表板</string>
+    <string name="comment_count">%1$d %2$s</string>
+
+    <!-- Create Post -->
+    <string name="create_post_title">新帖子</string>
+    <string name="create_post_subtitle_global">所有人可见（所有中心）</string>
+    <string name="create_post_subtitle_hub">发布到%1$s</string>
+    <string name="post_title_hint">发生了什么？</string>
+    <string name="post_content_hint">描述情况，分享信息或请求帮助…</string>
+    <string name="title_label">标题</string>
+    <string name="content_label">内容</string>
+    <string name="create_post">创建帖子</string>
+    <string name="creating_post">创建中…</string>
+    <string name="back_to_forum">← 返回论坛</string>
+    <string name="title_required">标题是必需的。</string>
+    <string name="content_required">内容是必需的。</string>
+
+    <!-- Map -->
+    <string name="map_content_description">显示附近集合点的地图</string>
+    <string name="nearest_label">最近的集合点</string>
+    <string name="nearest_format">最近：%1$s</string>
+    <string name="back">返回</string>
+
+    <!-- Language -->
+    <string name="language">语言</string>
+    <string name="select_language">选择语言</string>
+</resources>

@@ -182,4 +182,8 @@
     <string name="nearest_label">Nearest gathering point</string>
     <string name="nearest_format">Nearest: %1$s</string>
     <string name="back">Back</string>
+
+    <!-- Language -->
+    <string name="language">Language</string>
+    <string name="select_language">Select Language</string>
 </resources>

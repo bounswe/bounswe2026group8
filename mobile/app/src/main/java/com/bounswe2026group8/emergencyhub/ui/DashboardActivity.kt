@@ -5,6 +5,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,7 @@ import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.bounswe2026group8.emergencyhub.map.cache.MapTileCacheHelper
 import com.bounswe2026group8.emergencyhub.map.data.GatheringPointCache
 import com.bounswe2026group8.emergencyhub.map.data.PreferencesManager
+import com.bounswe2026group8.emergencyhub.util.LocaleManager
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -70,8 +74,43 @@ class DashboardActivity : AppCompatActivity() {
         // Hub selector (load() is called in onResume)
         hubSelectorHelper = HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector))
 
+        // Language selector
+        setupLanguageSelector()
+
         // Feature cards
         setupFeatureCards()
+    }
+
+    private fun setupLanguageSelector() {
+        val languageSpinner = findViewById<Spinner>(R.id.spinnerLanguage)
+        
+        val languages = LocaleManager.getSupportedLanguages()
+        val displayNames = languages.map { LocaleManager.getDisplayName(it) }
+        
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, displayNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        languageSpinner.adapter = adapter
+
+        // Set current selection
+        val currentLanguage = LocaleManager.getLanguage(this)
+        val position = languages.indexOf(currentLanguage)
+        if (position >= 0) {
+            languageSpinner.setSelection(position)
+        }
+
+        // Handle language change
+        languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedLanguage = languages[position]
+                val currentLanguage = LocaleManager.getLanguage(this@DashboardActivity)
+                if (selectedLanguage != currentLanguage) {
+                    LocaleManager.setLanguage(this@DashboardActivity, selectedLanguage)
+                    LocaleManager.applyLocale(this@DashboardActivity, selectedLanguage)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     override fun onResume() {
