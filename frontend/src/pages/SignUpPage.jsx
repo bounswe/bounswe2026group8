@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
-import { register } from '../services/api';
+import { register, getExpertiseCategories } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
 export default function SignUpPage() {
   const navigate = useNavigate();
   const { isAuthenticated, loading, hubs } = useAuth();
-  const { t } = useTranslation(); // Initialize hook
+  const { t, i18n } = useTranslation();
+
+  const [expertiseCategories, setExpertiseCategories] = useState([]);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -17,8 +19,12 @@ export default function SignUpPage() {
     role: 'STANDARD',
     hub_id: '',
     neighborhood_address: '',
-    expertise_field: '',
+    category_id: '',
   });
+
+  useEffect(() => {
+    getExpertiseCategories().then(({ ok, data }) => { if (ok) setExpertiseCategories(data); });
+  }, []);
 
   const [errors, setErrors] = useState({});
   const [globalError, setGlobalError] = useState('');
@@ -62,8 +68,8 @@ export default function SignUpPage() {
       errs.password = t('sign_up.errors.password_min');
     if (form.password !== form.confirm_password)
       errs.confirm_password = t('sign_up.errors.password_match');
-    if (form.role === 'EXPERT' && !form.expertise_field.trim())
-      errs.expertise_field = t('sign_up.errors.expertise_req');
+    if (form.role === 'EXPERT' && !form.category_id)
+      errs.category_id = t('sign_up.errors.expertise_req');
     return errs;
   };
 
@@ -95,7 +101,7 @@ export default function SignUpPage() {
       payload.neighborhood_address = form.neighborhood_address.trim();
     }
     if (form.role === 'EXPERT') {
-      payload.expertise_field = form.expertise_field.trim();
+      payload.category_id = Number(form.category_id);
     }
 
     const { ok, data } = await register(payload);
@@ -254,21 +260,31 @@ export default function SignUpPage() {
               </select>
             </div>
 
-            {/* Expertise field — only visible for EXPERT */}
+            {/* Expertise category — only visible for EXPERT */}
             {form.role === 'EXPERT' && (
                 <div className="form-group slide-in">
-                  <label htmlFor="expertise_field">{t('sign_up.labels.expertise_field')}</label>
-                  <input
-                      id="expertise_field"
-                      name="expertise_field"
-                      type="text"
-                      placeholder={t('sign_up.placeholders.expertise_field')}
-                      value={form.expertise_field}
+                  <label htmlFor="category_id">{t('sign_up.labels.expertise_field')}</label>
+                  <select
+                      id="category_id"
+                      name="category_id"
+                      value={form.category_id}
                       onChange={handleChange}
-                      className={errors.expertise_field ? 'input-error' : ''}
-                  />
-                  {errors.expertise_field && (
-                      <span className="field-error">{errors.expertise_field}</span>
+                      className={errors.category_id ? 'input-error' : ''}
+                  >
+                    <option value="">— {t('sign_up.placeholders.expertise_field')} —</option>
+                    {['MEDICAL', 'SHELTER', 'TRANSPORT', 'FOOD', 'OTHER'].map((grp) => {
+                      const items = expertiseCategories.filter((c) => c.help_request_category === grp);
+                      return items.length ? (
+                          <optgroup key={grp} label={t(`help_requests.categories.${grp.toLowerCase()}`)}>
+                            {items.map((c) => (
+                                <option key={c.id} value={c.id}>{c.translations?.[i18n.language] || c.name}</option>
+                            ))}
+                          </optgroup>
+                      ) : null;
+                    })}
+                  </select>
+                  {errors.category_id && (
+                      <span className="field-error">{errors.category_id}</span>
                   )}
                 </div>
             )}

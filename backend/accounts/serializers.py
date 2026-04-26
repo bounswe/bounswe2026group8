@@ -113,6 +113,12 @@ class RegisterSerializer(serializers.Serializer):
     neighborhood_address = serializers.CharField(
         max_length=255, required=False, allow_blank=True, allow_null=True
     )
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=ExpertiseCategory.objects.filter(is_active=True),
+        required=False,
+        allow_null=True,
+        write_only=True,
+    )
 
     def validate_email(self, value):
         if User.objects.filter(email__iexact=value).exists():
@@ -127,6 +133,8 @@ class RegisterSerializer(serializers.Serializer):
     def validate(self, data):
         if data['password'] != data['confirm_password']:
             raise serializers.ValidationError({'confirm_password': ['Passwords do not match.']})
+        if data.get('role') == User.Role.EXPERT and not data.get('category_id'):
+            raise serializers.ValidationError({'category_id': ['Expertise category is required for Expert users.']})
 
         # Validate password against Django's password validators
         try:
@@ -140,6 +148,7 @@ class RegisterSerializer(serializers.Serializer):
         validated_data.pop('confirm_password')
         password = validated_data.pop('password')
         hub_id = validated_data.pop('hub_id', None)
+        category = validated_data.pop('category_id', None)
         if hub_id is not None:
             validated_data['hub_id'] = hub_id
         user = User.objects.create_user(
@@ -148,6 +157,8 @@ class RegisterSerializer(serializers.Serializer):
             password=password,
             **validated_data,
         )
+        if category:
+            ExpertiseField.objects.create(user=user, category=category)
         return user
 
 
