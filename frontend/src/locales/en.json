@@ -132,7 +132,8 @@
       "medical": "Medical",
       "food": "Food",
       "shelter": "Shelter",
-      "transport": "Transport"
+      "transport": "Transport",
+      "other": "Other"
     },
     "urgencies": {
       "low": "Low",
@@ -229,8 +230,10 @@
       "medical": "Medical",
       "food": "Food",
       "shelter": "Shelter",
-      "transport": "Transport"
+      "transport": "Transport",
+      "other": "Other"
     },
+    "my_expertise": "My Expertise",
     "time": {
       "just_now": "Just now",
       "m_ago": "{{count}}m ago",

@@ -11,7 +11,7 @@ data class RegisterRequest(
     @SerializedName("confirm_password") val confirmPassword: String,
     val role: String,
     @SerializedName("neighborhood_address") val neighborhoodAddress: String? = null,
-    @SerializedName("expertise_field") val expertiseField: String? = null,
+    @SerializedName("category_id") val categoryId: Int? = null,
     @SerializedName("hub_id") val hubId: Int? = null
 )
 

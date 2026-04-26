@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.ExpertiseCategoryData
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldData
 import com.bounswe2026group8.emergencyhub.api.ProfileData
@@ -21,6 +23,7 @@ import com.bounswe2026group8.emergencyhub.api.ResourceCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ResourceData
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.util.LocaleManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
@@ -35,6 +38,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var tokenManager: TokenManager
     private var currentProfile: ProfileData? = null
     private var ignoreBloodTypeSelection = false
+    private var expertiseCategories: List<ExpertiseCategoryData> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +55,7 @@ class ProfileActivity : AppCompatActivity() {
         if (tokenManager.getUser()?.role == "EXPERT") {
             findViewById<View>(R.id.cardExpertise).visibility = View.VISIBLE
             loadExpertise()
-            setupExpertiseForm()
+            loadExpertiseCategories { setupExpertiseForm() }
         }
     }
 
@@ -359,7 +363,7 @@ class ProfileActivity : AppCompatActivity() {
                 getString(R.string.profile_cert_level_beginner)
             }
             val label = TextView(this).apply {
-                text = getString(R.string.profile_expertise_item_format, item.field, level)
+                text = getString(R.string.profile_expertise_item_format, item.category.displayName(LocaleManager.getLanguage(context)), level)
                 setTextColor(ContextCompat.getColor(context, R.color.text_primary))
                 textSize = 14f
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -378,10 +382,29 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadExpertiseCategories(onDone: () -> Unit = {}) {
+        lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.getService(this@ProfileActivity).getExpertiseCategories()
+                if (res.isSuccessful) expertiseCategories = res.body() ?: emptyList()
+            } catch (_: Exception) { }
+            onDone()
+        }
+    }
+
     private fun setupExpertiseForm() {
         val form = findViewById<LinearLayout>(R.id.formAddExpertise)
         findViewById<MaterialButton>(R.id.btnAddExpertise).setOnClickListener {
             form.visibility = if (form.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        }
+
+        val dropdown = findViewById<AutoCompleteTextView>(R.id.dropdownExpertiseCategory)
+        val langCode = LocaleManager.getLanguage(this)
+        val categoryNames = expertiseCategories.map { it.displayName(langCode) }
+        dropdown.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categoryNames))
+        var selectedCategoryId: Int? = null
+        dropdown.setOnItemClickListener { _, _, pos, _ ->
+            selectedCategoryId = expertiseCategories[pos].id
         }
 
         val spinner = findViewById<Spinner>(R.id.spinnerCertLevel)
@@ -392,14 +415,14 @@ class ProfileActivity : AppCompatActivity() {
         )
 
         findViewById<MaterialButton>(R.id.btnSaveExpertise).setOnClickListener {
-            val field = findViewById<TextInputEditText>(R.id.inputExpertiseField).text?.toString()?.trim() ?: ""
-            val level = if (spinner.selectedItemPosition == 1) "ADVANCED" else "BEGINNER"
-            val url = findViewById<TextInputEditText>(R.id.inputCertUrl).text?.toString()?.trim()
-            if (field.isBlank()) {
+            val catId = selectedCategoryId
+            if (catId == null) {
                 toast(getString(R.string.profile_expertise_validation))
                 return@setOnClickListener
             }
-            createExpertise(ExpertiseFieldCreateRequest(field, level, url?.ifBlank { null }))
+            val level = if (spinner.selectedItemPosition == 1) "ADVANCED" else "BEGINNER"
+            val url = findViewById<TextInputEditText>(R.id.inputCertUrl).text?.toString()?.trim()
+            createExpertise(ExpertiseFieldCreateRequest(catId, level, url?.ifBlank { null }))
         }
     }
 
@@ -409,7 +432,7 @@ class ProfileActivity : AppCompatActivity() {
                 val res = RetrofitClient.getService(this@ProfileActivity).createExpertiseField(req)
                 if (res.isSuccessful) {
                     toast(getString(R.string.profile_expertise_added))
-                    findViewById<TextInputEditText>(R.id.inputExpertiseField).text?.clear()
+                    findViewById<AutoCompleteTextView>(R.id.dropdownExpertiseCategory).text?.clear()
                     findViewById<TextInputEditText>(R.id.inputCertUrl).text?.clear()
                     findViewById<LinearLayout>(R.id.formAddExpertise).visibility = View.GONE
                     loadExpertise()

@@ -46,7 +46,8 @@ interface ApiService {
     @GET("help-requests/")
     suspend fun getHelpRequests(
         @Query("hub_id") hubId: Int? = null,
-        @Query("category") category: String? = null
+        @Query("category") category: String? = null,
+        @Query("expertise_match") expertiseMatch: Boolean? = null,
     ): Response<List<HelpRequestItem>>
 
     @POST("help-requests/")
@@ -192,6 +193,11 @@ interface ApiService {
 
     @DELETE("resources/{id}")
     suspend fun deleteResource(@Path("id") id: Int): Response<Unit>
+
+    // ── Expertise Categories (public) ────────────────────────────────────────────
+
+    @GET("expertise-categories/")
+    suspend fun getExpertiseCategories(): Response<List<ExpertiseCategoryData>>
 
     // ── Expertise Fields ────────────────────────────────────────────────────────
 

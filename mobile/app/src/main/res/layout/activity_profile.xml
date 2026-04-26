@@ -454,13 +454,16 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/inputExpertiseField"
+                        android:layout_marginBottom="6dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                        <AutoCompleteTextView
+                            android:id="@+id/dropdownExpertiseCategory"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/profile_expertise_field"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:focusable="false"
+                            android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Spinner

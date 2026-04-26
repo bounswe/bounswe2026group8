@@ -21,6 +21,7 @@ import com.bounswe2026group8.emergencyhub.util.BadgeUtils
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.launch
 
 class HelpRequestListActivity : AppCompatActivity() {
@@ -45,6 +46,8 @@ class HelpRequestListActivity : AppCompatActivity() {
     private lateinit var offerAdapter: HelpOfferAdapter
 
     private var activeTab = "requests"
+
+    private var expertiseMatchEnabled: Boolean = true
     private var selectedCategory: String? = null
     private var allRequests: List<HelpRequestItem> = emptyList()
     private var allOffers: List<HelpOfferItem> = emptyList()
@@ -112,6 +115,7 @@ class HelpRequestListActivity : AppCompatActivity() {
                 checkedIds[0] == R.id.chipFood -> "FOOD"
                 checkedIds[0] == R.id.chipShelter -> "SHELTER"
                 checkedIds[0] == R.id.chipTransport -> "TRANSPORT"
+                checkedIds[0] == R.id.chipOther -> "OTHER"
                 else -> null
             }
             applyFilter()
@@ -126,6 +130,16 @@ class HelpRequestListActivity : AppCompatActivity() {
             }
         )
         hubSelectorHelper.load()
+
+        // Expertise-match toggle — visible only for EXPERT users
+        val isExpert = tokenManager.getUser()?.role == "EXPERT"
+        if (isExpert) {
+            findViewById<View>(R.id.layoutExpertiseToggle).visibility = View.VISIBLE
+            findViewById<SwitchMaterial>(R.id.switchExpertiseMatch).setOnCheckedChangeListener { _, checked ->
+                expertiseMatchEnabled = checked
+                if (activeTab == "requests") fetchHelpRequests()
+            }
+        }
     }
 
     override fun onResume() {
@@ -162,8 +176,12 @@ class HelpRequestListActivity : AppCompatActivity() {
         showLoading()
         lifecycleScope.launch {
             try {
+                val isExpert = tokenManager.getUser()?.role == "EXPERT"
                 val response = RetrofitClient.getService(this@HelpRequestListActivity)
-                    .getHelpRequests(hubId = selectedHub?.id)
+                    .getHelpRequests(
+                        hubId = selectedHub?.id,
+                        expertiseMatch = if (isExpert && expertiseMatchEnabled) true else null,
+                    )
 
                 if (response.isSuccessful) {
                     allRequests = response.body() ?: emptyList()

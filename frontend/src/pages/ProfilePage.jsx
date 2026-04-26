@@ -6,6 +6,7 @@ import {
   getProfile, updateProfile,
   getResources, createResource, updateResource, deleteResource,
   getExpertiseFields, createExpertiseField, updateExpertiseField, deleteExpertiseField,
+  getExpertiseCategories,
   uploadImages, resolveImageUrl,
 } from '../services/api';
 
@@ -162,18 +163,18 @@ function BloodTypeSelect({ value, name, onSave, t }) {
 }
 
 const EMPTY_RESOURCE = { name: '', category: '', quantity: 1, condition: true };
-const EMPTY_EXPERTISE = { field: '', certification_level: 'BEGINNER', certification_document_url: '' };
+const EMPTY_EXPERTISE = { category_id: '', certification_level: 'BEGINNER', certification_document_url: '' };
 
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation(); // 5. Initialize hook
+  const { t, i18n } = useTranslation(); // 5. Initialize hook
 
   // 6. Dynamic labels mapping
   const AVAILABILITY_LABELS = {
     SAFE: { label: t('user_profile.status.safe'), color: '#34d399' },
     NEEDS_HELP: { label: t('user_profile.status.needs_help'), color: '#f87171' },
-    AVAILABLE_TO_HELP: { label: t('user_profile.status.available'), color: '#38bdf8' }
+    AVAILABLE_TO_HELP: { label: t('user_profile.status.available_to_help'), color: '#38bdf8' }
   };
 
   const [profile, setProfile] = useState({
@@ -187,6 +188,7 @@ export default function ProfilePage() {
   const [showResourceForm, setShowResourceForm] = useState(false);
 
   const [expertiseFields, setExpertiseFields] = useState([]);
+  const [expertiseCategories, setExpertiseCategories] = useState([]);
   const [newExpertise, setNewExpertise] = useState(EMPTY_EXPERTISE);
   const [showExpertiseForm, setShowExpertiseForm] = useState(false);
   const [certUploading, setCertUploading] = useState(false);
@@ -201,7 +203,10 @@ export default function ProfilePage() {
       if (ok) setProfile({ phone_number: data.phone_number || '', blood_type: data.blood_type || '', emergency_contact_phone: data.emergency_contact_phone || '', special_needs: data.special_needs || '', has_disability: data.has_disability ?? false, availability_status: data.availability_status || 'SAFE', bio: data.bio || '', preferred_language: data.preferred_language || '', emergency_contact: data.emergency_contact || '' });
     });
     getResources().then(({ ok, data }) => { if (ok) setResources(data); });
-    if (isExpert) getExpertiseFields().then(({ ok, data }) => { if (ok) setExpertiseFields(data); });
+    if (isExpert) {
+      getExpertiseFields().then(({ ok, data }) => { if (ok) setExpertiseFields(data); });
+      getExpertiseCategories().then(({ ok, data }) => { if (ok) setExpertiseCategories(data); });
+    }
   }, [user, isExpert]);
 
   const notify = (msg, type = 'success') => {
@@ -424,7 +429,21 @@ export default function ProfilePage() {
                     <div className="form-row">
                       <div className="form-group">
                         <label>{t('profile.labels.field')}</label>
-                        <input placeholder={t('profile.placeholders.expertise_field')} value={newExpertise.field} onChange={(e) => setNewExpertise((p) => ({ ...p, field: e.target.value }))} required />
+                        <select
+                          value={newExpertise.category_id}
+                          onChange={(e) => setNewExpertise((p) => ({ ...p, category_id: e.target.value }))}
+                          required
+                        >
+                          <option value="">— {t('profile.placeholders.expertise_field')} —</option>
+                          {['MEDICAL', 'SHELTER', 'TRANSPORT', 'FOOD', 'OTHER'].map((grp) => {
+                            const items = expertiseCategories.filter((c) => c.help_request_category === grp);
+                            return items.length ? (
+                              <optgroup key={grp} label={t(`help_requests.categories.${grp.toLowerCase()}`)}>
+                                {items.map((c) => <option key={c.id} value={c.id}>{c.translations?.[i18n.language] || c.name}</option>)}
+                              </optgroup>
+                            ) : null;
+                          })}
+                        </select>
                       </div>
                       <div className="form-group form-group-sm">
                         <label>{t('profile.labels.level')}</label>
@@ -458,7 +477,7 @@ export default function ProfilePage() {
                         <li key={ef.id} className="item-card">
                           <div className="item-card-icon">🎓</div>
                           <div className="item-card-body">
-                            <span className="item-card-name">{ef.field}</span>
+                            <span className="item-card-name">{ef.category?.translations?.[i18n.language] || ef.category?.name}</span>
                             <span className="item-card-meta">
                       {ef.certification_level === 'ADVANCED'
                           ? `★ ${t('profile.expertise_item.advanced')}`
