@@ -39,7 +39,7 @@
             android:id="@+id/btnCreate"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="+ New"
+            android:text="@string/new_item"
             android:textSize="13sp"
             style="@style/Widget.EmergencyHub.Button.Primary" />
 
@@ -56,7 +56,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hub:"
+            android:text="@string/hub_label"
             android:textColor="@color/text_secondary"
             android:textSize="13sp" />
 

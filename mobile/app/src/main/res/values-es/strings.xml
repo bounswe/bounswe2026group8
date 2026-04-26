@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Emergency Hub</string>
+    <string name="app_title">Centro de\nPreparación</string>
+    <string name="app_subtitle">Prepárate para emergencias, conecta con vecinos y construye resiliencia comunitaria juntos.</string>
+    <string name="emergency_hub">Centro de Emergencia</string>
+
+    <!-- Auth actions -->
+    <string name="sign_up">Registrarse</string>
+    <string name="sign_in">Iniciar Sesión</string>
+    <string name="signing_up">Registrando…</string>
+    <string name="signing_in">Iniciando sesión…</string>
+    <string name="logout">Cerrar Sesión</string>
+
+    <!-- Sign Up screen -->
+    <string name="create_account">Crear Cuenta</string>
+    <string name="join_community">Únete a tu centro de emergencia vecinal</string>
+    <string name="full_name">Nombre Completo</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="confirm_password">Confirmar Contraseña</string>
+    <string name="select_role">Selecciona tu rol</string>
+    <string name="role_standard">Estándar</string>
+    <string name="role_expert">Experto</string>
+    <string name="expertise_field">Campo de Experiencia</string>
+    <string name="neighborhood_optional">Barrio / Dirección (opcional)</string>
+    <string name="already_have_account">¿Ya tienes cuenta? Iniciar Sesión</string>
+
+    <!-- Sign In screen -->
+    <string name="welcome_back">Bienvenido</string>
+    <string name="sign_in_subtitle">Inicia sesión en tu cuenta de centro de emergencia</string>
+    <string name="no_account">¿No tienes cuenta? Registrarse</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_placeholder">¡Bienvenido!</string>
+    <string name="feature_forum">Foro</string>
+    <string name="feature_forum_desc">Discusiones comunitarias</string>
+    <string name="feature_help">Solicitudes de Ayuda</string>
+    <string name="feature_help_desc">Pide o ofrece ayuda</string>
+    <string name="feature_profile">Perfil</string>
+    <string name="feature_profile_desc">Gestiona tu cuenta</string>
+    <string name="feature_offline">Info Sin Conexión</string>
+    <string name="feature_offline_desc">Acceso a datos críticos</string>
+
+    <!-- Help Center -->
+    <string name="help_center_title">Centro de Ayuda</string>
+    <string name="tab_requests">Solicitudes</string>
+    <string name="tab_offers">Ofertas</string>
+    <string name="help_requests_title">Solicitudes de Ayuda</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_medical">Médico</string>
+    <string name="filter_food">Alimento</string>
+    <string name="filter_shelter">Refugio</string>
+    <string name="filter_transport">Transporte</string>
+    <string name="category_medical">Médico</string>
+    <string name="category_food">Alimento</string>
+    <string name="category_shelter">Refugio</string>
+    <string name="category_transport">Transporte</string>
+    <string name="category_other">Otro</string>
+    <string name="urgency_low">Baja</string>
+    <string name="urgency_medium">Media</string>
+    <string name="urgency_high">Alta</string>
+    <string name="empty_help_requests">No se encontraron solicitudes de ayuda</string>
+    <string name="empty_help_requests_hint">Intenta cambiar tu filtro o vuelve más tarde</string>
+    <string name="status_open">Abierto</string>
+    <string name="status_expert_responding">Experto Respondiendo</string>
+    <string name="status_resolved">Resuelto</string>
+
+    <!-- Create Help Request -->
+    <string name="create_help_request">Crear Solicitud de Ayuda</string>
+    <string name="create_help_request_subtitle">Describe qué ayuda necesitas</string>
+    <string name="help_title">Título</string>
+    <string name="help_description">Descripción</string>
+    <string name="select_category">Seleccionar categoría</string>
+    <string name="select_urgency">Seleccionar urgencia</string>
+    <string name="location_text_hint">Descripción de ubicación (opcional)</string>
+    <string name="use_my_location">Usar Mi Ubicación</string>
+    <string name="location_acquired">Ubicación obtenida</string>
+    <string name="location_section">Ubicación (opcional)</string>
+    <string name="submitting">Enviando…</string>
+    <string name="submit">Enviar</string>
+    <string name="help_request_created">¡Solicitud de ayuda creada!</string>
+    <string name="images_optional">Imágenes (opcional)</string>
+    <string name="upload_from_gallery">Galería</string>
+    <string name="take_photo">Cámara</string>
+
+    <!-- Help Request Detail -->
+    <string name="help_request_detail_title">Solicitud de Ayuda</string>
+    <string name="location_label">Ubicación</string>
+    <string name="comments_label">Comentarios</string>
+    <string name="comments_count_label">Comentarios (%d)</string>
+    <string name="no_comments_yet">Aún no hay comentarios. ¡Sé el primero en responder!</string>
+    <string name="comment_hint">Escribe un comentario…</string>
+    <string name="send">Enviar</string>
+    <string name="sending">Enviando…</string>
+    <string name="comment_posted">Comentario publicado</string>
+    <string name="expert_badge">Experto</string>
+
+    <!-- Help Offers -->
+    <string name="help_offers_title">Ofertas de Ayuda</string>
+    <string name="feature_help_offers">Ofertas de Ayuda</string>
+    <string name="feature_help_offers_desc">Ofrece tus habilidades</string>
+    <string name="empty_help_offers">No se encontraron ofertas de ayuda</string>
+    <string name="empty_help_offers_hint">Sé el primero en ofrecer ayuda en tu comunidad</string>
+    <string name="create_help_offer">Crear Oferta de Ayuda</string>
+    <string name="create_help_offer_subtitle">Describe qué ayuda puedes ofrecer</string>
+    <string name="skill_or_resource">Habilidad o Recurso</string>
+    <string name="help_availability">Disponibilidad</string>
+    <string name="availability_247">24/7</string>
+    <string name="availability_weekdays">Días laborables</string>
+    <string name="availability_weekends">Fines de semana</string>
+    <string name="availability_mornings">Mañanas</string>
+    <string name="availability_evenings">Tardes</string>
+    <string name="availability_oncall">Bajo demanda</string>
+    <string name="help_offer_created">¡Oferta de ayuda creada!</string>
+    <string name="delete_offer">Eliminar Oferta</string>
+    <string name="delete_offer_confirm">¿Estás seguro de que quieres eliminar esta oferta de ayuda?</string>
+    <string name="help_offer_deleted">Oferta de ayuda eliminada</string>
+    <string name="delete">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+
+    <!-- Offline Info screen -->
+    <string name="offline_info_title">Info Sin Conexión</string>
+    <string name="offline_info_heading">Recursos de Preparación para Emergencias</string>
+    <string name="offline_info_desc">Accede a información crítica sin conexión para prepararte para emergencias y protegerte a ti mismo y a tu comunidad.</string>
+    <string name="offline_info_tips_title">Recursos Clave</string>
+    <string name="offline_info_tips">• Números de emergencia\n• Primeros auxilios básicos\n• Procedimientos de evacuación\n• Listas de seguridad\n• Recursos comunitarios</string>
+    <string name="hub_city">Hub (Ciudad)</string>
+    <string name="select_hub">Seleccionar hub</string>
+
+    <!-- Notification Preferences -->
+    <string name="notification_preferences">Preferencias de Notificaciones</string>
+    <string name="help_request_notifications">Notificaciones de Solicitudes de Ayuda</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Tu Perfil</string>
+    <string name="back_arrow">← Atrás</string>
+    <string name="profile_personal_info">Información Personal</string>
+    <string name="profile_phone">Teléfono</string>
+    <string name="profile_blood_type">Tipo de Sangre</string>
+    <string name="profile_emergency_contact">Contacto de Emergencia</string>
+    <string name="profile_emergency_phone">Teléfono de Emergencia</string>
+    <string name="profile_bio">Biografía</string>
+    <string name="profile_special_needs_label">Necesidades Especiales</string>
+    <string name="profile_has_disability">Tiene Discapacidad</string>
+    <string name="profile_availability">Estado de Disponibilidad</string>
+    <string name="status_safe">Seguro</string>
+    <string name="status_needs_help">Necesita Ayuda</string>
+    <string name="status_available">Disponible</string>
+    <string name="profile_resources">Recursos</string>
+    <string name="profile_expertise">Campos de Experiencia</string>
+    <string name="profile_add">+ Añadir</string>
+    <string name="profile_save">Guardar</string>
+    <string name="profile_resource_name">Nombre del recurso</string>
+    <string name="profile_resource_category">Categoría</string>
+    <string name="profile_resource_qty">Cantidad</string>
+    <string name="profile_no_resources">No hay recursos añadidos aún.</string>
+    <string name="profile_expertise_field">Campo (ej. Primeros Auxilios)</string>
+    <string name="profile_cert_url">URL del Certificado (opcional)</string>
+    <string name="profile_no_expertise">No hay campos de experiencia añadidos aún.</string>
+
+    <!-- Forum -->
+    <string name="forum_title">Foro</string>
+    <string name="forum_hub_all">Todos los hubs — todos</string>
+    <string name="new_post">+ Nueva Publicación</string>
+    <string name="tab_global">Global</string>
+    <string name="tab_standard">Estándar</string>
+    <string name="tab_urgent">Urgente</string>
+    <string name="forum_type_global">Global</string>
+    <string name="forum_type_standard">Estándar</string>
+    <string name="forum_type_urgent">Urgente</string>
+    <string name="new_post_format">Nueva Publicación %1$s</string>
+    <string name="hub_scoped_post">Publicación del hub</string>
+    <string name="sort_newest">Más Reciente</string>
+    <string name="sort_most_liked">Más Gustado</string>
+    <string name="sort_hot">Popular</string>
+    <string name="forum_loading">Cargando publicaciones…</string>
+    <string name="forum_empty_global">No hay publicaciones globales aún.</string>
+    <string name="forum_empty_hub">No hay publicaciones de %1$s aún.</string>
+    <string name="forum_select_hub">Selecciona un hub para ver publicaciones.</string>
+    <string name="back_to_dashboard">← Volver al Panel</string>
+    <string name="comment_count">%1$d %2$s</string>
+
+    <!-- Create Post -->
+    <string name="create_post_title">Nueva Publicación</string>
+    <string name="create_post_subtitle_global">Visible para todos (todos los hubs)</string>
+    <string name="create_post_subtitle_hub">Publicando en %1$s</string>
+    <string name="post_title_hint">¿Qué está pasando?</string>
+    <string name="post_content_hint">Describe la situación, comparte información o pide ayuda…</string>
+    <string name="title_label">Título</string>
+    <string name="content_label">Contenido</string>
+    <string name="create_post">Crear Publicación</string>
+    <string name="creating_post">Creando…</string>
+    <string name="back_to_forum">← Volver al Foro</string>
+    <string name="title_required">El título es requerido.</string>
+    <string name="content_required">El contenido es requerido.</string>
+
+    <!-- Map -->
+    <string name="map_content_description">Mapa mostrando puntos de reunión cercanos</string>
+    <string name="nearest_label">Punto de reunión más cercano</string>
+    <string name="nearest_format">Más cercano: %1$s</string>
+    <string name="back">Atrás</string>
+
+    <!-- Language -->
+    <string name="language">Idioma</string>
+    <string name="select_language">Seleccionar Idioma</string>
+    <string name="dashboard_welcome_format">¡Bienvenido, %1$s!</string>
+    <string name="dashboard_role_expert">Experto</string>
+    <string name="dashboard_role_standard">Estándar</string>
+    <string name="dashboard_neighborhood_format">Ubicación: %1$s</string>
+    <string name="offline_features_title">Funciones sin conexión</string>
+    <string name="offline_map">Mapa sin conexión</string>
+    <string name="emergency_checklist">Lista de emergencia</string>
+    <string name="offline_contacts">Contactos sin conexión</string>
+    <string name="emergency_numbers">Números de emergencia</string>
+    <string name="general_emergency">Emergencia general</string>
+    <string name="call">Llamar</string>
+    <string name="add_custom_number">Agregar número personalizado</string>
+    <string name="first_aid_guide_title">Guía básica</string>
+    <string name="first_aid_displacement_title">Traslado</string>
+    <string name="first_aid_displacement_summary">Mueva al paciente a un lugar seguro si es necesario y seguro hacerlo.</string>
+    <string name="first_aid_displacement_detail">Si hay peligros como fuego o electricidad, traslade al paciente a un lugar seguro solo si también es seguro para quien presta primeros auxilios.\n\nSi se sospecha una lesión grave en la columna, no mueva al paciente salvo que sea absolutamente necesario. Si debe moverlo, hágalo lo menos posible y con mucho cuidado.\n\nPor lo general, el paciente debe quedar boca arriba sobre una superficie firme para poder aplicar compresiones si hace falta.</string>
+    <string name="first_aid_checking_title">Evaluación</string>
+    <string name="first_aid_checking_summary">Revise seguridad, respuesta, sangrado, pulso y respiración rápidamente.</string>
+    <string name="first_aid_checking_detail">Evalúe primero las amenazas inmediatas para la vida.\n\nCompruebe la respuesta tocando el hombro y hablando en voz alta.\n\nSi hay sangrado grave, aplique presión directa.\n\nSi no responde, revise el pulso carotídeo o radial.\n\nObserve el pecho y escuche el aire para comprobar la respiración.\n\nNo dedique más de 10 segundos a revisar pulso y respiración antes de actuar.</string>
+    <string name="first_aid_cpr_title">Reanimación cardiopulmonar</string>
+    <string name="first_aid_cpr_summary">Técnica que salva vidas con compresiones y respiraciones de rescate.</string>
+    <string name="first_aid_cpr_detail">1. Coloque la base de una mano en el centro del pecho.\n\n2. Ponga la otra mano encima y entrelace los dedos.\n\n3. Presione fuerte y rápido, al menos 5 cm de profundidad y unas 100-120 compresiones por minuto.\n\n4. Deje que el pecho se eleve por completo entre compresiones.\n\n5. Si está capacitado, dé 2 respiraciones de rescate cada 30 compresiones.</string>
+    <string name="first_aid_abc_title">ABC</string>
+    <string name="first_aid_abc_summary">Revise vía aérea, respiración y circulación en ese orden.</string>
+    <string name="first_aid_abc_detail">A - Vía aérea: incline suavemente la cabeza hacia atrás y eleve el mentón para abrir la vía aérea.\n\nB - Respiración: observe, escuche y sienta la respiración normal durante no más de 10 segundos.\n\nC - Circulación: revise si hay hemorragias graves. Si la persona no respira con normalidad, inicie RCP de inmediato.\n\nLa vía aérea debe estar abierta para que el aire llegue a los pulmones. Las personas conscientes suelen mantenerla por sí mismas, pero las inconscientes pueden no hacerlo.\n\nUse la posición de recuperación cuando corresponda, vigile el atragantamiento y pase a RCP si no hay respiración o es anormal.</string>
+    <string name="saved">Guardado</string>
+    <string name="removed">Eliminado</string>
+    <string name="network_error">Error de red</string>
+    <string name="network_error_with_message">Error de red: %1$s</string>
+    <string name="profile_update_failed">Actualización fallida</string>
+    <string name="profile_empty_value">—</string>
+    <string name="profile_status_badge_format">• %1$s</string>
+    <string name="profile_cert_level_beginner">Principiante</string>
+    <string name="profile_cert_level_advanced">Avanzado</string>
+    <string name="new_item">+ Nuevo</string>
+    <string name="hub_label">Hub:</string>
+    <string name="share">Compartir</string>
+    <string name="repost">Republicar</string>
+    <string name="reposted">Republicado</string>
+    <string name="report">Reportar</string>
+    <string name="copied">¡Copiado!</string>
+    <string name="comment_singular">comentario</string>
+    <string name="comment_plural">comentarios</string>
+    <string name="repost_singular">republicación</string>
+    <string name="repost_plural">republicaciones</string>
+    <string name="forum_repost_count_format">%1$d %2$s</string>
+    <string name="forum_reposted_by_format">🔁 %1$s republicó</string>
+    <string name="forum_post_not_found">Publicación no encontrada</string>
+    <string name="forum_post_deleted">Publicación eliminada</string>
+    <string name="forum_delete_failed">No se pudo eliminar la publicación</string>
+    <string name="forum_delete_post_title">Eliminar publicación</string>
+    <string name="forum_delete_post_confirm">¿Seguro que deseas eliminar esta publicación? Esta acción no se puede deshacer.</string>
+    <string name="forum_report_title">Reportar esta publicación</string>
+    <string name="forum_report_success">Reporte enviado. Gracias.</string>
+    <string name="forum_report_already_exists">Ya reportaste esta publicación.</string>
+    <string name="forum_report_failed">No se pudo enviar el reporte.</string>
+    <string name="forum_reposted">¡Republicado!</string>
+    <string name="forum_repost_failed">No se pudo republicar.</string>
+    <string name="forum_no_comments_yet">Aún no hay comentarios. ¡Sé el primero!</string>
+    <string name="posting">Publicando…</string>
+    <string name="post_comment">Publicar comentario</string>
+    <string name="forum_load_failed">No se pudieron cargar las publicaciones</string>
+    <string name="sign_in_to_vote">Inicia sesión para votar</string>
+    <string name="help_requests_load_failed">No se pudieron cargar las solicitudes</string>
+    <string name="help_offers_load_failed">No se pudieron cargar las ofertas</string>
+    <string name="help_request_invalid">Solicitud inválida</string>
+    <string name="help_request_detail_load_failed">No se pudieron cargar los detalles</string>
+    <string name="help_request_author_format">Publicado por %1$s</string>
+    <string name="help_request_comments_load_failed">No se pudieron cargar los comentarios</string>
+    <string name="mark_resolved">Marcar como resuelta</string>
+    <string name="resolving">Resolviendo…</string>
+    <string name="help_request_resolved">Marcada como resuelta.</string>
+    <string name="help_request_status_update_failed">No se pudo actualizar el estado.</string>
+    <string name="help_request_delete_title">Eliminar solicitud</string>
+    <string name="help_request_delete_confirm">¿Seguro que deseas eliminar esta solicitud? No se puede deshacer.</string>
+    <string name="help_request_delete_forbidden">Solo puedes eliminar tus propias solicitudes.</string>
+    <string name="help_request_deleted">Solicitud eliminada.</string>
+    <string name="comment_delete_title">Eliminar comentario</string>
+    <string name="comment_delete_confirm">¿Seguro que deseas eliminar este comentario?</string>
+    <string name="comment_delete_failed">No se pudo eliminar el comentario.</string>
+    <string name="comment_empty_error">El comentario no puede estar vacío.</string>
+    <string name="comment_post_failed">No se pudo publicar el comentario.</string>
+    <string name="help_offer_author_format">Ofrecido por %1$s</string>
+    <string name="help_offer_detail_category_format">Categoría: %1$s</string>
+    <string name="help_offer_detail_availability_format">Disponibilidad: %1$s</string>
+    <string name="help_offer_delete_failed">No se pudo eliminar la oferta</string>
+    <string name="ok">OK</string>
+    <string name="post_type_label">Tipo de publicación</string>
+    <string name="images_label">Imágenes</string>
+    <string name="upload_from_device">Subir desde el dispositivo</string>
+    <string name="image_urls_one_per_line">URLs de imágenes (una por línea)</string>
+</resources>

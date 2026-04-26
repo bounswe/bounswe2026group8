@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Emergency Hub</string>
+    <string name="app_title">Acil Durum\nHazırlık Merkezi</string>
+    <string name="app_subtitle">Acil durumlara hazırlanın, komşularınızla bağlantı kurun ve birlikte topluluk direncini oluşturun.</string>
+    <string name="emergency_hub">Acil Durum Merkezi</string>
+
+    <!-- Auth actions -->
+    <string name="sign_up">Kayıt Ol</string>
+    <string name="sign_in">Giriş Yap</string>
+    <string name="signing_up">Kayıt yapılıyor…</string>
+    <string name="signing_in">Giriş yapılıyor…</string>
+    <string name="logout">Çıkış Yap</string>
+
+    <!-- Sign Up screen -->
+    <string name="create_account">Hesap Oluştur</string>
+    <string name="join_community">Mahalle acil durum hub\'ınıza katılın</string>
+    <string name="full_name">Ad Soyad</string>
+    <string name="email">E-posta</string>
+    <string name="password">Şifre</string>
+    <string name="confirm_password">Şifreyi Onayla</string>
+    <string name="select_role">Rolünüzü seçin</string>
+    <string name="role_standard">Standart</string>
+    <string name="role_expert">Uzman</string>
+    <string name="expertise_field">Uzmanlık Alanı</string>
+    <string name="neighborhood_optional">Mahalle / Adres (isteğe bağlı)</string>
+    <string name="already_have_account">Zaten hesabınız var mı? Giriş Yap</string>
+
+    <!-- Sign In screen -->
+    <string name="welcome_back">Hoş Geldiniz</string>
+    <string name="sign_in_subtitle">Acil durum hub hesabınıza giriş yapın</string>
+    <string name="no_account">Hesabınız yok mu? Kayıt Ol</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_placeholder">Hoş Geldiniz!</string>
+    <string name="feature_forum">Forum</string>
+    <string name="feature_forum_desc">Topluluk tartışmaları</string>
+    <string name="feature_help">Yardım Talepleri</string>
+    <string name="feature_help_desc">Yardım isteyin veya sunun</string>
+    <string name="feature_profile">Profil</string>
+    <string name="feature_profile_desc">Hesabınızı yönetin</string>
+    <string name="feature_offline">Çevrimdışı Bilgi</string>
+    <string name="feature_offline_desc">Kritik veri erişimi</string>
+
+    <!-- Help Center -->
+    <string name="help_center_title">Yardım Merkezi</string>
+    <string name="tab_requests">Talepler</string>
+    <string name="tab_offers">Teklifler</string>
+    <string name="help_requests_title">Yardım Talepleri</string>
+    <string name="filter_all">Tümü</string>
+    <string name="filter_medical">Tıbbi</string>
+    <string name="filter_food">Yiyecek</string>
+    <string name="filter_shelter">Barınak</string>
+    <string name="filter_transport">Ulaşım</string>
+    <string name="category_medical">Tıbbi</string>
+    <string name="category_food">Yiyecek</string>
+    <string name="category_shelter">Barınak</string>
+    <string name="category_transport">Ulaşım</string>
+    <string name="category_other">Diğer</string>
+    <string name="urgency_low">Düşük</string>
+    <string name="urgency_medium">Orta</string>
+    <string name="urgency_high">Yüksek</string>
+    <string name="empty_help_requests">Yardım talebi bulunamadı</string>
+    <string name="empty_help_requests_hint">Filtrelerinizi değiştirmeyi veya daha sonra tekrar kontrol etmeyi deneyin</string>
+    <string name="status_open">Açık</string>
+    <string name="status_expert_responding">Uzman Yanıtlıyor</string>
+    <string name="status_resolved">Çözüldü</string>
+
+    <!-- Create Help Request -->
+    <string name="create_help_request">Yardım Talebi Oluştur</string>
+    <string name="create_help_request_subtitle">Ne tür yardıma ihtiyacınız olduğunu açıklayın</string>
+    <string name="help_title">Başlık</string>
+    <string name="help_description">Açıklama</string>
+    <string name="select_category">Kategori seçin</string>
+    <string name="select_urgency">Aciliyet seçin</string>
+    <string name="location_text_hint">Konum açıklaması (isteğe bağlı)</string>
+    <string name="use_my_location">Konumumu Kullan</string>
+    <string name="location_acquired">Konum alındı</string>
+    <string name="location_section">Konum (isteğe bağlı)</string>
+    <string name="submitting">Gönderiliyor…</string>
+    <string name="submit">Gönder</string>
+    <string name="help_request_created">Yardım talebi oluşturuldu!</string>
+    <string name="images_optional">Resimler (isteğe bağlı)</string>
+    <string name="upload_from_gallery">Galeri</string>
+    <string name="take_photo">Kamera</string>
+
+    <!-- Help Request Detail -->
+    <string name="help_request_detail_title">Yardım Talebi</string>
+    <string name="location_label">Konum</string>
+    <string name="comments_label">Yorumlar</string>
+    <string name="comments_count_label">Yorumlar (%d)</string>
+    <string name="no_comments_yet">Henüz yorum yok. İlk yanıt veren siz olun!</string>
+    <string name="comment_hint">Yorum yazın…</string>
+    <string name="send">Gönder</string>
+    <string name="sending">Gönderiliyor…</string>
+    <string name="comment_posted">Yorum gönderildi</string>
+    <string name="expert_badge">Uzman</string>
+
+    <!-- Help Offers -->
+    <string name="help_offers_title">Yardım Teklifleri</string>
+    <string name="feature_help_offers">Yardım Teklifleri</string>
+    <string name="feature_help_offers_desc">Becerilerinizi sunun</string>
+    <string name="empty_help_offers">Yardım teklifi bulunamadı</string>
+    <string name="empty_help_offers_hint">Topluluğunuzda yardım teklif eden ilk kişi siz olun</string>
+    <string name="create_help_offer">Yardım Teklifi Oluştur</string>
+    <string name="create_help_offer_subtitle">Ne tür yardım sunabileceğinizi açıklayın</string>
+    <string name="skill_or_resource">Beceri veya Kaynak</string>
+    <string name="help_availability">Kullanılabilirlik</string>
+    <string name="availability_247">7/24</string>
+    <string name="availability_weekdays">Hafta içi</string>
+    <string name="availability_weekends">Hafta sonu</string>
+    <string name="availability_mornings">Sabahlar</string>
+    <string name="availability_evenings">Akşamlar</string>
+    <string name="availability_oncall">Çağrı üzerine</string>
+    <string name="help_offer_created">Yardım teklifi oluşturuldu!</string>
+    <string name="delete_offer">Teklifi Sil</string>
+    <string name="delete_offer_confirm">Bu yardım teklifini silmek istediğinizden emin misiniz?</string>
+    <string name="help_offer_deleted">Yardım teklifi silindi</string>
+    <string name="delete">Sil</string>
+    <string name="cancel">İptal</string>
+
+    <!-- Offline Info screen -->
+    <string name="offline_info_title">Çevrimdışı Bilgi</string>
+    <string name="offline_info_heading">Acil Durum Hazırlık Kaynakları</string>
+    <string name="offline_info_desc">Acil durumlara hazırlanmak ve kendinizi ve topluluğunuzu korumak için kritik çevrimdışı bilgilere erişin.</string>
+    <string name="offline_info_tips_title">Önemli Kaynaklar</string>
+    <string name="offline_info_tips">• Acil durum telefon numaraları\n• İlk yardım temelleri\n• Tahliye prosedürleri\n• Güvenlik kontrol listeleri\n• Topluluk kaynakları</string>
+    <string name="hub_city">Hub (Şehir)</string>
+    <string name="select_hub">Hub seçin</string>
+
+    <!-- Notification Preferences -->
+    <string name="notification_preferences">Bildirim Tercihleri</string>
+    <string name="help_request_notifications">Yardım Talebi Bildirimleri</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profiliniz</string>
+    <string name="back_arrow">← Geri</string>
+    <string name="profile_personal_info">Kişisel Bilgiler</string>
+    <string name="profile_phone">Telefon</string>
+    <string name="profile_blood_type">Kan Grubu</string>
+    <string name="profile_emergency_contact">Acil Durum Kişisi</string>
+    <string name="profile_emergency_phone">Acil Durum Telefonu</string>
+    <string name="profile_bio">Biyografi</string>
+    <string name="profile_special_needs_label">Özel İhtiyaçlar</string>
+    <string name="profile_has_disability">Engellilik Var</string>
+    <string name="profile_availability">Kullanılabilirlik Durumu</string>
+    <string name="status_safe">Güvende</string>
+    <string name="status_needs_help">Yardıma İhtiyaç Var</string>
+    <string name="status_available">Müsait</string>
+    <string name="profile_resources">Kaynaklar</string>
+    <string name="profile_expertise">Uzmanlık Alanları</string>
+    <string name="profile_add">+ Ekle</string>
+    <string name="profile_save">Kaydet</string>
+    <string name="profile_resource_name">Kaynak adı</string>
+    <string name="profile_resource_category">Kategori</string>
+    <string name="profile_resource_qty">Miktar</string>
+    <string name="profile_no_resources">Henüz kaynak eklenmedi.</string>
+    <string name="profile_expertise_field">Alan (örn. İlk Yardım)</string>
+    <string name="profile_cert_url">Sertifika URL\'si (isteğe bağlı)</string>
+    <string name="profile_no_expertise">Henüz uzmanlık alanı eklenmedi.</string>
+
+    <!-- Forum -->
+    <string name="forum_title">Forum</string>
+    <string name="forum_hub_all">Tüm hub\'lar — herkes</string>
+    <string name="new_post">+ Yeni Gönderi</string>
+    <string name="tab_global">Genel</string>
+    <string name="tab_standard">Standart</string>
+    <string name="tab_urgent">Acil</string>
+    <string name="forum_type_global">Genel</string>
+    <string name="forum_type_standard">Standart</string>
+    <string name="forum_type_urgent">Acil</string>
+    <string name="new_post_format">Yeni %1$s Gönderisi</string>
+    <string name="hub_scoped_post">Hub\'a özel gönderi</string>
+    <string name="sort_newest">En Yeni</string>
+    <string name="sort_most_liked">En Beğenilen</string>
+    <string name="sort_hot">Popüler</string>
+    <string name="forum_loading">Gönderiler yükleniyor…</string>
+    <string name="forum_empty_global">Henüz genel gönderi yok.</string>
+    <string name="forum_empty_hub">Henüz %1$s gönderisi yok.</string>
+    <string name="forum_select_hub">Gönderileri görmek için hub seçin.</string>
+    <string name="back_to_dashboard">← Panoya Geri</string>
+    <string name="comment_count">%1$d %2$s</string>
+
+    <!-- Create Post -->
+    <string name="create_post_title">Yeni Gönderi</string>
+    <string name="create_post_subtitle_global">Herkes görsün (tüm hub\'lar)</string>
+    <string name="create_post_subtitle_hub">%1$s\'e gönderiliyor</string>
+    <string name="post_title_hint">Ne oluyor?</string>
+    <string name="post_content_hint">Durumu açıklayın, bilgi paylaşın veya yardım isteyin…</string>
+    <string name="title_label">Başlık</string>
+    <string name="content_label">İçerik</string>
+    <string name="create_post">Gönderi Oluştur</string>
+    <string name="creating_post">Oluşturuluyor…</string>
+    <string name="back_to_forum">← Foruma Geri</string>
+    <string name="title_required">Başlık gerekli.</string>
+    <string name="content_required">İçerik gerekli.</string>
+
+    <!-- Map -->
+    <string name="map_content_description">Yakındaki toplanma noktalarını gösteren harita</string>
+    <string name="nearest_label">En yakın toplanma noktası</string>
+    <string name="nearest_format">En yakın: %1$s</string>
+    <string name="back">Geri</string>
+
+    <!-- Language -->
+    <string name="language">Dil</string>
+    <string name="select_language">Dil Seç</string>
+    <string name="dashboard_welcome_format">Hoş geldin, %1$s!</string>
+    <string name="dashboard_role_expert">Uzman</string>
+    <string name="dashboard_role_standard">Standart</string>
+    <string name="dashboard_neighborhood_format">Konum: %1$s</string>
+    <string name="profile_empty_value">—</string>
+    <string name="profile_status_badge_format">• %1$s</string>
+    <string name="saved">Kaydedildi</string>
+    <string name="removed">Kaldırıldı</string>
+    <string name="network_error">Ağ hatası</string>
+    <string name="network_error_with_message">Ağ hatası: %1$s</string>
+    <string name="profile_update_failed">Güncelleme başarısız</string>
+    <string name="profile_resource_validation">Ad ve kategori gerekli</string>
+    <string name="profile_resource_added">Kaynak eklendi</string>
+    <string name="profile_resource_add_failed">Kaynak eklenemedi</string>
+    <string name="profile_cert_level_beginner">Başlangıç</string>
+    <string name="profile_cert_level_advanced">İleri</string>
+    <string name="profile_expertise_validation">Alan adı gerekli</string>
+    <string name="profile_expertise_added">Uzmanlık eklendi</string>
+    <string name="profile_expertise_add_failed">Uzmanlık eklenemedi</string>
+    <string name="delete_icon">✕</string>
+    <string name="offline_features_title">Çevrimdışı Özellikler</string>
+    <string name="offline_map">Çevrimdışı Harita</string>
+    <string name="emergency_checklist">Acil Durum Kontrol Listesi</string>
+    <string name="offline_contacts">Çevrimdışı Kişiler</string>
+    <string name="emergency_numbers">Acil Numaralar</string>
+    <string name="general_emergency">Genel Acil Durum</string>
+    <string name="call">Ara</string>
+    <string name="add_custom_number">Özel Numara Ekle</string>
+    <string name="offline_contact_name_hint">İsim (örn. Anne, Zehir Danışma)</string>
+    <string name="offline_contact_phone_hint">Telefon Numarası</string>
+    <string name="offline_contact_alias_placeholder">Takma Ad</string>
+    <string name="offline_contacts_load_failed">Çevrimdışı kişiler yüklenemedi. Sayfayı yeniden açın.</string>
+    <string name="offline_contacts_save_failed">Çevrimdışı kişiler kaydedilemedi.</string>
+    <string name="offline_contacts_fill_both_fields">Lütfen iki alanı da doldurun</string>
+    <string name="offline_contacts_delete_title">Kişiyi Sil</string>
+    <string name="offline_contacts_delete_confirm">%1$s kişisini kaldırmak istediğinize emin misiniz?</string>
+    <string name="offline_contacts_delete_failed">Çevrimdışı kişi silinemedi.</string>
+    <string name="first_aid_guide_title">Temel Beceriler Rehberi</string>
+    <string name="first_aid_displacement_title">Taşıma Becerileri</string>
+    <string name="first_aid_displacement_summary">Hastayı acil tehlikeden uzak güvenli bir yere taşıyın. Ciddi omurga şüphesinde zorunlu değilse hareket ettirmeyin.</string>
+    <string name="first_aid_displacement_detail">Yangin veya elektrik tehlikesi gibi riskler varsa, ilk yardim veren kisi icin guvenliyse hastayi guvenli bir yere tasiyin.\n\nCiddi omurga yaralanmasi suphesinde hasta zorunlu olmadikca hareket ettirilmemelidir. Tasimak gerekiyorsa bunu cok dikkatli ve olabildigince az yapin.\n\nGenellikle hasta, gerekirse gogus basisi uygulanabilecek sert bir zeminde sirtustu durmalidir.</string>
+    <string name="first_aid_checking_title">Kontrol Becerileri</string>
+    <string name="first_aid_checking_summary">Olay yeri güvenliğini, bilinç durumunu, kanamayı, nabzı ve solunumu hızlıca değerlendirin.</string>
+    <string name="first_aid_checking_detail">Kazazedenin durumunu degerlendirirken once yasami tehdit eden durumlara odaklanin.\n\nOmzuna dokunup yuksek sesle konusarak bilincini kontrol edin.\n\nSiddetli kanama varsa dogrudan basi uygulayin.\n\nHasta tepki vermiyorsa boyun veya bilek nabzini kontrol edin.\n\nGogus hareketlerini izleyip havayi dinleyerek solunumu kontrol edin.\n\nNabiz ve solunumu degerlendirirken 10 saniyeden fazla zaman kaybetmeyin.</string>
+    <string name="first_aid_cpr_title">Kardiyopulmoner Resüsitasyon</string>
+    <string name="first_aid_cpr_summary">Göğüs basısı ve gerekirse kurtarıcı nefesi içeren hayat kurtarıcı teknik.</string>
+    <string name="first_aid_cpr_detail">1. Bir elinizin topugunu gogsun ortasina yerlestirin.\n\n2. Diger elinizi ustune koyup parmaklarinizi kenetleyin.\n\n3. En az 5 cm derinliginde, dakikada yaklasik 100-120 basi hizinda guclu ve hizli bastirin.\n\n4. Her basidan sonra gogsun tamamen yukselmesine izin verin.\n\n5. Egitimliyseniz her 30 basidan sonra 2 kurtarici nefes verin.</string>
+    <string name="first_aid_abc_title">ABC Becerileri</string>
+    <string name="first_aid_abc_summary">Hava yolu, solunum ve dolaşımı bu sırayla kontrol edin.</string>
+    <string name="first_aid_abc_detail">A - Hava yolu: Basini hafifce geriye egip ceneyi kaldirarak hava yolunu acin.\n\nB - Solunum: En fazla 10 saniye boyunca normal solunumu bakarak, dinleyerek ve hissederek kontrol edin.\n\nC - Dolasim: Ciddi kanama olup olmadigini kontrol edin. Kisi normal nefes almiyorsa hemen CPR baslatin.\n\nAkcigerlere hava ulasabilmesi icin hava yolu acik olmalidir. Bilinci acik kisiler bunu kendiliginden saglar, bilincsiz kisiler saglayamayabilir.\n\nGerekli oldugunda iyilesme pozisyonunu kullanin, bogulmaya dikkat edin ve solunum yoksa ya da anormalse CPR uygulayin.</string>
+    <string name="help_requests_load_failed">Yardım talepleri yüklenemedi</string>
+    <string name="help_offers_load_failed">Yardım teklifleri yüklenemedi</string>
+    <string name="help_offer_delete_failed">Teklif silinemedi</string>
+    <string name="help_offer_author_format">Teklif eden: %1$s</string>
+    <string name="help_offer_detail_category_format">Kategori: %1$s</string>
+    <string name="help_offer_detail_availability_format">Uygunluk: %1$s</string>
+    <string name="empty_icon_requests">📋</string>
+    <string name="empty_icon_offers">🤝</string>
+    <string name="help_request_invalid">Geçersiz talep</string>
+    <string name="help_request_detail_load_failed">Detaylar yüklenemedi</string>
+    <string name="help_request_author_format">Gönderen: %1$s</string>
+    <string name="location_pin_format">📍 %1$s</string>
+    <string name="help_request_map_marker_title">Talep konumu</string>
+    <string name="help_request_comments_load_failed">Yorumlar yüklenemedi</string>
+    <string name="resolving">Çözülüyor…</string>
+    <string name="mark_resolved">Çözüldü Olarak İşaretle</string>
+    <string name="help_request_resolved">Çözüldü olarak işaretlendi.</string>
+    <string name="help_request_status_update_failed">Durum güncellenemedi.</string>
+    <string name="help_request_delete_title">Yardım Talebini Sil</string>
+    <string name="help_request_delete_confirm">Bu yardım talebini silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</string>
+    <string name="help_request_delete_forbidden">Yalnızca kendi taleplerinizi silebilirsiniz.</string>
+    <string name="help_request_deleted">Yardım talebi silindi.</string>
+    <string name="comment_delete_title">Yorumu Sil</string>
+    <string name="comment_delete_confirm">Bu yorumu silmek istediğinize emin misiniz?</string>
+    <string name="comment_delete_failed">Yorum silinemedi.</string>
+    <string name="comment_empty_error">Yorum boş olamaz.</string>
+    <string name="comment_post_failed">Yorum gönderilemedi.</string>
+    <string name="new_item">+ Yeni</string>
+    <string name="hub_label">Hub:</string>
+    <string name="share">Paylaş</string>
+    <string name="repost">Yeniden Paylaş</string>
+    <string name="reposted">Yeniden paylaşıldı</string>
+    <string name="report">Bildir</string>
+    <string name="copied">Kopyalandı!</string>
+    <string name="comment_singular">yorum</string>
+    <string name="comment_plural">yorum</string>
+    <string name="repost_singular">yeniden paylaşım</string>
+    <string name="repost_plural">yeniden paylaşım</string>
+    <string name="forum_repost_count_format">%1$d %2$s</string>
+    <string name="forum_reposted_by_format">🔁 %1$s yeniden paylaştı</string>
+    <string name="forum_post_not_found">Gönderi bulunamadı</string>
+    <string name="forum_post_deleted">Gönderi silindi</string>
+    <string name="forum_delete_failed">Gönderi silinemedi</string>
+    <string name="forum_delete_post_title">Gönderiyi Sil</string>
+    <string name="forum_delete_post_confirm">Bu gönderiyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</string>
+    <string name="forum_report_title">Bu gönderiyi bildir</string>
+    <string name="forum_report_success">Bildirim gönderildi. Teşekkürler.</string>
+    <string name="forum_report_already_exists">Bu gönderiyi zaten bildirdiniz.</string>
+    <string name="forum_report_failed">Bildirim gönderilemedi.</string>
+    <string name="report_reason_spam">Spam</string>
+    <string name="report_reason_misinformation">Yanlış Bilgi</string>
+    <string name="report_reason_abuse">Taciz</string>
+    <string name="report_reason_irrelevant">İlgisiz</string>
+    <string name="forum_reposted">Yeniden paylaşıldı!</string>
+    <string name="forum_repost_failed">Yeniden paylaşılamadı.</string>
+    <string name="forum_no_comments_yet">Henüz yorum yok. İlk siz olun!</string>
+    <string name="posting">Gönderiliyor…</string>
+    <string name="post_comment">Yorum Gönder</string>
+    <string name="forum_load_failed">Gönderiler yüklenemedi</string>
+    <string name="sign_in_to_vote">Oy vermek için giriş yapın</string>
+    <string name="ok">Tamam</string>
+    <string name="post_type_label">Gönderi Türü</string>
+    <string name="images_label">Görseller</string>
+    <string name="upload_from_device">Cihazdan Yükle</string>
+    <string name="image_urls_one_per_line">Gorsel URLleri (her satira bir tane)</string>
+</resources>
+

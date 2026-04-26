@@ -5,6 +5,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,8 @@ import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.bounswe2026group8.emergencyhub.map.cache.MapTileCacheHelper
 import com.bounswe2026group8.emergencyhub.map.data.GatheringPointCache
 import com.bounswe2026group8.emergencyhub.map.data.PreferencesManager
+import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
+import com.bounswe2026group8.emergencyhub.util.LocaleManager
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -26,20 +31,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
-import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
 import kotlinx.coroutines.tasks.await
 
-/**
- * Dashboard screen — the post-login home page.
- *
- * Displays:
- *   - Welcome message with user name
- *   - Role badge (STANDARD / EXPERT)
- *   - Expertise badge (if EXPERT)
- *   - Neighborhood badge (if provided)
- *   - Feature cards (Forum, Help Requests, Profile, Offline Info)
- *   - Logout button
- */
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var tokenManager: TokenManager
@@ -51,27 +44,50 @@ class DashboardActivity : AppCompatActivity() {
 
         tokenManager = TokenManager(this)
 
-        // If no token, redirect to Landing
         if (!tokenManager.isLoggedIn()) {
             navigateToLanding()
             return
         }
 
-        // Try cached user first, then refresh from /me
         tokenManager.getUser()?.let { displayUser(it) }
         fetchMe()
-
-        // Register FCM token for push notifications
         sendFcmTokenToBackend()
 
-        // Logout
         findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { performLogout() }
 
-        // Hub selector (load() is called in onResume)
         hubSelectorHelper = HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector))
-
-        // Feature cards
+        setupLanguageSelector()
         setupFeatureCards()
+    }
+
+    private fun setupLanguageSelector() {
+        val languageSpinner = findViewById<Spinner>(R.id.spinnerLanguage)
+
+        val languages = LocaleManager.getSupportedLanguages()
+        val displayNames = languages.map { LocaleManager.getDisplayName(it) }
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, displayNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        languageSpinner.adapter = adapter
+
+        val currentLanguage = LocaleManager.getLanguage(this)
+        val position = languages.indexOf(currentLanguage)
+        if (position >= 0) {
+            languageSpinner.setSelection(position)
+        }
+
+        languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedLanguage = languages[position]
+                val currentLanguage = LocaleManager.getLanguage(this@DashboardActivity)
+                if (selectedLanguage != currentLanguage) {
+                    LocaleManager.setLanguage(this@DashboardActivity, selectedLanguage)
+                    LocaleManager.applyLocale(this@DashboardActivity, selectedLanguage)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     override fun onResume() {
@@ -93,20 +109,23 @@ class DashboardActivity : AppCompatActivity() {
                     tokenManager.saveUser(user)
                     displayUser(user)
                 } else if (response.code() == 401) {
-                    // Token expired / invalid
                     tokenManager.clear()
                     navigateToLandingIfVisible()
                 }
-            } catch (e: Exception) {
-                // Network error — use cached data if available
+            } catch (_: Exception) {
             }
         }
     }
 
     private fun displayUser(user: UserData) {
-        findViewById<TextView>(R.id.txtWelcome).text = "Welcome, ${user.fullName}!"
+        findViewById<TextView>(R.id.txtWelcome).text =
+            getString(R.string.dashboard_welcome_format, user.fullName)
 
-        val roleLabel = if (user.role == "EXPERT") "🎓 Expert" else "👤 Standard"
+        val roleLabel = if (user.role == "EXPERT") {
+            getString(R.string.dashboard_role_expert)
+        } else {
+            getString(R.string.dashboard_role_standard)
+        }
         findViewById<TextView>(R.id.txtRole).text = roleLabel
 
         val txtExpertise = findViewById<TextView>(R.id.txtExpertise)
@@ -119,7 +138,8 @@ class DashboardActivity : AppCompatActivity() {
 
         val txtNeighborhood = findViewById<TextView>(R.id.txtNeighborhood)
         if (!user.neighborhoodAddress.isNullOrBlank()) {
-            txtNeighborhood.text = "📍 ${user.neighborhoodAddress}"
+            txtNeighborhood.text =
+                getString(R.string.dashboard_neighborhood_format, user.neighborhoodAddress)
             txtNeighborhood.visibility = TextView.VISIBLE
         } else {
             txtNeighborhood.visibility = TextView.GONE
@@ -131,7 +151,6 @@ class DashboardActivity : AppCompatActivity() {
             try {
                 RetrofitClient.getService(this@DashboardActivity).logout()
             } catch (_: Exception) {
-                // Even if the server call fails, clear local state
             }
             tokenManager.clear()
             navigateToLanding()
@@ -163,16 +182,10 @@ class DashboardActivity : AppCompatActivity() {
                 RetrofitClient.getService(this@DashboardActivity)
                     .updateFcmToken(FcmTokenRequest(fcmToken))
             } catch (_: Exception) {
-                // FCM token registration failed — will retry on next launch
             }
         }
     }
 
-    /**
-     * Silently pre-caches map tiles and gathering points in the background.
-     * Uses current GPS if location permission is already granted, otherwise
-     * falls back to the last saved location. Never prompts for permission.
-     */
     @Suppress("MissingPermission")
     private fun preCacheOfflineData() {
         val hasPermission = ContextCompat.checkSelfPermission(
@@ -191,11 +204,9 @@ class DashboardActivity : AppCompatActivity() {
                     runOfflineCache(lat, lon)
                 }
                 .addOnFailureListener {
-                    // GPS failed — use last saved location
                     runOfflineCacheFromSaved()
                 }
         } else {
-            // No permission — use last saved location (default: Istanbul)
             runOfflineCacheFromSaved()
         }
     }
@@ -208,7 +219,6 @@ class DashboardActivity : AppCompatActivity() {
     private fun runOfflineCache(lat: Double, lon: Double) {
         Log.d("Dashboard", "Pre-caching offline data for ($lat, $lon)")
 
-        // Initialize OSMDroid config so tile downloads have proper User-Agent and cache path
         org.osmdroid.config.Configuration.getInstance().load(
             this, getSharedPreferences("osmdroid", MODE_PRIVATE)
         )
@@ -217,10 +227,8 @@ class DashboardActivity : AppCompatActivity() {
         org.osmdroid.config.Configuration.getInstance().tileFileSystemCacheMaxBytes = 50L * 1024 * 1024
         org.osmdroid.config.Configuration.getInstance().tileFileSystemCacheTrimBytes = 40L * 1024 * 1024
 
-        // Cache map tiles (runs on OSMDroid's internal thread pool)
         MapTileCacheHelper.cacheUserArea(this, lat, lon)
 
-        // Cache gathering points from Overpass API
         lifecycleScope.launch {
             try {
                 val cache = GatheringPointCache(this@DashboardActivity)

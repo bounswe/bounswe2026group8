@@ -155,14 +155,24 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         // Category dropdown
         val categoryAdapter = ArrayAdapter(
             this, android.R.layout.simple_dropdown_item_1line,
-            arrayOf("Medical", "Food", "Shelter", "Transport", "Other")
+            arrayOf(
+                getString(R.string.category_medical),
+                getString(R.string.category_food),
+                getString(R.string.category_shelter),
+                getString(R.string.category_transport),
+                getString(R.string.category_other),
+            )
         )
         dropdownCategory.setAdapter(categoryAdapter)
 
         // Urgency dropdown
         val urgencyAdapter = ArrayAdapter(
             this, android.R.layout.simple_dropdown_item_1line,
-            arrayOf("Low", "Medium", "High")
+            arrayOf(
+                getString(R.string.urgency_low),
+                getString(R.string.urgency_medium),
+                getString(R.string.urgency_high)
+            )
         )
         dropdownUrgency.setAdapter(urgencyAdapter)
 
@@ -367,18 +377,18 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         }
 
         val category = when (dropdownCategory.text.toString()) {
-            "Medical"   -> "MEDICAL"
-            "Food"      -> "FOOD"
-            "Shelter"   -> "SHELTER"
-            "Transport" -> "TRANSPORT"
-            "Other"     -> "OTHER"
+            getString(R.string.category_medical)   -> "MEDICAL"
+            getString(R.string.category_food)      -> "FOOD"
+            getString(R.string.category_shelter)   -> "SHELTER"
+            getString(R.string.category_transport) -> "TRANSPORT"
+            getString(R.string.category_other)     -> "OTHER"
             else        -> "MEDICAL"
         }
 
         val urgency = when (dropdownUrgency.text.toString()) {
-            "Low"    -> "LOW"
-            "Medium" -> "MEDIUM"
-            "High"   -> "HIGH"
+            getString(R.string.urgency_low)    -> "LOW"
+            getString(R.string.urgency_medium) -> "MEDIUM"
+            getString(R.string.urgency_high)   -> "HIGH"
             else     -> "LOW"
         }
 

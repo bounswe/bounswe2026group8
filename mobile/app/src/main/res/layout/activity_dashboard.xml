@@ -28,6 +28,17 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+            <!-- Language selector -->
+            <Spinner
+                android:id="@+id/spinnerLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:minWidth="70dp"
+                android:background="@drawable/sort_pill_active_bg"
+                android:paddingStart="8dp"
+                android:paddingEnd="6dp"
+                android:layout_marginEnd="8dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
                 android:layout_width="wrap_content"

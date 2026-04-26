@@ -11,27 +11,28 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { createHelpRequest, uploadHelpRequestImages, resolveImageUrl } from '../services/api';
-
-/** Category options — matches backend Category.choices. */
-const CATEGORIES = [
-  { value: 'MEDICAL', label: 'Medical' },
-  { value: 'FOOD', label: 'Food' },
-  { value: 'SHELTER', label: 'Shelter' },
-  { value: 'TRANSPORT', label: 'Transport' },
-  { value: 'OTHER', label: 'Other' },
-];
-
-/** Urgency options — matches backend Urgency.choices. */
-const URGENCIES = [
-  { value: 'LOW', label: 'Low' },
-  { value: 'MEDIUM', label: 'Medium' },
-  { value: 'HIGH', label: 'High' },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function HelpRequestCreatePage() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const { t } = useTranslation(); // Initialize hook
+
+  // Move arrays inside the component to access 't' for labels
+  const CATEGORIES = [
+    { value: 'MEDICAL', label: t('help_request_create.categories.medical') },
+    { value: 'FOOD', label: t('help_request_create.categories.food') },
+    { value: 'SHELTER', label: t('help_request_create.categories.shelter') },
+    { value: 'TRANSPORT', label: t('help_request_create.categories.transport') },
+    { value: 'OTHER', label: t('help_request_create.categories.other') },
+  ];
+
+  const URGENCIES = [
+    { value: 'LOW', label: t('help_request_create.urgencies.low') },
+    { value: 'MEDIUM', label: t('help_request_create.urgencies.medium') },
+    { value: 'HIGH', label: t('help_request_create.urgencies.high') },
+  ];
 
   /* ── Form state ─────────────────────────────────────────────────────────── */
   const [form, setForm] = useState({
@@ -56,7 +57,6 @@ export default function HelpRequestCreatePage() {
   const [locating, setLocating] = useState(false);
   const [locationStatus, setLocationStatus] = useState('');
 
-  /** Uploads selected files and appends returned URLs to the preview list. */
   const handleFileSelect = async (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
@@ -69,18 +69,16 @@ export default function HelpRequestCreatePage() {
     if (ok) {
       setUploadedImages((prev) => [...prev, ...data.urls]);
     } else {
-      setGlobalError(data?.detail || 'Image upload failed.');
+      setGlobalError(data?.detail || t('help_request_create.errors.upload_failed'));
     }
 
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  /** Removes a previously uploaded image from the preview list. */
   const removeUploadedImage = (index) => {
     setUploadedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  /** Generic change handler — clears field error on edit. */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -93,10 +91,9 @@ export default function HelpRequestCreatePage() {
     }
   };
 
-  /** Uses the browser Geolocation API to populate lat/lng fields. */
   const handleUseLocation = () => {
     if (!navigator.geolocation) {
-      setLocationStatus('Geolocation is not supported by your browser.');
+      setLocationStatus(t('help_request_create.location_status.not_supported'));
       return;
     }
 
@@ -104,27 +101,27 @@ export default function HelpRequestCreatePage() {
     setLocationStatus('');
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setForm((prev) => ({
-          ...prev,
-          latitude: position.coords.latitude.toFixed(6),
-          longitude: position.coords.longitude.toFixed(6),
-        }));
-        setLocationStatus('Location captured.');
-        setLocating(false);
-      },
-      (err) => {
-        setLocationStatus(`Could not get location: ${err.message}`);
-        setLocating(false);
-      },
+        (position) => {
+          setForm((prev) => ({
+            ...prev,
+            latitude: position.coords.latitude.toFixed(6),
+            longitude: position.coords.longitude.toFixed(6),
+          }));
+          setLocationStatus(t('help_request_create.location_status.captured'));
+          setLocating(false);
+        },
+        (err) => {
+          setLocationStatus(t('help_request_create.location_status.failed', { message: err.message }));
+          setLocating(false);
+        },
     );
   };
 
   /* ── Client-side validation ─────────────────────────────────────────────── */
   const validate = () => {
     const errs = {};
-    if (!form.title.trim()) errs.title = 'Title is required.';
-    if (!form.description.trim()) errs.description = 'Description is required.';
+    if (!form.title.trim()) errs.title = t('help_request_create.errors.title_required');
+    if (!form.description.trim()) errs.description = t('help_request_create.errors.description_required');
     return errs;
   };
 
@@ -142,7 +139,6 @@ export default function HelpRequestCreatePage() {
 
     setSubmitting(true);
 
-    // Build payload — only include optional fields when they have values.
     const payload = {
       title: form.title.trim(),
       description: form.description.trim(),
@@ -160,10 +156,8 @@ export default function HelpRequestCreatePage() {
     setSubmitting(false);
 
     if (ok) {
-      // Redirect to the newly created request's detail page.
       navigate(`/help-requests/${data.id}`);
     } else {
-      // Map per-field errors from the API response.
       if (typeof data === 'object' && data !== null) {
         const mapped = {};
         for (const [field, msgs] of Object.entries(data)) {
@@ -173,7 +167,7 @@ export default function HelpRequestCreatePage() {
         if (Object.keys(mapped).length > 0) setErrors(mapped);
       }
       setGlobalError(
-        data.detail || data.non_field_errors?.[0] || 'Failed to create help request.',
+          data.detail || data.non_field_errors?.[0] || t('help_request_create.errors.submit_failed'),
       );
     }
   };
@@ -181,182 +175,173 @@ export default function HelpRequestCreatePage() {
   if (!user) return null;
 
   return (
-    <div className="page help-create-page">
-      {/* Header */}
-      <header className="help-requests-header">
-        <button
-          className="btn btn-secondary btn-sm"
-          onClick={() => navigate('/help-requests')}
-        >
-          &larr; Back
-        </button>
-        <h2 className="gradient-text">New Help Request</h2>
-      </header>
+      <div className="page help-create-page">
+        <header className="help-requests-header">
+          <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => navigate('/help-requests')}
+          >
+            &larr; {t('help_request_create.header.back')}
+          </button>
+          <h2 className="gradient-text">{t('help_request_create.header.title')}</h2>
+        </header>
 
-      {/* Form card */}
-      <div className="help-create-card">
-        {globalError && <div className="alert alert-error">{globalError}</div>}
+        <div className="help-create-card">
+          {globalError && <div className="alert alert-error">{globalError}</div>}
 
-        <form onSubmit={handleSubmit} noValidate>
-          {/* Title */}
-          <div className="form-group">
-            <label htmlFor="title">Title</label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              placeholder="Brief summary of your request"
-              value={form.title}
-              onChange={handleChange}
-              className={errors.title ? 'input-error' : ''}
-            />
-            {errors.title && <span className="field-error">{errors.title}</span>}
-          </div>
-
-          {/* Description */}
-          <div className="form-group">
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              className={`help-create-textarea${errors.description ? ' input-error' : ''}`}
-              placeholder="Describe what help you need..."
-              value={form.description}
-              onChange={handleChange}
-              rows={5}
-            />
-            {errors.description && (
-              <span className="field-error">{errors.description}</span>
-            )}
-          </div>
-
-          {/* Images — optional */}
-          <div className="form-group">
-            <label>Images <span className="optional-tag">optional</span></label>
-
-            <div className="image-upload-area">
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-              >
-                {uploading ? 'Uploading...' : 'Upload from Device'}
-              </button>
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="form-group">
+              <label htmlFor="title">{t('help_request_create.labels.title')}</label>
               <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/gif,image/webp"
-                multiple
-                onChange={handleFileSelect}
-                style={{ display: 'none' }}
+                  id="title"
+                  name="title"
+                  type="text"
+                  placeholder={t('help_request_create.placeholders.title')}
+                  value={form.title}
+                  onChange={handleChange}
+                  className={errors.title ? 'input-error' : ''}
+              />
+              {errors.title && <span className="field-error">{errors.title}</span>}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="description">{t('help_request_create.labels.description')}</label>
+              <textarea
+                  id="description"
+                  name="description"
+                  className={`help-create-textarea${errors.description ? ' input-error' : ''}`}
+                  placeholder={t('help_request_create.placeholders.description')}
+                  value={form.description}
+                  onChange={handleChange}
+                  rows={5}
+              />
+              {errors.description && (
+                  <span className="field-error">{errors.description}</span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label>{t('help_request_create.labels.images')} <span className="optional-tag">{t('help_request_create.labels.optional')}</span></label>
+
+              <div className="image-upload-area">
+                <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                >
+                  {uploading ? t('help_request_create.actions.uploading') : t('help_request_create.actions.upload')}
+                </button>
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif,image/webp"
+                    multiple
+                    onChange={handleFileSelect}
+                    style={{ display: 'none' }}
+                />
+              </div>
+
+              {uploadedImages.length > 0 && (
+                  <div className="image-preview-list">
+                    {uploadedImages.map((url, i) => (
+                        <div className="image-preview-item" key={i}>
+                          <img src={resolveImageUrl(url)} alt={`Upload ${i + 1}`} className="image-preview-thumb" />
+                          <button
+                              type="button"
+                              className="image-preview-remove"
+                              onClick={() => removeUploadedImage(i)}
+                              title={t('help_request_create.actions.remove')}
+                          >&times;</button>
+                        </div>
+                    ))}
+                  </div>
+              )}
+            </div>
+
+            <div className="help-create-row">
+              <div className="form-group help-create-half">
+                <label htmlFor="category">{t('help_request_create.labels.category')}</label>
+                <select
+                    id="category"
+                    name="category"
+                    value={form.category}
+                    onChange={handleChange}
+                >
+                  {CATEGORIES.map((c) => (
+                      <option key={c.value} value={c.value}>{c.label}</option>
+                  ))}
+                </select>
+                {errors.category && (
+                    <span className="field-error">{errors.category}</span>
+                )}
+              </div>
+
+              <div className="form-group help-create-half">
+                <label htmlFor="urgency">{t('help_request_create.labels.urgency')}</label>
+                <select
+                    id="urgency"
+                    name="urgency"
+                    value={form.urgency}
+                    onChange={handleChange}
+                >
+                  {URGENCIES.map((u) => (
+                      <option key={u.value} value={u.value}>{u.label}</option>
+                  ))}
+                </select>
+                {errors.urgency && (
+                    <span className="field-error">{errors.urgency}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="location_text">
+                {t('help_request_create.labels.location_text')} <span className="optional-tag">{t('help_request_create.labels.optional')}</span>
+              </label>
+              <input
+                  id="location_text"
+                  name="location_text"
+                  type="text"
+                  placeholder={t('help_request_create.placeholders.location_text')}
+                  value={form.location_text}
+                  onChange={handleChange}
               />
             </div>
 
-            {uploadedImages.length > 0 && (
-              <div className="image-preview-list">
-                {uploadedImages.map((url, i) => (
-                  <div className="image-preview-item" key={i}>
-                    <img src={resolveImageUrl(url)} alt={`Upload ${i + 1}`} className="image-preview-thumb" />
-                    <button
-                      type="button"
-                      className="image-preview-remove"
-                      onClick={() => removeUploadedImage(i)}
-                      title="Remove"
-                    >&times;</button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Category & Urgency — side by side on desktop */}
-          <div className="help-create-row">
-            <div className="form-group help-create-half">
-              <label htmlFor="category">Category</label>
-              <select
-                id="category"
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
-                ))}
-              </select>
-              {errors.category && (
-                <span className="field-error">{errors.category}</span>
-              )}
-            </div>
-
-            <div className="form-group help-create-half">
-              <label htmlFor="urgency">Urgency</label>
-              <select
-                id="urgency"
-                name="urgency"
-                value={form.urgency}
-                onChange={handleChange}
-              >
-                {URGENCIES.map((u) => (
-                  <option key={u.value} value={u.value}>{u.label}</option>
-                ))}
-              </select>
-              {errors.urgency && (
-                <span className="field-error">{errors.urgency}</span>
-              )}
-            </div>
-          </div>
-
-          {/* Location text — optional */}
-          <div className="form-group">
-            <label htmlFor="location_text">
-              Location description <span className="optional-tag">optional</span>
-            </label>
-            <input
-              id="location_text"
-              name="location_text"
-              type="text"
-              placeholder="e.g. Near Central Park entrance"
-              value={form.location_text}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Geolocation — optional */}
-          <div className="form-group">
-            <label>
-              Coordinates <span className="optional-tag">optional</span>
-            </label>
-            <div className="help-create-location-row">
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm"
-                onClick={handleUseLocation}
-                disabled={locating}
-              >
-                {locating ? 'Locating...' : 'Use my location'}
-              </button>
-              {form.latitude && form.longitude && (
-                <span className="help-create-coords">
+            <div className="form-group">
+              <label>
+                {t('help_request_create.labels.coordinates')} <span className="optional-tag">{t('help_request_create.labels.optional')}</span>
+              </label>
+              <div className="help-create-location-row">
+                <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    onClick={handleUseLocation}
+                    disabled={locating}
+                >
+                  {locating ? t('help_request_create.actions.locating') : t('help_request_create.actions.use_location')}
+                </button>
+                {form.latitude && form.longitude && (
+                    <span className="help-create-coords">
                   {form.latitude}, {form.longitude}
                 </span>
+                )}
+              </div>
+              {locationStatus && (
+                  <span className="help-create-location-status">{locationStatus}</span>
               )}
             </div>
-            {locationStatus && (
-              <span className="help-create-location-status">{locationStatus}</span>
-            )}
-          </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            className="btn btn-primary btn-block"
-            disabled={submitting || uploading}
-          >
-            {submitting ? 'Submitting...' : 'Submit Request'}
-          </button>
-        </form>
+            <button
+                type="submit"
+                className="btn btn-primary btn-block"
+                disabled={submitting || uploading}
+            >
+              {submitting ? t('help_request_create.actions.submitting') : t('help_request_create.actions.submit')}
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
   );
 }

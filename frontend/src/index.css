@@ -170,6 +170,59 @@
      font-size: 0.9rem;
      color: var(--text-secondary);
    }
+
+   /* ═══════════════════════════════════════════════════════════════════════════════
+      Language Selector
+      ═══════════════════════════════════════════════════════════════════════════════ */
+    .language-selector-bar {
+        position: fixed;
+        top: 1rem;
+        left: 1.25rem;
+        z-index: 2000;
+    }
+
+    .language-selector-select {
+        width: auto;
+        min-width: 70px;
+        padding: 0.4rem 2rem 0.4rem 0.85rem;
+        font-family: var(--font);
+        font-size: 0.85rem;
+        font-weight: 600;
+        background-color: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        cursor: pointer;
+
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5l6.5 6 6.5-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.6rem center;
+
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .language-selector-select:focus {
+        outline: none;
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .language-selector-select:hover {
+        border-color: var(--accent);
+    }
+
+    .language-selector-select option {
+        background-color: var(--bg-surface);
+        color: var(--text-primary);
+    }
+
+    @media (max-width: 600px) {
+        .language-selector-bar {
+            top: 0.5rem;
+            left: 0.5rem;
+        }
+    }
    
    /* ═══════════════════════════════════════════════════════════════════════════════
       Auth Pages (Sign Up / Sign In)

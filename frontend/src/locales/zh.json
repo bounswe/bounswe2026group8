@@ -1,0 +1,810 @@
+{
+  "hub": "中心",
+  "landing": {
+    "title_main": "社区",
+    "title_sub": "应急中心",
+    "subtitle": "为突发事件做好准备。与邻居建立联系。通过互助建立社区\n韧性 —— 即使在断网时也能保持\n联系。",
+    "btn_get_started": "开始使用",
+    "btn_sign_in": "登录",
+    "features": [
+      {
+        "icon": "🛡️",
+        "title": "灾害准备",
+        "desc": "获取您所在社区的关键信息和应急计划。"
+      },
+      {
+        "icon": "🤝",
+        "title": "互助互救",
+        "desc": "在紧急情况下向邻居提供并请求帮助。"
+      },
+      {
+        "icon": "📡",
+        "title": "离线优先",
+        "desc": "即使没有互联网连接，关键数据也依然可访问。"
+      }
+    ]
+  },
+  "dashboard": {
+    "header_title": "应急中心",
+    "btn_logout": "登出",
+    "welcome": "欢迎，{{name}}！",
+    "roles": {
+      "expert": "专家",
+      "standard": "普通"
+    },
+    "status": {
+      "safe": "安全",
+      "needs_help": "需要帮助",
+      "available_to_help": "可提供帮助"
+    },
+    "features": {
+      "forum": {"title": "论坛", "desc": "社区讨论"},
+      "help_requests": {"title": "求助", "desc": "寻求或提供帮助"},
+      "profile": {"title": "个人资料", "desc": "管理您的账户"},
+      "emergency_info": {"title": "应急信息", "desc": "获取关键数据"}
+    }
+  },
+  "forum": {
+    "status": {
+      "safe": "安全",
+      "needs_help": "需要帮助",
+      "available_to_help": "可提供帮助"
+    },
+    "time": {
+      "just_now": "刚刚",
+      "m_ago": "{{count}} 分钟前",
+      "h_ago": "{{count}} 小时前",
+      "d_ago": "{{count}} 天前"
+    },
+    "header": {
+      "title": "论坛",
+      "global_hub_label": "所有中心 — 所有人",
+      "select_hub_label": "选择一个中心",
+      "btn_new_post": "+ 发帖"
+    },
+    "tabs": {
+      "global": "全局",
+      "standard": "普通",
+      "urgent": "紧急"
+    },
+    "sort": {
+      "newest": "最新",
+      "most_liked": "最多点赞",
+      "hot": "热门"
+    },
+    "empty_states": {
+      "loading": "正在加载帖子...",
+      "select_hub": "选择一个中心以查看 {{tab}} 帖子。",
+      "no_global": "暂无全局帖子。",
+      "no_hub_posts": "{{hub}} 暂无 {{tab}} 帖子。"
+    },
+    "post": {
+      "upvote": "赞",
+      "downvote": "踩",
+      "reposted_from": "转发自 {{name}}",
+      "expert": "专家",
+      "comment_single": "{{count}} 条评论",
+      "comment_plural": "{{count}} 条评论",
+      "repost_single": "{{count}} 次转发",
+      "repost_plural": "{{count}} 次转发",
+      "copy_link": "复制链接",
+      "copied": "已复制！",
+      "share": "分享",
+      "repost_global": "转发 (全局)",
+      "repost_hub": "转发到您的中心",
+      "repost": "转发"
+    },
+    "actions": {
+      "back_to_top": "回到顶部",
+      "back_to_dashboard": "返回控制台"
+    }
+  },
+  "help_request_create": {
+    "header": {
+      "back": "返回",
+      "title": "新求助"
+    },
+    "labels": {
+      "title": "标题",
+      "description": "描述",
+      "images": "图片",
+      "category": "分类",
+      "urgency": "紧急程度",
+      "location_text": "位置描述",
+      "coordinates": "坐标",
+      "optional": "可选"
+    },
+    "placeholders": {
+      "title": "简要概括您的请求",
+      "description": "描述您需要什么帮助...",
+      "location_text": "例如：中央公园入口附近"
+    },
+    "actions": {
+      "upload": "从设备上传",
+      "uploading": "上传中...",
+      "remove": "移除",
+      "use_location": "使用我的位置",
+      "locating": "定位中...",
+      "submit": "提交请求",
+      "submitting": "提交中..."
+    },
+    "categories": {
+      "medical": "医疗",
+      "food": "食物",
+      "shelter": "避难所",
+      "transport": "交通",
+      "other": "其他"
+    },
+    "urgencies": {
+      "low": "低",
+      "medium": "中",
+      "high": "高"
+    },
+    "errors": {
+      "title_required": "标题是必填项。",
+      "description_required": "描述是必填项。",
+      "upload_failed": "图片上传失败。",
+      "submit_failed": "创建求助请求失败。"
+    },
+    "location_status": {
+      "not_supported": "您的浏览器不支持地理定位功能。",
+      "captured": "已获取位置。",
+      "failed": "无法获取位置：{{message}}"
+    }
+  },
+  "help_request_detail": {
+    "header": {
+      "back": "返回",
+      "title": "请求详情"
+    },
+    "states": {
+      "loading": "加载中...",
+      "not_found": "未找到请求。",
+      "fetch_failed": "加载请求失败。",
+      "network_error": "网络错误。请重试。",
+      "post_failed": "发表评论失败。"
+    },
+    "time": {
+      "just_now": "刚刚",
+      "m_ago": "{{count}} 分钟前",
+      "h_ago": "{{count}} 小时前",
+      "d_ago": "{{count}} 天前"
+    },
+    "labels": {
+      "by": "发布者：",
+      "expert": "专家",
+      "hub": "中心："
+    },
+    "urgency": {
+      "low": "低",
+      "medium": "中",
+      "high": "高"
+    },
+    "status": {
+      "open": "开放",
+      "expert_responding": "专家处理中",
+      "resolved": "已解决"
+    },
+    "availability": {
+      "safe": "安全",
+      "needs_help": "需要帮助",
+      "available": "可提供帮助"
+    },
+    "actions": {
+      "resolving": "解决中...",
+      "mark_resolved": "标记为已解决",
+      "delete": "删除",
+      "cancel": "取消"
+    },
+    "modal": {
+      "title": "删除请求",
+      "desc": "您确定要删除此求助吗？此操作无法撤销。"
+    },
+    "location": {
+      "title": "位置"
+    },
+    "comments": {
+      "title": "评论 ({{count}})",
+      "empty": "暂无评论。成为第一个回复的人吧！",
+      "delete_title": "删除评论",
+      "placeholder": "写下您的评论...",
+      "posting": "发布中...",
+      "post": "发表评论"
+    }
+  },
+  "help_requests": {
+    "header": {
+      "back": "控制台",
+      "title": "帮助中心",
+      "new_request": "+ 新求助",
+      "new_offer": "+ 新帮助",
+      "cancel": "取消"
+    },
+    "tabs": {
+      "requests": "求助",
+      "offers": "提供帮助"
+    },
+    "hub_context": "当前正在显示 {{tab}}，范围：",
+    "categories": {
+      "all": "所有分类",
+      "medical": "医疗",
+      "food": "食物",
+      "shelter": "避难所",
+      "transport": "交通",
+      "other": "其他"
+    },
+    "time": {
+      "just_now": "刚刚",
+      "m_ago": "{{count}} 分钟前",
+      "h_ago": "{{count}} 小时前",
+      "d_ago": "{{count}} 天前"
+    },
+    "urgency": {
+      "low": "低",
+      "medium": "中",
+      "high": "高"
+    },
+    "status": {
+      "open": "开放",
+      "expert_responding": "专家处理中",
+      "resolved": "已解决"
+    },
+    "availability_status": {
+      "safe": "安全",
+      "needs_help": "需要帮助",
+      "available": "可提供帮助"
+    },
+    "labels": {
+      "expert": "专家",
+      "deleting": "删除中...",
+      "delete": "删除"
+    },
+    "requests_tab": {
+      "loading": "正在加载求助信息...",
+      "error_fetch": "加载求助信息失败。",
+      "error_network": "网络错误。请重试。",
+      "empty_title": "未找到求助信息",
+      "empty_filter": "尝试选择其他分类。",
+      "empty_hub": "您的中心暂无求助信息。"
+    },
+    "offers_tab": {
+      "loading": "正在加载提供的帮助...",
+      "error_fetch": "加载提供的帮助失败。",
+      "error_network": "网络错误。请重试。",
+      "empty_title": "未找到提供的帮助",
+      "empty_filter": "尝试选择其他分类。",
+      "empty_hub": "成为您的中心第一个提供帮助的人吧！",
+      "form": {
+        "title": "创建帮助提供",
+        "category": "分类",
+        "skill": "技能或资源",
+        "skill_placeholder": "例如：急救、车辆、避难所空间",
+        "desc": "描述",
+        "desc_placeholder": "描述您可以提供什么...",
+        "availability": "可用时间",
+        "avail_placeholder": "— 选择可用时间 —",
+        "posting": "发布中...",
+        "post": "发布帮助",
+        "error_skill": "技能或资源是必填项。",
+        "error_desc": "描述是必填项。",
+        "error_avail": "可用时间是必填项。",
+        "error_submit": "创建帮助提供失败。"
+      },
+      "avail_options": {
+        "24_7": "全天候 (24/7)",
+        "weekdays": "工作日",
+        "weekends": "周末",
+        "mornings": "早上",
+        "evenings": "晚上",
+        "on_call": "随叫随到"
+      },
+      "modal": {
+        "availability": "可用时间",
+        "offered_by": "提供者：",
+        "posted": "发布时间"
+      }
+    }
+  },
+  "my_posts": {
+    "header": {
+      "title": "我的帖子",
+      "back": "返回"
+    },
+    "tabs": {
+      "posts": "论坛帖子",
+      "requests": "我的求助",
+      "offers": "提供的帮助"
+    },
+    "tab_names": {
+      "posts": "帖子",
+      "requests": "求助",
+      "offers": "提供的帮助"
+    },
+    "states": {
+      "loading": "加载中...",
+      "empty": "暂无{{tab}}。"
+    },
+    "forum_types": {
+      "global": "全局",
+      "standard": "普通",
+      "urgent": "紧急"
+    },
+    "urgency": {
+      "low": "低",
+      "medium": "中",
+      "high": "高"
+    },
+    "status": {
+      "open": "开放",
+      "expert_responding": "专家处理中",
+      "resolved": "已解决"
+    },
+    "categories": {
+      "medical": "医疗",
+      "food": "食物",
+      "shelter": "避难所",
+      "transport": "交通",
+      "other": "其他"
+    },
+    "time": {
+      "just_now": "刚刚",
+      "m_ago": "{{count}} 分钟前",
+      "h_ago": "{{count}} 小时前",
+      "d_ago": "{{count}} 天前"
+    },
+    "meta": {
+      "upvotes": "{{count}} 个赞",
+      "comments": "{{count}} 条评论",
+      "reposts": "{{count}} 次转发"
+    },
+    "modal": {
+      "availability": "可用时间",
+      "posted": "发布时间"
+    }
+  },
+  "post_create": {
+    "types": {
+      "global": "全局",
+      "standard": "普通",
+      "urgent": "紧急"
+    },
+    "header": {
+      "title": "新{{type}}帖子",
+      "subtitle_global": "所有人可见（所有中心）",
+      "subtitle_hub": "发布到 {{hub}}",
+      "subtitle_hub_fallback": "…"
+    },
+    "errors": {
+      "upload_failed": "图片上传失败。",
+      "title_required": "标题是必填项。",
+      "content_required": "内容是必填项。",
+      "select_hub": "请先选择一个中心。",
+      "create_failed": "创建帖子失败。"
+    },
+    "labels": {
+      "title": "标题",
+      "content": "内容",
+      "images": "图片",
+      "optional": "可选"
+    },
+    "placeholders": {
+      "title": "发生了什么事？",
+      "content": "描述情况，分享信息，或请求帮助...",
+      "image_urls": "或者在此处粘贴图片URL，每行一个"
+    },
+    "actions": {
+      "uploading": "上传中...",
+      "upload": "从设备上传",
+      "remove": "移除",
+      "creating": "创建中...",
+      "create": "创建帖子",
+      "back": "返回论坛"
+    }
+  },
+  "post_detail": {
+    "states": {
+      "loading": "加载中...",
+      "not_found": "未找到帖子。",
+      "edited": "(已编辑)",
+      "reposted": "已转发"
+    },
+    "actions": {
+      "back": "返回",
+      "edit": "编辑",
+      "delete": "删除",
+      "cancel": "取消",
+      "save": "保存",
+      "saving": "保存中...",
+      "upload": "从设备上传",
+      "uploading": "上传中...",
+      "remove": "移除",
+      "share": "分享",
+      "copied": "已复制！",
+      "repost": "转发",
+      "repost_error": "无法转发。",
+      "report": "举报"
+    },
+    "time": {
+      "just_now": "刚刚",
+      "m_ago": "{{count}} 分钟前",
+      "h_ago": "{{count}} 小时前",
+      "d_ago": "{{count}} 天前"
+    },
+    "availability": {
+      "safe": "安全",
+      "needs_help": "需要帮助",
+      "available": "可提供帮助"
+    },
+    "labels": {
+      "reposted_from": "转发自",
+      "expert": "专家",
+      "images": "图片",
+      "title": "标题",
+      "content": "内容",
+      "upvote": "赞",
+      "downvote": "踩"
+    },
+    "counts": {
+      "repost_single": "{{count}} 次转发",
+      "repost_plural": "{{count}} 次转发",
+      "comments": "评论 ({{count}})"
+    },
+    "comments": {
+      "placeholder": "写下您的评论...",
+      "post": "发表评论",
+      "posting": "发布中...",
+      "empty": "暂无评论。成为第一个评论的人吧！",
+      "delete_title": "删除评论"
+    },
+    "delete_modal": {
+      "title": "删除帖子",
+      "desc": "您确定要删除此帖子吗？此操作无法撤销。"
+    },
+    "report_modal": {
+      "title": "举报此帖",
+      "reason": "原因",
+      "submit": "提交",
+      "success": "举报已提交。谢谢。",
+      "error": "无法提交举报。",
+      "options": {
+        "spam": "垃圾信息",
+        "misinformation": "不实信息",
+        "abuse": "滥用/人身攻击",
+        "irrelevant": "无关内容"
+      }
+    }
+  },
+  "sign_in": {
+    "loading": "加载中…",
+    "header": {
+      "title": "欢迎回来",
+      "subtitle": "登录到您的应急中心账户"
+    },
+    "labels": {
+      "email": "邮箱",
+      "password": "密码"
+    },
+    "placeholders": {
+      "email": "sheila@example.com",
+      "password": "您的密码"
+    },
+    "actions": {
+      "hide_password": "隐藏密码",
+      "show_password": "显示密码",
+      "signing_in": "登录中…",
+      "sign_in": "登录",
+      "sign_up": "注册"
+    },
+    "errors": {
+      "empty_fields": "请输入邮箱和密码。",
+      "invalid_credentials": "邮箱或密码无效"
+    },
+    "footer": {
+      "no_account": "还没有账户？"
+    }
+  },
+  "sign_up": {
+    "loading": "加载中…",
+    "header": {
+      "title": "创建账户",
+      "subtitle": "加入您所在社区的应急中心"
+    },
+    "success": "账户已创建！正在重定向到登录页面…",
+    "labels": {
+      "full_name": "全名",
+      "email": "邮箱",
+      "password": "密码",
+      "confirm_password": "确认密码",
+      "role": "角色",
+      "hub": "中心 (城市)",
+      "expertise_field": "专业领域",
+      "neighborhood_address": "社区 / 地址",
+      "optional": "可选"
+    },
+    "placeholders": {
+      "full_name": "例如：Sheila Davis",
+      "email": "sheila@example.com",
+      "password": "至少 8 个字符",
+      "confirm_password": "重复输入密码",
+      "select_hub": "选择一个中心",
+      "expertise_field": "例如：内科医生",
+      "neighborhood_address": "例如：伊斯坦布尔，Sariyer"
+    },
+    "roles": {
+      "standard": "普通用户",
+      "expert": "专家"
+    },
+    "actions": {
+      "hide_password": "隐藏密码",
+      "show_password": "显示密码",
+      "signing_up": "创建账户中…",
+      "sign_up": "注册",
+      "sign_in": "登录"
+    },
+    "errors": {
+      "full_name_req": "全名是必填项。",
+      "email_req": "邮箱是必填项。",
+      "password_req": "密码是必填项。",
+      "password_min": "密码必须至少包含 8 个字符。",
+      "password_match": "两次输入的密码不一致。",
+      "expertise_req": "专家用户必须填写专业领域。",
+      "failed": "注册失败"
+    },
+    "footer": {
+      "already_have_account": "已有账户？"
+    }
+  },
+  "user_profile": {
+    "status": {
+      "safe": "安全",
+      "needs_help": "需要帮助",
+      "available_to_help": "可提供帮助"
+    },
+    "forum_types": {
+      "global": "全局",
+      "standard": "普通",
+      "urgent": "紧急"
+    },
+    "roles": {
+      "expert": "专家",
+      "standard": "普通"
+    },
+    "time": {
+      "just_now": "刚刚",
+      "m_ago": "{{count}} 分钟前",
+      "h_ago": "{{count}} 小时前",
+      "d_ago": "{{count}} 天前"
+    },
+    "header": {
+      "title": "用户资料",
+      "back": "返回"
+    },
+    "states": {
+      "loading": "加载中...",
+      "not_found": "未找到用户。",
+      "no_items": "暂无{{tab}}。"
+    },
+    "sections": {
+      "personal_info": "个人信息",
+      "expertise": "专业技能",
+      "resources": "物资资源",
+      "activity": "活动"
+    },
+    "fields": {
+      "phone": "电话",
+      "blood_type": "血型",
+      "emergency_contact": "紧急联系人",
+      "emergency_contact_phone": "紧急联系电话",
+      "preferred_language": "首选语言",
+      "location": "位置",
+      "has_disability": "是否有残疾",
+      "yes": "是",
+      "availability": "可用状态",
+      "special_needs": "特殊需求",
+      "bio": "个人简介"
+    },
+    "expertise_item": {
+      "advanced": "高级",
+      "beginner": "初级",
+      "certificate": "证书"
+    },
+    "resource_item": {
+      "qty": "数量 {{count}}",
+      "functional": "功能正常",
+      "not_functional": "功能损坏"
+    },
+    "tabs": {
+      "posts": "帖子",
+      "requests": "求助",
+      "offers": "提供帮助"
+    },
+    "card": {
+      "upvotes": "{{count}} 个赞",
+      "comments": "{{count}} 条评论"
+    }
+  },
+  "profile": {
+    "header": {
+      "title": "我的资料",
+      "back": "返回"
+    },
+    "my_posts": {
+      "title": "我的帖子",
+      "desc": "查看您的论坛帖子、求助和提供的帮助"
+    },
+    "sections": {
+      "personal_info": "个人信息",
+      "resources": "物资资源",
+      "expertise": "专业领域"
+    },
+    "fields": {
+      "phone": "电话",
+      "blood_type": "血型",
+      "emergency_contact": "紧急联系人",
+      "emergency_contact_phone": "紧急联系电话",
+      "preferred_language": "首选语言",
+      "has_disability": "是否有残疾",
+      "availability": "可用状态",
+      "special_needs": "特殊需求",
+      "bio": "个人简介"
+    },
+    "placeholders": {
+      "click_to_add": "点击添加",
+      "select_blood": "— 请选择 —",
+      "special_needs": "描述任何特殊需求...",
+      "bio": "向其他人介绍一下自己...",
+      "resource_name": "例如：发电机",
+      "resource_category": "例如：能源",
+      "expertise_field": "例如：急救",
+      "cert_url": "https://... 或上传文件"
+    },
+    "actions": {
+      "yes": "是",
+      "no": "否",
+      "add_resource": "+ 添加物资",
+      "add_expertise": "+ 添加专业技能",
+      "cancel": "取消",
+      "save": "保存",
+      "delete": "删除",
+      "click_to_toggle": "点击切换",
+      "upload": "上传",
+      "uploading": "上传中…"
+    },
+    "labels": {
+      "name": "名称",
+      "category": "分类",
+      "quantity": "数量",
+      "functional": "功能正常",
+      "not_functional": "功能损坏",
+      "field": "领域",
+      "level": "级别",
+      "certificate": "证书",
+      "optional": "(可选)"
+    },
+    "expertise_item": {
+      "advanced": "高级",
+      "beginner": "初级",
+      "certificate": "证书"
+    },
+    "resource_item": {
+      "qty": "数量 {{count}}",
+      "functional": "功能正常",
+      "not_functional": "功能损坏"
+    },
+    "empty": {
+      "resources": "尚未添加任何物资资源。",
+      "expertise": "尚未添加任何专业领域。"
+    },
+    "toasts": {
+      "saved": "已保存",
+      "update_failed": "更新失败",
+      "resource_added": "物资已添加",
+      "resource_removed": "物资已移除",
+      "expertise_added": "专业技能已添加",
+      "expertise_removed": "专业技能已移除",
+      "file_uploaded": "文件已上传",
+      "upload_failed": "上传失败"
+    },
+    "phone_validation": {
+      "invalid": "请输入有效的电话号码 (例如：+86 138 1234 5678)",
+      "length": "必须是 6–15 位数字"
+    }
+  },
+  "emergency_info": {
+    "header": {
+      "back": "返回",
+      "title": "应急信息",
+      "subtitle": "支持离线访问的关键信息"
+    },
+    "sections": {
+      "checklist": {
+        "title": "应急检查清单",
+        "desc": "急救指南：人员转移、生命体征检查、心肺复苏 (CPR) 及 ABC 方案"
+      },
+      "map": {
+        "title": "地图",
+        "desc": "在地图上查看附近的援助资源和危险区域"
+      }
+    }
+  },
+  "checklist": {
+    "header": {
+      "title": "应急检查清单",
+      "back": "主题"
+    },
+    "subtitle": "点击主题查看循序渐进的急救指南。",
+    "topics": {
+      "displacement": {
+        "title": "人员转移技巧",
+        "summary": "如何安全地将受伤患者转移到安全区域",
+        "text": "如果周围存在危险（如火灾、触电危险或其他），必须将患者转移到安全的地方（前提是施救者这样做是安全的），在那里可以提供所需的急救程序。\n\n— 如果可能存在严重的脊柱损伤：当患者的脊髓（颈部或背部的脊柱）可能严重受伤时，除非绝对必要，否则不得移动患者。必要时，动作幅度必须尽可能小且非常小心。这些预防措施可以避免在未来对患者的活动能力造成进一步损害的风险。\n\n通常，患者最终需要仰卧在足够坚硬的表面上（例如地板上，这样您就可以进行心肺复苏的胸外按压）。"
+      },
+      "checking": {
+        "title": "生命体征检查技巧",
+        "summary": "评估受害者的状况并确定主要的生命威胁",
+        "text": "评估受害者的状况，首先关注对生命构成主要威胁的情况。\n\n• 检查意识：用力拍打患者的肩膀并大声呼喊，例如：“你能听到我吗？”\n\n• 控制严重出血：如果受害者有大量出血的伤口，需要立即处理（首先对伤口施加直接压力）。\n\n• 检查脉搏：如果患者没有反应，将两根手指放在脖子两侧来检查颈动脉脉搏。或者，在拇指下方的的手腕上检查桡动脉脉搏。\n\n• 检查呼吸：将耳朵靠近他们的嘴巴听/感觉空气流动，同时观察他们的胸部是否有起伏。\n\n关键提示：不要花太多时间检查。在采取进一步行动之前，检查呼吸和脉搏的时间不应超过 10 秒。"
+      },
+      "cpr": {
+        "title": "心肺复苏术 (CPR)",
+        "summary": "针对无反应受害者的循序渐进 CPR 步骤",
+        "text": "1. 将一只手掌根部放在胸部中央。\n\n2. 将另一只手叠放在第一只手上，十指交叉。\n\n3. 用力且快速地按压 — 深度至少 5 厘米（2 英寸），每分钟 100-120 次。\n\n4. 在每次按压之间让胸部完全回弹。\n\n5. 如果受过训练，每进行 30 次按压后给予 2 次人工呼吸。"
+      },
+      "abc": {
+        "title": "ABC 方案",
+        "summary": "气道、呼吸、循环 — 在紧急情况下挽救生命",
+        "text": "A — 气道 (AIRWAY)：轻轻向后仰头并抬起下巴以打开气道。\n\nB — 呼吸 (BREATHING)：看、听、感觉正常呼吸，时间不超过 10 秒。\n\nC — 循环 (CIRCULATION)：检查是否有严重出血。如果此人呼吸不正常，请立即开始心肺复苏。\n\n\n挽救生命\n\n患者必须保持气道畅通 — 即允许空气从口腔/鼻腔进入肺部的无阻碍通道。有意识的人会自动维持气道畅通，但失去意识的患者可能无法做到。\n\n• 恢复体位：可将患者侧卧。这样可以使患者放松，让舌头离开咽部，并避免一种常见的死亡原因：因胃内容物反流而窒息。\n\n• 窒息：气道可能被异物阻塞。要将其排出，请使用抗窒息方法（如拍打背部、胸部冲击或腹部冲击/海姆立克急救法）。\n\n• 切换到 CPR：打开气道后，重新评估患者的呼吸。如果没有呼吸或呼吸异常（例如濒死叹息），应立即开始心肺复苏，将空气压入肺部并手动促进血液在全身循环。"
+      }
+    }
+  },
+  "emergency_map": {
+    "header": {
+      "back": "控制台",
+      "title": "应急信息",
+      "subtitle": "显示您当前位置 {{radius}} 公里范围内的应急设施。请允许访问位置信息以查看您附近的设施。"
+    },
+    "types": {
+      "hospital": "医院",
+      "gathering": "集会点",
+      "shelter": "避难所",
+      "fire_station": "消防站",
+      "police": "警察局"
+    },
+    "location": {
+      "detecting": "正在定位…",
+      "refresh": "刷新位置",
+      "gps": "GPS",
+      "hub": "中心",
+      "resolving": "正在解析 {{name}}…",
+      "not_found": "无法确定位置"
+    },
+    "states": {
+      "fetching": "正在获取附近的应急设施…",
+      "rate_limited": "受到 Overpass API 速率限制。请一分钟后重试。",
+      "timeout": "Overpass API 请求超时 (504)。正在重试…",
+      "unknown": "未知"
+    },
+    "card": {
+      "nearest": "距离最近的{{type}}",
+      "distance": "{{dist}} 公里",
+      "away": "距离 {{dist}} 公里",
+      "directions": "路线"
+    },
+    "toggles": {
+      "show_map": "显示地图",
+      "hide_map": "隐藏地图",
+      "show_list": "显示列表",
+      "hide_list": "隐藏列表",
+      "all": "全部"
+    },
+    "map_popup": {
+      "your_location": "您的位置",
+      "get_directions": "获取路线"
+    },
+    "empty": {
+      "no_filter_match_title": "未找到此类型的设施",
+      "no_filter_match_desc": "尝试选择其他分类。",
+      "no_facilities_title": "附近未找到设施",
+      "no_facilities_desc": "在您当前位置 {{radius}} 公里范围内未找到应急设施。"
+    }
+  }
+}

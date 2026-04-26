@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function HubSelector() {
   const { user, hubs, updateHub } = useAuth();
+  const { t } = useTranslation();
 
   // Auto-assign first hub if user has none
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function HubSelector() {
   return (
     <div className="hub-selector-bar">
       <div className="hub-selector">
-        <span className="hub-selector-label">📍 Hub</span>
+        <span className="hub-selector-label"> 📍{t('hub')}</span>
         <select value={String(selectedHub.id)} onChange={handleChange}>
           {hubs.map((h) => (
             <option key={h.id} value={String(h.id)}>
