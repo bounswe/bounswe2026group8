@@ -190,16 +190,16 @@ class CreatePostActivity : AppCompatActivity() {
 
     private fun updateSubtitle() {
         val typeLabel = when (selectedForumType) {
-            "STANDARD" -> "Standard"
-            "URGENT" -> "Urgent"
-            else -> "Global"
+            "STANDARD" -> getString(R.string.forum_type_standard)
+            "URGENT" -> getString(R.string.forum_type_urgent)
+            else -> getString(R.string.forum_type_global)
         }
-        txtPageTitle.text = "New $typeLabel Post"
+        txtPageTitle.text = getString(R.string.new_post_format, typeLabel)
 
         txtPageSubtitle.text = if (selectedForumType == "GLOBAL") {
             getString(R.string.create_post_subtitle_global)
         } else {
-            "Hub-scoped post"
+            getString(R.string.hub_scoped_post)
         }
     }
 

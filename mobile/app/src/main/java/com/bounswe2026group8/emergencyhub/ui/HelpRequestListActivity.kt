@@ -12,31 +12,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
-import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.HelpOfferItem
 import com.bounswe2026group8.emergencyhub.api.HelpRequestItem
+import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
-import com.bounswe2026group8.emergencyhub.auth.HubManager
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.util.BadgeUtils
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
-/**
- * Tabbed Help Center screen with "Requests" and "Offers" tabs.
- *
- * Both tabs share the same category filter chips. Switching tabs
- * fetches the relevant data and swaps the visible RecyclerView.
- * Matches the frontend's HelpRequestsPage tabbed layout.
- */
 class HelpRequestListActivity : AppCompatActivity() {
 
     private lateinit var tokenManager: TokenManager
     private lateinit var hubSelectorHelper: HubSelectorHelper
     private var selectedHub: Hub? = null
 
-    // Views
     private lateinit var recyclerRequests: RecyclerView
     private lateinit var recyclerOffers: RecyclerView
     private lateinit var emptyState: View
@@ -49,21 +41,13 @@ class HelpRequestListActivity : AppCompatActivity() {
     private lateinit var tabOffers: TextView
     private lateinit var btnCreate: MaterialButton
 
-    // Adapters
     private lateinit var requestAdapter: HelpRequestAdapter
     private lateinit var offerAdapter: HelpOfferAdapter
 
-    /** "requests" or "offers" */
     private var activeTab = "requests"
-
-    /** Currently selected category filter (null = "All"). */
     private var selectedCategory: String? = null
-
-    /** Full unfiltered lists from the API. */
     private var allRequests: List<HelpRequestItem> = emptyList()
     private var allOffers: List<HelpOfferItem> = emptyList()
-
-    /** ID of the currently logged-in user, for showing delete on own offers. */
     private var currentUserId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,8 +55,6 @@ class HelpRequestListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_help_request_list)
 
         tokenManager = TokenManager(this)
-
-        // Auth guard
         if (!tokenManager.isLoggedIn()) {
             navigateToLanding()
             return
@@ -80,7 +62,6 @@ class HelpRequestListActivity : AppCompatActivity() {
 
         currentUserId = tokenManager.getUser()?.id
 
-        // Bind views
         recyclerRequests = findViewById(R.id.recyclerHelpRequests)
         recyclerOffers = findViewById(R.id.recyclerHelpOffers)
         emptyState = findViewById(R.id.emptyState)
@@ -93,10 +74,8 @@ class HelpRequestListActivity : AppCompatActivity() {
         tabOffers = findViewById(R.id.tabOffers)
         btnCreate = findViewById(R.id.btnCreate)
 
-        // Back button
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
 
-        // Create button — action depends on active tab
         btnCreate.setOnClickListener {
             if (activeTab == "requests") {
                 startActivity(Intent(this, CreateHelpRequestActivity::class.java))
@@ -105,7 +84,6 @@ class HelpRequestListActivity : AppCompatActivity() {
             }
         }
 
-        // RecyclerView setup — Requests
         recyclerRequests.layoutManager = LinearLayoutManager(this)
         requestAdapter = HelpRequestAdapter(emptyList()) { item ->
             val intent = Intent(this, HelpRequestDetailActivity::class.java)
@@ -114,7 +92,6 @@ class HelpRequestListActivity : AppCompatActivity() {
         }
         recyclerRequests.adapter = requestAdapter
 
-        // RecyclerView setup — Offers
         recyclerOffers.layoutManager = LinearLayoutManager(this)
         offerAdapter = HelpOfferAdapter(
             items = mutableListOf(),
@@ -124,11 +101,9 @@ class HelpRequestListActivity : AppCompatActivity() {
         )
         recyclerOffers.adapter = offerAdapter
 
-        // Tab switching
         tabRequests.setOnClickListener { switchTab("requests") }
         tabOffers.setOnClickListener { switchTab("offers") }
 
-        // Category filter chips
         chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             selectedCategory = when {
                 checkedIds.isEmpty() -> null
@@ -142,7 +117,6 @@ class HelpRequestListActivity : AppCompatActivity() {
             applyFilter()
         }
 
-        // Hub selector
         hubSelectorHelper = HubSelectorHelper(
             this,
             findViewById<Spinner>(R.id.spinnerHubSelector),
@@ -154,7 +128,6 @@ class HelpRequestListActivity : AppCompatActivity() {
         hubSelectorHelper.load()
     }
 
-    /** Re-fetch on resume so lists update after creating or deleting an item. */
     override fun onResume() {
         super.onResume()
         if (::hubSelectorHelper.isInitialized) {
@@ -163,13 +136,10 @@ class HelpRequestListActivity : AppCompatActivity() {
         if (activeTab == "requests") fetchHelpRequests() else fetchHelpOffers()
     }
 
-    // ── Tab switching ────────────────────────────────────────────────────
-
     private fun switchTab(tab: String) {
         if (activeTab == tab) return
         activeTab = tab
 
-        // Update tab visual state
         if (tab == "requests") {
             tabRequests.setTextColor(getColor(R.color.accent))
             tabRequests.setBackgroundResource(R.drawable.tab_active_bg)
@@ -182,24 +152,14 @@ class HelpRequestListActivity : AppCompatActivity() {
             tabRequests.background = null
         }
 
-        // Reset category filter to "All"
         chipGroup.check(R.id.chipAll)
         selectedCategory = null
 
-        // Fetch data for the newly active tab
-        if (tab == "requests") {
-            fetchHelpRequests()
-        } else {
-            fetchHelpOffers()
-        }
+        if (tab == "requests") fetchHelpRequests() else fetchHelpOffers()
     }
 
-    // ── Data fetching ────────────────────────────────────────────────────
-
-    /** Fetches all help requests from the backend. */
     private fun fetchHelpRequests() {
         showLoading()
-
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestListActivity)
@@ -214,7 +174,7 @@ class HelpRequestListActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this@HelpRequestListActivity,
-                        "Failed to load help requests",
+                        getString(R.string.help_requests_load_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                     showEmpty()
@@ -222,7 +182,7 @@ class HelpRequestListActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Toast.makeText(
                     this@HelpRequestListActivity,
-                    "Network error: ${e.localizedMessage}",
+                    getString(R.string.network_error_with_message, e.localizedMessage ?: ""),
                     Toast.LENGTH_LONG
                 ).show()
                 showEmpty()
@@ -232,10 +192,8 @@ class HelpRequestListActivity : AppCompatActivity() {
         }
     }
 
-    /** Fetches all help offers from the backend. */
     private fun fetchHelpOffers() {
         showLoading()
-
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestListActivity)
@@ -250,7 +208,7 @@ class HelpRequestListActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this@HelpRequestListActivity,
-                        "Failed to load help offers",
+                        getString(R.string.help_offers_load_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                     showEmpty()
@@ -258,7 +216,7 @@ class HelpRequestListActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Toast.makeText(
                     this@HelpRequestListActivity,
-                    "Network error: ${e.localizedMessage}",
+                    getString(R.string.network_error_with_message, e.localizedMessage ?: ""),
                     Toast.LENGTH_LONG
                 ).show()
                 showEmpty()
@@ -268,9 +226,6 @@ class HelpRequestListActivity : AppCompatActivity() {
         }
     }
 
-    // ── Filtering ────────────────────────────────────────────────────────
-
-    /** Filters the active tab's data by [selectedCategory] and updates the UI. */
     private fun applyFilter() {
         if (activeTab == "requests") {
             val filtered = if (selectedCategory == null) allRequests
@@ -279,7 +234,6 @@ class HelpRequestListActivity : AppCompatActivity() {
             requestAdapter.updateItems(filtered)
             recyclerRequests.visibility = if (filtered.isNotEmpty()) View.VISIBLE else View.GONE
             recyclerOffers.visibility = View.GONE
-
             if (filtered.isEmpty()) showEmpty() else emptyState.visibility = View.GONE
         } else {
             val filtered = if (selectedCategory == null) allOffers
@@ -288,33 +242,28 @@ class HelpRequestListActivity : AppCompatActivity() {
             offerAdapter.updateItems(filtered)
             recyclerOffers.visibility = if (filtered.isNotEmpty()) View.VISIBLE else View.GONE
             recyclerRequests.visibility = View.GONE
-
             if (filtered.isEmpty()) showEmpty() else emptyState.visibility = View.GONE
         }
     }
 
-    // ── Offer detail dialog ──────────────────────────────────────────────
-
-    /** Shows a MaterialAlertDialog with full offer details. */
     private fun showOfferDetailDialog(item: HelpOfferItem) {
-        val category = item.category.lowercase().replaceFirstChar { it.uppercase() }
         val message = buildString {
-            append("Category: $category\n")
-            append("Availability: ${item.availability}\n\n")
+            append(getString(R.string.help_offer_detail_category_format, BadgeUtils.formatCategoryLabel(this@HelpRequestListActivity, item.category)))
+            append('\n')
+            append(getString(R.string.help_offer_detail_availability_format, BadgeUtils.formatAvailabilityLabel(this@HelpRequestListActivity, item.availability)))
+            append("\n\n")
             append(item.description)
-            append("\n\nOffered by ${item.author.fullName}")
+            append("\n\n")
+            append(getString(R.string.help_offer_author_format, item.author.fullName))
         }
 
         MaterialAlertDialogBuilder(this)
             .setTitle(item.skillOrResource)
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(getString(R.string.ok), null)
             .show()
     }
 
-    // ── Offer deletion ───────────────────────────────────────────────────
-
-    /** Shows a confirmation dialog, then deletes the offer on confirm. */
     private fun confirmDeleteOffer(item: HelpOfferItem) {
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.delete_offer))
@@ -324,14 +273,12 @@ class HelpRequestListActivity : AppCompatActivity() {
             .show()
     }
 
-    /** Calls DELETE /help-offers/{id}/ and removes the item from the adapter. */
     private fun deleteOffer(item: HelpOfferItem) {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@HelpRequestListActivity)
                     .deleteHelpOffer(item.id)
 
-                // Treat 204 No Content (and any 2xx) as success
                 if (response.code() == 204 || response.isSuccessful) {
                     onOfferDeleted(item.id)
                 } else if (response.code() == 401) {
@@ -340,20 +287,17 @@ class HelpRequestListActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this@HelpRequestListActivity,
-                        "Failed to delete offer",
+                        getString(R.string.help_offer_delete_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             } catch (e: Exception) {
-                // OkHttp throws ProtocolException when a 204 response has a
-                // non-zero Content-Length header. The server did delete the
-                // resource, so treat this specific error as success.
                 if (e.message?.contains("HTTP 204") == true) {
                     onOfferDeleted(item.id)
                 } else {
                     Toast.makeText(
                         this@HelpRequestListActivity,
-                        "Network error: ${e.localizedMessage}",
+                        getString(R.string.network_error_with_message, e.localizedMessage ?: ""),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -361,15 +305,12 @@ class HelpRequestListActivity : AppCompatActivity() {
         }
     }
 
-    /** Removes the deleted offer from both the adapter and backing list. */
     private fun onOfferDeleted(offerId: Int) {
         offerAdapter.removeItem(offerId)
         allOffers = allOffers.filter { it.id != offerId }
         Toast.makeText(this, getString(R.string.help_offer_deleted), Toast.LENGTH_SHORT).show()
         if (offerAdapter.itemCount == 0) showEmpty()
     }
-
-    // ── UI helpers ───────────────────────────────────────────────────────
 
     private fun showLoading() {
         progressBar.visibility = View.VISIBLE
@@ -383,13 +324,12 @@ class HelpRequestListActivity : AppCompatActivity() {
         recyclerOffers.visibility = View.GONE
         emptyState.visibility = View.VISIBLE
 
-        // Update empty state text/icon based on active tab
         if (activeTab == "requests") {
-            txtEmptyIcon.text = "📋"
+            txtEmptyIcon.text = getString(R.string.empty_icon_requests)
             txtEmptyTitle.text = getString(R.string.empty_help_requests)
             txtEmptyHint.text = getString(R.string.empty_help_requests_hint)
         } else {
-            txtEmptyIcon.text = "🤝"
+            txtEmptyIcon.text = getString(R.string.empty_icon_offers)
             txtEmptyTitle.text = getString(R.string.empty_help_offers)
             txtEmptyHint.text = getString(R.string.empty_help_offers_hint)
         }

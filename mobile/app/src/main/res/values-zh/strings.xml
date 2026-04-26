@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Emergency Hub</string>
+    <string name="app_title">应急\n准备中心</string>
+    <string name="app_subtitle">为紧急情况做好准备，与邻居建立联系，共同建设社区韧性。</string>
+    <string name="emergency_hub">应急中心</string>
+
+    <!-- Auth actions -->
+    <string name="sign_up">注册</string>
+    <string name="sign_in">登录</string>
+    <string name="signing_up">正在注册…</string>
+    <string name="signing_in">正在登录…</string>
+    <string name="logout">退出登录</string>
+
+    <!-- Sign Up screen -->
+    <string name="create_account">创建账户</string>
+    <string name="join_community">加入您的社区应急中心</string>
+    <string name="full_name">姓名</string>
+    <string name="email">电子邮件</string>
+    <string name="password">密码</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="select_role">选择您的角色</string>
+    <string name="role_standard">标准</string>
+    <string name="role_expert">专家</string>
+    <string name="expertise_field">专业领域</string>
+    <string name="neighborhood_optional">社区 / 地址（可选）</string>
+    <string name="already_have_account">已有账户？登录</string>
+
+    <!-- Sign In screen -->
+    <string name="welcome_back">欢迎回来</string>
+    <string name="sign_in_subtitle">登录您的应急中心账户</string>
+    <string name="no_account">没有账户？注册</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_placeholder">欢迎！</string>
+    <string name="feature_forum">论坛</string>
+    <string name="feature_forum_desc">社区讨论</string>
+    <string name="feature_help">帮助请求</string>
+    <string name="feature_help_desc">请求或提供帮助</string>
+    <string name="feature_profile">个人资料</string>
+    <string name="feature_profile_desc">管理您的账户</string>
+    <string name="feature_offline">离线信息</string>
+    <string name="feature_offline_desc">关键数据访问</string>
+
+    <!-- Help Center -->
+    <string name="help_center_title">帮助中心</string>
+    <string name="tab_requests">请求</string>
+    <string name="tab_offers">提供</string>
+    <string name="help_requests_title">帮助请求</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_medical">医疗</string>
+    <string name="filter_food">食物</string>
+    <string name="filter_shelter">庇护</string>
+    <string name="filter_transport">交通</string>
+    <string name="category_medical">医疗</string>
+    <string name="category_food">食物</string>
+    <string name="category_shelter">庇护</string>
+    <string name="category_transport">交通</string>
+    <string name="urgency_low">低</string>
+    <string name="urgency_medium">中</string>
+    <string name="urgency_high">高</string>
+    <string name="empty_help_requests">未找到帮助请求</string>
+    <string name="empty_help_requests_hint">尝试更改筛选条件或稍后再来</string>
+    <string name="status_open">开放</string>
+    <string name="status_expert_responding">专家响应中</string>
+    <string name="status_resolved">已解决</string>
+
+    <!-- Create Help Request -->
+    <string name="create_help_request">创建帮助请求</string>
+    <string name="create_help_request_subtitle">描述您需要什么帮助</string>
+    <string name="help_title">标题</string>
+    <string name="help_description">描述</string>
+    <string name="select_category">选择类别</string>
+    <string name="select_urgency">选择紧急程度</string>
+    <string name="location_text_hint">位置描述（可选）</string>
+    <string name="use_my_location">使用我的位置</string>
+    <string name="location_acquired">已获取位置</string>
+    <string name="location_section">位置（可选）</string>
+    <string name="submitting">提交中…</string>
+    <string name="submit">提交</string>
+    <string name="help_request_created">帮助请求已创建！</string>
+    <string name="images_optional">图片（可选）</string>
+    <string name="upload_from_gallery">相册</string>
+    <string name="take_photo">相机</string>
+
+    <!-- Help Request Detail -->
+    <string name="help_request_detail_title">帮助请求</string>
+    <string name="location_label">位置</string>
+    <string name="comments_label">评论</string>
+    <string name="comments_count_label">评论 (%d)</string>
+    <string name="no_comments_yet">暂无评论。成为第一个响应者！</string>
+    <string name="comment_hint">写评论…</string>
+    <string name="send">发送</string>
+    <string name="sending">发送中…</string>
+    <string name="comment_posted">评论已发布</string>
+    <string name="expert_badge">专家</string>
+
+    <!-- Help Offers -->
+    <string name="help_offers_title">帮助提供</string>
+    <string name="feature_help_offers">帮助提供</string>
+    <string name="feature_help_offers_desc">提供您的技能</string>
+    <string name="empty_help_offers">未找到帮助提供</string>
+    <string name="empty_help_offers_hint">成为第一个在社区提供帮助的人</string>
+    <string name="create_help_offer">创建帮助提供</string>
+    <string name="create_help_offer_subtitle">描述您可以提供什么帮助</string>
+    <string name="skill_or_resource">技能或资源</string>
+    <string name="help_availability">可用性</string>
+    <string name="availability_247">全天候</string>
+    <string name="availability_weekdays">工作日</string>
+    <string name="availability_weekends">周末</string>
+    <string name="availability_mornings">上午</string>
+    <string name="availability_evenings">下午</string>
+    <string name="availability_oncall">随时待命</string>
+    <string name="help_offer_created">帮助提供已创建！</string>
+    <string name="delete_offer">删除提供</string>
+    <string name="delete_offer_confirm">您确定要删除此帮助提供吗？</string>
+    <string name="help_offer_deleted">帮助提供已删除</string>
+    <string name="delete">删除</string>
+    <string name="cancel">取消</string>
+
+    <!-- Offline Info screen -->
+    <string name="offline_info_title">离线信息</string>
+    <string name="offline_info_heading">应急准备资源</string>
+    <string name="offline_info_desc">访问关键离线信息，为紧急情况做准备，保护您和您的社区。</string>
+    <string name="offline_info_tips_title">关键资源</string>
+    <string name="offline_info_tips">• 紧急联系电话\n• 急救基础知识\n• 疏散程序\n• 安全清单\n• 社区资源</string>
+    <string name="hub_city">中心（城市）</string>
+    <string name="select_hub">选择中心</string>
+
+    <!-- Notification Preferences -->
+    <string name="notification_preferences">通知偏好</string>
+    <string name="help_request_notifications">帮助请求通知</string>
+
+    <!-- Profile -->
+    <string name="profile_title">您的个人资料</string>
+    <string name="back_arrow">← 返回</string>
+    <string name="profile_personal_info">个人信息</string>
+    <string name="profile_phone">电话</string>
+    <string name="profile_blood_type">血型</string>
+    <string name="profile_emergency_contact">紧急联系人</string>
+    <string name="profile_emergency_phone">紧急电话</string>
+    <string name="profile_bio">简介</string>
+    <string name="profile_special_needs_label">特殊需求</string>
+    <string name="profile_has_disability">有残疾</string>
+    <string name="profile_availability">可用状态</string>
+    <string name="status_safe">安全</string>
+    <string name="status_needs_help">需要帮助</string>
+    <string name="status_available">可用</string>
+    <string name="profile_resources">资源</string>
+    <string name="profile_expertise">专业领域</string>
+    <string name="profile_add">+ 添加</string>
+    <string name="profile_save">保存</string>
+    <string name="profile_resource_name">资源名称</string>
+    <string name="profile_resource_category">类别</string>
+    <string name="profile_resource_qty">数量</string>
+    <string name="profile_no_resources">尚未添加资源。</string>
+    <string name="profile_expertise_field">领域（例如急救）</string>
+    <string name="profile_cert_url">证书URL（可选）</string>
+    <string name="profile_no_expertise">尚未添加专业领域。</string>
+
+    <!-- Forum -->
+    <string name="forum_title">论坛</string>
+    <string name="forum_hub_all">所有中心 — 所有人</string>
+    <string name="new_post">+ 新帖子</string>
+    <string name="tab_global">全局</string>
+    <string name="tab_standard">标准</string>
+    <string name="tab_urgent">紧急</string>
+    <string name="forum_type_global">全局</string>
+    <string name="forum_type_standard">标准</string>
+    <string name="forum_type_urgent">紧急</string>
+    <string name="new_post_format">新%1$s帖子</string>
+    <string name="hub_scoped_post">中心帖子</string>
+    <string name="sort_newest">最新</string>
+    <string name="sort_most_liked">最多赞</string>
+    <string name="sort_hot">热门</string>
+    <string name="forum_loading">正在加载帖子…</string>
+    <string name="forum_empty_global">暂无全局帖子。</string>
+    <string name="forum_empty_hub">暂无%1$s的帖子。</string>
+    <string name="forum_select_hub">选择中心以查看帖子。</string>
+    <string name="back_to_dashboard">← 返回仪表板</string>
+    <string name="comment_count">%1$d %2$s</string>
+
+    <!-- Create Post -->
+    <string name="create_post_title">新帖子</string>
+    <string name="create_post_subtitle_global">所有人可见（所有中心）</string>
+    <string name="create_post_subtitle_hub">发布到%1$s</string>
+    <string name="post_title_hint">发生了什么？</string>
+    <string name="post_content_hint">描述情况，分享信息或请求帮助…</string>
+    <string name="title_label">标题</string>
+    <string name="content_label">内容</string>
+    <string name="create_post">创建帖子</string>
+    <string name="creating_post">创建中…</string>
+    <string name="back_to_forum">← 返回论坛</string>
+    <string name="title_required">标题是必需的。</string>
+    <string name="content_required">内容是必需的。</string>
+
+    <!-- Map -->
+    <string name="map_content_description">显示附近集合点的地图</string>
+    <string name="nearest_label">最近的集合点</string>
+    <string name="nearest_format">最近：%1$s</string>
+    <string name="back">返回</string>
+
+    <!-- Language -->
+    <string name="language">语言</string>
+    <string name="select_language">选择语言</string>
+    <string name="dashboard_welcome_format">欢迎，%1$s！</string>
+    <string name="dashboard_role_expert">专家</string>
+    <string name="dashboard_role_standard">标准用户</string>
+    <string name="dashboard_neighborhood_format">位置：%1$s</string>
+    <string name="offline_features_title">离线功能</string>
+    <string name="offline_map">离线地图</string>
+    <string name="emergency_checklist">应急清单</string>
+    <string name="offline_contacts">离线联系人</string>
+    <string name="emergency_numbers">紧急号码</string>
+    <string name="general_emergency">通用紧急求助</string>
+    <string name="call">拨打</string>
+    <string name="add_custom_number">添加自定义号码</string>
+    <string name="first_aid_guide_title">基础技能指南</string>
+    <string name="first_aid_displacement_title">转移</string>
+    <string name="first_aid_displacement_summary">如有必要且安全，请将伤者转移到安全地点。</string>
+    <string name="first_aid_displacement_detail">如果周围存在火灾、电力等危险，且施救者自身安全有保障时，可将伤者转移到安全地点。\n\n如果怀疑有严重脊柱损伤，除非绝对必要，不要移动伤者。如必须移动，也要尽量少动并非常小心。\n\n通常应让伤者仰卧在坚硬平面上，以便在需要时实施胸外按压。</string>
+    <string name="first_aid_checking_title">检查</string>
+    <string name="first_aid_checking_summary">快速检查现场安全、意识、出血、脉搏和呼吸。</string>
+    <string name="first_aid_checking_detail">先处理直接威胁生命的情况。\n\n轻拍肩膀并大声呼喊，检查是否有反应。\n\n若有大量出血，立即直接加压止血。\n\n若无反应，检查颈动脉或桡动脉脉搏。\n\n观察胸部起伏并听气流，检查呼吸。\n\n检查脉搏和呼吸时不要超过10秒，然后立即采取措施。</string>
+    <string name="first_aid_cpr_title">心肺复苏</string>
+    <string name="first_aid_cpr_summary">通过胸外按压和人工呼吸挽救生命。</string>
+    <string name="first_aid_cpr_detail">1. 将一只手掌根放在胸部中央。\n\n2. 另一只手叠放其上并交叉手指。\n\n3. 用力快速按压，深度至少约5厘米，每分钟约100到120次。\n\n4. 每次按压后让胸部完全回弹。\n\n5. 如果受过训练，每30次按压后给予2次人工呼吸。</string>
+    <string name="first_aid_abc_title">ABC</string>
+    <string name="first_aid_abc_summary">依次检查气道、呼吸和循环。</string>
+    <string name="first_aid_abc_detail">A - 气道：轻轻后仰头部并抬起下巴，打开气道。\n\nB - 呼吸：在不超过10秒内观察、倾听并感受是否有正常呼吸。\n\nC - 循环：检查是否有严重出血。如果患者呼吸不正常，应立即开始心肺复苏。\n\n气道必须保持通畅，空气才能进入肺部。清醒的人通常能自行维持，但昏迷者可能无法做到。\n\n在适当情况下使用恢复体位，注意是否窒息，如无呼吸或呼吸异常则立即转入心肺复苏。</string>
+    <string name="saved">已保存</string>
+    <string name="removed">已移除</string>
+    <string name="network_error">网络错误</string>
+    <string name="network_error_with_message">网络错误：%1$s</string>
+    <string name="profile_update_failed">更新失败</string>
+    <string name="profile_empty_value">—</string>
+    <string name="profile_status_badge_format">• %1$s</string>
+    <string name="profile_cert_level_beginner">初级</string>
+    <string name="profile_cert_level_advanced">高级</string>
+    <string name="new_item">+ 新建</string>
+    <string name="hub_label">中心：</string>
+    <string name="share">分享</string>
+    <string name="repost">转发</string>
+    <string name="reposted">已转发</string>
+    <string name="report">举报</string>
+    <string name="copied">已复制！</string>
+    <string name="comment_singular">评论</string>
+    <string name="comment_plural">评论</string>
+    <string name="repost_singular">转发</string>
+    <string name="repost_plural">转发</string>
+    <string name="forum_repost_count_format">%1$d %2$s</string>
+    <string name="forum_reposted_by_format">🔁 %1$s 已转发</string>
+    <string name="forum_post_not_found">未找到帖子</string>
+    <string name="forum_post_deleted">帖子已删除</string>
+    <string name="forum_delete_failed">删除帖子失败</string>
+    <string name="forum_delete_post_title">删除帖子</string>
+    <string name="forum_delete_post_confirm">确定要删除这条帖子吗？此操作无法撤销。</string>
+    <string name="forum_report_title">举报此帖子</string>
+    <string name="forum_report_success">举报已提交，谢谢。</string>
+    <string name="forum_report_already_exists">你已经举报过这条帖子。</string>
+    <string name="forum_report_failed">无法提交举报。</string>
+    <string name="forum_reposted">已转发！</string>
+    <string name="forum_repost_failed">无法转发。</string>
+    <string name="forum_no_comments_yet">还没有评论，来发表第一条吧！</string>
+    <string name="posting">发布中…</string>
+    <string name="post_comment">发布评论</string>
+    <string name="forum_load_failed">加载帖子失败</string>
+    <string name="sign_in_to_vote">请先登录后投票</string>
+    <string name="help_requests_load_failed">加载求助请求失败</string>
+    <string name="help_offers_load_failed">加载帮助提供失败</string>
+    <string name="help_request_invalid">无效请求</string>
+    <string name="help_request_detail_load_failed">加载详情失败</string>
+    <string name="help_request_author_format">发布者：%1$s</string>
+    <string name="help_request_comments_load_failed">加载评论失败</string>
+    <string name="mark_resolved">标记为已解决</string>
+    <string name="resolving">处理中…</string>
+    <string name="help_request_resolved">已标记为已解决。</string>
+    <string name="help_request_status_update_failed">状态更新失败。</string>
+    <string name="help_request_delete_title">删除求助请求</string>
+    <string name="help_request_delete_confirm">确定要删除这条求助请求吗？此操作无法撤销。</string>
+    <string name="help_request_delete_forbidden">你只能删除自己的请求。</string>
+    <string name="help_request_deleted">求助请求已删除。</string>
+    <string name="comment_delete_title">删除评论</string>
+    <string name="comment_delete_confirm">确定要删除这条评论吗？</string>
+    <string name="comment_delete_failed">删除评论失败。</string>
+    <string name="comment_empty_error">评论不能为空。</string>
+    <string name="comment_post_failed">发布评论失败。</string>
+    <string name="help_offer_author_format">提供者：%1$s</string>
+    <string name="help_offer_detail_category_format">类别：%1$s</string>
+    <string name="help_offer_detail_availability_format">可用时间：%1$s</string>
+    <string name="help_offer_delete_failed">删除帮助提供失败</string>
+    <string name="ok">确定</string>
+    <string name="post_type_label">帖子类型</string>
+    <string name="images_label">图片</string>
+    <string name="upload_from_device">从设备上传</string>
+    <string name="image_urls_one_per_line">图片 URL（每行一条）</string>
+</resources>

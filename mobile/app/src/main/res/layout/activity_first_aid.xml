@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Basic Skills Guide"
+            android:text="@string/first_aid_guide_title"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="#38BDF8"
@@ -41,7 +41,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Displacement Skills"
+                    android:text="@string/first_aid_displacement_title"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"
@@ -50,7 +50,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Move patients to a safe place away from immediate danger (fire, electrical hazards). Do not move if a severe spinal injury is suspected unless absolutely necessary."
+                    android:text="@string/first_aid_displacement_summary"
                     android:textSize="14sp"
                     android:textColor="#9CA3AF"
                     android:lineSpacingExtra="4dp" />
@@ -78,7 +78,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Checking Skills"
+                    android:text="@string/first_aid_checking_title"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"
@@ -87,7 +87,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Assess the scene for safety of the rescuer and others. Evaluate the patient's level of consciousness, responsiveness, and general condition."
+                    android:text="@string/first_aid_checking_summary"
                     android:textSize="14sp"
                     android:textColor="#9CA3AF"
                     android:lineSpacingExtra="4dp" />
@@ -115,7 +115,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cardiopulmonary Resuscitation"
+                    android:text="@string/first_aid_cpr_title"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"
@@ -124,7 +124,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="(CPR) A life-saving technique for cardiac arrest. It utilizes chest compressions to provide artificial circulation and rescue breaths to supply oxygen."
+                    android:text="@string/first_aid_cpr_summary"
                     android:textSize="14sp"
                     android:textColor="#9CA3AF"
                     android:lineSpacingExtra="4dp" />
@@ -152,7 +152,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ABC Skills"
+                    android:text="@string/first_aid_abc_title"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"
@@ -161,7 +161,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Airway, Breathing, and Circulation. Ensure the airway is clear of obstructions, check for normal breathing, and assess circulation (pulse or bleeding)."
+                    android:text="@string/first_aid_abc_summary"
                     android:textSize="14sp"
                     android:textColor="#9CA3AF"
                     android:lineSpacingExtra="4dp" />
