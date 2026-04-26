@@ -55,7 +55,11 @@ data class ExpertiseCategoryData(
     val id: Int,
     val name: String,
     @SerializedName("help_request_category") val helpRequestCategory: String,
-)
+    val translations: Map<String, String> = emptyMap(),
+) {
+    /** Returns the localized name for [langCode], falling back to [name]. */
+    fun displayName(langCode: String): String = translations[langCode] ?: name
+}
 
 // ── Expertise Field ─────────────────────────────────────────────────────────────
 

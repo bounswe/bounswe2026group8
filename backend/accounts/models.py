@@ -166,6 +166,8 @@ class ExpertiseCategory(models.Model):
         choices=HelpRequestCategory.choices,
     )
     is_active = models.BooleanField(default=True)
+    # Keys are BCP-47 language codes (e.g. "tr", "es", "zh"). Falls back to name if key missing.
+    translations = models.JSONField(default=dict, blank=True)
 
     class Meta:
         verbose_name_plural = 'expertise categories'

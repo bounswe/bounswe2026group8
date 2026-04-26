@@ -122,7 +122,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Show only my expertise"
+            android:text="@string/show_only_my_expertise"
             android:textColor="@color/text_secondary"
             android:textSize="13sp" />
 
@@ -213,7 +213,7 @@
                 android:id="@+id/chipOther"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Other"
+                android:text="@string/filter_other"
                 style="@style/Widget.Material3.Chip.Filter"
                 app:chipBackgroundColor="@color/bg_surface"
                 app:chipStrokeColor="@color/border"

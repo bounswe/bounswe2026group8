@@ -233,6 +233,7 @@
       "transport": "Transport",
       "other": "Other"
     },
+    "my_expertise": "My Expertise",
     "time": {
       "just_now": "Just now",
       "m_ago": "{{count}}m ago",

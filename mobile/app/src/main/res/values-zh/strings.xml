@@ -53,6 +53,8 @@
     <string name="filter_food">食物</string>
     <string name="filter_shelter">庇护</string>
     <string name="filter_transport">交通</string>
+    <string name="filter_other">其他</string>
+    <string name="show_only_my_expertise">仅显示我的专长</string>
     <string name="category_medical">医疗</string>
     <string name="category_food">食物</string>
     <string name="category_shelter">庇护</string>

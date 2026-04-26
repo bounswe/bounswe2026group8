@@ -289,7 +289,7 @@ export default function HelpRequestsPage() {
                   className={`btn btn-sm ${expertiseMatch ? 'btn-primary' : 'btn-secondary'}`}
                   onClick={() => { setExpertiseMatch(true); setCategory(''); }}
               >
-                My Expertise
+                {t('help_requests.my_expertise')}
               </button>
           )}
         </div>

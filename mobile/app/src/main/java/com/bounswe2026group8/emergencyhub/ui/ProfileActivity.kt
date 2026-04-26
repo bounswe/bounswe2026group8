@@ -23,6 +23,7 @@ import com.bounswe2026group8.emergencyhub.api.ResourceCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ResourceData
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.util.LocaleManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
@@ -362,7 +363,7 @@ class ProfileActivity : AppCompatActivity() {
                 getString(R.string.profile_cert_level_beginner)
             }
             val label = TextView(this).apply {
-                text = getString(R.string.profile_expertise_item_format, item.category.name, level)
+                text = getString(R.string.profile_expertise_item_format, item.category.displayName(LocaleManager.getLanguage(context)), level)
                 setTextColor(ContextCompat.getColor(context, R.color.text_primary))
                 textSize = 14f
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -398,7 +399,8 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         val dropdown = findViewById<AutoCompleteTextView>(R.id.dropdownExpertiseCategory)
-        val categoryNames = expertiseCategories.map { it.name }
+        val langCode = LocaleManager.getLanguage(this)
+        val categoryNames = expertiseCategories.map { it.displayName(langCode) }
         dropdown.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categoryNames))
         var selectedCategoryId: Int? = null
         dropdown.setOnItemClickListener { _, _, pos, _ ->

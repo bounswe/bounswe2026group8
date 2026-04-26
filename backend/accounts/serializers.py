@@ -49,7 +49,7 @@ class ExpertiseCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExpertiseCategory
-        fields = ['id', 'name', 'help_request_category']
+        fields = ['id', 'name', 'help_request_category', 'translations']
 
 
 class ExpertiseFieldSerializer(serializers.ModelSerializer):

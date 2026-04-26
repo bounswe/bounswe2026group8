@@ -168,13 +168,13 @@ const EMPTY_EXPERTISE = { category_id: '', certification_level: 'BEGINNER', cert
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation(); // 5. Initialize hook
+  const { t, i18n } = useTranslation(); // 5. Initialize hook
 
   // 6. Dynamic labels mapping
   const AVAILABILITY_LABELS = {
     SAFE: { label: t('user_profile.status.safe'), color: '#34d399' },
     NEEDS_HELP: { label: t('user_profile.status.needs_help'), color: '#f87171' },
-    AVAILABLE_TO_HELP: { label: t('user_profile.status.available'), color: '#38bdf8' }
+    AVAILABLE_TO_HELP: { label: t('user_profile.status.available_to_help'), color: '#38bdf8' }
   };
 
   const [profile, setProfile] = useState({
@@ -438,8 +438,8 @@ export default function ProfilePage() {
                           {['MEDICAL', 'SHELTER', 'TRANSPORT', 'FOOD', 'OTHER'].map((grp) => {
                             const items = expertiseCategories.filter((c) => c.help_request_category === grp);
                             return items.length ? (
-                              <optgroup key={grp} label={grp.charAt(0) + grp.slice(1).toLowerCase()}>
-                                {items.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                              <optgroup key={grp} label={t(`help_requests.categories.${grp.toLowerCase()}`)}>
+                                {items.map((c) => <option key={c.id} value={c.id}>{c.translations?.[i18n.language] || c.name}</option>)}
                               </optgroup>
                             ) : null;
                           })}
@@ -477,7 +477,7 @@ export default function ProfilePage() {
                         <li key={ef.id} className="item-card">
                           <div className="item-card-icon">🎓</div>
                           <div className="item-card-body">
-                            <span className="item-card-name">{ef.category?.name}</span>
+                            <span className="item-card-name">{ef.category?.translations?.[i18n.language] || ef.category?.name}</span>
                             <span className="item-card-meta">
                       {ef.certification_level === 'ADVANCED'
                           ? `★ ${t('profile.expertise_item.advanced')}`

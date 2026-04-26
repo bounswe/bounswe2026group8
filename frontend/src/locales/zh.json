@@ -233,6 +233,7 @@
       "transport": "交通",
       "other": "其他"
     },
+    "my_expertise": "我的专长",
     "time": {
       "just_now": "刚刚",
       "m_ago": "{{count}} 分钟前",

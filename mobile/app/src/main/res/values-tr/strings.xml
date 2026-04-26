@@ -53,6 +53,8 @@
     <string name="filter_food">Yiyecek</string>
     <string name="filter_shelter">Barınak</string>
     <string name="filter_transport">Ulaşım</string>
+    <string name="filter_other">Diğer</string>
+    <string name="show_only_my_expertise">Yalnızca uzmanlığımı göster</string>
     <string name="category_medical">Tıbbi</string>
     <string name="category_food">Yiyecek</string>
     <string name="category_shelter">Barınak</string>

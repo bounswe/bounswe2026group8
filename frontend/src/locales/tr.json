@@ -233,6 +233,7 @@
       "transport": "Ulaşım",
       "other": "Diğer"
     },
+    "my_expertise": "Uzmanlığım",
     "time": {
       "just_now": "Şimdi",
       "m_ago": "{{count}}d önce",

@@ -27,6 +27,7 @@ object BadgeUtils {
         "FOOD" -> context.getString(R.string.category_food)
         "SHELTER" -> context.getString(R.string.category_shelter)
         "TRANSPORT" -> context.getString(R.string.category_transport)
+        "OTHER" -> context.getString(R.string.category_other)
         else -> formatFallbackLabel(raw)
     }
 
