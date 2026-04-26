@@ -132,7 +132,8 @@
       "medical": "Médico",
       "food": "Comida",
       "shelter": "Refugio",
-      "transport": "Transporte"
+      "transport": "Transporte",
+      "other": "Otro"
     },
     "urgencies": {
       "low": "Baja",
@@ -229,8 +230,10 @@
       "medical": "Médico",
       "food": "Comida",
       "shelter": "Refugio",
-      "transport": "Transporte"
+      "transport": "Transporte",
+      "other": "Otro"
     },
+    "my_expertise": "Mi Especialidad",
     "time": {
       "just_now": "Ahora mismo",
       "m_ago": "hace {{count}} min",
@@ -341,7 +344,8 @@
       "medical": "Médico",
       "food": "Comida",
       "shelter": "Refugio",
-      "transport": "Transporte"
+      "transport": "Transporte",
+      "other": "Otro"
     },
     "time": {
       "just_now": "ahora mismo",

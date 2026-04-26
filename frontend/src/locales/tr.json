@@ -132,7 +132,8 @@
       "medical": "Medikal",
       "food": "Yemek",
       "shelter": "Sığınak",
-      "transport": "Ulaşım"
+      "transport": "Ulaşım",
+      "other": "Diğer"
     },
     "urgencies": {
       "low": "Düşük",
@@ -229,8 +230,10 @@
       "medical": "Medikal",
       "food": "Yemek",
       "shelter": "Sığınak",
-      "transport": "Ulaşım"
+      "transport": "Ulaşım",
+      "other": "Diğer"
     },
+    "my_expertise": "Uzmanlığım",
     "time": {
       "just_now": "Şimdi",
       "m_ago": "{{count}}d önce",
@@ -341,7 +344,8 @@
       "medical": "Medikal",
       "food": "Yemek",
       "shelter": "Sığınak",
-      "transport": "Ulaşım"
+      "transport": "Ulaşım",
+      "other": "Diğer"
     },
     "time": {
       "just_now": "şimdi",

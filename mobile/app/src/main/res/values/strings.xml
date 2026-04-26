@@ -53,10 +53,13 @@
     <string name="filter_food">Food</string>
     <string name="filter_shelter">Shelter</string>
     <string name="filter_transport">Transport</string>
+    <string name="filter_other">Other</string>
+    <string name="show_only_my_expertise">Show only my expertise</string>
     <string name="category_medical">Medical</string>
     <string name="category_food">Food</string>
     <string name="category_shelter">Shelter</string>
     <string name="category_transport">Transport</string>
+    <string name="category_other">Other</string>
     <string name="urgency_low">Low</string>
     <string name="urgency_medium">Medium</string>
     <string name="urgency_high">High</string>

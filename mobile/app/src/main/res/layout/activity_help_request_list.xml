@@ -108,6 +108,32 @@
 
     </LinearLayout>
 
+    <!-- ── Expertise-match toggle (EXPERT users only) ───────────────────── -->
+    <LinearLayout
+        android:id="@+id/layoutExpertiseToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/show_only_my_expertise"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchExpertiseMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true" />
+
+    </LinearLayout>
+
     <!-- ── Category filter chips ───────────────────────────────────────── -->
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -176,6 +202,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/filter_transport"
+                style="@style/Widget.Material3.Chip.Filter"
+                app:chipBackgroundColor="@color/bg_surface"
+                app:chipStrokeColor="@color/border"
+                app:chipStrokeWidth="1dp"
+                android:textColor="@color/text_secondary"
+                app:checkedIconVisible="false" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_other"
                 style="@style/Widget.Material3.Chip.Filter"
                 app:chipBackgroundColor="@color/bg_surface"
                 app:chipStrokeColor="@color/border"

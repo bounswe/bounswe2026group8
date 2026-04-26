@@ -159,7 +159,8 @@ class CreateHelpRequestActivity : AppCompatActivity() {
                 getString(R.string.category_medical),
                 getString(R.string.category_food),
                 getString(R.string.category_shelter),
-                getString(R.string.category_transport)
+                getString(R.string.category_transport),
+                getString(R.string.category_other),
             )
         )
         dropdownCategory.setAdapter(categoryAdapter)
@@ -380,6 +381,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
             getString(R.string.category_food)      -> "FOOD"
             getString(R.string.category_shelter)   -> "SHELTER"
             getString(R.string.category_transport) -> "TRANSPORT"
+            getString(R.string.category_other)     -> "OTHER"
             else        -> "MEDICAL"
         }
 

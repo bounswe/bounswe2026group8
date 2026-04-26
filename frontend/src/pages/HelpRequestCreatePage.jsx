@@ -25,6 +25,7 @@ export default function HelpRequestCreatePage() {
     { value: 'FOOD', label: t('help_request_create.categories.food') },
     { value: 'SHELTER', label: t('help_request_create.categories.shelter') },
     { value: 'TRANSPORT', label: t('help_request_create.categories.transport') },
+    { value: 'OTHER', label: t('help_request_create.categories.other') },
   ];
 
   const URGENCIES = [
