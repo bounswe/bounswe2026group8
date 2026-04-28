@@ -54,9 +54,17 @@ class MeshSyncManager(
 
     // Listener for UI updates
     var onMessagesUpdated: (() -> Unit)? = null
+    var onPeersUpdated: (() -> Unit)? = null
 
     // Track peers we've already exchanged inventories with to prevent infinite loop
     private val inventorySentToPeers = mutableSetOf<String>()
+
+    // deviceId -> displayName? for currently connected peers (for UI display)
+    private val connectedPeers = mutableMapOf<String, String?>()
+
+    fun getConnectedPeers(): List<DeviceInfo> = synchronized(connectedPeers) {
+        connectedPeers.map { DeviceInfo(it.key, it.value) }
+    }
 
     private fun getOrCreateDeviceId(): String {
         val existing = prefs.getString(KEY_DEVICE_ID, null)
@@ -76,9 +84,16 @@ class MeshSyncManager(
         scope.launch { deleteExpiredMessages() }
 
         // Set up callbacks
-        transport.onDeviceFound { peer -> onPeerFound(peer) }
+        transport.onDeviceFound { peer ->
+            synchronized(connectedPeers) { connectedPeers[peer.deviceId] = peer.displayName }
+            onPeersUpdated?.invoke()
+            onPeerFound(peer)
+        }
         transport.onPayloadReceived { deviceId, data -> onPayloadReceived(deviceId, data) }
         transport.onDeviceDisconnected { deviceId ->
+            synchronized(connectedPeers) { connectedPeers.remove(deviceId) }
+            inventorySentToPeers.remove(deviceId)
+            onPeersUpdated?.invoke()
             Log.d(TAG, "Peer disconnected: $deviceId")
         }
 
@@ -88,6 +103,8 @@ class MeshSyncManager(
     fun stop() {
         transport.stop()
         inventorySentToPeers.clear()
+        synchronized(connectedPeers) { connectedPeers.clear() }
+        onPeersUpdated?.invoke()
     }
 
     /**

@@ -15,7 +15,6 @@ import androidx.core.app.NotificationCompat
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.mesh.transport.BleTransport
 import com.bounswe2026group8.emergencyhub.mesh.transport.MeshTransport
-import com.bounswe2026group8.emergencyhub.mesh.transport.MockTcpTransport
 import com.bounswe2026group8.emergencyhub.mesh.ui.MeshActivity
 import com.bounswe2026group8.emergencyhub.offline.data.AppDatabase
 
@@ -26,7 +25,6 @@ class MeshForegroundService : Service() {
         private const val CHANNEL_ID = "mesh_service_channel"
         private const val NOTIFICATION_ID = 1001
 
-        const val EXTRA_USE_BLE = "use_ble"
         const val EXTRA_DISPLAY_NAME = "display_name"
 
         const val ACTION_STOP = "com.bounswe2026group8.emergencyhub.mesh.STOP"
@@ -57,11 +55,10 @@ class MeshForegroundService : Service() {
             return START_NOT_STICKY
         }
 
-        val useBle = intent?.getBooleanExtra(EXTRA_USE_BLE, true) ?: true
         val displayName = intent?.getStringExtra(EXTRA_DISPLAY_NAME)
 
         startForeground(NOTIFICATION_ID, buildNotification())
-        startMesh(useBle, displayName)
+        startMesh(displayName)
 
         return START_STICKY
     }
@@ -71,29 +68,21 @@ class MeshForegroundService : Service() {
         stopMesh()
     }
 
-    private fun startMesh(useBle: Boolean, displayName: String?) {
+    private fun startMesh(displayName: String?) {
         val deviceId = MeshSyncManager.getDeviceId(this)
         val dao = AppDatabase.getDatabase(this).meshMessageDao()
 
-        transport = if (useBle) {
-            BleTransport(this, deviceId, displayName)
-        } else {
-            MockTcpTransport(deviceId, displayName)
-        }
+        transport = BleTransport(this, deviceId, displayName)
 
         syncManager = MeshSyncManager(this, transport!!, dao).also {
             if (displayName != null) it.displayName = displayName
             it.start()
         }
 
-        if (useBle) {
-            transport!!.startAdvertising()
-            transport!!.startDiscovery()
-        } else {
-            transport!!.startAdvertising()
-        }
+        transport!!.startAdvertising()
+        transport!!.startDiscovery()
 
-        Log.d(TAG, "Mesh started: useBle=$useBle, deviceId=$deviceId")
+        Log.d(TAG, "Mesh started: deviceId=$deviceId")
     }
 
     private fun stopMesh() {

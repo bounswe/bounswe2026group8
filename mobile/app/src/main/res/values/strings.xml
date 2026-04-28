@@ -187,12 +187,10 @@
     <string name="mesh_name_hint">Display name (optional)</string>
     <string name="mesh_compose_hint">Write a message…</string>
     <string name="mesh_empty">No messages yet.\nStart the mesh and send one!</string>
-    <string name="mesh_mode_advertise">Advertise (Host)</string>
-    <string name="mesh_mode_discover">Discover (Join)</string>
-    <string name="mesh_mode_ble">BLE (Real)</string>
-    <string name="mesh_mode_tcp">TCP (Emulator)</string>
     <string name="mesh_permissions_needed">Bluetooth permissions are required for mesh messaging</string>
     <string name="mesh_bluetooth_needed">Bluetooth must be enabled for mesh messaging</string>
+    <string name="mesh_peers_none">No peers connected</string>
+    <string name="mesh_peers_format">Connected to %1$d: %2$s</string>
 
     <!-- Map -->
     <string name="map_content_description">Map showing nearby gathering points</string>

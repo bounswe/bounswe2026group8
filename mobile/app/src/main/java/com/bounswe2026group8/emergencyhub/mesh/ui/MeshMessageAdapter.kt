@@ -7,7 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.mesh.db.MeshMessage
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class MeshMessageAdapter(
     private var messages: List<MeshMessage> = emptyList()
@@ -40,18 +43,17 @@ class MeshMessageAdapter(
             txtAuthor.text = message.authorDisplayName
                 ?: "device-${message.authorDeviceId}"
             txtHops.text = if (message.hopCount == 0) "direct" else "${message.hopCount} hop(s)"
-            txtTime.text = timeAgo(message.createdAt)
+            txtTime.text = formatTimestamp(message.createdAt)
             txtBody.text = message.body
         }
 
-        private fun timeAgo(epochMillis: Long): String {
-            val seconds = (Date().time - epochMillis) / 1000
-            return when {
-                seconds < 60 -> "just now"
-                seconds < 3600 -> "${seconds / 60}m ago"
-                seconds < 86400 -> "${seconds / 3600}h ago"
-                else -> "${seconds / 86400}d ago"
-            }
+        private fun formatTimestamp(epochMillis: Long): String {
+            val now = Calendar.getInstance()
+            val msg = Calendar.getInstance().apply { timeInMillis = epochMillis }
+            val sameDay = now.get(Calendar.YEAR) == msg.get(Calendar.YEAR) &&
+                now.get(Calendar.DAY_OF_YEAR) == msg.get(Calendar.DAY_OF_YEAR)
+            val pattern = if (sameDay) "HH:mm:ss" else "MMM d, HH:mm"
+            return SimpleDateFormat(pattern, Locale.getDefault()).format(Date(epochMillis))
         }
     }
 }

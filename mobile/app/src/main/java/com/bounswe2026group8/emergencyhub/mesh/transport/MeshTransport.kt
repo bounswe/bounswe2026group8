@@ -4,8 +4,7 @@ package com.bounswe2026group8.emergencyhub.mesh.transport
  * Abstraction over the mesh communication layer.
  *
  * Implementations:
- *  - MockTcpTransport  → emulator testing over TCP sockets
- *  - (future) BleWifiDirectTransport → real BLE discovery + Wi-Fi Direct data transfer
+ *  - BleTransport → BLE discovery + GATT data transfer
  */
 interface MeshTransport {
 

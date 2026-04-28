@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +35,6 @@ class MeshActivity : AppCompatActivity() {
     private var syncManager: MeshSyncManager? = null
     private lateinit var adapter: MeshMessageAdapter
     private var meshRunning = false
-    private var useBle = true
     private var serviceBound = false
 
     private var pendingStartAction: (() -> Unit)? = null
@@ -44,6 +44,8 @@ class MeshActivity : AppCompatActivity() {
             val meshBinder = binder as MeshForegroundService.MeshBinder
             syncManager = meshBinder.getSyncManager()
             syncManager?.onMessagesUpdated = { runOnUiThread { loadMessages() } }
+            syncManager?.onPeersUpdated = { runOnUiThread { renderPeers() } }
+            runOnUiThread { renderPeers() }
             serviceBound = true
         }
 
@@ -92,22 +94,6 @@ class MeshActivity : AppCompatActivity() {
         // --- Display name ---
         val editName = findViewById<TextInputEditText>(R.id.editDisplayName)
 
-        // --- Mode selector: BLE vs Mock TCP ---
-        val btnBle = findViewById<MaterialButton>(R.id.btnModeAdvertise)
-        val btnTcp = findViewById<MaterialButton>(R.id.btnModeDiscover)
-        btnBle.text = getString(R.string.mesh_mode_ble)
-        btnTcp.text = getString(R.string.mesh_mode_tcp)
-        updateModeButtons(btnBle, btnTcp)
-
-        btnBle.setOnClickListener {
-            useBle = true
-            updateModeButtons(btnBle, btnTcp)
-        }
-        btnTcp.setOnClickListener {
-            useBle = false
-            updateModeButtons(btnBle, btnTcp)
-        }
-
         // --- Start/Stop toggle ---
         val btnToggle = findViewById<MaterialButton>(R.id.btnToggleMesh)
         val txtStatus = findViewById<View>(R.id.txtStatus) as android.widget.TextView
@@ -130,8 +116,8 @@ class MeshActivity : AppCompatActivity() {
                 btnToggle.text = getString(R.string.mesh_start)
                 txtStatus.text = getString(R.string.mesh_status_off)
                 statusDot.setBackgroundColor(getColor(R.color.text_muted))
-                btnBle.isEnabled = true
-                btnTcp.isEnabled = true
+                findViewById<TextView>(R.id.txtPeers).text =
+                    getString(R.string.mesh_peers_none)
                 editName.isEnabled = true
             } else {
                 val startAction = {
@@ -139,7 +125,6 @@ class MeshActivity : AppCompatActivity() {
 
                     // Start the foreground service
                     val serviceIntent = Intent(this, MeshForegroundService::class.java).apply {
-                        putExtra(MeshForegroundService.EXTRA_USE_BLE, useBle)
                         putExtra(MeshForegroundService.EXTRA_DISPLAY_NAME, name)
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -154,19 +139,12 @@ class MeshActivity : AppCompatActivity() {
                     meshRunning = true
                     val deviceId = MeshSyncManager.getDeviceId(this)
                     btnToggle.text = getString(R.string.mesh_stop)
-                    val modeLabel = if (useBle) "BLE Mesh" else "TCP Mock"
-                    txtStatus.text = "$modeLabel active as $deviceId"
+                    txtStatus.text = "BLE Mesh active as $deviceId"
                     statusDot.setBackgroundColor(getColor(R.color.success))
-                    btnBle.isEnabled = false
-                    btnTcp.isEnabled = false
                     editName.isEnabled = false
                 }
 
-                if (useBle) {
-                    startWithBlePermissions(startAction)
-                } else {
-                    startAction()
-                }
+                startWithBlePermissions(startAction)
             }
         }
 
@@ -243,22 +221,24 @@ class MeshActivity : AppCompatActivity() {
                 } else {
                     recycler.visibility = View.VISIBLE
                     txtEmpty.visibility = View.GONE
+                    // newest is at index 0 (DESC order) — keep it in view
+                    recycler.scrollToPosition(0)
                 }
             }
         }
     }
 
-    private fun updateModeButtons(btnBle: MaterialButton, btnTcp: MaterialButton) {
-        if (useBle) {
-            btnBle.setBackgroundColor(getColor(R.color.accent))
-            btnBle.setTextColor(getColor(R.color.white))
-            btnTcp.setBackgroundColor(getColor(R.color.bg_input))
-            btnTcp.setTextColor(getColor(R.color.text_secondary))
+    private fun renderPeers() {
+        val txtPeers = findViewById<TextView>(R.id.txtPeers)
+        val peers = syncManager?.getConnectedPeers().orEmpty()
+        if (peers.isEmpty()) {
+            txtPeers.text = getString(R.string.mesh_peers_none)
         } else {
-            btnTcp.setBackgroundColor(getColor(R.color.accent))
-            btnTcp.setTextColor(getColor(R.color.white))
-            btnBle.setBackgroundColor(getColor(R.color.bg_input))
-            btnBle.setTextColor(getColor(R.color.text_secondary))
+            val names = peers.joinToString(", ") {
+                it.displayName?.takeIf { n -> n.isNotBlank() } ?: "device-${it.deviceId}"
+            }
+            txtPeers.text = getString(R.string.mesh_peers_format, peers.size, names)
         }
     }
+
 }
