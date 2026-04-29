@@ -203,4 +203,51 @@ interface ApiService {
 
     @DELETE("expertise/{id}")
     suspend fun deleteExpertiseField(@Path("id") id: Int): Response<Unit>
+
+    // ── Staff: Admin (user management) ─────────────────────────────────────────
+
+    @GET("staff/users/")
+    suspend fun listStaffUsers(
+        @Query("search") search: String? = null,
+        @Query("staff_role") staffRole: String? = null,
+        @Query("is_active") isActive: Boolean? = null,
+    ): Response<List<StaffUserListItem>>
+
+    @PATCH("staff/users/{id}/staff-role/")
+    suspend fun updateStaffRole(
+        @Path("id") userId: Int,
+        @Body body: StaffRoleUpdateRequest,
+    ): Response<StaffUserListItem>
+
+    @PATCH("staff/users/{id}/status/")
+    suspend fun updateAccountStatus(
+        @Path("id") userId: Int,
+        @Body body: AccountStatusUpdateRequest,
+    ): Response<StaffUserListItem>
+
+    // ── Staff: Forum moderation (mod / admin) ──────────────────────────────────
+
+    @GET("forum/moderation/posts/")
+    suspend fun listForumModerationPosts(
+        @Query("status") status: String? = null,
+    ): Response<List<ForumModerationPost>>
+
+    @PATCH("forum/posts/{id}/moderation/")
+    suspend fun moderateForumPost(
+        @Path("id") postId: Int,
+        @Body body: ForumModerationActionRequest,
+    ): Response<ForumModerationPost>
+
+    // ── Staff: Expertise verification (verifier / admin) ───────────────────────
+
+    @GET("staff/expertise-verifications/")
+    suspend fun listExpertiseVerifications(
+        @Query("status") status: String? = null,
+    ): Response<List<ExpertiseVerificationItem>>
+
+    @PATCH("staff/expertise-verifications/{id}/decision/")
+    suspend fun decideExpertiseVerification(
+        @Path("id") expertiseId: Int,
+        @Body body: ExpertiseDecisionRequest,
+    ): Response<ExpertiseVerificationItem>
 }

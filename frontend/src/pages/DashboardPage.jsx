@@ -2,6 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { logout } from '../services/api';
 import { useTranslation } from 'react-i18next'; // 1. Import the hook
+import {
+  canModerate,
+  canVerifyExpertise,
+  hasAnyStaffRole,
+  isAdmin,
+  staffRoleLabel,
+} from '../utils/staffRoles';
 
 export default function DashboardPage() {
   const { user, logoutUser } = useAuth();
@@ -36,6 +43,19 @@ export default function DashboardPage() {
     { icon: '👤', title: t('dashboard.features.profile.title'), desc: t('dashboard.features.profile.desc'), path: '/profile' },
     { icon: '📶', title: t('dashboard.features.emergency_info.title'), desc: t('dashboard.features.emergency_info.desc'), path: '/emergency-info' },
   ];
+
+  if (hasAnyStaffRole(user)) {
+    let staffPath = '/staff';
+    if (isAdmin(user)) staffPath = '/staff/users';
+    else if (canModerate(user)) staffPath = '/staff/moderation/forum';
+    else if (canVerifyExpertise(user)) staffPath = '/staff/verification/expertise';
+    features.push({
+      icon: '🛡️',
+      title: 'Staff tools',
+      desc: `Tools for ${staffRoleLabel(user.staff_role)}.`,
+      path: staffPath,
+    });
+  }
 
   return (
       <div className="page dashboard-page">

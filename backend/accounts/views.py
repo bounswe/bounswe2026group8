@@ -190,7 +190,8 @@ class ResourceDetailView(APIView):
 class ExpertiseFieldListView(APIView):
     """
     GET  /expertise  — list expertise fields for the current EXPERT user
-    POST /expertise  — add an expertise field (EXPERT only)
+    POST /expertise  — add an expertise field (EXPERT only); always created
+                       in PENDING verification state.
     """
     permission_classes = [IsAuthenticated]
 
@@ -212,17 +213,29 @@ class ExpertiseFieldListView(APIView):
             return error
         serializer = ExpertiseFieldSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            # New submissions always start as PENDING regardless of input.
+            serializer.save(
+                user=request.user,
+                verification_status=ExpertiseField.VerificationStatus.PENDING,
+                reviewed_by=None,
+                reviewed_at=None,
+                verification_note='',
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'message': 'Invalid expertise data', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ExpertiseFieldDetailView(APIView):
     """
-    PATCH  /expertise/<id>  — update expertise field
-    DELETE /expertise/<id>  — delete expertise field
+    PATCH  /expertise/<id>  — update expertise field; any change to the
+                              certification content resets verification to
+                              PENDING so stale approvals don't survive edits.
+    DELETE /expertise/<id>  — delete expertise field.
     """
     permission_classes = [IsAuthenticated]
+
+    # Editable fields that re-trigger verification when changed.
+    _VERIFICATION_RESET_FIELDS = ('field', 'certification_level', 'certification_document_url')
 
     def _get_expertise(self, request, pk):
         if request.user.role != User.Role.EXPERT:
@@ -236,10 +249,26 @@ class ExpertiseFieldDetailView(APIView):
         obj, error = self._get_expertise(request, pk)
         if error:
             return error
+        previous_snapshot = {f: getattr(obj, f) for f in self._VERIFICATION_RESET_FIELDS}
         serializer = ExpertiseFieldSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            updated = serializer.save()
+            content_changed = any(
+                getattr(updated, f) != previous_snapshot[f]
+                for f in self._VERIFICATION_RESET_FIELDS
+            )
+            if content_changed and updated.verification_status != ExpertiseField.VerificationStatus.PENDING:
+                updated.verification_status = ExpertiseField.VerificationStatus.PENDING
+                updated.reviewed_by = None
+                updated.reviewed_at = None
+                updated.verification_note = ''
+                updated.save(update_fields=[
+                    'verification_status',
+                    'reviewed_by',
+                    'reviewed_at',
+                    'verification_note',
+                ])
+            return Response(ExpertiseFieldSerializer(updated).data, status=status.HTTP_200_OK)
         return Response({'message': 'Invalid expertise data', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
