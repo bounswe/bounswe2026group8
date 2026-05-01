@@ -173,6 +173,12 @@ class DashboardActivity : AppCompatActivity() {
         findViewById<MaterialCardView>(R.id.cardOfflineInfo).setOnClickListener {
             startActivity(Intent(this, OfflineFeaturesActivity::class.java))
         }
+
+        findViewById<MaterialCardView>(R.id.cardOfflineMessages).setOnClickListener {
+            startActivity(
+                Intent(this, com.bounswe2026group8.emergencyhub.mesh.ui.MeshArchiveActivity::class.java)
+            )
+        }
     }
 
     private fun sendFcmTokenToBackend() {

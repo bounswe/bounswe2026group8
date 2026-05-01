@@ -11,6 +11,7 @@ import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.bounswe2026group8.emergencyhub.map.ui.OfflineFeaturesActivity
 import com.bounswe2026group8.emergencyhub.util.LocaleManager
+import com.bounswe2026group8.emergencyhub.mesh.ui.MeshActivity
 import com.google.android.material.button.MaterialButton
 
 /**
@@ -51,6 +52,10 @@ class LandingActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.btnOfflineInfo).setOnClickListener {
             startActivity(Intent(this, OfflineFeaturesActivity::class.java))
+        }
+
+        findViewById<MaterialButton>(R.id.btnMeshMessaging).setOnClickListener {
+            startActivity(Intent(this, MeshActivity::class.java))
         }
     }
 
