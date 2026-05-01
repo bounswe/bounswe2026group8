@@ -54,7 +54,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post Type"
+            android:text="@string/post_type_label"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:layout_marginBottom="8dp" />
@@ -150,7 +150,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Images"
+            android:text="@string/images_label"
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:layout_marginBottom="8dp" />
@@ -166,7 +166,7 @@
                 android:id="@+id/btnUploadImages"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="Upload from Device"
+                android:text="@string/upload_from_device"
                 android:textSize="13sp"
                 style="@style/Widget.EmergencyHub.Button.Secondary" />
 
@@ -186,7 +186,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:hint="Image URLs (one per line)"
+            android:hint="@string/image_urls_one_per_line"
             style="@style/Widget.EmergencyHub.TextInput">
 
             <com.google.android.material.textfield.TextInputEditText

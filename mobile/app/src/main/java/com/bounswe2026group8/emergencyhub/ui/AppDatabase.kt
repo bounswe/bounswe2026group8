@@ -18,6 +18,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun meshMessageDao(): MeshMessageDao
 
     companion object {
+        private const val DATABASE_NAME = "offline_contacts_database"
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -46,10 +48,12 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "emergency_database"
+                    DATABASE_NAME
                 )
+                    // Offline contacts are local-only, so resetting stale schemas is safer than crashing.
                     .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                     .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigrationOnDowngrade()
                     .build()
                 INSTANCE = instance
                 instance

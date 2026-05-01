@@ -11,7 +11,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Hub, User, Resource, ExpertiseField
+from .models import Hub, User, Resource, ExpertiseField, ExpertiseCategory
 
 
 class RegisterTests(TestCase):
@@ -41,10 +41,9 @@ class RegisterTests(TestCase):
         self.assertEqual(response.data['user']['expertise_fields'], [])
 
     def test_register_expert_user(self):
-        """Expert user can register with an expertise_field."""
+        """Expert user can register; expertise areas are added separately via /expertise."""
         payload = self._base_payload(
             role='EXPERT',
-            expertise_field='Medical Doctor',
             neighborhood_address='Sariyer, Istanbul',
         )
         response = self.client.post(self.url, payload, format='json')
@@ -53,18 +52,9 @@ class RegisterTests(TestCase):
         self.assertEqual(response.data['user']['neighborhood_address'], 'Sariyer, Istanbul')
 
     def test_register_standard_user_without_optional_fields(self):
-        """Neighborhood and expertise fields should be optional for standard users."""
+        """Neighborhood field is optional for standard users."""
         response = self.client.post(self.url, self._base_payload(), format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    # ── Validation failures ────────────────────────────────────────────────────
-
-    def test_register_expert_without_expertise_field_rejected(self):
-        """Expert users must provide an expertise_field."""
-        payload = self._base_payload(role='EXPERT')
-        response = self.client.post(self.url, payload, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('expertise_field', response.data['errors'])
 
     def test_register_duplicate_email_rejected(self):
         """Registering with an already-used email is rejected."""
@@ -108,7 +98,6 @@ class LoginTests(TestCase):
             full_name='Sheila Davis',
             password='StrongPass123!',
             role='EXPERT',
-            expertise_field='Medical Doctor',
         )
 
     def test_login_valid_credentials(self):
@@ -163,7 +152,6 @@ class MeTests(TestCase):
             full_name='Sheila Davis',
             password='StrongPass123!',
             role='EXPERT',
-            expertise_field='Medical Doctor',
             neighborhood_address='Sariyer, Istanbul',
         )
         # Generate a JWT access token for the user
@@ -417,17 +405,94 @@ class ResourceTests(TestCase):
         self.assertIn(response.status_code, [status.HTTP_403_FORBIDDEN, status.HTTP_404_NOT_FOUND])
 
 
+class ExpertiseCategoryTests(TestCase):
+    """Tests for the ExpertiseCategory model and seeded data."""
+
+    def test_predefined_categories_seeded(self):
+        """Migration must have seeded all 13 predefined categories."""
+        self.assertEqual(ExpertiseCategory.objects.count(), 13)
+
+    def test_medical_group_has_five_categories(self):
+        """Five expertise areas map to the MEDICAL help-request category."""
+        count = ExpertiseCategory.objects.filter(help_request_category='MEDICAL').count()
+        self.assertEqual(count, 5)
+
+    def test_shelter_group_has_three_categories(self):
+        count = ExpertiseCategory.objects.filter(help_request_category='SHELTER').count()
+        self.assertEqual(count, 3)
+
+    def test_transport_group_has_two_categories(self):
+        count = ExpertiseCategory.objects.filter(help_request_category='TRANSPORT').count()
+        self.assertEqual(count, 2)
+
+    def test_food_group_has_two_categories(self):
+        count = ExpertiseCategory.objects.filter(help_request_category='FOOD').count()
+        self.assertEqual(count, 2)
+
+    def test_other_group_has_one_category(self):
+        count = ExpertiseCategory.objects.filter(help_request_category='OTHER').count()
+        self.assertEqual(count, 1)
+
+    def test_expertise_category_str(self):
+        cat = ExpertiseCategory.objects.get(name='First Aid')
+        self.assertEqual(str(cat), 'First Aid (MEDICAL)')
+
+    def test_all_seeded_categories_are_active(self):
+        inactive = ExpertiseCategory.objects.filter(is_active=False).count()
+        self.assertEqual(inactive, 0)
+
+    def test_inactive_category_excluded_from_serializer_queryset(self):
+        """An inactive category must not be selectable via the API."""
+        cat = ExpertiseCategory.objects.get(name='First Aid')
+        cat.is_active = False
+        cat.save()
+        from .serializers import ExpertiseFieldSerializer
+        field = ExpertiseFieldSerializer().fields['category_id']
+        active_ids = list(field.queryset.values_list('id', flat=True))
+        self.assertNotIn(cat.pk, active_ids)
+
+
+class ExpertiseCategoryEndpointTests(TestCase):
+    """Tests for GET /expertise-categories/ — public, unauthenticated."""
+
+    def test_list_is_public(self):
+        """No authentication required."""
+        response = APIClient().get('/expertise-categories/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_returns_all_seeded_categories(self):
+        response = APIClient().get('/expertise-categories/')
+        self.assertEqual(len(response.data), 13)
+
+    def test_response_shape(self):
+        """Each item has id, name, and help_request_category."""
+        response = APIClient().get('/expertise-categories/')
+        item = response.data[0]
+        self.assertIn('id', item)
+        self.assertIn('name', item)
+        self.assertIn('help_request_category', item)
+
+    def test_inactive_category_excluded(self):
+        ExpertiseCategory.objects.filter(name='First Aid').update(is_active=False)
+        response = APIClient().get('/expertise-categories/')
+        names = [c['name'] for c in response.data]
+        self.assertNotIn('First Aid', names)
+        self.assertEqual(len(response.data), 12)
+
+
 class ExpertiseFieldTests(TestCase):
     """Tests for GET/POST /expertise and role-based access control."""
 
     def setUp(self):
         self.client = APIClient()
+        # Reuse seeded categories from the migration
+        self.medical_cat = ExpertiseCategory.objects.get(name='First Aid')
+        self.shelter_cat = ExpertiseCategory.objects.get(name='Firefighter')
         self.expert = User.objects.create_user(
             email='expert@example.com',
             full_name='Expert User',
             password='StrongPass123!',
             role='EXPERT',
-            expertise_field='Medical Doctor',
         )
         self.standard = User.objects.create_user(
             email='standard@example.com',
@@ -448,7 +513,7 @@ class ExpertiseFieldTests(TestCase):
 
     def _create_payload(self, **overrides):
         payload = {
-            'field': 'Cardiology',
+            'category_id': self.medical_cat.pk,
             'certification_level': 'ADVANCED',
         }
         payload.update(overrides)
@@ -457,26 +522,33 @@ class ExpertiseFieldTests(TestCase):
     # ── Expert user happy paths ────────────────────────────────────────────────
 
     def test_expert_can_create_expertise_field(self):
-        """Expert user can add an expertise field."""
+        """Expert user can add an expertise field linked to a category."""
         response = self.expert_client.post('/expertise', self._create_payload(), format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['field'], 'Cardiology')
+        self.assertEqual(response.data['category']['id'], self.medical_cat.pk)
+        self.assertEqual(response.data['category']['name'], self.medical_cat.name)
         self.assertEqual(response.data['certification_level'], 'ADVANCED')
+
+    def test_expertise_field_is_approved_defaults_to_true(self):
+        """Newly created expertise fields are approved by default."""
+        response = self.expert_client.post('/expertise', self._create_payload(), format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.data['is_approved'])
 
     def test_expert_can_list_own_expertise_fields(self):
         """Expert user can list their own expertise fields."""
         ExpertiseField.objects.create(
-            user=self.expert, field='Neurology', certification_level='BEGINNER'
+            user=self.expert, category=self.shelter_cat, certification_level='BEGINNER'
         )
         response = self.expert_client.get('/expertise')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        fields = [e['field'] for e in response.data]
-        self.assertIn('Neurology', fields)
+        category_names = [e['category']['name'] for e in response.data]
+        self.assertIn(self.shelter_cat.name, category_names)
 
     def test_expert_can_delete_expertise_field(self):
         """Expert user can delete their own expertise field."""
         ef = ExpertiseField.objects.create(
-            user=self.expert, field='Radiology', certification_level='BEGINNER'
+            user=self.expert, category=self.medical_cat, certification_level='BEGINNER'
         )
         response = self.expert_client.delete(f'/expertise/{ef.pk}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -484,7 +556,7 @@ class ExpertiseFieldTests(TestCase):
 
     def test_expertise_defaults_certification_level_to_beginner(self):
         """Omitting certification_level defaults to BEGINNER."""
-        payload = {'field': 'Surgery'}
+        payload = {'category_id': self.medical_cat.pk}
         response = self.expert_client.post('/expertise', payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['certification_level'], 'BEGINNER')
@@ -511,11 +583,10 @@ class ExpertiseFieldTests(TestCase):
             full_name='Other Expert',
             password='Pass123!',
             role='EXPERT',
-            expertise_field='Nurse',
         )
         ExpertiseField.objects.create(
-            user=other_expert, field='Oncology', certification_level='ADVANCED'
+            user=other_expert, category=self.shelter_cat, certification_level='ADVANCED'
         )
         response = self.expert_client.get('/expertise')
-        fields = [e['field'] for e in response.data]
-        self.assertNotIn('Oncology', fields)
+        category_names = [e['category']['name'] for e in response.data]
+        self.assertNotIn(self.shelter_cat.name, category_names)

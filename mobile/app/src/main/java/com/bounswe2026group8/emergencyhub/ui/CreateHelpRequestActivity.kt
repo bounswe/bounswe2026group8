@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -34,9 +33,7 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import com.bounswe2026group8.emergencyhub.util.ImageUploadHelper
 
 /**
  * Form screen for creating a new help request.
@@ -158,14 +155,24 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         // Category dropdown
         val categoryAdapter = ArrayAdapter(
             this, android.R.layout.simple_dropdown_item_1line,
-            arrayOf("Medical", "Food", "Shelter", "Transport")
+            arrayOf(
+                getString(R.string.category_medical),
+                getString(R.string.category_food),
+                getString(R.string.category_shelter),
+                getString(R.string.category_transport),
+                getString(R.string.category_other),
+            )
         )
         dropdownCategory.setAdapter(categoryAdapter)
 
         // Urgency dropdown
         val urgencyAdapter = ArrayAdapter(
             this, android.R.layout.simple_dropdown_item_1line,
-            arrayOf("Low", "Medium", "High")
+            arrayOf(
+                getString(R.string.urgency_low),
+                getString(R.string.urgency_medium),
+                getString(R.string.urgency_high)
+            )
         )
         dropdownUrgency.setAdapter(urgencyAdapter)
 
@@ -288,14 +295,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         txtUploadStatus.text = "Uploading ${uris.size} image(s)…"
         txtUploadStatus.visibility = View.VISIBLE
 
-        val parts = mutableListOf<MultipartBody.Part>()
-        for (uri in uris) {
-            val bytes = contentResolver.openInputStream(uri)?.readBytes() ?: continue
-            val mimeType = contentResolver.getType(uri) ?: "image/jpeg"
-            val fileName = getFileName(uri) ?: "image.jpg"
-            val requestBody = bytes.toRequestBody(mimeType.toMediaType())
-            parts.add(MultipartBody.Part.createFormData("images", fileName, requestBody))
-        }
+        val parts = ImageUploadHelper.prepareParts(contentResolver, uris)
 
         lifecycleScope.launch {
             try {
@@ -317,15 +317,6 @@ class CreateHelpRequestActivity : AppCompatActivity() {
                 btnCaptureImage.isEnabled = true
             }
         }
-    }
-
-    private fun getFileName(uri: Uri): String? {
-        var name: String? = null
-        contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            val idx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            if (idx >= 0 && cursor.moveToFirst()) name = cursor.getString(idx)
-        }
-        return name
     }
 
     /** Rebuilds the horizontal image preview strip from [uploadedImageUrls]. */
@@ -386,17 +377,18 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         }
 
         val category = when (dropdownCategory.text.toString()) {
-            "Medical"   -> "MEDICAL"
-            "Food"      -> "FOOD"
-            "Shelter"   -> "SHELTER"
-            "Transport" -> "TRANSPORT"
+            getString(R.string.category_medical)   -> "MEDICAL"
+            getString(R.string.category_food)      -> "FOOD"
+            getString(R.string.category_shelter)   -> "SHELTER"
+            getString(R.string.category_transport) -> "TRANSPORT"
+            getString(R.string.category_other)     -> "OTHER"
             else        -> "MEDICAL"
         }
 
         val urgency = when (dropdownUrgency.text.toString()) {
-            "Low"    -> "LOW"
-            "Medium" -> "MEDIUM"
-            "High"   -> "HIGH"
+            getString(R.string.urgency_low)    -> "LOW"
+            getString(R.string.urgency_medium) -> "MEDIUM"
+            getString(R.string.urgency_high)   -> "HIGH"
             else     -> "LOW"
         }
 

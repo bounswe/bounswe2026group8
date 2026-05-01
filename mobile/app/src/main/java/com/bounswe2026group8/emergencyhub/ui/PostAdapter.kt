@@ -10,16 +10,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.Post
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
 import com.bumptech.glide.Glide
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 class PostAdapter(
     private var posts: MutableList<Post> = mutableListOf(),
@@ -44,22 +40,8 @@ class PostAdapter(
         }
     }
 
-    fun addPostToTop(post: Post) {
-        posts.add(0, post)
-        notifyItemInserted(0)
-    }
-
-    fun removePost(postId: Int) {
-        val idx = posts.indexOfFirst { it.id == postId }
-        if (idx != -1) {
-            posts.removeAt(idx)
-            notifyItemRemoved(idx)
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_post_card, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post_card, parent, false)
         return PostViewHolder(view)
     }
 
@@ -98,9 +80,10 @@ class PostAdapter(
             onDeleteClick: ((Int) -> Unit)?,
             onPostClick: ((Int) -> Unit)?
         ) {
-            // Repost label
+            val ctx = itemView.context
+
             if (post.repostedFrom != null) {
-                txtRepostLabel.text = "🔁 ${post.author.fullName} reposted"
+                txtRepostLabel.text = ctx.getString(R.string.forum_reposted_by_format, post.author.fullName)
                 txtRepostLabel.visibility = View.VISIBLE
                 txtAuthor.text = post.repostedFrom.author.fullName
             } else {
@@ -108,12 +91,11 @@ class PostAdapter(
                 txtAuthor.text = post.author.fullName
             }
 
-            txtUpvote.text = "▲ ${post.upvoteCount}"
-            txtDownvote.text = "▼ ${post.downvoteCount}"
+            txtUpvote.text = "\u25B2 ${post.upvoteCount}"
+            txtDownvote.text = "\u25BC ${post.downvoteCount}"
             txtTitle.text = post.title
-            txtTime.text = timeAgo(post.createdAt)
+            txtTime.text = TimeUtils.timeAgo(post.createdAt)
 
-            // Image thumbnails
             val images = post.imageUrls
             if (!images.isNullOrEmpty()) {
                 imageContainer.visibility = View.VISIBLE
@@ -121,28 +103,23 @@ class PostAdapter(
                 for ((i, thumb) in thumbs.withIndex()) {
                     if (i < images.size) {
                         thumb.visibility = View.VISIBLE
-                        Glide.with(itemView.context).load(RetrofitClient.resolveImageUrl(images[i])).centerCrop().into(thumb)
+                        Glide.with(ctx).load(RetrofitClient.resolveImageUrl(images[i])).centerCrop().into(thumb)
                     } else {
                         thumb.visibility = View.GONE
                     }
                 }
-                if (images.size > 3) {
-                    txtMoreImages.text = "+${images.size - 3}"
-                    txtMoreImages.visibility = View.VISIBLE
-                } else {
-                    txtMoreImages.visibility = View.GONE
-                }
+                txtMoreImages.visibility = if (images.size > 3) View.VISIBLE else View.GONE
+                if (images.size > 3) txtMoreImages.text = "+${images.size - 3}"
             } else {
                 imageContainer.visibility = View.GONE
             }
 
-            val commentWord = if (post.commentCount == 1) "comment" else "comments"
-            txtComments.text = "${post.commentCount} $commentWord"
+            val commentWord = if (post.commentCount == 1) ctx.getString(R.string.comment_singular) else ctx.getString(R.string.comment_plural)
+            txtComments.text = ctx.getString(R.string.comment_count, post.commentCount, commentWord)
 
-            // Repost count (only on non-repost posts)
             if (post.repostedFrom == null && post.repostCount > 0) {
-                val repostWord = if (post.repostCount == 1) "repost" else "reposts"
-                txtRepostCount.text = "${post.repostCount} $repostWord"
+                val repostWord = if (post.repostCount == 1) ctx.getString(R.string.repost_singular) else ctx.getString(R.string.repost_plural)
+                txtRepostCount.text = ctx.getString(R.string.forum_repost_count_format, post.repostCount, repostWord)
                 txtRepostCount.visibility = View.VISIBLE
             } else {
                 txtRepostCount.visibility = View.GONE
@@ -150,52 +127,43 @@ class PostAdapter(
 
             when (post.forumType) {
                 "GLOBAL" -> {
-                    txtForumType.text = "Global"
-                    txtForumType.setTextColor(itemView.context.getColor(R.color.forum_global))
+                    txtForumType.text = ctx.getString(R.string.forum_type_global)
+                    txtForumType.setTextColor(ctx.getColor(R.color.forum_global))
                     txtForumType.setBackgroundResource(R.drawable.forum_type_badge_global)
                     txtForumType.visibility = View.VISIBLE
                 }
                 "STANDARD" -> {
-                    txtForumType.text = "Standard"
-                    txtForumType.setTextColor(itemView.context.getColor(R.color.forum_standard))
+                    txtForumType.text = ctx.getString(R.string.forum_type_standard)
+                    txtForumType.setTextColor(ctx.getColor(R.color.forum_standard))
                     txtForumType.setBackgroundResource(R.drawable.forum_type_badge_standard)
                     txtForumType.visibility = View.VISIBLE
                 }
                 "URGENT" -> {
-                    txtForumType.text = "Urgent"
-                    txtForumType.setTextColor(itemView.context.getColor(R.color.forum_urgent))
+                    txtForumType.text = ctx.getString(R.string.forum_type_urgent)
+                    txtForumType.setTextColor(ctx.getColor(R.color.forum_urgent))
                     txtForumType.setBackgroundResource(R.drawable.forum_type_badge_urgent)
                     txtForumType.visibility = View.VISIBLE
                 }
-                else -> {
-                    txtForumType.visibility = View.GONE
-                }
+                else -> txtForumType.visibility = View.GONE
             }
 
-            txtUpvote.setTextColor(
-                if (post.userVote == "UP") itemView.context.getColor(R.color.vote_up_active)
-                else itemView.context.getColor(R.color.text_muted)
-            )
-            txtDownvote.setTextColor(
-                if (post.userVote == "DOWN") itemView.context.getColor(R.color.vote_down_active)
-                else itemView.context.getColor(R.color.text_muted)
-            )
+            txtUpvote.setTextColor(if (post.userVote == "UP") ctx.getColor(R.color.vote_up_active) else ctx.getColor(R.color.text_muted))
+            txtDownvote.setTextColor(if (post.userVote == "DOWN") ctx.getColor(R.color.vote_down_active) else ctx.getColor(R.color.text_muted))
 
             txtUpvote.setOnClickListener { onVoteClick?.invoke(post.id, "UP") }
             txtDownvote.setOnClickListener { onVoteClick?.invoke(post.id, "DOWN") }
 
-            // Share button
             btnShare.setOnClickListener {
-                val clipboard = itemView.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Post Link", "https://emergencyhub.app/forum/posts/${post.id}")
+                val clipboard = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText(
+                    ctx.getString(R.string.forum_post_link_label),
+                    "https://emergencyhub.app/forum/posts/${post.id}"
+                )
                 clipboard.setPrimaryClip(clip)
-                btnShare.text = "Copied!"
-                btnShare.postDelayed({ btnShare.text = "Share" }, 1500)
+                btnShare.text = ctx.getString(R.string.copied)
+                btnShare.postDelayed({ btnShare.text = ctx.getString(R.string.share) }, 1500)
             }
 
-            // Repost button rules:
-            // Show if: logged in AND not the author AND not already reposted
-            // Hide if: is the author OR already reposted
             val isAuthor = currentUserId != null && currentUserId == post.author.id
             val alreadyReposted = post.userHasReposted == true
 
@@ -222,30 +190,10 @@ class PostAdapter(
                 if (onPostClick != null) {
                     onPostClick.invoke(post.id)
                 } else {
-                    val context = itemView.context
-                    val intent = Intent(context, PostDetailActivity::class.java)
+                    val intent = Intent(ctx, PostDetailActivity::class.java)
                     intent.putExtra("post_id", post.id)
-                    context.startActivity(intent)
+                    ctx.startActivity(intent)
                 }
-            }
-        }
-
-        private fun timeAgo(dateStr: String): String {
-            return try {
-                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-                format.timeZone = TimeZone.getTimeZone("UTC")
-                val date = format.parse(dateStr.substringBefore(".").substringBefore("Z"))
-                    ?: return dateStr
-                val seconds = (Date().time - date.time) / 1000
-
-                when {
-                    seconds < 60 -> "just now"
-                    seconds < 3600 -> "${seconds / 60}m ago"
-                    seconds < 86400 -> "${seconds / 3600}h ago"
-                    else -> "${seconds / 86400}d ago"
-                }
-            } catch (_: Exception) {
-                dateStr
             }
         }
     }

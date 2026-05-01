@@ -7,16 +7,11 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-// Read DEV_BASE_URL from local.properties (gitignored) so a developer can point
-// debug builds at a LAN backend without committing their personal IP.
-//   echo 'DEV_BASE_URL=http://192.168.1.51:8000/' >> local.properties
-// Falls back to the prod duckdns URL when unset.
-val devBaseUrl: String = run {
-    val props = Properties()
-    val file = rootProject.file("local.properties")
-    if (file.exists()) file.inputStream().use { props.load(it) }
-    props.getProperty("DEV_BASE_URL") ?: "https://emergencyhub.duckdns.org/api/"
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) load(f.inputStream())
 }
+val localBaseUrl: String = localProps.getProperty("BASE_URL") ?: "http://10.0.2.2:8000/"
 
 android {
     namespace = "com.bounswe2026group8.emergencyhub"
@@ -36,7 +31,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"$devBaseUrl\"")
+            buildConfigField("String", "BASE_URL", "\"$localBaseUrl\"")
         }
         release {
             isMinifyEnabled = false

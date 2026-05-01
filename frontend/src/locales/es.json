@@ -1,0 +1,811 @@
+{
+  "hub": "Centro",
+  "landing": {
+    "title_main": "Vecindario",
+    "title_sub": "Centro de Emergencias",
+    "subtitle": "Prepárate para emergencias. Conecta con tus vecinos. Desarrolla la resiliencia\nde la comunidad a través de la ayuda mutua, incluso cuando\nno hay internet.",
+    "btn_get_started": "Empezar",
+    "btn_sign_in": "Iniciar Sesión",
+    "features": [
+      {
+        "icon": "🛡️",
+        "title": "Preparación para Desastres",
+        "desc": "Accede a información crítica y planes de emergencia para tu vecindario."
+      },
+      {
+        "icon": "🤝",
+        "title": "Ayuda Mutua",
+        "desc": "Ofrece y solicita ayuda a tus vecinos durante emergencias."
+      },
+      {
+        "icon": "📡",
+        "title": "Prioridad Sin Conexión",
+        "desc": "Los datos clave permanecen accesibles incluso sin conexión a internet."
+      }
+    ]
+  },
+  "dashboard": {
+    "header_title": "Centro de Emergencias",
+    "btn_logout": "Cerrar Sesión",
+    "welcome": "¡Bienvenido/a, {{name}}!",
+    "roles": {
+      "expert": "Experto",
+      "standard": "Estándar"
+    },
+    "status": {
+      "safe": "A Salvo",
+      "needs_help": "Necesita Ayuda",
+      "available_to_help": "Disponible para Ayudar"
+    },
+    "features": {
+      "forum": {"title": "Foro", "desc": "Discusiones de la comunidad"},
+      "help_requests": {"title": "Solicitudes de Ayuda", "desc": "Pide u ofrece ayuda"},
+      "profile": {"title": "Perfil", "desc": "Gestiona tu cuenta"},
+      "emergency_info": {"title": "Info de Emergencia", "desc": "Acceso a datos críticos"}
+    }
+  },
+  "forum": {
+    "status": {
+      "safe": "A Salvo",
+      "needs_help": "Necesita Ayuda",
+      "available_to_help": "Disponible Para Ayudar"
+    },
+    "time": {
+      "just_now": "ahora mismo",
+      "m_ago": "hace {{count}} min",
+      "h_ago": "hace {{count}} h",
+      "d_ago": "hace {{count}} d"
+    },
+    "header": {
+      "title": "Foro",
+      "global_hub_label": "Todos los centros — todos",
+      "select_hub_label": "Selecciona un centro",
+      "btn_new_post": "+ Nueva Publicación"
+    },
+    "tabs": {
+      "global": "Global",
+      "standard": "Estándar",
+      "urgent": "Urgente"
+    },
+    "sort": {
+      "newest": "Más Recientes",
+      "most_liked": "Con Más Me Gusta",
+      "hot": "Populares"
+    },
+    "empty_states": {
+      "loading": "Cargando publicaciones...",
+      "select_hub": "Selecciona un centro para ver las publicaciones en {{tab}}.",
+      "no_global": "No hay publicaciones globales todavía.",
+      "no_hub_posts": "No hay publicaciones en {{tab}} para {{hub}} todavía."
+    },
+    "post": {
+      "upvote": "Votar a favor",
+      "downvote": "Votar en contra",
+      "reposted_from": "Republicado de {{name}}",
+      "expert": "Experto",
+      "comment_single": "{{count}} comentario",
+      "comment_plural": "{{count}} comentarios",
+      "repost_single": "{{count}} republicación",
+      "repost_plural": "{{count}} republicaciones",
+      "copy_link": "Copiar enlace",
+      "copied": "¡Copiado!",
+      "share": "Compartir",
+      "repost_global": "Republicar (global)",
+      "repost_hub": "Republicar en tu centro",
+      "repost": "Republicar"
+    },
+    "actions": {
+      "back_to_top": "Volver Arriba",
+      "back_to_dashboard": "Volver al Panel"
+    }
+  },
+  "help_request_create": {
+    "header": {
+      "back": "Atrás",
+      "title": "Nueva Solicitud de Ayuda"
+    },
+    "labels": {
+      "title": "Título",
+      "description": "Descripción",
+      "images": "Imágenes",
+      "category": "Categoría",
+      "urgency": "Urgencia",
+      "location_text": "Descripción de la ubicación",
+      "coordinates": "Coordenadas",
+      "optional": "opcional"
+    },
+    "placeholders": {
+      "title": "Breve resumen de tu solicitud",
+      "description": "Describe qué ayuda necesitas...",
+      "location_text": "ej. Cerca de la entrada principal"
+    },
+    "actions": {
+      "upload": "Subir desde el dispositivo",
+      "uploading": "Subiendo...",
+      "remove": "Eliminar",
+      "use_location": "Usar mi ubicación",
+      "locating": "Localizando...",
+      "submit": "Enviar Solicitud",
+      "submitting": "Enviando..."
+    },
+    "categories": {
+      "medical": "Médico",
+      "food": "Comida",
+      "shelter": "Refugio",
+      "transport": "Transporte",
+      "other": "Otro"
+    },
+    "urgencies": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta"
+    },
+    "errors": {
+      "title_required": "El título es obligatorio.",
+      "description_required": "La descripción es obligatoria.",
+      "upload_failed": "Error al subir la imagen.",
+      "submit_failed": "Error al crear la solicitud de ayuda."
+    },
+    "location_status": {
+      "not_supported": "Tu navegador no soporta la geolocalización.",
+      "captured": "Ubicación capturada.",
+      "failed": "No se pudo obtener la ubicación: {{message}}"
+    }
+  },
+  "help_request_detail": {
+    "header": {
+      "back": "Atrás",
+      "title": "Detalle de la Solicitud"
+    },
+    "states": {
+      "loading": "Cargando...",
+      "not_found": "Solicitud no encontrada.",
+      "fetch_failed": "Error al cargar la solicitud.",
+      "network_error": "Error de red. Por favor, inténtalo de nuevo.",
+      "post_failed": "Error al publicar el comentario."
+    },
+    "time": {
+      "just_now": "Ahora mismo",
+      "m_ago": "hace {{count}} min",
+      "h_ago": "hace {{count}} h",
+      "d_ago": "hace {{count}} d"
+    },
+    "labels": {
+      "by": "Por ",
+      "expert": "Experto",
+      "hub": "Centro: "
+    },
+    "urgency": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta"
+    },
+    "status": {
+      "open": "Abierta",
+      "expert_responding": "Experto Respondiendo",
+      "resolved": "Resuelta"
+    },
+    "availability": {
+      "safe": "A Salvo",
+      "needs_help": "Necesita Ayuda",
+      "available": "Disponible"
+    },
+    "actions": {
+      "resolving": "Resolviendo...",
+      "mark_resolved": "Marcar como Resuelta",
+      "delete": "Eliminar",
+      "cancel": "Cancelar"
+    },
+    "modal": {
+      "title": "Eliminar Solicitud",
+      "desc": "¿Estás seguro de que quieres eliminar esta solicitud de ayuda? Esta acción no se puede deshacer."
+    },
+    "location": {
+      "title": "Ubicación"
+    },
+    "comments": {
+      "title": "Comentarios ({{count}})",
+      "empty": "No hay comentarios todavía. ¡Sé el primero en responder!",
+      "delete_title": "Eliminar comentario",
+      "placeholder": "Escribe un comentario...",
+      "posting": "Publicando...",
+      "post": "Publicar Comentario"
+    }
+  },
+  "help_requests": {
+    "header": {
+      "back": "Panel",
+      "title": "Centro de Ayuda",
+      "new_request": "+ Nueva Solicitud",
+      "new_offer": "+ Nueva Oferta",
+      "cancel": "Cancelar"
+    },
+    "tabs": {
+      "requests": "Solicitudes",
+      "offers": "Ofertas"
+    },
+    "hub_context": "Mostrando {{tab}} para",
+    "categories": {
+      "all": "Todas las Categorías",
+      "medical": "Médico",
+      "food": "Comida",
+      "shelter": "Refugio",
+      "transport": "Transporte",
+      "other": "Otro"
+    },
+    "my_expertise": "Mi Especialidad",
+    "time": {
+      "just_now": "Ahora mismo",
+      "m_ago": "hace {{count}} min",
+      "h_ago": "hace {{count}} h",
+      "d_ago": "hace {{count}} d"
+    },
+    "urgency": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta"
+    },
+    "status": {
+      "open": "Abierta",
+      "expert_responding": "Experto Respondiendo",
+      "resolved": "Resuelta"
+    },
+    "availability_status": {
+      "safe": "A Salvo",
+      "needs_help": "Necesita Ayuda",
+      "available": "Disponible"
+    },
+    "labels": {
+      "expert": "Experto",
+      "deleting": "Eliminando...",
+      "delete": "Eliminar"
+    },
+    "requests_tab": {
+      "loading": "Cargando solicitudes de ayuda...",
+      "error_fetch": "Error al cargar las solicitudes de ayuda.",
+      "error_network": "Error de red. Por favor, inténtalo de nuevo.",
+      "empty_title": "No se encontraron solicitudes",
+      "empty_filter": "Prueba a seleccionar una categoría diferente.",
+      "empty_hub": "No hay solicitudes de ayuda en tu centro todavía."
+    },
+    "offers_tab": {
+      "loading": "Cargando ofertas de ayuda...",
+      "error_fetch": "Error al cargar las ofertas de ayuda.",
+      "error_network": "Error de red. Por favor, inténtalo de nuevo.",
+      "empty_title": "No se encontraron ofertas",
+      "empty_filter": "Prueba a seleccionar una categoría diferente.",
+      "empty_hub": "¡Sé el primero en ofrecer ayuda en tu centro!",
+      "form": {
+        "title": "Crear una Oferta",
+        "category": "Categoría",
+        "skill": "Habilidad o Recurso",
+        "skill_placeholder": "ej. Primeros Auxilios, Vehículo, Refugio",
+        "desc": "Descripción",
+        "desc_placeholder": "Describe lo que puedes aportar...",
+        "availability": "Disponibilidad",
+        "avail_placeholder": "— Seleccionar disponibilidad —",
+        "posting": "Publicando...",
+        "post": "Publicar Oferta",
+        "error_skill": "La habilidad o recurso es obligatorio.",
+        "error_desc": "La descripción es obligatoria.",
+        "error_avail": "La disponibilidad es obligatoria.",
+        "error_submit": "Error al crear la oferta de ayuda."
+      },
+      "avail_options": {
+        "24_7": "24/7",
+        "weekdays": "Entre semana",
+        "weekends": "Fines de semana",
+        "mornings": "Mañanas",
+        "evenings": "Tardes",
+        "on_call": "De guardia"
+      },
+      "modal": {
+        "availability": "Disponibilidad",
+        "offered_by": "Ofrecido por",
+        "posted": "Publicado"
+      }
+    }
+  },
+  "my_posts": {
+    "header": {
+      "title": "Mis Publicaciones",
+      "back": "Atrás"
+    },
+    "tabs": {
+      "posts": "Publicaciones del Foro",
+      "requests": "Solicitudes de Ayuda",
+      "offers": "Ofertas de Ayuda"
+    },
+    "tab_names": {
+      "posts": "publicaciones",
+      "requests": "solicitudes",
+      "offers": "ofertas"
+    },
+    "states": {
+      "loading": "Cargando...",
+      "empty": "No hay {{tab}} todavía."
+    },
+    "forum_types": {
+      "global": "Global",
+      "standard": "Estándar",
+      "urgent": "Urgente"
+    },
+    "urgency": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta"
+    },
+    "status": {
+      "open": "Abierta",
+      "expert_responding": "Experto Respondiendo",
+      "resolved": "Resuelta"
+    },
+    "categories": {
+      "medical": "Médico",
+      "food": "Comida",
+      "shelter": "Refugio",
+      "transport": "Transporte",
+      "other": "Otro"
+    },
+    "time": {
+      "just_now": "ahora mismo",
+      "m_ago": "hace {{count}} min",
+      "h_ago": "hace {{count}} h",
+      "d_ago": "hace {{count}} d"
+    },
+    "meta": {
+      "upvotes": "{{count}} votos",
+      "comments": "{{count}} comentarios",
+      "reposts": "{{count}} republicaciones"
+    },
+    "modal": {
+      "availability": "Disponibilidad",
+      "posted": "Publicado"
+    }
+  },
+  "post_create": {
+    "types": {
+      "global": "Global",
+      "standard": "Estándar",
+      "urgent": "Urgente"
+    },
+    "header": {
+      "title": "Nueva Publicación {{type}}",
+      "subtitle_global": "Visible para todos (todos los centros)",
+      "subtitle_hub": "Publicando en {{hub}}",
+      "subtitle_hub_fallback": "…"
+    },
+    "errors": {
+      "upload_failed": "Error al subir la imagen.",
+      "title_required": "El título es obligatorio.",
+      "content_required": "El contenido es obligatorio.",
+      "select_hub": "Por favor, selecciona un centro primero.",
+      "create_failed": "Error al crear la publicación."
+    },
+    "labels": {
+      "title": "Título",
+      "content": "Contenido",
+      "images": "Imágenes",
+      "optional": "opcional"
+    },
+    "placeholders": {
+      "title": "¿Qué está pasando?",
+      "content": "Describe la situación, comparte información o pide ayuda...",
+      "image_urls": "O pega las URL de las imágenes aquí, una por línea"
+    },
+    "actions": {
+      "uploading": "Subiendo...",
+      "upload": "Subir desde el dispositivo",
+      "remove": "Eliminar",
+      "creating": "Creando...",
+      "create": "Crear Publicación",
+      "back": "Volver al Foro"
+    }
+  },
+  "post_detail": {
+    "states": {
+      "loading": "Cargando...",
+      "not_found": "Publicación no encontrada.",
+      "edited": "(editado)",
+      "reposted": "Republicado"
+    },
+    "actions": {
+      "back": "Atrás",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "Guardando...",
+      "upload": "Subir desde el dispositivo",
+      "uploading": "Subiendo...",
+      "remove": "Eliminar",
+      "share": "Compartir",
+      "copied": "¡Copiado!",
+      "repost": "Republicar",
+      "repost_error": "No se pudo republicar.",
+      "report": "Reportar"
+    },
+    "time": {
+      "just_now": "ahora mismo",
+      "m_ago": "hace {{count}} min",
+      "h_ago": "hace {{count}} h",
+      "d_ago": "hace {{count}} d"
+    },
+    "availability": {
+      "safe": "A Salvo",
+      "needs_help": "Necesita Ayuda",
+      "available": "Disponible"
+    },
+    "labels": {
+      "reposted_from": "Republicado de",
+      "expert": "Experto",
+      "images": "Imágenes",
+      "title": "Título",
+      "content": "Contenido",
+      "upvote": "Votar a favor",
+      "downvote": "Votar en contra"
+    },
+    "counts": {
+      "repost_single": "{{count}} republicación",
+      "repost_plural": "{{count}} republicaciones",
+      "comments": "Comentarios ({{count}})"
+    },
+    "comments": {
+      "placeholder": "Escribe un comentario...",
+      "post": "Publicar Comentario",
+      "posting": "Publicando...",
+      "empty": "No hay comentarios todavía. ¡Sé el primero!",
+      "delete_title": "Eliminar comentario"
+    },
+    "delete_modal": {
+      "title": "Eliminar Publicación",
+      "desc": "¿Estás seguro de que quieres eliminar esta publicación? Esta acción no se puede deshacer."
+    },
+    "report_modal": {
+      "title": "Reportar esta publicación",
+      "reason": "Razón",
+      "submit": "Enviar",
+      "success": "Reporte enviado. Gracias.",
+      "error": "No se pudo enviar el reporte.",
+      "options": {
+        "spam": "Spam",
+        "misinformation": "Desinformación",
+        "abuse": "Abuso",
+        "irrelevant": "Irrelevante"
+      }
+    }
+  },
+  "sign_in": {
+    "loading": "Cargando…",
+    "header": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicia sesión en tu cuenta del centro de emergencias"
+    },
+    "labels": {
+      "email": "Correo electrónico",
+      "password": "Contraseña"
+    },
+    "placeholders": {
+      "email": "sheila@example.com",
+      "password": "Tu contraseña"
+    },
+    "actions": {
+      "hide_password": "Ocultar contraseña",
+      "show_password": "Mostrar contraseña",
+      "signing_in": "Iniciando sesión…",
+      "sign_in": "Iniciar Sesión",
+      "sign_up": "Registrarse"
+    },
+    "errors": {
+      "empty_fields": "Por favor, introduce el correo y la contraseña.",
+      "invalid_credentials": "Correo electrónico o contraseña no válidos"
+    },
+    "footer": {
+      "no_account": "¿No tienes una cuenta?"
+    }
+  },
+  "sign_up": {
+    "loading": "Cargando…",
+    "header": {
+      "title": "Crear Cuenta",
+      "subtitle": "Únete a tu centro de emergencias del vecindario"
+    },
+    "success": "¡Cuenta creada! Redirigiendo al inicio de sesión…",
+    "labels": {
+      "full_name": "Nombre Completo",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirm_password": "Confirmar Contraseña",
+      "role": "Rol",
+      "hub": "Centro (Ciudad)",
+      "expertise_field": "Campo de Experiencia",
+      "neighborhood_address": "Barrio / Dirección",
+      "optional": "opcional"
+    },
+    "placeholders": {
+      "full_name": "ej. Sheila Davis",
+      "email": "sheila@example.com",
+      "password": "Mín. 8 caracteres",
+      "confirm_password": "Repite tu contraseña",
+      "select_hub": "Selecciona un centro",
+      "expertise_field": "ej. Médico",
+      "neighborhood_address": "ej. Madrid, Centro"
+    },
+    "roles": {
+      "standard": "Estándar",
+      "expert": "Experto"
+    },
+    "actions": {
+      "hide_password": "Ocultar contraseña",
+      "show_password": "Mostrar contraseña",
+      "signing_up": "Creando cuenta…",
+      "sign_up": "Registrarse",
+      "sign_in": "Iniciar Sesión"
+    },
+    "errors": {
+      "full_name_req": "El nombre completo es obligatorio.",
+      "email_req": "El correo electrónico es obligatorio.",
+      "password_req": "La contraseña es obligatoria.",
+      "password_min": "La contraseña debe tener al menos 8 caracteres.",
+      "password_match": "Las contraseñas no coinciden.",
+      "expertise_req": "El campo de experiencia es obligatorio para los usuarios Expertos.",
+      "failed": "Error en el registro"
+    },
+    "footer": {
+      "already_have_account": "¿Ya tienes una cuenta?"
+    }
+  },
+  "user_profile": {
+    "status": {
+      "safe": "A Salvo",
+      "needs_help": "Necesita Ayuda",
+      "available_to_help": "Disponible para Ayudar"
+    },
+    "forum_types": {
+      "global": "Global",
+      "standard": "Estándar",
+      "urgent": "Urgente"
+    },
+    "roles": {
+      "expert": "Experto",
+      "standard": "Estándar"
+    },
+    "time": {
+      "just_now": "ahora mismo",
+      "m_ago": "hace {{count}} min",
+      "h_ago": "hace {{count}} h",
+      "d_ago": "hace {{count}} d"
+    },
+    "header": {
+      "title": "Perfil de Usuario",
+      "back": "Atrás"
+    },
+    "states": {
+      "loading": "Cargando...",
+      "not_found": "Usuario no encontrado.",
+      "no_items": "No hay {{tab}} todavía."
+    },
+    "sections": {
+      "personal_info": "Información Personal",
+      "expertise": "Experiencia",
+      "resources": "Recursos",
+      "activity": "Actividad"
+    },
+    "fields": {
+      "phone": "Teléfono",
+      "blood_type": "Grupo Sanguíneo",
+      "emergency_contact": "Contacto de Emergencia",
+      "emergency_contact_phone": "Teléfono de Emergencia",
+      "preferred_language": "Idioma Preferido",
+      "location": "Ubicación",
+      "has_disability": "Tiene Discapacidad",
+      "yes": "Sí",
+      "availability": "Estado de Disponibilidad",
+      "special_needs": "Necesidades Especiales",
+      "bio": "Biografía"
+    },
+    "expertise_item": {
+      "advanced": "Avanzado",
+      "beginner": "Principiante",
+      "certificate": "Certificado"
+    },
+    "resource_item": {
+      "qty": "cant. {{count}}",
+      "functional": "Funcional",
+      "not_functional": "No funcional"
+    },
+    "tabs": {
+      "posts": "Publicaciones",
+      "requests": "Solicitudes",
+      "offers": "Ofertas"
+    },
+    "card": {
+      "upvotes": "{{count}} votos",
+      "comments": "{{count}} comentarios"
+    }
+  },
+  "profile": {
+    "header": {
+      "title": "Tu Perfil",
+      "back": "Atrás"
+    },
+    "my_posts": {
+      "title": "Mis Publicaciones",
+      "desc": "Mira tus publicaciones del foro, solicitudes de ayuda y ofertas de ayuda"
+    },
+    "sections": {
+      "personal_info": "Información Personal",
+      "resources": "Recursos",
+      "expertise": "Campos de Experiencia"
+    },
+    "fields": {
+      "phone": "Teléfono",
+      "blood_type": "Grupo Sanguíneo",
+      "emergency_contact": "Contacto de Emergencia",
+      "emergency_contact_phone": "Teléfono de Emergencia",
+      "preferred_language": "Idioma Preferido",
+      "has_disability": "Tiene Discapacidad",
+      "availability": "Estado de Disponibilidad",
+      "special_needs": "Necesidades Especiales",
+      "bio": "Biografía"
+    },
+    "placeholders": {
+      "click_to_add": "Haz clic para añadir",
+      "select_blood": "— seleccionar —",
+      "special_needs": "Describe cualquier necesidad especial…",
+      "bio": "Cuéntales a los demás sobre ti…",
+      "resource_name": "ej. Generador",
+      "resource_category": "ej. Energía",
+      "expertise_field": "ej. Primeros Auxilios",
+      "cert_url": "https://… o sube un archivo"
+    },
+    "actions": {
+      "yes": "Sí",
+      "no": "No",
+      "add_resource": "+ Añadir Recurso",
+      "add_expertise": "+ Añadir Experiencia",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "delete": "Eliminar",
+      "click_to_toggle": "Haz clic para alternar",
+      "upload": "Subir",
+      "uploading": "Subiendo…"
+    },
+    "labels": {
+      "name": "Nombre",
+      "category": "Categoría",
+      "quantity": "Cantidad",
+      "functional": "Funcional",
+      "not_functional": "No funcional",
+      "field": "Campo",
+      "level": "Nivel",
+      "certificate": "Certificado",
+      "optional": "(opcional)"
+    },
+    "expertise_item": {
+      "advanced": "Avanzado",
+      "beginner": "Principiante",
+      "certificate": "Certificado"
+    },
+    "resource_item": {
+      "qty": "cant. {{count}}",
+      "functional": "Funcional",
+      "not_functional": "No funcional"
+    },
+    "empty": {
+      "resources": "No se han añadido recursos todavía.",
+      "expertise": "No se han añadido campos de experiencia todavía."
+    },
+    "toasts": {
+      "saved": "Guardado",
+      "update_failed": "Error al actualizar",
+      "resource_added": "Recurso añadido",
+      "resource_removed": "Recurso eliminado",
+      "expertise_added": "Experiencia añadida",
+      "expertise_removed": "Experiencia eliminada",
+      "file_uploaded": "Archivo subido",
+      "upload_failed": "Error al subir"
+    },
+    "phone_validation": {
+      "invalid": "Introduce un número de teléfono válido (ej. +34 600 123 456)",
+      "length": "Debe tener entre 6 y 15 dígitos"
+    }
+  },
+  "emergency_info": {
+    "header": {
+      "back": "Atrás",
+      "title": "Info de Emergencia",
+      "subtitle": "Información crítica disponible sin conexión"
+    },
+    "sections": {
+      "checklist": {
+        "title": "Lista de Control de Emergencias",
+        "desc": "Guías de primeros auxilios: desplazamiento, revisión de signos vitales, RCP y protocolo ABC"
+      },
+      "map": {
+        "title": "Mapa",
+        "desc": "Ver recursos de ayuda cercanos y zonas de peligro en el mapa"
+      }
+    }
+  },
+  "checklist": {
+    "header": {
+      "title": "Lista de Control de Emergencias",
+      "back": "Temas"
+    },
+    "subtitle": "Toca un tema para ver la guía de primeros auxilios paso a paso.",
+    "topics": {
+      "displacement": {
+        "title": "Habilidades de Desplazamiento",
+        "summary": "Cómo trasladar de forma segura a un paciente herido a un área segura",
+        "text": "Si hay peligros alrededor (como fuego, peligros eléctricos u otros), el paciente debe ser trasladado a un lugar seguro (si es seguro para el proveedor de primeros auxilios hacerlo), donde sea posible proporcionar los procedimientos de primeros auxilios necesarios.\n\n— En caso de una posible lesión grave de la columna: cuando un paciente parece tener una posible lesión grave en la médula espinal (en la columna vertebral, ya sea en la parte del cuello o de la espalda), no se debe mover al paciente excepto si es necesario. Cuando sea necesario, debe hacerse lo menos posible y con mucho cuidado. Estas precauciones evitan muchos riesgos de causar más daños a la movilidad del paciente en el futuro.\n\nPor lo general, el paciente necesita terminar acostado, boca arriba, en una superficie lo suficientemente firme (por ejemplo, en el suelo, lo que te permite realizar las compresiones torácicas de la reanimación cardiopulmonar)."
+      },
+      "checking": {
+        "title": "Habilidades de Revisión",
+        "summary": "Evaluar la condición de la víctima e identificar las principales amenazas para la vida",
+        "text": "Evaluar la condición de la víctima, prestando atención primero a las principales amenazas para la vida.\n\n• Comprobar la capacidad de respuesta: Toca al paciente firmemente en el hombro y grita en voz alta, como: \"¿Me oyes?\"\n\n• Controlar sangrado grave: Si la víctima tiene una herida que sangra abundantemente, esto requiere tratamiento inmediato (comienza aplicando presión directa a la herida).\n\n• Comprobar el pulso: Si el paciente no reacciona, comprueba el pulso carotídeo colocando dos dedos a cada lado del cuello. Alternativamente, comprueba el pulso radial en la muñeca, debajo del pulgar.\n\n• Comprobar la respiración: Coloca tu oreja cerca de su boca para escuchar/sentir el aire, mientras observas su pecho para ver si sube y baja.\n\nCRÍTICO: No pierdas demasiado tiempo comprobando. No debes tardar más de 10 segundos en comprobar la respiración y el pulso antes de tomar más medidas."
+      },
+      "cpr": {
+        "title": "Reanimación Cardiopulmonar",
+        "summary": "Procedimiento de RCP paso a paso para una víctima inconsciente",
+        "text": "1. Coloca el talón de una mano en el centro del pecho.\n\n2. Coloca la otra mano encima y entrelaza los dedos.\n\n3. Presiona fuerte y rápido: al menos a 5 centímetros de profundidad, de 100 a 120 compresiones por minuto.\n\n4. Deja que el pecho suba por completo entre las presiones.\n\n5. Si estás capacitado, proporciona 2 respiraciones de rescate después de cada 30 compresiones."
+      },
+      "abc": {
+        "title": "Protocolo ABC",
+        "summary": "Vía Aérea, Buena Respiración, Circulación — preservar la vida en emergencias",
+        "text": "A — VÍA AÉREA (AIRWAY): Inclina suavemente la cabeza hacia atrás y levanta la barbilla para abrir las vías respiratorias.\n\nB — RESPIRACIÓN (BREATHING): Mira, escucha y siente la respiración normal durante no más de 10 segundos.\n\nC — CIRCULACIÓN (CIRCULATION): Comprueba si hay sangrado grave. Si la persona no respira normalmente, comienza la RCP inmediatamente.\n\n\nPRESERVAR LA VIDA\n\nEl paciente debe tener una vía aérea abierta: un paso sin obstrucciones que permita que el aire viaje desde la boca/nariz hacia los pulmones. Las personas conscientes mantienen esto automáticamente, pero los pacientes inconscientes pueden no ser capaces de hacerlo.\n\n• La Posición de Recuperación: El paciente puede ser colocado de lado. Esto relaja al paciente, despeja la lengua de la faringe y evita una causa común de muerte: el ahogamiento por el contenido estomacal regurgitado.\n\n• Atragantamiento: Las vías respiratorias pueden bloquearse por un objeto extraño. Para desalojarlo, usa métodos anti-atragantamiento (como palmadas en la espalda, compresiones torácicas o compresiones abdominales).\n\n• Transición a la RCP: Una vez que se ha abierto la vía aérea, reevalúa la respiración del paciente. Si no hay respiración, o es anormal (ej. respiración agónica), inicia la RCP para forzar el aire hacia los pulmones y bombear la sangre manualmente por el cuerpo."
+      }
+    }
+  },
+  "emergency_map": {
+    "header": {
+      "back": "Panel",
+      "title": "Información de Emergencia",
+      "subtitle": "Instalaciones de emergencia cercanas en un radio de {{radius}} km de tu ubicación. Permite el acceso a la ubicación para ver las instalaciones cerca de ti."
+    },
+    "types": {
+      "hospital": "Hospital",
+      "gathering": "Punto de Encuentro",
+      "shelter": "Refugio",
+      "fire_station": "Estación de Bomberos",
+      "police": "Estación de Policía"
+    },
+    "location": {
+      "detecting": "Detectando ubicación…",
+      "refresh": "Actualizar Ubicación",
+      "gps": "GPS",
+      "hub": "centro",
+      "resolving": "Resolviendo {{name}}…",
+      "not_found": "No se pudo determinar la ubicación"
+    },
+    "states": {
+      "fetching": "Buscando instalaciones de emergencia cercanas…",
+      "rate_limited": "Límite de velocidad excedido por la API de Overpass. Inténtalo de nuevo en un minuto.",
+      "timeout": "Tiempo de espera agotado de la API de Overpass (504). Reintentando…",
+      "unknown": "Desconocido"
+    },
+    "card": {
+      "nearest": "{{type}} más cercano/a",
+      "distance": "{{dist}} km",
+      "away": "a {{dist}} km de distancia",
+      "directions": "Cómo llegar"
+    },
+    "toggles": {
+      "show_map": "Mostrar Mapa",
+      "hide_map": "Ocultar Mapa",
+      "show_list": "Mostrar Lista",
+      "hide_list": "Ocultar Lista",
+      "all": "Todos"
+    },
+    "map_popup": {
+      "your_location": "Tu ubicación",
+      "get_directions": "Cómo llegar"
+    },
+    "empty": {
+      "no_filter_match_title": "No se encontraron instalaciones de este tipo",
+      "no_filter_match_desc": "Prueba a seleccionar una categoría diferente.",
+      "no_facilities_title": "No se encontraron instalaciones cercanas",
+      "no_facilities_desc": "No se encontraron instalaciones de emergencia a menos de {{radius}} km de tu ubicación."
+    }
+  }
+}

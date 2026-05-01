@@ -44,11 +44,11 @@ class ImageUrlResolverTest {
     }
 
     @Test
-    fun `production base url works correctly`() {
+    fun `production base url strips api prefix for media paths`() {
         val result = ImageUrlResolver.resolve(
             "/media/uploads/doc.pdf",
             "https://emergencyhub.duckdns.org/api/"
         )
-        assertEquals("https://emergencyhub.duckdns.org/api/media/uploads/doc.pdf", result)
+        assertEquals("https://emergencyhub.duckdns.org/media/uploads/doc.pdf", result)
     }
 }
