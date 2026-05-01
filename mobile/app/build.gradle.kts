@@ -1,8 +1,21 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.gms.google-services")
+}
+
+// Read DEV_BASE_URL from local.properties (gitignored) so a developer can point
+// debug builds at a LAN backend without committing their personal IP.
+//   echo 'DEV_BASE_URL=http://192.168.1.51:8000/' >> local.properties
+// Falls back to the prod duckdns URL when unset.
+val devBaseUrl: String = run {
+    val props = Properties()
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { props.load(it) }
+    props.getProperty("DEV_BASE_URL") ?: "https://emergencyhub.duckdns.org/api/"
 }
 
 android {
@@ -23,7 +36,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://emergencyhub.duckdns.org/api/\"")
+            buildConfigField("String", "BASE_URL", "\"$devBaseUrl\"")
         }
         release {
             isMinifyEnabled = false

@@ -75,6 +75,12 @@
         <activity android:name=".offline.ui.FirstAidDetailActivity" android:exported="false" />
         <activity android:name=".mesh.ui.MeshActivity" android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".mesh.ui.MeshCreatePostActivity" android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".mesh.ui.MeshPostDetailActivity" android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".mesh.ui.MeshArchiveActivity" android:exported="false" />
+        <activity android:name=".mesh.ui.MeshArchivePostDetailActivity" android:exported="false" />
 
         <service
             android:name=".mesh.MeshForegroundService"

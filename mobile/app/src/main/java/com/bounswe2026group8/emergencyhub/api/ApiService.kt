@@ -203,4 +203,22 @@ interface ApiService {
 
     @DELETE("expertise/{id}")
     suspend fun deleteExpertiseField(@Path("id") id: Int): Response<Unit>
+
+    // ── Mesh (offline messages archive) ─────────────────────────────────────────
+
+    /** Upload a batch of mesh messages. Idempotent — server skips ids it already has. */
+    @POST("mesh-messages/sync/")
+    suspend fun syncMeshMessages(
+        @Body body: MeshSyncRequest
+    ): Response<MeshSyncResponse>
+
+    /** List top-level mesh posts (parent_post_id is null). */
+    @GET("mesh-messages/")
+    suspend fun getMeshPosts(): Response<List<MeshMessageDto>>
+
+    /** List comments for a given mesh post, oldest first. */
+    @GET("mesh-messages/{postId}/comments/")
+    suspend fun getMeshComments(
+        @Path("postId") postId: String
+    ): Response<List<MeshMessageDto>>
 }

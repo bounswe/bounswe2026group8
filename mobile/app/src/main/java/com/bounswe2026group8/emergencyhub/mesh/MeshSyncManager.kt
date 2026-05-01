@@ -10,6 +10,7 @@ import com.bounswe2026group8.emergencyhub.mesh.transport.MeshProtocol
 import com.bounswe2026group8.emergencyhub.mesh.transport.MeshTransport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -31,6 +32,7 @@ class MeshSyncManager(
         private const val PREFS_NAME = "mesh_prefs"
         private const val KEY_DEVICE_ID = "device_id"
         private const val KEY_DISPLAY_NAME = "display_name"
+        private const val KEY_SHARE_LOCATION = "share_location"
 
         /** Get or create the stable device ID without creating a full SyncManager. */
         fun getDeviceId(context: Context): String {
@@ -41,9 +43,24 @@ class MeshSyncManager(
             prefs.edit().putString(KEY_DEVICE_ID, id).apply()
             return id
         }
+
+        /** Read the persisted "share location" toggle without creating a SyncManager. */
+        fun isLocationSharingEnabled(context: Context): Boolean =
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getBoolean(KEY_SHARE_LOCATION, false)
+
+        /** Persist the "share location" toggle. */
+        fun setLocationSharingEnabled(context: Context, enabled: Boolean) {
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .edit().putBoolean(KEY_SHARE_LOCATION, enabled).apply()
+        }
     }
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    // SupervisorJob: a single child failing (e.g., a DB query throwing) must not
+    // cancel the whole scope. Without this, an exception in deleteExpiredMessages
+    // or handleMessages would silently kill all subsequent sync work — BLE would
+    // stay connected at the radio layer but no data would flow.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
@@ -108,33 +125,98 @@ class MeshSyncManager(
     }
 
     /**
-     * Create a new message authored by this device and push it to connected peers.
+     * Create a new top-level post and gossip it to connected peers.
      */
-    fun sendMessage(body: String) {
+    fun sendPost(
+        title: String,
+        body: String,
+        postType: String,
+        latitude: Double? = null,
+        longitude: Double? = null,
+        locAccuracyMeters: Float? = null,
+        locCapturedAt: Long? = null
+    ) {
+        val message = buildMessage(
+            body = body,
+            title = title,
+            postType = postType,
+            parentPostId = null,
+            latitude = latitude,
+            longitude = longitude,
+            locAccuracyMeters = locAccuracyMeters,
+            locCapturedAt = locCapturedAt
+        )
+        persistAndBroadcast(message)
+    }
+
+    /**
+     * Create a comment on an existing post and gossip it to connected peers.
+     */
+    fun sendComment(
+        parentPostId: String,
+        body: String,
+        latitude: Double? = null,
+        longitude: Double? = null,
+        locAccuracyMeters: Float? = null,
+        locCapturedAt: Long? = null
+    ) {
+        val message = buildMessage(
+            body = body,
+            title = null,
+            postType = null,
+            parentPostId = parentPostId,
+            latitude = latitude,
+            longitude = longitude,
+            locAccuracyMeters = locAccuracyMeters,
+            locCapturedAt = locCapturedAt
+        )
+        persistAndBroadcast(message)
+    }
+
+    private fun buildMessage(
+        body: String,
+        title: String?,
+        postType: String?,
+        parentPostId: String?,
+        latitude: Double?,
+        longitude: Double?,
+        locAccuracyMeters: Float?,
+        locCapturedAt: Long?
+    ): MeshMessage {
+        val now = System.currentTimeMillis()
+        return MeshMessage(
+            id = UUID.randomUUID().toString(),
+            authorDeviceId = localDeviceId,
+            authorDisplayName = displayName,
+            body = body,
+            createdAt = now,
+            receivedAt = now,
+            ttlHours = 72,
+            hopCount = 0,
+            syncedToServer = false,
+            latitude = latitude,
+            longitude = longitude,
+            locAccuracyMeters = locAccuracyMeters,
+            locCapturedAt = locCapturedAt,
+            title = title,
+            postType = postType,
+            parentPostId = parentPostId
+        )
+    }
+
+    private fun persistAndBroadcast(message: MeshMessage) {
         scope.launch {
-            val now = System.currentTimeMillis()
-            val message = MeshMessage(
-                id = UUID.randomUUID().toString(),
-                authorDeviceId = localDeviceId,
-                authorDisplayName = displayName,
-                body = body,
-                createdAt = now,
-                receivedAt = now,
-                ttlHours = 72,
-                hopCount = 0,
-                syncedToServer = false
-            )
             dao.insertMessage(message)
-            Log.d(TAG, "Created local message: ${message.id}")
+            val kind = if (message.parentPostId == null) "post" else "comment"
+            Log.d(TAG, "Created local $kind: ${message.id}")
             onMessagesUpdated?.invoke()
 
-            // Push to all connected peers immediately
             val peers = transport.getConnectedPeerIds()
             Log.d(TAG, "Connected peers: $peers (count=${peers.size})")
             val payload = MeshProtocol.encodeMessages(listOf(message.copy(hopCount = 1)))
             for (peerId in peers) {
                 transport.sendPayload(peerId, payload)
-                Log.d(TAG, "Pushed new message to peer $peerId")
+                Log.d(TAG, "Pushed new $kind to peer $peerId")
             }
         }
     }
@@ -193,13 +275,17 @@ class MeshSyncManager(
     }
 
     /**
-     * Peer wants specific messages from us. Send them.
+     * Peer wants specific messages from us. Send them, with posts ordered before
+     * any comments — so the receiver's batch insert never has to deal with a
+     * comment whose parent is later in the same payload.
      */
     private fun handleRequest(deviceId: String, data: ByteArray) {
         scope.launch {
             val requestedIds = MeshProtocol.decodeRequest(data)
             val allMessages = dao.getAllMessages()
-            val toSend = allMessages.filter { it.id in requestedIds.toSet() }
+            val toSend = allMessages
+                .filter { it.id in requestedIds.toSet() }
+                .sortedBy { if (it.parentPostId == null) 0 else 1 }
 
             if (toSend.isNotEmpty()) {
                 // Increment hop count before sending

@@ -25,6 +25,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -71,7 +72,10 @@ class BleTransport(
     private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    // SupervisorJob: don't let a thrown exception in one peer's GATT coroutine
+    // (e.g., a write timing out in an unexpected way) cancel the whole scope and
+    // silently kill the scan loop and every other peer's sendPayload.
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var scanJob: Job? = null
     private var gattServer: BluetoothGattServer? = null
 
@@ -126,18 +130,35 @@ class BleTransport(
         override fun onConnectionStateChange(device: BluetoothDevice, status: Int, newState: Int) {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.d(TAG, "GATT server: peer connected from ${device.address}")
-                // If we don't already have a client connection to this device, connect back
                 val address = device.address
-                if (address !in connectingAddresses && addressToDeviceId[address] == null) {
+                // Always schedule a client connect-back (deduped by connectingAddresses).
+                //
+                // The earlier "skip if addressToDeviceId[address] != null" condition
+                // assumed any cached mapping was still valid — but if the peer
+                // reinstalled or restarted with a new device ID, BLE supervision
+                // timeout may not have detected the old gatt's death yet, leaving us
+                // with a stale mapping. By always connecting back, we re-read the
+                // peer's DEVICE_ID characteristic; if it changed, onCharacteristicRead
+                // prunes the stale entry. If it's the same, the duplicate-detection
+                // path in onCharacteristicRead closes the new gatt as a no-op.
+                if (address !in connectingAddresses) {
                     scope.launch {
                         delay(500) // Small delay to let the peer's server stabilize
                         connectToDevice(device)
                     }
                 }
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                val meshId = addressToDeviceId[device.address]
-                Log.d(TAG, "GATT server: peer disconnected: ${device.address} ($meshId)")
-                cleanupPeer(device.address, meshId)
+                Log.d(TAG, "GATT server: peer client disconnected: ${device.address}")
+                // Server-side disconnect just means the peer's GATT CLIENT closed its
+                // connection to our server. Our OUTBOUND client (in connectedGatts) may
+                // still be alive — do NOT call cleanupPeer here, or we'll wipe the live
+                // outbound's state. The client-side gattCallback fires its own DISCONNECTED
+                // event when our outbound truly dies. Just clear in-flight reassembly
+                // buffers since any partial chunk this peer was sending is now lost.
+                synchronized(reassemblyLock) {
+                    incomingBuffers.remove(device.address)
+                    expectedLengths.remove(device.address)
+                }
             }
         }
 
@@ -357,7 +378,21 @@ class BleTransport(
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.d(TAG, "GATT client disconnected from ${device.address}")
                     val meshId = addressToDeviceId[device.address]
-                    cleanupPeer(device.address, meshId)
+                    // Only clean up if THIS gatt is the one we currently have stored.
+                    // When a duplicate connection (e.g., a connect-back race where both
+                    // sides initiated client connections) is closed, the closing gatt is
+                    // NOT the live one — cleaning up would wipe the live connection's
+                    // state and leave us thinking we're disconnected.
+                    val storedGatt = if (meshId != null) {
+                        synchronized(connectedGatts) { connectedGatts[meshId] }
+                    } else null
+                    if (storedGatt === gatt) {
+                        cleanupPeer(device.address, meshId)
+                    } else {
+                        synchronized(connectingAddresses) {
+                            connectingAddresses.remove(device.address)
+                        }
+                    }
                     gatt.close()
                 }
             }
@@ -422,6 +457,27 @@ class BleTransport(
                     }
                 }
 
+                // Re-identification: if this BLE address used to map to a different
+                // mesh device id, the peer must have reinstalled / cleared data and
+                // restarted with a new id. The old id's gatt is dead even if BLE
+                // supervision hasn't reported it yet, so prune the stale entry now —
+                // otherwise the peer list shows the old id forever.
+                val priorMeshId = addressToDeviceId[device.address]
+                if (priorMeshId != null && priorMeshId != peerId) {
+                    Log.d(
+                        TAG,
+                        "Address ${device.address} re-identified: $priorMeshId → $peerId; pruning stale"
+                    )
+                    val staleGatt = synchronized(connectedGatts) {
+                        val g = connectedGatts.remove(priorMeshId)
+                        gattWriteLocks.remove(priorMeshId)
+                        g
+                    }
+                    deviceIdToAddress.remove(priorMeshId)
+                    runCatching { staleGatt?.close() }
+                    deviceDisconnectedCallback?.invoke(priorMeshId)
+                }
+
                 Log.d(TAG, "Identified peer: $peerId ($peerName) at ${device.address}")
 
                 addressToDeviceId[device.address] = peerId
@@ -458,6 +514,9 @@ class BleTransport(
             deviceDisconnectedCallback?.invoke(meshId)
         }
         addressToDeviceId.remove(address)
+        // Allow this peer's address to be rediscovered next time the scanner sees it,
+        // so a peer that drops out of range and comes back will reconnect.
+        discoveredAddresses.remove(address)
         synchronized(connectingAddresses) { connectingAddresses.remove(address) }
         synchronized(reassemblyLock) {
             incomingBuffers.remove(address)

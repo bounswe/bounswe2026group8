@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.mesh.MeshForegroundService
+import com.bounswe2026group8.emergencyhub.mesh.MeshServerSyncManager
 import com.bounswe2026group8.emergencyhub.mesh.MeshSyncManager
 import com.bounswe2026group8.emergencyhub.offline.data.AppDatabase
 import com.google.android.material.button.MaterialButton
@@ -43,7 +44,7 @@ class MeshActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             val meshBinder = binder as MeshForegroundService.MeshBinder
             syncManager = meshBinder.getSyncManager()
-            syncManager?.onMessagesUpdated = { runOnUiThread { loadMessages() } }
+            syncManager?.onMessagesUpdated = { runOnUiThread { loadPosts() } }
             syncManager?.onPeersUpdated = { runOnUiThread { renderPeers() } }
             runOnUiThread { renderPeers() }
             serviceBound = true
@@ -84,6 +85,12 @@ class MeshActivity : AppCompatActivity() {
 
         // --- RecyclerView ---
         adapter = MeshMessageAdapter()
+        adapter.setOnPostClick { post ->
+            val intent = Intent(this, MeshPostDetailActivity::class.java).apply {
+                putExtra(MeshPostDetailActivity.EXTRA_POST_ID, post.id)
+            }
+            startActivity(intent)
+        }
         val recycler = findViewById<RecyclerView>(R.id.recyclerMessages)
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
@@ -96,8 +103,18 @@ class MeshActivity : AppCompatActivity() {
 
         // --- Start/Stop toggle ---
         val btnToggle = findViewById<MaterialButton>(R.id.btnToggleMesh)
-        val txtStatus = findViewById<View>(R.id.txtStatus) as android.widget.TextView
+        val btnNewPost = findViewById<MaterialButton>(R.id.btnNewPost)
+        val txtStatus = findViewById<View>(R.id.txtStatus) as TextView
         val statusDot = findViewById<View>(R.id.statusDot)
+
+        btnNewPost.isEnabled = false
+        btnNewPost.setOnClickListener {
+            if (syncManager == null) {
+                Toast.makeText(this, getString(R.string.mesh_start_first), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            startActivity(Intent(this, MeshCreatePostActivity::class.java))
+        }
 
         btnToggle.setOnClickListener {
             if (meshRunning) {
@@ -119,6 +136,7 @@ class MeshActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.txtPeers).text =
                     getString(R.string.mesh_peers_none)
                 editName.isEnabled = true
+                btnNewPost.isEnabled = false
             } else {
                 val startAction = {
                     val name = editName.text?.toString()?.trim()?.ifEmpty { null }
@@ -142,27 +160,27 @@ class MeshActivity : AppCompatActivity() {
                     txtStatus.text = "BLE Mesh active as $deviceId"
                     statusDot.setBackgroundColor(getColor(R.color.success))
                     editName.isEnabled = false
+                    btnNewPost.isEnabled = true
                 }
 
                 startWithBlePermissions(startAction)
             }
         }
 
-        // --- Send ---
-        val editMessage = findViewById<TextInputEditText>(R.id.editMessage)
-        findViewById<MaterialButton>(R.id.btnSend).setOnClickListener {
-            val body = editMessage.text?.toString()?.trim() ?: return@setOnClickListener
-            if (body.isEmpty()) return@setOnClickListener
-            val mgr = syncManager
-            if (mgr == null) {
-                Toast.makeText(this, getString(R.string.mesh_start_first), Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            mgr.sendMessage(body)
-            editMessage.text?.clear()
-        }
+        loadPosts()
+    }
 
-        loadMessages()
+    override fun onResume() {
+        super.onResume()
+        // Reclaim the SyncManager's onMessagesUpdated callback after returning from
+        // detail/create — otherwise it still points at the destroyed detail activity.
+        syncManager?.onMessagesUpdated = { runOnUiThread { loadPosts() } }
+        loadPosts()
+        // Opportunistically push any local unsynced messages up to the server when
+        // the user opens this screen with internet. No-op if offline / nothing new.
+        CoroutineScope(Dispatchers.IO).launch {
+            MeshServerSyncManager.uploadIfOnline(this@MeshActivity)
+        }
     }
 
     override fun onDestroy() {
@@ -207,21 +225,21 @@ class MeshActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadMessages() {
+    private fun loadPosts() {
         val dao = AppDatabase.getDatabase(this).meshMessageDao()
         CoroutineScope(Dispatchers.IO).launch {
-            val messages = dao.getAllMessages()
+            val posts = dao.getAllPosts()
+            val counts = posts.associate { it.id to dao.getCommentCount(it.id) }
             withContext(Dispatchers.Main) {
-                adapter.submitList(messages)
+                adapter.submitList(posts, counts)
                 val recycler = findViewById<RecyclerView>(R.id.recyclerMessages)
                 val txtEmpty = findViewById<View>(R.id.txtEmpty)
-                if (messages.isEmpty()) {
+                if (posts.isEmpty()) {
                     recycler.visibility = View.GONE
                     txtEmpty.visibility = View.VISIBLE
                 } else {
                     recycler.visibility = View.VISIBLE
                     txtEmpty.visibility = View.GONE
-                    // newest is at index 0 (DESC order) — keep it in view
                     recycler.scrollToPosition(0)
                 }
             }
@@ -240,5 +258,4 @@ class MeshActivity : AppCompatActivity() {
             txtPeers.text = getString(R.string.mesh_peers_format, peers.size, names)
         }
     }
-
 }

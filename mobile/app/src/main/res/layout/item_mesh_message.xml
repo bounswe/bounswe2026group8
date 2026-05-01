@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/bg_surface"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
     app:strokeColor="@color/border"
-    app:strokeWidth="1dp"
-    app:cardElevation="0dp">
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,42 +20,81 @@
         android:orientation="vertical"
         android:padding="14dp">
 
-        <!-- Header: author · hops · time -->
+        <!-- Type badge -->
+        <TextView
+            android:id="@+id/txtPostType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textAllCaps="true"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="NEED HELP" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="Need water at apartment 4B" />
+
+        <!-- Body snippet -->
+        <TextView
+            android:id="@+id/txtBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp"
+            android:lineSpacingExtra="2dp"
+            tools:text="Three people, one elderly. Water ran out 30 min ago." />
+
+        <!-- Optional location row -->
+        <TextView
+            android:id="@+id/txtLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="📍 41.08230, 29.01510 · ±15m"
+            tools:visibility="visible" />
+
+        <!-- Footer: author · time · comments -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="6dp">
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/txtAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/accent"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="Ali" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" · "
-                android:textColor="@color/text_muted"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/txtHops"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:textColor="@color/text_muted"
                 android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" · "
-                android:textColor="@color/text_muted"
-                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/txtTime"
@@ -59,18 +102,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/text_muted"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:text="14:32" />
+
+            <TextView
+                android:id="@+id/txtCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp"
+                tools:text="3 comment(s)" />
 
         </LinearLayout>
-
-        <!-- Message body -->
-        <TextView
-            android:id="@+id/txtBody"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_primary"
-            android:textSize="14sp"
-            android:lineSpacingExtra="2dp" />
 
     </LinearLayout>
 

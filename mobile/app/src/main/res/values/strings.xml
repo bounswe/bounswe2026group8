@@ -178,19 +178,55 @@
     <string name="content_required">Content is required.</string>
 
     <!-- Mesh Messaging -->
-    <string name="mesh_title">Offline Messaging</string>
-    <string name="mesh_landing_button">Offline Messaging</string>
+    <string name="mesh_title">Offline Forum</string>
+    <string name="mesh_landing_button">Offline Forum</string>
     <string name="mesh_status_off">Mesh is off</string>
     <string name="mesh_start">Start</string>
     <string name="mesh_stop">Stop</string>
     <string name="mesh_start_first">Start mesh first</string>
     <string name="mesh_name_hint">Display name (optional)</string>
-    <string name="mesh_compose_hint">Write a message…</string>
-    <string name="mesh_empty">No messages yet.\nStart the mesh and send one!</string>
+    <string name="mesh_empty">No posts yet.\nStart the mesh and create one!</string>
     <string name="mesh_permissions_needed">Bluetooth permissions are required for mesh messaging</string>
     <string name="mesh_bluetooth_needed">Bluetooth must be enabled for mesh messaging</string>
     <string name="mesh_peers_none">No peers connected</string>
     <string name="mesh_peers_format">Connected to %1$d: %2$s</string>
+    <string name="mesh_share_location">Share location</string>
+    <string name="mesh_location_permission_needed">Location permission is required to share location</string>
+    <string name="mesh_location_unavailable">No location fix available — sent without location</string>
+
+    <!-- Mesh forum -->
+    <string name="mesh_new_post">+ New Post</string>
+    <string name="mesh_post_type">Post Type</string>
+    <string name="mesh_post_type_need">Need Help</string>
+    <string name="mesh_post_type_offer">Offer Help</string>
+    <string name="mesh_post_title_hint">Title</string>
+    <string name="mesh_post_content_hint">Describe what\'s happening</string>
+    <string name="mesh_create_post">Create Post</string>
+    <string name="mesh_create_post_title">New Post</string>
+    <string name="mesh_create_post_subtitle">Posts are gossiped to nearby peers when the mesh is active.</string>
+    <string name="mesh_title_required">Title is required</string>
+    <string name="mesh_content_required">Content is required</string>
+    <string name="mesh_type_required">Pick a post type</string>
+    <string name="mesh_post_created">Post created</string>
+    <string name="mesh_comment_created">Comment posted</string>
+    <string name="mesh_comments_heading">Comments (%1$d)</string>
+    <string name="mesh_no_comments">No comments yet.</string>
+    <string name="mesh_comment_hint">Write a comment…</string>
+    <string name="mesh_post_comment">Post Comment</string>
+    <string name="mesh_comment_count_format">%1$d comment(s)</string>
+    <string name="mesh_post_not_found">Post not found</string>
+    <string name="mesh_back_to_forum">← Back to forum</string>
+    <string name="mesh_back_to_archive">← Back to offline messages</string>
+    <string name="mesh_archive_empty">No offline messages have been uploaded yet.</string>
+    <string name="mesh_archive_status_loading">Loading…</string>
+    <string name="mesh_archive_status_offline">You\'re offline — showing nothing yet. Connect to upload and view.</string>
+    <string name="mesh_archive_status_uploading">Uploading your local inventory…</string>
+    <string name="mesh_archive_status_loaded">%1$d post(s) on the server</string>
+    <string name="mesh_archive_status_error">Couldn\'t load: %1$s</string>
+
+    <!-- Dashboard -->
+    <string name="feature_offline_messages">Offline Messages</string>
+    <string name="feature_offline_messages_desc">Server-synced offline forum</string>
 
     <!-- Map -->
     <string name="map_content_description">Map showing nearby gathering points</string>
