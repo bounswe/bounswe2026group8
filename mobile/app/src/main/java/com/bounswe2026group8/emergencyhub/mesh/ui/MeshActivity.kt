@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.mesh.MeshForegroundService
-import com.bounswe2026group8.emergencyhub.mesh.MeshServerSyncManager
 import com.bounswe2026group8.emergencyhub.mesh.MeshSyncManager
 import com.bounswe2026group8.emergencyhub.offline.data.AppDatabase
 import com.google.android.material.button.MaterialButton
@@ -176,11 +175,10 @@ class MeshActivity : AppCompatActivity() {
         // detail/create — otherwise it still points at the destroyed detail activity.
         syncManager?.onMessagesUpdated = { runOnUiThread { loadPosts() } }
         loadPosts()
-        // Opportunistically push any local unsynced messages up to the server when
-        // the user opens this screen with internet. No-op if offline / nothing new.
-        CoroutineScope(Dispatchers.IO).launch {
-            MeshServerSyncManager.uploadIfOnline(this@MeshActivity)
-        }
+        // Server upload is intentionally NOT triggered here — this screen is
+        // accessible pre-login and would have no auth token. Upload is wired in
+        // DashboardActivity.onResume (fires after login) and MeshArchiveActivity
+        // (fires on archive open).
     }
 
     override fun onDestroy() {

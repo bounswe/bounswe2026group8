@@ -379,3 +379,15 @@ export async function uploadHelpRequestImages(files) {
   const data = await response.json();
   return { ok: response.ok, status: response.status, data };
 }
+
+// --------------- Mesh (offline messages archive) ---------------
+
+/** GET /mesh-messages/ — list top-level posts uploaded from the offline mesh. */
+export function getMeshPosts() {
+  return request('/mesh-messages/', { method: 'GET' });
+}
+
+/** GET /mesh-messages/{id}/comments/ — list comments on an offline post. */
+export function getMeshComments(postId) {
+  return request(`/mesh-messages/${postId}/comments/`, { method: 'GET' });
+}
