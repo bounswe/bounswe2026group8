@@ -298,4 +298,61 @@
     <string name="images_label">图片</string>
     <string name="upload_from_device">从设备上传</string>
     <string name="image_urls_one_per_line">图片 URL（每行一条）</string>
+
+    <!-- Mesh / 离线消息 -->
+    <string name="mesh_title">离线论坛</string>
+    <string name="mesh_landing_button">离线论坛</string>
+    <string name="mesh_status_off">Mesh 已关闭</string>
+    <string name="mesh_start">启动</string>
+    <string name="mesh_stop">停止</string>
+    <string name="mesh_start_first">请先启动 mesh</string>
+    <string name="mesh_name_hint">显示名称（可选）</string>
+    <string name="mesh_empty">暂无帖子。\n启动 mesh 并创建一条吧！</string>
+    <string name="mesh_permissions_needed">需要蓝牙权限才能使用 mesh 通讯</string>
+    <string name="mesh_bluetooth_needed">必须开启蓝牙才能使用 mesh 通讯</string>
+    <string name="mesh_peers_none">未连接到任何节点</string>
+    <string name="mesh_peers_format">已连接 %1$d 个节点：%2$s</string>
+    <string name="mesh_share_location">分享位置</string>
+    <string name="mesh_location_permission_needed">分享位置需要位置权限</string>
+    <string name="mesh_location_unavailable">无法获取位置 — 已在不带位置的情况下发送</string>
+
+    <string name="mesh_new_post">+ 新建帖子</string>
+    <string name="mesh_post_type">帖子类型</string>
+    <string name="mesh_post_type_need">需要帮助</string>
+    <string name="mesh_post_type_offer">提供帮助</string>
+    <string name="mesh_post_title_hint">标题</string>
+    <string name="mesh_post_content_hint">描述当前情况</string>
+    <string name="mesh_create_post">创建帖子</string>
+    <string name="mesh_create_post_title">新建帖子</string>
+    <string name="mesh_create_post_subtitle">当 mesh 启用时，帖子会在附近的节点之间扩散。</string>
+    <string name="mesh_title_required">标题不能为空</string>
+    <string name="mesh_content_required">内容不能为空</string>
+    <string name="mesh_type_required">请选择帖子类型</string>
+    <string name="mesh_post_created">帖子已创建</string>
+    <string name="mesh_comment_created">评论已发表</string>
+    <string name="mesh_comments_heading">评论（%1$d）</string>
+    <string name="mesh_no_comments">暂无评论。</string>
+    <string name="mesh_comment_hint">写下评论…</string>
+    <string name="mesh_post_comment">发表评论</string>
+    <string name="mesh_comment_count_format">%1$d 条评论</string>
+    <string name="mesh_post_not_found">未找到帖子</string>
+    <string name="mesh_back_to_forum">← 返回论坛</string>
+    <string name="mesh_back_to_archive">← 返回离线消息</string>
+    <string name="mesh_archive_empty">尚未上传任何离线消息。</string>
+    <string name="mesh_archive_status_loading">加载中…</string>
+    <string name="mesh_archive_status_offline">您当前处于离线状态 — 暂时没有内容。请连接网络以上传并查看。</string>
+    <string name="mesh_archive_status_uploading">正在上传本地内容…</string>
+    <string name="mesh_archive_status_loaded">服务器上有 %1$d 条帖子</string>
+    <string name="mesh_archive_status_error">加载失败：%1$s</string>
+
+    <string name="mesh_active_as_format">BLE Mesh 已启用，身份为 %1$s</string>
+    <string name="mesh_device_fallback_format">设备-%1$s</string>
+    <string name="mesh_fix_seconds_format">%1$d 秒前定位</string>
+    <string name="mesh_fix_minutes_format">%1$d 分钟前定位</string>
+    <string name="mesh_fix_hours_format">%1$d 小时前定位</string>
+    <string name="mesh_fix_days_format">%1$d 天前定位</string>
+    <string name="mesh_error_unknown">未知</string>
+
+    <string name="feature_offline_messages">离线消息</string>
+    <string name="feature_offline_messages_desc">已同步至服务器的离线论坛</string>
 </resources>

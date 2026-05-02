@@ -322,5 +322,62 @@
     <string name="images_label">Görseller</string>
     <string name="upload_from_device">Cihazdan Yükle</string>
     <string name="image_urls_one_per_line">Gorsel URLleri (her satira bir tane)</string>
+
+    <!-- Mesh / Offline Messaging -->
+    <string name="mesh_title">Çevrimdışı Forum</string>
+    <string name="mesh_landing_button">Çevrimdışı Forum</string>
+    <string name="mesh_status_off">Mesh kapalı</string>
+    <string name="mesh_start">Başlat</string>
+    <string name="mesh_stop">Durdur</string>
+    <string name="mesh_start_first">Önce mesh\'i başlatın</string>
+    <string name="mesh_name_hint">Görünen ad (opsiyonel)</string>
+    <string name="mesh_empty">Henüz gönderi yok.\nMesh\'i başlatıp bir gönderi oluşturun!</string>
+    <string name="mesh_permissions_needed">Mesh mesajlaşması için Bluetooth izinleri gerekli</string>
+    <string name="mesh_bluetooth_needed">Mesh mesajlaşması için Bluetooth açık olmalı</string>
+    <string name="mesh_peers_none">Bağlı eş yok</string>
+    <string name="mesh_peers_format">%1$d eşe bağlı: %2$s</string>
+    <string name="mesh_share_location">Konumu paylaş</string>
+    <string name="mesh_location_permission_needed">Konum paylaşmak için konum izni gerekli</string>
+    <string name="mesh_location_unavailable">Konum bilgisi yok — konum olmadan gönderildi</string>
+
+    <string name="mesh_new_post">+ Yeni Gönderi</string>
+    <string name="mesh_post_type">Gönderi Türü</string>
+    <string name="mesh_post_type_need">Yardım Lazım</string>
+    <string name="mesh_post_type_offer">Yardım Sun</string>
+    <string name="mesh_post_title_hint">Başlık</string>
+    <string name="mesh_post_content_hint">Neler oluyor anlatın</string>
+    <string name="mesh_create_post">Gönderi Oluştur</string>
+    <string name="mesh_create_post_title">Yeni Gönderi</string>
+    <string name="mesh_create_post_subtitle">Mesh aktifken gönderiler yakındaki eşlere yayılır.</string>
+    <string name="mesh_title_required">Başlık gerekli</string>
+    <string name="mesh_content_required">İçerik gerekli</string>
+    <string name="mesh_type_required">Bir gönderi türü seçin</string>
+    <string name="mesh_post_created">Gönderi oluşturuldu</string>
+    <string name="mesh_comment_created">Yorum gönderildi</string>
+    <string name="mesh_comments_heading">Yorumlar (%1$d)</string>
+    <string name="mesh_no_comments">Henüz yorum yok.</string>
+    <string name="mesh_comment_hint">Yorum yazın…</string>
+    <string name="mesh_post_comment">Yorum Gönder</string>
+    <string name="mesh_comment_count_format">%1$d yorum</string>
+    <string name="mesh_post_not_found">Gönderi bulunamadı</string>
+    <string name="mesh_back_to_forum">← Foruma dön</string>
+    <string name="mesh_back_to_archive">← Çevrimdışı mesajlara dön</string>
+    <string name="mesh_archive_empty">Henüz hiç çevrimdışı mesaj yüklenmedi.</string>
+    <string name="mesh_archive_status_loading">Yükleniyor…</string>
+    <string name="mesh_archive_status_offline">Çevrimdışısınız — şu an gösterilecek bir şey yok. Yüklemek ve görmek için bağlanın.</string>
+    <string name="mesh_archive_status_uploading">Yerel envanteriniz yükleniyor…</string>
+    <string name="mesh_archive_status_loaded">Sunucuda %1$d gönderi var</string>
+    <string name="mesh_archive_status_error">Yüklenemedi: %1$s</string>
+
+    <string name="mesh_active_as_format">BLE Mesh aktif: %1$s</string>
+    <string name="mesh_device_fallback_format">cihaz-%1$s</string>
+    <string name="mesh_fix_seconds_format">konum %1$dsn önce</string>
+    <string name="mesh_fix_minutes_format">konum %1$dd önce</string>
+    <string name="mesh_fix_hours_format">konum %1$ds önce</string>
+    <string name="mesh_fix_days_format">konum %1$dg önce</string>
+    <string name="mesh_error_unknown">bilinmiyor</string>
+
+    <string name="feature_offline_messages">Çevrimdışı Mesajlar</string>
+    <string name="feature_offline_messages_desc">Sunucuya senkronlanan çevrimdışı forum</string>
 </resources>
 

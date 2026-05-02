@@ -40,8 +40,9 @@ class MeshCommentAdapter(
         private val txtLocation: TextView = itemView.findViewById(R.id.txtLocation)
 
         fun bind(comment: MeshMessage) {
+            val ctx = itemView.context
             txtAuthor.text = comment.authorDisplayName
-                ?: "device-${comment.authorDeviceId}"
+                ?: ctx.getString(R.string.mesh_device_fallback_format, comment.authorDeviceId)
             txtTime.text = formatTimestamp(comment.createdAt)
             txtBody.text = comment.body
 
@@ -50,7 +51,7 @@ class MeshCommentAdapter(
             if (lat != null && lon != null) {
                 txtLocation.visibility = View.VISIBLE
                 txtLocation.text = formatLocation(
-                    lat, lon, comment.locAccuracyMeters, comment.locCapturedAt
+                    ctx, lat, lon, comment.locAccuracyMeters, comment.locCapturedAt
                 )
             } else {
                 txtLocation.visibility = View.GONE
@@ -58,6 +59,7 @@ class MeshCommentAdapter(
         }
 
         private fun formatLocation(
+            ctx: android.content.Context,
             lat: Double,
             lon: Double,
             accuracyMeters: Float?,
@@ -68,13 +70,7 @@ class MeshCommentAdapter(
             if (accuracyMeters != null) parts += "±${accuracyMeters.toInt()}m"
             if (capturedAt != null) {
                 val ageSec = (System.currentTimeMillis() - capturedAt) / 1000
-                val age = when {
-                    ageSec < 60 -> "${ageSec}s ago"
-                    ageSec < 3600 -> "${ageSec / 60}m ago"
-                    ageSec < 86400 -> "${ageSec / 3600}h ago"
-                    else -> "${ageSec / 86400}d ago"
-                }
-                parts += "fix $age"
+                parts += formatFixAge(ctx, ageSec)
             }
             return parts.joinToString(" · ")
         }

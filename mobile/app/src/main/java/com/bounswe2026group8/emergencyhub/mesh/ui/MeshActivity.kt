@@ -156,7 +156,7 @@ class MeshActivity : AppCompatActivity() {
                     meshRunning = true
                     val deviceId = MeshSyncManager.getDeviceId(this)
                     btnToggle.text = getString(R.string.mesh_stop)
-                    txtStatus.text = "BLE Mesh active as $deviceId"
+                    txtStatus.text = getString(R.string.mesh_active_as_format, deviceId)
                     statusDot.setBackgroundColor(getColor(R.color.success))
                     editName.isEnabled = false
                     btnNewPost.isEnabled = true
@@ -251,7 +251,8 @@ class MeshActivity : AppCompatActivity() {
             txtPeers.text = getString(R.string.mesh_peers_none)
         } else {
             val names = peers.joinToString(", ") {
-                it.displayName?.takeIf { n -> n.isNotBlank() } ?: "device-${it.deviceId}"
+                it.displayName?.takeIf { n -> n.isNotBlank() }
+                    ?: getString(R.string.mesh_device_fallback_format, it.deviceId)
             }
             txtPeers.text = getString(R.string.mesh_peers_format, peers.size, names)
         }

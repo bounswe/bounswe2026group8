@@ -202,7 +202,7 @@ class MeshPostDetailActivity : AppCompatActivity() {
         }
         findViewById<TextView>(R.id.txtPostTitle).text = p.title.orEmpty()
         findViewById<TextView>(R.id.txtAuthor).text = p.authorDisplayName
-            ?: "device-${p.authorDeviceId}"
+            ?: getString(R.string.mesh_device_fallback_format, p.authorDeviceId)
         findViewById<TextView>(R.id.txtTime).text = formatTimestamp(p.createdAt)
         findViewById<TextView>(R.id.txtPostBody).text = p.body
 
@@ -264,13 +264,7 @@ class MeshPostDetailActivity : AppCompatActivity() {
         if (accuracyMeters != null) parts += "±${accuracyMeters.toInt()}m"
         if (capturedAt != null) {
             val ageSec = (System.currentTimeMillis() - capturedAt) / 1000
-            val age = when {
-                ageSec < 60 -> "${ageSec}s ago"
-                ageSec < 3600 -> "${ageSec / 60}m ago"
-                ageSec < 86400 -> "${ageSec / 3600}h ago"
-                else -> "${ageSec / 86400}d ago"
-            }
-            parts += "fix $age"
+            parts += formatFixAge(this, ageSec)
         }
         return parts.joinToString(" · ")
     }
