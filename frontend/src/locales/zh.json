@@ -41,7 +41,8 @@
       "forum": {"title": "论坛", "desc": "社区讨论"},
       "help_requests": {"title": "求助", "desc": "寻求或提供帮助"},
       "profile": {"title": "个人资料", "desc": "管理您的账户"},
-      "emergency_info": {"title": "应急信息", "desc": "获取关键数据"}
+      "emergency_info": {"title": "应急信息", "desc": "获取关键数据"},
+      "offline_messages": {"title": "离线消息", "desc": "已同步至服务器的离线论坛"}
     }
   },
   "forum": {
@@ -806,6 +807,46 @@
       "no_filter_match_desc": "尝试选择其他分类。",
       "no_facilities_title": "附近未找到设施",
       "no_facilities_desc": "在您当前位置 {{radius}} 公里范围内未找到应急设施。"
+    }
+  },
+  "offline_messages": {
+    "list": {
+      "title": "离线消息",
+      "back": "← 仪表板",
+      "subtitle": "用户在离线 mesh 网络中创建并在重新联网后上传的帖子。",
+      "loading": "加载中…",
+      "error": "无法加载：{{error}}",
+      "empty": "尚未上传任何离线消息。",
+      "untitled": "（无标题）",
+      "location_attached": "📍 已附带位置",
+      "device_fallback": "设备-{{id}}"
+    },
+    "detail": {
+      "back": "← 返回",
+      "loading": "加载中…",
+      "error_load": "无法加载帖子（HTTP {{status}}）",
+      "error_not_found": "未找到帖子。",
+      "untitled": "（无标题）",
+      "comments_heading": "评论（{{count}}）",
+      "no_comments": "暂无评论。",
+      "view_location": "查看位置",
+      "device_fallback": "设备-{{id}}"
+    },
+    "post_type": {
+      "need_help": "需要帮助",
+      "offer_help": "提供帮助"
+    },
+    "time": {
+      "just_now": "刚刚",
+      "m_ago": "{{count}} 分钟前",
+      "h_ago": "{{count}} 小时前",
+      "d_ago": "{{count}} 天前"
+    },
+    "location": {
+      "fix_seconds": "{{count}} 秒前定位",
+      "fix_minutes": "{{count}} 分钟前定位",
+      "fix_hours": "{{count}} 小时前定位",
+      "fix_days": "{{count}} 天前定位"
     }
   }
 }

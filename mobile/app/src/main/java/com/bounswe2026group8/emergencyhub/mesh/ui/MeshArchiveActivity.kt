@@ -104,7 +104,8 @@ class MeshArchiveActivity : AppCompatActivity() {
                     recycler.visibility = View.GONE
                     empty.visibility = View.GONE
                     status.text = getString(
-                        R.string.mesh_archive_status_error, e.message ?: "unknown"
+                        R.string.mesh_archive_status_error,
+                        e.message ?: getString(R.string.mesh_error_unknown)
                     )
                 }
         }

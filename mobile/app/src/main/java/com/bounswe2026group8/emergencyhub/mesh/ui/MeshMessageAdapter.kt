@@ -59,14 +59,15 @@ class MeshMessageAdapter(
         private val txtCommentCount: TextView = itemView.findViewById(R.id.txtCommentCount)
 
         fun bind(post: MeshMessage, commentCount: Int) {
+            val ctx = itemView.context
             renderPostType(post.postType)
             txtTitle.text = post.title.orEmpty()
             txtBody.text = post.body
             renderLocation(post)
             txtAuthor.text = post.authorDisplayName
-                ?: "device-${post.authorDeviceId}"
+                ?: ctx.getString(R.string.mesh_device_fallback_format, post.authorDeviceId)
             txtTime.text = formatTimestamp(post.createdAt)
-            txtCommentCount.text = itemView.context.getString(
+            txtCommentCount.text = ctx.getString(
                 R.string.mesh_comment_count_format, commentCount
             )
         }
@@ -98,10 +99,13 @@ class MeshMessageAdapter(
                 return
             }
             txtLocation.visibility = View.VISIBLE
-            txtLocation.text = formatLocation(lat, lon, post.locAccuracyMeters, post.locCapturedAt)
+            txtLocation.text = formatLocation(
+                itemView.context, lat, lon, post.locAccuracyMeters, post.locCapturedAt
+            )
         }
 
         private fun formatLocation(
+            ctx: android.content.Context,
             lat: Double,
             lon: Double,
             accuracyMeters: Float?,
@@ -112,13 +116,7 @@ class MeshMessageAdapter(
             if (accuracyMeters != null) parts += "±${accuracyMeters.toInt()}m"
             if (capturedAt != null) {
                 val ageSec = (System.currentTimeMillis() - capturedAt) / 1000
-                val age = when {
-                    ageSec < 60 -> "${ageSec}s ago"
-                    ageSec < 3600 -> "${ageSec / 60}m ago"
-                    ageSec < 86400 -> "${ageSec / 3600}h ago"
-                    else -> "${ageSec / 86400}d ago"
-                }
-                parts += "fix $age"
+                parts += formatFixAge(ctx, ageSec)
             }
             return parts.joinToString(" · ")
         }

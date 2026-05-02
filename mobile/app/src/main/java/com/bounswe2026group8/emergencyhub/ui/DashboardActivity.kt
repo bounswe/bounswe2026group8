@@ -98,6 +98,14 @@ class DashboardActivity : AppCompatActivity() {
         }
         hubSelectorHelper.load()
         preCacheOfflineData()
+        // Push any locally-stored mesh messages up to the server. Fires on fresh
+        // login (user just landed on dashboard) and every time the user returns
+        // to dashboard — so any unsynced offline-mesh posts/comments get uploaded
+        // without the user having to open the archive screen explicitly.
+        lifecycleScope.launch {
+            com.bounswe2026group8.emergencyhub.mesh.MeshServerSyncManager
+                .uploadIfOnline(this@DashboardActivity)
+        }
     }
 
     private fun fetchMe() {

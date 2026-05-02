@@ -41,7 +41,8 @@
       "forum": {"title": "Forum", "desc": "Community discussions"},
       "help_requests": {"title": "Help Requests", "desc": "Ask for or offer help"},
       "profile": {"title": "Profile", "desc": "Manage your account"},
-      "emergency_info": {"title": "Emergency Info", "desc": "Critical data access"}
+      "emergency_info": {"title": "Emergency Info", "desc": "Critical data access"},
+      "offline_messages": {"title": "Offline Messages", "desc": "Server-synced offline forum"}
     }
   },
   "forum": {
@@ -805,6 +806,46 @@
       "no_filter_match_desc": "Try selecting a different category.",
       "no_facilities_title": "No facilities found nearby",
       "no_facilities_desc": "No emergency facilities found within {{radius}} km of your location."
+    }
+  },
+  "offline_messages": {
+    "list": {
+      "title": "Offline Messages",
+      "back": "← Dashboard",
+      "subtitle": "Posts that users created in the offline mesh and uploaded once they came back online.",
+      "loading": "Loading…",
+      "error": "Couldn't load: {{error}}",
+      "empty": "No offline messages have been uploaded yet.",
+      "untitled": "(untitled)",
+      "location_attached": "📍 location attached",
+      "device_fallback": "device-{{id}}"
+    },
+    "detail": {
+      "back": "← Back",
+      "loading": "Loading…",
+      "error_load": "Couldn't load post (HTTP {{status}})",
+      "error_not_found": "Post not found.",
+      "untitled": "(untitled)",
+      "comments_heading": "Comments ({{count}})",
+      "no_comments": "No comments yet.",
+      "view_location": "View location",
+      "device_fallback": "device-{{id}}"
+    },
+    "post_type": {
+      "need_help": "Need Help",
+      "offer_help": "Offer Help"
+    },
+    "time": {
+      "just_now": "just now",
+      "m_ago": "{{count}}m ago",
+      "h_ago": "{{count}}h ago",
+      "d_ago": "{{count}}d ago"
+    },
+    "location": {
+      "fix_seconds": "fix {{count}}s old",
+      "fix_minutes": "fix {{count}}m old",
+      "fix_hours": "fix {{count}}h old",
+      "fix_days": "fix {{count}}d old"
     }
   }
 }

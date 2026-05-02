@@ -245,6 +245,15 @@
     <string name="mesh_archive_status_loaded">%1$d post(s) on the server</string>
     <string name="mesh_archive_status_error">Couldn\'t load: %1$s</string>
 
+    <!-- Mesh runtime helpers -->
+    <string name="mesh_active_as_format">BLE Mesh active as %1$s</string>
+    <string name="mesh_device_fallback_format">device-%1$s</string>
+    <string name="mesh_fix_seconds_format">fix %1$ds ago</string>
+    <string name="mesh_fix_minutes_format">fix %1$dm ago</string>
+    <string name="mesh_fix_hours_format">fix %1$dh ago</string>
+    <string name="mesh_fix_days_format">fix %1$dd ago</string>
+    <string name="mesh_error_unknown">unknown</string>
+
     <!-- Dashboard -->
     <string name="feature_offline_messages">Offline Messages</string>
     <string name="feature_offline_messages_desc">Server-synced offline forum</string>

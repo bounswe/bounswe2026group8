@@ -298,4 +298,61 @@
     <string name="images_label">Imágenes</string>
     <string name="upload_from_device">Subir desde el dispositivo</string>
     <string name="image_urls_one_per_line">URLs de imágenes (una por línea)</string>
+
+    <!-- Mesh / Mensajería sin conexión -->
+    <string name="mesh_title">Foro sin conexión</string>
+    <string name="mesh_landing_button">Foro sin conexión</string>
+    <string name="mesh_status_off">Mesh desactivado</string>
+    <string name="mesh_start">Iniciar</string>
+    <string name="mesh_stop">Detener</string>
+    <string name="mesh_start_first">Inicia el mesh primero</string>
+    <string name="mesh_name_hint">Nombre visible (opcional)</string>
+    <string name="mesh_empty">Aún no hay publicaciones.\n¡Inicia el mesh y crea una!</string>
+    <string name="mesh_permissions_needed">Se requieren permisos de Bluetooth para la mensajería mesh</string>
+    <string name="mesh_bluetooth_needed">Bluetooth debe estar activado para la mensajería mesh</string>
+    <string name="mesh_peers_none">Sin pares conectados</string>
+    <string name="mesh_peers_format">Conectado a %1$d: %2$s</string>
+    <string name="mesh_share_location">Compartir ubicación</string>
+    <string name="mesh_location_permission_needed">Se requiere permiso de ubicación para compartirla</string>
+    <string name="mesh_location_unavailable">No hay ubicación disponible — enviado sin ubicación</string>
+
+    <string name="mesh_new_post">+ Nueva publicación</string>
+    <string name="mesh_post_type">Tipo de publicación</string>
+    <string name="mesh_post_type_need">Necesito ayuda</string>
+    <string name="mesh_post_type_offer">Ofrezco ayuda</string>
+    <string name="mesh_post_title_hint">Título</string>
+    <string name="mesh_post_content_hint">Describe lo que ocurre</string>
+    <string name="mesh_create_post">Crear publicación</string>
+    <string name="mesh_create_post_title">Nueva publicación</string>
+    <string name="mesh_create_post_subtitle">Cuando el mesh está activo, las publicaciones se difunden a los pares cercanos.</string>
+    <string name="mesh_title_required">El título es obligatorio</string>
+    <string name="mesh_content_required">El contenido es obligatorio</string>
+    <string name="mesh_type_required">Selecciona un tipo de publicación</string>
+    <string name="mesh_post_created">Publicación creada</string>
+    <string name="mesh_comment_created">Comentario publicado</string>
+    <string name="mesh_comments_heading">Comentarios (%1$d)</string>
+    <string name="mesh_no_comments">Aún no hay comentarios.</string>
+    <string name="mesh_comment_hint">Escribe un comentario…</string>
+    <string name="mesh_post_comment">Publicar comentario</string>
+    <string name="mesh_comment_count_format">%1$d comentario(s)</string>
+    <string name="mesh_post_not_found">Publicación no encontrada</string>
+    <string name="mesh_back_to_forum">← Volver al foro</string>
+    <string name="mesh_back_to_archive">← Volver a mensajes sin conexión</string>
+    <string name="mesh_archive_empty">Aún no se han subido mensajes sin conexión.</string>
+    <string name="mesh_archive_status_loading">Cargando…</string>
+    <string name="mesh_archive_status_offline">Estás sin conexión — todavía no hay nada que mostrar. Conéctate para subir y ver.</string>
+    <string name="mesh_archive_status_uploading">Subiendo tu inventario local…</string>
+    <string name="mesh_archive_status_loaded">%1$d publicación(es) en el servidor</string>
+    <string name="mesh_archive_status_error">No se pudo cargar: %1$s</string>
+
+    <string name="mesh_active_as_format">BLE Mesh activo como %1$s</string>
+    <string name="mesh_device_fallback_format">dispositivo-%1$s</string>
+    <string name="mesh_fix_seconds_format">fijada hace %1$d s</string>
+    <string name="mesh_fix_minutes_format">fijada hace %1$d min</string>
+    <string name="mesh_fix_hours_format">fijada hace %1$d h</string>
+    <string name="mesh_fix_days_format">fijada hace %1$d d</string>
+    <string name="mesh_error_unknown">desconocido</string>
+
+    <string name="feature_offline_messages">Mensajes sin conexión</string>
+    <string name="feature_offline_messages_desc">Foro sin conexión sincronizado con el servidor</string>
 </resources>
