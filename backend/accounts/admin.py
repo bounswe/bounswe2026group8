@@ -1,6 +1,21 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Hub, User, Profile
+from .models import Hub, User, Profile, ExpertiseCategory, ExpertiseField
+
+
+@admin.register(ExpertiseCategory)
+class ExpertiseCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'help_request_category', 'is_active')
+    list_filter = ('help_request_category', 'is_active')
+    search_fields = ('name',)
+
+
+@admin.register(ExpertiseField)
+class ExpertiseFieldAdmin(admin.ModelAdmin):
+    list_display = ('user', 'category', 'is_approved', 'certification_level')
+    list_filter = ('is_approved', 'category__help_request_category')
+    search_fields = ('user__email', 'user__full_name', 'category__name')
+    readonly_fields = ('created_at', 'updated_at')
 
 
 @admin.register(Profile)
@@ -25,7 +40,7 @@ class UserAdmin(BaseUserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('full_name', 'role', 'hub', 'neighborhood_address', 'expertise_field')}),
+        ('Personal info', {'fields': ('full_name', 'role', 'hub', 'neighborhood_address')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Dates', {'fields': ('created_at',)}),
     )

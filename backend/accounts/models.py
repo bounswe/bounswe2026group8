@@ -64,7 +64,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_name='members',
     )
     neighborhood_address = models.CharField(max_length=255, blank=True, null=True)
-    expertise_field = models.CharField(max_length=255, blank=True, null=True)
 
     # Push notifications
     fcm_token = models.TextField(blank=True, null=True)
@@ -144,6 +143,40 @@ class Resource(models.Model):
         return f'{self.name} (x{self.quantity}) — {self.user.email}'
 
 
+class HelpRequestCategory(models.TextChoices):
+    """
+    Mirrors help_requests.models.Category — defined here to avoid a circular import
+    (help_requests imports accounts for User FK).
+    """
+    MEDICAL   = 'MEDICAL',   'Medical'
+    FOOD      = 'FOOD',      'Food'
+    SHELTER   = 'SHELTER',   'Shelter'
+    TRANSPORT = 'TRANSPORT', 'Transport'
+    OTHER     = 'OTHER',     'Other'
+
+
+class ExpertiseCategory(models.Model):
+    """
+    Predefined expertise area managed by admins.
+    Grouped under a help-request category for notification targeting.
+    """
+    name = models.CharField(max_length=100, unique=True)
+    help_request_category = models.CharField(
+        max_length=20,
+        choices=HelpRequestCategory.choices,
+    )
+    is_active = models.BooleanField(default=True)
+    # Keys are BCP-47 language codes (e.g. "tr", "es", "zh"). Falls back to name if key missing.
+    translations = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        verbose_name_plural = 'expertise categories'
+        ordering = ['help_request_category', 'name']
+
+    def __str__(self):
+        return f'{self.name} ({self.help_request_category})'
+
+
 class ExpertiseField(models.Model):
     """An area of expertise for EXPERT users only."""
 
@@ -152,7 +185,12 @@ class ExpertiseField(models.Model):
         ADVANCED = 'ADVANCED', 'Advanced'
 
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='expertise_fields')
-    field = models.CharField(max_length=255, help_text='e.g. First Aid, Search and Rescue')
+    category = models.ForeignKey(
+        ExpertiseCategory,
+        on_delete=models.PROTECT,
+        related_name='expertise_fields',
+    )
+    is_approved = models.BooleanField(default=True)
     certification_level = models.CharField(
         max_length=10,
         choices=CertificationLevel.choices,
@@ -164,7 +202,7 @@ class ExpertiseField(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.field} ({self.certification_level}) — {self.user.email}'
+        return f'{self.category.name} ({self.certification_level}) — {self.user.email}'
 
 
 # Automatically create Profile when User is created

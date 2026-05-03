@@ -61,6 +61,21 @@ class HelpRequestListCreateView(APIView):
         if category:
             qs = qs.filter(category=category.upper())
 
+        # expertise_match=true: authenticated EXPERT sees only requests matching
+        # their approved expertise categories. Standard users are unaffected.
+        if (
+            request.query_params.get('expertise_match', '').lower() == 'true'
+            and request.user.is_authenticated
+            and request.user.role == User.Role.EXPERT
+        ):
+            matched_categories = (
+                request.user.expertise_fields
+                .filter(is_approved=True)
+                .values_list('category__help_request_category', flat=True)
+                .distinct()
+            )
+            qs = qs.filter(category__in=matched_categories)
+
         serializer = HelpRequestListSerializer(qs, many=True, context={'request': request})
         return Response(serializer.data)
 

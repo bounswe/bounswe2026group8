@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'accounts',
     'forum',
     'help_requests',
+    'mesh',
 ]
 
 MIDDLEWARE = [

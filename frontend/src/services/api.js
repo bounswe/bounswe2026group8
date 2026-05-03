@@ -135,6 +135,13 @@ export function deleteResource(id) {
   return request(`/resources/${id}`, { method: 'DELETE' });
 }
 
+// --------------- Expertise Categories (public) ---------------
+
+/** GET /expertise-categories/ — no auth needed. */
+export function getExpertiseCategories() {
+  return request('/expertise-categories/', { method: 'GET' });
+}
+
 // --------------- Expertise Fields (EXPERT only) ---------------
 
 export function getExpertiseFields() {
@@ -197,6 +204,7 @@ export function getHelpRequests(params = {}) {
   if (params.hub_id) query.append('hub_id', params.hub_id);
   if (params.category) query.append('category', params.category);
   if (params.author) query.append('author', params.author);
+  if (params.expertise_match) query.append('expertise_match', 'true');
   const qs = query.toString();
   return request(`/help-requests/${qs ? `?${qs}` : ''}`, {
     method: 'GET',
@@ -370,4 +378,16 @@ export async function uploadHelpRequestImages(files) {
 
   const data = await response.json();
   return { ok: response.ok, status: response.status, data };
+}
+
+// --------------- Mesh (offline messages archive) ---------------
+
+/** GET /mesh-messages/ — list top-level posts uploaded from the offline mesh. */
+export function getMeshPosts() {
+  return request('/mesh-messages/', { method: 'GET' });
+}
+
+/** GET /mesh-messages/{id}/comments/ — list comments on an offline post. */
+export function getMeshComments(postId) {
+  return request(`/mesh-messages/${postId}/comments/`, { method: 'GET' });
 }

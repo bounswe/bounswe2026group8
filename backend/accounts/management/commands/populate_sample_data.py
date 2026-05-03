@@ -147,7 +147,6 @@ class Command(BaseCommand):
                     'role': user_data['role'],
                     'hub': user_data['hub'],
                     'neighborhood_address': user_data['neighborhood_address'],
-                    'expertise_field': user_data.get('expertise_field', ''),
                 }
             )
             if created:
@@ -162,14 +161,9 @@ class Command(BaseCommand):
                 profile.availability_status = profile_data.get('availability_status')
                 profile.save()
 
-                # Create expertise if expert
-                if user.role == 'EXPERT' and 'expertise' in user_data:
-                    ExpertiseField.objects.create(
-                        user=user,
-                        field=user_data['expertise']['field'],
-                        certification_level=user_data['expertise']['certification_level'],
-                        certification_document_url=user_data['expertise'].get('certification_document_url', ''),
-                    )
+                # Skip expertise seeding — model schema changed (now FK to
+                # ExpertiseCategory), the dict shape no longer matches.
+                # Doesn't affect offline-mesh testing.
 
                 # Create some resources for experts
                 if user.role == 'EXPERT':
