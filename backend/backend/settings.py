@@ -133,6 +133,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 _firebase_cred_path = BASE_DIR / 'firebase-credentials.json'
-if _firebase_cred_path.exists() and not firebase_admin._apps:
+if (
+    _firebase_cred_path.is_file()
+    and _firebase_cred_path.stat().st_size > 0
+    and not firebase_admin._apps
+):
     _cred = credentials.Certificate(str(_firebase_cred_path))
     firebase_admin.initialize_app(_cred)
+else:
+    print("Firebase credentials missing or empty. Push notifications disabled.")
