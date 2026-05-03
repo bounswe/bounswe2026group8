@@ -11,6 +11,10 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
+    <!-- Voice input for offline messages (opt-in, Vosk). The mic button only
+         appears once the user enables it in Profile and downloads a model. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <!-- BLE Mesh permissions -->
     <uses-permission android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
@@ -82,6 +86,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".mesh.ui.MeshArchiveActivity" android:exported="false" />
         <activity android:name=".mesh.ui.MeshArchivePostDetailActivity" android:exported="false" />
+        <activity android:name=".mesh.ui.MeshVoiceSettingsActivity" android:exported="false" />
 
         <service
             android:name=".mesh.MeshForegroundService"

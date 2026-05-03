@@ -258,6 +258,55 @@
     <string name="feature_offline_messages">Offline Messages</string>
     <string name="feature_offline_messages_desc">Server-synced offline forum</string>
 
+    <!-- Mesh voice input (offline messages, opt-in Vosk) -->
+    <string name="mesh_voice_settings_title">Voice input (offline messages)</string>
+    <string name="mesh_voice_settings_subtitle">Dictate offline messages with on-device speech recognition. Each language requires a one-time download (~40 MB) that works without internet afterwards.</string>
+    <string name="mesh_voice_master_toggle">Enable voice input</string>
+    <string name="mesh_voice_master_toggle_desc">Adds a microphone button to the offline messages screens.</string>
+    <string name="mesh_voice_allow_metered">Allow downloads on cellular</string>
+    <string name="mesh_voice_allow_metered_desc">Off by default — models are large and Wi-Fi is preferred.</string>
+    <string name="mesh_voice_languages_heading">Language models</string>
+    <string name="mesh_voice_languages_desc">Download only the languages you need. Models stay on this device.</string>
+    <string name="mesh_voice_enable_first">Turn on voice input above before downloading a model.</string>
+    <string name="mesh_voice_delete_all">Delete all models</string>
+    <string name="mesh_voice_delete_all_title">Delete all voice models?</string>
+    <string name="mesh_voice_delete_all_body">This frees up storage. You can re-download any language later.</string>
+    <string name="mesh_voice_delete_one_title">Delete language model?</string>
+    <string name="mesh_voice_delete_one_body">Remove the %1$s voice model from this device?</string>
+
+    <string name="mesh_voice_lang_en">English</string>
+    <string name="mesh_voice_lang_tr">Türkçe</string>
+    <string name="mesh_voice_lang_es">Español</string>
+    <string name="mesh_voice_lang_zh">中文</string>
+
+    <string name="mesh_voice_status_off">Off</string>
+    <string name="mesh_voice_status_on_no_models">On · no models downloaded yet</string>
+    <string name="mesh_voice_status_on_with_models">On · %1$d language(s) ready</string>
+    <string name="mesh_voice_status_not_downloaded">Not downloaded · ~%1$d MB</string>
+    <string name="mesh_voice_status_ready">Ready · %1$d MB on disk</string>
+    <string name="mesh_voice_status_queued">Queued…</string>
+    <string name="mesh_voice_status_downloading">Downloading… %1$d / %2$d MB</string>
+    <string name="mesh_voice_status_failed">Failed: %1$s</string>
+    <string name="mesh_voice_status_cancelled">Cancelled</string>
+    <string name="mesh_voice_status_waiting_network">Waiting for Wi-Fi…</string>
+
+    <string name="mesh_voice_action_download">Download</string>
+    <string name="mesh_voice_action_delete">Delete</string>
+    <string name="mesh_voice_action_retry">Retry</string>
+
+    <string name="mesh_voice_download_prompt_title">Download voice model</string>
+    <string name="mesh_voice_download_prompt_body">Download the %1$s voice model (~%2$d MB)? Recognition will then work fully offline. By default downloads use Wi-Fi only.</string>
+    <string name="mesh_voice_download_prompt_open_settings">Open settings</string>
+
+    <string name="mesh_voice_record_permission_needed">Microphone permission is required to dictate</string>
+    <string name="mesh_voice_model_missing">No voice model installed for this language</string>
+    <string name="mesh_voice_model_load_failed">Couldn\'t load voice model</string>
+    <string name="mesh_voice_recognizer_error">Voice recognizer error</string>
+
+    <string name="mesh_voice_start_cd">Start dictation</string>
+    <string name="mesh_voice_stop_cd">Stop dictation</string>
+    <string name="mesh_voice_download_cd">Download voice model</string>
+
     <!-- Map -->
     <string name="map_content_description">Map showing nearby gathering points</string>
     <string name="nearest_label">Nearest gathering point</string>

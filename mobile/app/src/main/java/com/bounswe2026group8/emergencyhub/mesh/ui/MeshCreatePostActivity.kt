@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.mesh.MeshForegroundService
 import com.bounswe2026group8.emergencyhub.mesh.MeshSyncManager
+import com.bounswe2026group8.emergencyhub.mesh.voice.MeshVoiceBinding
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -26,6 +28,8 @@ class MeshCreatePostActivity : AppCompatActivity() {
 
     private var syncManager: MeshSyncManager? = null
     private var serviceBound = false
+    private var titleVoice: MeshVoiceBinding? = null
+    private var contentVoice: MeshVoiceBinding? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
@@ -72,6 +76,17 @@ class MeshCreatePostActivity : AppCompatActivity() {
         val switchShareLocation = findViewById<SwitchMaterial>(R.id.switchShareLocation)
         val btnCreate = findViewById<MaterialButton>(R.id.btnCreate)
         val txtError = findViewById<TextView>(R.id.txtError)
+
+        titleVoice = MeshVoiceBinding.bind(
+            activity = this,
+            editText = inputTitle,
+            micButton = findViewById<ImageButton>(R.id.btnVoiceTitle),
+        )
+        contentVoice = MeshVoiceBinding.bind(
+            activity = this,
+            editText = inputContent,
+            micButton = findViewById<ImageButton>(R.id.btnVoiceContent),
+        )
 
         // Persisted toggle is the user's default (sticky across compose sessions).
         switchShareLocation.isChecked = MeshSyncManager.isLocationSharingEnabled(this)
@@ -125,6 +140,14 @@ class MeshCreatePostActivity : AppCompatActivity() {
 
             postWithOptionalLocation(mgr, title, content, type, switchShareLocation.isChecked)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // The user may have toggled the master switch / installed a model
+        // while we were paused — re-evaluate mic visibility on every resume.
+        titleVoice?.refresh()
+        contentVoice?.refresh()
     }
 
     override fun onDestroy() {

@@ -355,4 +355,53 @@
 
     <string name="feature_offline_messages">Mensajes sin conexión</string>
     <string name="feature_offline_messages_desc">Foro sin conexión sincronizado con el servidor</string>
+
+    <!-- Entrada por voz para mensajes sin conexión (opcional, Vosk) -->
+    <string name="mesh_voice_settings_title">Entrada por voz (mensajes sin conexión)</string>
+    <string name="mesh_voice_settings_subtitle">Dicta mensajes sin conexión usando reconocimiento de voz en el dispositivo. Cada idioma requiere una descarga única (~40 MB) que después funciona sin internet.</string>
+    <string name="mesh_voice_master_toggle">Activar entrada por voz</string>
+    <string name="mesh_voice_master_toggle_desc">Añade un botón de micrófono a las pantallas de mensajes sin conexión.</string>
+    <string name="mesh_voice_allow_metered">Permitir descargas con datos móviles</string>
+    <string name="mesh_voice_allow_metered_desc">Desactivado por defecto: los modelos son grandes y se prefiere Wi-Fi.</string>
+    <string name="mesh_voice_languages_heading">Modelos de idioma</string>
+    <string name="mesh_voice_languages_desc">Descarga solo los idiomas que necesites. Los modelos se quedan en este dispositivo.</string>
+    <string name="mesh_voice_enable_first">Activa primero la entrada por voz arriba antes de descargar un modelo.</string>
+    <string name="mesh_voice_delete_all">Eliminar todos los modelos</string>
+    <string name="mesh_voice_delete_all_title">¿Eliminar todos los modelos de voz?</string>
+    <string name="mesh_voice_delete_all_body">Esto libera almacenamiento. Puedes volver a descargar cualquier idioma más tarde.</string>
+    <string name="mesh_voice_delete_one_title">¿Eliminar el modelo de idioma?</string>
+    <string name="mesh_voice_delete_one_body">¿Quitar el modelo de voz %1$s de este dispositivo?</string>
+
+    <string name="mesh_voice_lang_en">Inglés</string>
+    <string name="mesh_voice_lang_tr">Turco</string>
+    <string name="mesh_voice_lang_es">Español</string>
+    <string name="mesh_voice_lang_zh">Chino</string>
+
+    <string name="mesh_voice_status_off">Desactivada</string>
+    <string name="mesh_voice_status_on_no_models">Activada · aún no hay modelos descargados</string>
+    <string name="mesh_voice_status_on_with_models">Activada · %1$d idioma(s) listo(s)</string>
+    <string name="mesh_voice_status_not_downloaded">No descargado · ~%1$d MB</string>
+    <string name="mesh_voice_status_ready">Listo · %1$d MB en disco</string>
+    <string name="mesh_voice_status_queued">En cola…</string>
+    <string name="mesh_voice_status_downloading">Descargando… %1$d / %2$d MB</string>
+    <string name="mesh_voice_status_failed">Error: %1$s</string>
+    <string name="mesh_voice_status_cancelled">Cancelado</string>
+    <string name="mesh_voice_status_waiting_network">Esperando Wi-Fi…</string>
+
+    <string name="mesh_voice_action_download">Descargar</string>
+    <string name="mesh_voice_action_delete">Eliminar</string>
+    <string name="mesh_voice_action_retry">Reintentar</string>
+
+    <string name="mesh_voice_download_prompt_title">Descargar modelo de voz</string>
+    <string name="mesh_voice_download_prompt_body">¿Descargar el modelo de voz %1$s (~%2$d MB)? Después el reconocimiento funcionará completamente sin conexión. Por defecto, las descargas usan solo Wi-Fi.</string>
+    <string name="mesh_voice_download_prompt_open_settings">Abrir ajustes</string>
+
+    <string name="mesh_voice_record_permission_needed">Se necesita permiso de micrófono para dictar</string>
+    <string name="mesh_voice_model_missing">No hay modelo de voz instalado para este idioma</string>
+    <string name="mesh_voice_model_load_failed">No se pudo cargar el modelo de voz</string>
+    <string name="mesh_voice_recognizer_error">Error del reconocedor de voz</string>
+
+    <string name="mesh_voice_start_cd">Iniciar dictado</string>
+    <string name="mesh_voice_stop_cd">Detener dictado</string>
+    <string name="mesh_voice_download_cd">Descargar modelo de voz</string>
 </resources>

@@ -355,4 +355,53 @@
 
     <string name="feature_offline_messages">离线消息</string>
     <string name="feature_offline_messages_desc">已同步至服务器的离线论坛</string>
+
+    <!-- 离线消息的语音输入（可选 Vosk） -->
+    <string name="mesh_voice_settings_title">语音输入（离线消息）</string>
+    <string name="mesh_voice_settings_subtitle">使用设备端语音识别口述离线消息。每种语言需要一次性下载（约 40 MB），下载完成后即可在无网络环境下使用。</string>
+    <string name="mesh_voice_master_toggle">启用语音输入</string>
+    <string name="mesh_voice_master_toggle_desc">在离线消息屏幕上添加一个麦克风按钮。</string>
+    <string name="mesh_voice_allow_metered">允许使用移动数据下载</string>
+    <string name="mesh_voice_allow_metered_desc">默认关闭 — 模型较大，建议使用 Wi-Fi。</string>
+    <string name="mesh_voice_languages_heading">语言模型</string>
+    <string name="mesh_voice_languages_desc">仅下载您需要的语言。模型保存在本设备上。</string>
+    <string name="mesh_voice_enable_first">下载模型前请先在上方启用语音输入。</string>
+    <string name="mesh_voice_delete_all">删除所有模型</string>
+    <string name="mesh_voice_delete_all_title">删除所有语音模型？</string>
+    <string name="mesh_voice_delete_all_body">这会释放存储空间。您可以稍后重新下载任何语言。</string>
+    <string name="mesh_voice_delete_one_title">删除语言模型？</string>
+    <string name="mesh_voice_delete_one_body">从本设备移除 %1$s 语音模型？</string>
+
+    <string name="mesh_voice_lang_en">英语</string>
+    <string name="mesh_voice_lang_tr">土耳其语</string>
+    <string name="mesh_voice_lang_es">西班牙语</string>
+    <string name="mesh_voice_lang_zh">中文</string>
+
+    <string name="mesh_voice_status_off">已关闭</string>
+    <string name="mesh_voice_status_on_no_models">已开启 · 尚未下载模型</string>
+    <string name="mesh_voice_status_on_with_models">已开启 · %1$d 个语言已就绪</string>
+    <string name="mesh_voice_status_not_downloaded">未下载 · 约 %1$d MB</string>
+    <string name="mesh_voice_status_ready">已就绪 · 占用 %1$d MB</string>
+    <string name="mesh_voice_status_queued">排队中…</string>
+    <string name="mesh_voice_status_downloading">下载中… %1$d / %2$d MB</string>
+    <string name="mesh_voice_status_failed">失败：%1$s</string>
+    <string name="mesh_voice_status_cancelled">已取消</string>
+    <string name="mesh_voice_status_waiting_network">等待 Wi-Fi…</string>
+
+    <string name="mesh_voice_action_download">下载</string>
+    <string name="mesh_voice_action_delete">删除</string>
+    <string name="mesh_voice_action_retry">重试</string>
+
+    <string name="mesh_voice_download_prompt_title">下载语音模型</string>
+    <string name="mesh_voice_download_prompt_body">下载 %1$s 语音模型（约 %2$d MB）？下载完成后，识别将完全离线运行。默认下载仅使用 Wi-Fi。</string>
+    <string name="mesh_voice_download_prompt_open_settings">打开设置</string>
+
+    <string name="mesh_voice_record_permission_needed">口述需要麦克风权限</string>
+    <string name="mesh_voice_model_missing">该语言未安装语音模型</string>
+    <string name="mesh_voice_model_load_failed">无法加载语音模型</string>
+    <string name="mesh_voice_recognizer_error">语音识别错误</string>
+
+    <string name="mesh_voice_start_cd">开始口述</string>
+    <string name="mesh_voice_stop_cd">停止口述</string>
+    <string name="mesh_voice_download_cd">下载语音模型</string>
 </resources>

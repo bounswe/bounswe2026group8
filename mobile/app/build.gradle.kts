@@ -101,4 +101,13 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
+
+    // WorkManager — drives the (~40 MB) Vosk model download for offline voice
+    // input. Survives process death and supports network/charging constraints.
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+
+    // Vosk offline speech recognition. The library itself is small (~3 MB of
+    // native libs); the per-language acoustic model is downloaded at runtime
+    // from alphacephei.com via VoskDownloadWorker, NEVER bundled into the APK.
+    implementation("com.alphacephei:vosk-android:0.3.47")
 }

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +21,7 @@ import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.mesh.MeshForegroundService
 import com.bounswe2026group8.emergencyhub.mesh.MeshSyncManager
 import com.bounswe2026group8.emergencyhub.mesh.db.MeshMessage
+import com.bounswe2026group8.emergencyhub.mesh.voice.MeshVoiceBinding
 import com.bounswe2026group8.emergencyhub.offline.data.AppDatabase
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -45,6 +47,7 @@ class MeshPostDetailActivity : AppCompatActivity() {
     private lateinit var commentAdapter: MeshCommentAdapter
     private lateinit var postId: String
     private var post: MeshMessage? = null
+    private var commentVoice: MeshVoiceBinding? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
@@ -118,6 +121,11 @@ class MeshPostDetailActivity : AppCompatActivity() {
         }
 
         val inputComment = findViewById<TextInputEditText>(R.id.inputComment)
+        commentVoice = MeshVoiceBinding.bind(
+            activity = this,
+            editText = inputComment,
+            micButton = findViewById<ImageButton>(R.id.btnVoiceComment),
+        )
         findViewById<MaterialButton>(R.id.btnPostComment).setOnClickListener {
             val body = inputComment.text?.toString()?.trim().orEmpty()
             if (body.isEmpty()) return@setOnClickListener
@@ -132,6 +140,11 @@ class MeshPostDetailActivity : AppCompatActivity() {
 
         loadPost()
         loadComments()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        commentVoice?.refresh()
     }
 
     override fun onDestroy() {

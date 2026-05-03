@@ -379,5 +379,54 @@
 
     <string name="feature_offline_messages">Çevrimdışı Mesajlar</string>
     <string name="feature_offline_messages_desc">Sunucuya senkronlanan çevrimdışı forum</string>
+
+    <!-- Mesh sesli giriş (çevrimdışı mesajlar, isteğe bağlı Vosk) -->
+    <string name="mesh_voice_settings_title">Sesli giriş (çevrimdışı mesajlar)</string>
+    <string name="mesh_voice_settings_subtitle">Çevrimdışı mesajları cihaz üzerinde konuşma tanıma ile dikte edin. Her dil için bir kez ~40 MB indirme gerekir; sonrasında internet olmadan da çalışır.</string>
+    <string name="mesh_voice_master_toggle">Sesli girişi etkinleştir</string>
+    <string name="mesh_voice_master_toggle_desc">Çevrimdışı mesaj ekranlarına bir mikrofon düğmesi ekler.</string>
+    <string name="mesh_voice_allow_metered">Mobil veride indirmeye izin ver</string>
+    <string name="mesh_voice_allow_metered_desc">Varsayılan olarak kapalı — modeller büyüktür ve Wi-Fi tercih edilir.</string>
+    <string name="mesh_voice_languages_heading">Dil modelleri</string>
+    <string name="mesh_voice_languages_desc">Yalnızca ihtiyacınız olan dilleri indirin. Modeller bu cihazda kalır.</string>
+    <string name="mesh_voice_enable_first">Bir model indirmeden önce yukarıdan sesli girişi açın.</string>
+    <string name="mesh_voice_delete_all">Tüm modelleri sil</string>
+    <string name="mesh_voice_delete_all_title">Tüm ses modelleri silinsin mi?</string>
+    <string name="mesh_voice_delete_all_body">Bu, depolama alanını boşaltır. İstediğiniz dili daha sonra yeniden indirebilirsiniz.</string>
+    <string name="mesh_voice_delete_one_title">Dil modelini sil?</string>
+    <string name="mesh_voice_delete_one_body">%1$s ses modelini bu cihazdan kaldır?</string>
+
+    <string name="mesh_voice_lang_en">İngilizce</string>
+    <string name="mesh_voice_lang_tr">Türkçe</string>
+    <string name="mesh_voice_lang_es">İspanyolca</string>
+    <string name="mesh_voice_lang_zh">Çince</string>
+
+    <string name="mesh_voice_status_off">Kapalı</string>
+    <string name="mesh_voice_status_on_no_models">Açık · henüz model indirilmedi</string>
+    <string name="mesh_voice_status_on_with_models">Açık · %1$d dil hazır</string>
+    <string name="mesh_voice_status_not_downloaded">İndirilmedi · ~%1$d MB</string>
+    <string name="mesh_voice_status_ready">Hazır · diskte %1$d MB</string>
+    <string name="mesh_voice_status_queued">Kuyrukta…</string>
+    <string name="mesh_voice_status_downloading">İndiriliyor… %1$d / %2$d MB</string>
+    <string name="mesh_voice_status_failed">Başarısız: %1$s</string>
+    <string name="mesh_voice_status_cancelled">İptal edildi</string>
+    <string name="mesh_voice_status_waiting_network">Wi-Fi bekleniyor…</string>
+
+    <string name="mesh_voice_action_download">İndir</string>
+    <string name="mesh_voice_action_delete">Sil</string>
+    <string name="mesh_voice_action_retry">Yeniden dene</string>
+
+    <string name="mesh_voice_download_prompt_title">Ses modelini indir</string>
+    <string name="mesh_voice_download_prompt_body">%1$s ses modeli (~%2$d MB) indirilsin mi? Tanıma sonrasında tamamen çevrimdışı çalışır. Varsayılan olarak indirme yalnızca Wi-Fi kullanır.</string>
+    <string name="mesh_voice_download_prompt_open_settings">Ayarları aç</string>
+
+    <string name="mesh_voice_record_permission_needed">Dikte için mikrofon izni gerekli</string>
+    <string name="mesh_voice_model_missing">Bu dil için yüklü ses modeli yok</string>
+    <string name="mesh_voice_model_load_failed">Ses modeli yüklenemedi</string>
+    <string name="mesh_voice_recognizer_error">Ses tanıyıcı hatası</string>
+
+    <string name="mesh_voice_start_cd">Dikteyi başlat</string>
+    <string name="mesh_voice_stop_cd">Dikteyi durdur</string>
+    <string name="mesh_voice_download_cd">Ses modelini indir</string>
 </resources>
 

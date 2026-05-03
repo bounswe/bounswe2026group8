@@ -1,5 +1,6 @@
 package com.bounswe2026group8.emergencyhub.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -14,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.mesh.ui.MeshVoiceSettingsActivity
+import com.bounswe2026group8.emergencyhub.mesh.voice.MeshVoicePrefs
+import com.bounswe2026group8.emergencyhub.mesh.voice.VoskModelManager
 import com.bounswe2026group8.emergencyhub.api.ExpertiseCategoryData
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldData
@@ -47,6 +51,10 @@ class ProfileActivity : AppCompatActivity() {
         tokenManager = TokenManager(this)
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
 
+        findViewById<View>(R.id.cardMeshVoice).setOnClickListener {
+            startActivity(Intent(this, MeshVoiceSettingsActivity::class.java))
+        }
+
         loadIdentity()
         loadProfile()
         loadResources()
@@ -56,6 +64,31 @@ class ProfileActivity : AppCompatActivity() {
             findViewById<View>(R.id.cardExpertise).visibility = View.VISIBLE
             loadExpertise()
             loadExpertiseCategories { setupExpertiseForm() }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshMeshVoiceStatus()
+    }
+
+    /**
+     * Update the small subtitle on the "Voice input" card so the user can
+     * see at a glance whether the feature is on and how many languages are
+     * already downloaded — without having to drill into the settings.
+     */
+    private fun refreshMeshVoiceStatus() {
+        val txt = findViewById<TextView>(R.id.txtMeshVoiceStatus)
+        if (!MeshVoicePrefs.isEnabled(this)) {
+            txt.text = getString(R.string.mesh_voice_status_off)
+            return
+        }
+        val installedCount = VoskModelManager.Language.entries
+            .count { VoskModelManager.isInstalled(this, it) }
+        txt.text = if (installedCount == 0) {
+            getString(R.string.mesh_voice_status_on_no_models)
+        } else {
+            getString(R.string.mesh_voice_status_on_with_models, installedCount)
         }
     }
 

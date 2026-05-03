@@ -225,6 +225,16 @@
                 android:textColorHint="@color/text_muted"
                 android:textSize="14sp" />
 
+            <ImageButton
+                android:id="@+id/btnVoiceComment"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mesh_voice_start_cd"
+                android:src="@drawable/ic_mesh_mic"
+                android:visibility="gone" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPostComment"
                 android:layout_width="wrap_content"
