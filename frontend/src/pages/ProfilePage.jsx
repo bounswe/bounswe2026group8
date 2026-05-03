@@ -288,9 +288,9 @@ export default function ProfilePage() {
 
         {toast && <div className={`profile-toast ${toast.type === 'error' ? 'profile-toast-error' : ''}`}>{toast.msg}</div>}
 
-        <header className="dashboard-header">
+        <header className="dashboard-header page-main-header">
+          <button className="btn btn-secondary btn-sm" onClick={() => navigate('/dashboard')}>&larr; {t('profile.header.back')}</button>
           <h2>{t('profile.header.title')}</h2>
-          <button className="btn btn-secondary btn-sm" onClick={() => navigate('/dashboard')}>← {t('profile.header.back')}</button>
         </header>
 
         <div className="profile-identity-card">

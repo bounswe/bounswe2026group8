@@ -26,8 +26,14 @@ export default function App() {
 return (
   <BrowserRouter>
     <AuthProvider>
-        <HubSelector />
-        <LanguageSelector />
+        <div className="app-controls">
+          <div className="app-controls-left">
+            <LanguageSelector />
+          </div>
+          <div className="app-controls-right">
+            <HubSelector />
+          </div>
+        </div>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignUpPage />} />

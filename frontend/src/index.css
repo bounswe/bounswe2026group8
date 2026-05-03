@@ -60,10 +60,36 @@
    
    /* ── Page wrapper ───────────────────────────────────────────────────────────── */
    .page {
-     min-height: 100vh;
+     min-height: calc(100vh - 3.5rem);
      padding: 2rem 1.25rem;
      max-width: 1100px;
      margin: 0 auto;
+   }
+
+   .app-controls {
+     position: sticky;
+     top: 0;
+     z-index: 2000;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 1rem;
+     min-height: 3.5rem;
+     padding: 0.65rem 1rem;
+     background: rgba(11, 17, 32, 0.94);
+     border-bottom: 1px solid var(--border);
+     backdrop-filter: blur(14px);
+   }
+
+   .app-controls-left,
+   .app-controls-right {
+     display: flex;
+     align-items: center;
+     min-width: 0;
+   }
+
+   .app-controls-right {
+     margin-left: auto;
    }
    
    /* ═══════════════════════════════════════════════════════════════════════════════
@@ -175,10 +201,7 @@
       Language Selector
       ═══════════════════════════════════════════════════════════════════════════════ */
     .language-selector-bar {
-        position: fixed;
-        top: 1rem;
-        left: 1.25rem;
-        z-index: 2000;
+        position: static;
     }
 
     .language-selector-select {
@@ -218,9 +241,15 @@
     }
 
     @media (max-width: 600px) {
-        .language-selector-bar {
-            top: 0.5rem;
-            left: 0.5rem;
+        .app-controls {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .app-controls-right {
+            width: 100%;
+            margin-left: 0;
         }
     }
    
@@ -458,6 +487,32 @@
      font-size: 1.35rem;
      font-weight: 700;
    }
+
+   .page-main-header {
+     justify-content: flex-start;
+     align-items: center;
+     gap: 1rem;
+   }
+
+   .page-main-header > .btn-primary {
+     margin-left: auto;
+   }
+
+   .page-title-block {
+     min-width: 0;
+   }
+
+   .page-title-block h2 {
+     font-size: 1.35rem;
+     font-weight: 700;
+     line-height: 1.2;
+   }
+
+   .page-title-block p {
+     color: var(--text-secondary);
+     font-size: 0.875rem;
+     margin-top: 0.2rem;
+   }
    
    .welcome-card {
      background: var(--bg-card);
@@ -547,10 +602,7 @@
       Hub Selector Bar (persistent top-right)
       ═══════════════════════════════════════════════════════════════════════════════ */
    .hub-selector-bar {
-     position: fixed;
-     top: 0.75rem;
-     right: 1rem;
-     z-index: 1000;
+     position: static;
    }
    
    .hub-selector {
@@ -590,7 +642,7 @@
    .forum-layout {
      display: flex;
      flex-direction: column;
-     height: 100vh;
+     height: calc(100vh - 3.5rem);
      max-width: 1100px;
      margin: 0 auto;
      padding: 0 1.25rem;
@@ -598,7 +650,7 @@
    
    .forum-top {
      flex-shrink: 0;
-     padding-top: 1.5rem;
+     padding-top: 0;
    }
    
    .forum-scroll {
@@ -656,6 +708,10 @@
    .forum-header h1 {
      font-size: 1.65rem;
      font-weight: 700;
+   }
+
+   .forum-header-title {
+     min-width: 0;
    }
    
    .forum-hub-label {
@@ -1936,11 +1992,12 @@
      .auth-card { padding: 2rem 1.5rem; }
      .welcome-card { padding: 1.5rem; }
      .landing-title { font-size: 2rem; }
-     .hub-selector-bar { top: 0.5rem; right: 0.5rem; }
      .post-article { padding: 1.5rem; }
      .post-card { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
      .post-card-stats { margin-left: 0; }
      .forum-header { flex-direction: column; gap: 0.75rem; }
+     .forum-header.page-main-header { flex-direction: row; flex-wrap: wrap; align-items: center; }
+     .page-main-header > .btn-primary { margin-left: 0; }
      .forum-sort-bar { flex-wrap: wrap; }
      .help-request-card { padding: 1rem; }
      .help-request-card-top { flex-direction: column; gap: 0.5rem; }

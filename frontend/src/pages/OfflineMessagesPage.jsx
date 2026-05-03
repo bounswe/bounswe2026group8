@@ -66,11 +66,11 @@ export default function OfflineMessagesPage() {
 
   return (
     <div className="page">
-      <header className="dashboard-header">
-        <h2 className="gradient-text">📡 {t('offline_messages.list.title')}</h2>
+      <header className="dashboard-header page-main-header">
         <button className="btn btn-secondary btn-sm" onClick={() => navigate('/dashboard')}>
-          {t('offline_messages.list.back')}
+          &larr; {t('offline_messages.list.back')}
         </button>
+        <h2 className="gradient-text">📡 {t('offline_messages.list.title')}</h2>
       </header>
 
       <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1rem' }}>

@@ -180,8 +180,11 @@ export default function ForumPage() {
   return (
       <div className="forum-layout">
         <div className="forum-top">
-          <header className="forum-header">
-            <div>
+          <header className="forum-header page-main-header">
+            <button className="btn btn-secondary btn-sm" onClick={() => navigate('/dashboard')}>
+              &larr; {t('forum.actions.back_to_dashboard')}
+            </button>
+            <div className="forum-header-title">
               <h1 className="gradient-text">{t('forum.header.title')}</h1>
               <p className="forum-hub-label">
                 {tab === 'GLOBAL' ? t('forum.header.global_hub_label') : (selectedHub?.name || t('forum.header.select_hub_label'))}
@@ -318,9 +321,6 @@ export default function ForumPage() {
             </button>
         )}
 
-        <div className="forum-bottom">
-          <Link to="/dashboard" className="link">&larr; {t('forum.actions.back_to_dashboard')}</Link>
-        </div>
       </div>
   );
 }
