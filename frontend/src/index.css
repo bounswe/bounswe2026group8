@@ -290,6 +290,28 @@
      font-size: 0.9rem;
      color: var(--text-secondary);
    }
+
+   .auth-tutorial-divider {
+     display: flex;
+     align-items: center;
+     gap: 0.75rem;
+     margin: 1.35rem 0 0.85rem;
+     color: var(--text-muted);
+     font-size: 0.8rem;
+     font-weight: 600;
+   }
+
+   .auth-tutorial-divider::before,
+   .auth-tutorial-divider::after {
+     content: "";
+     flex: 1;
+     height: 1px;
+     background: var(--border);
+   }
+
+   .auth-tutorial-btn {
+     margin-top: 0;
+   }
    
    /* ── Form elements ──────────────────────────────────────────────────────────── */
    .form-group {
@@ -2709,6 +2731,110 @@
   font-size: 0.95rem;
   line-height: 1.7;
   margin-bottom: 2px;
+}
+
+/* Tutorial Mode */
+.tutorial-page .btn:disabled,
+.tutorial-page button:disabled {
+  cursor: not-allowed;
+}
+
+.tutorial-welcome-card p {
+  max-width: 760px;
+  color: var(--text-secondary);
+  margin: 0.65rem 0 1rem;
+}
+
+.tutorial-kicker {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+
+.tutorial-scenario-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.tutorial-scenario-strip > div {
+  background: rgba(17, 24, 39, 0.72);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+}
+
+.tutorial-scenario-strip strong,
+.tutorial-scenario-strip span {
+  display: block;
+}
+
+.tutorial-scenario-strip strong {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.tutorial-scenario-strip span {
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+}
+
+.tutorial-card-icon {
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tutorial-card-lock {
+  display: inline-block;
+  margin-top: 0.85rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.tutorial-post-card .post-card-body {
+  cursor: default;
+}
+
+.tutorial-post-body {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.65rem;
+}
+
+.tutorial-next-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin: 1rem 0 2rem;
+}
+
+.tutorial-next-panel h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.tutorial-next-panel p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.tutorial-alert {
+  color: var(--text-primary);
+}
+
+@media (max-width: 700px) {
+  .tutorial-scenario-strip {
+    grid-template-columns: 1fr;
+  }
 }
 
 

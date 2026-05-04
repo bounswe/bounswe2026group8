@@ -17,10 +17,13 @@ const SECTIONS_META = [
     },
 ];
 
-export default function EmergencyInfoPage() {
+export default function EmergencyInfoPage({ tutorialMode = false }) {
     const navigate = useNavigate();
     const [checklistOpen, setChecklistOpen] = useState(false);
     const { t } = useTranslation(); // Initialize hook
+    const visibleSections = tutorialMode
+        ? SECTIONS_META.filter((s) => s.id !== 'map')
+        : SECTIONS_META;
 
     const handleCardClick = (s) => {
         if (s.id === 'checklist') {
@@ -35,7 +38,7 @@ export default function EmergencyInfoPage() {
             <header className="dashboard-header page-main-header">
                 <button
                     className="btn btn-secondary btn-sm"
-                    onClick={() => navigate('/dashboard')}
+                    onClick={() => navigate(tutorialMode ? '/tutorial' : '/dashboard')}
                 >
                     &larr; {t('emergency_info.header.back')}
                 </button>
@@ -57,7 +60,7 @@ export default function EmergencyInfoPage() {
                     marginTop: '24px',
                 }}
             >
-                {SECTIONS_META.map((s) => (
+                {visibleSections.map((s) => (
                     <button
                         key={s.id}
                         onClick={() => handleCardClick(s)}

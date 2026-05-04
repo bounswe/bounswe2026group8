@@ -21,6 +21,9 @@ import EmergencyInfoPage from './pages/EmergencyInfoPage';
 import EmergencyMapPage from './pages/EmergencyMapPage';
 import OfflineMessagesPage from './pages/OfflineMessagesPage';
 import OfflineMessageDetailPage from './pages/OfflineMessageDetailPage';
+import DashboardPageTutorial from './pages/DashboardPage_tutorial';
+import ForumPageTutorial from './pages/ForumPage_tutorial';
+import HelpRequestCreatePageTutorial from './pages/HelpRequestCreatePage_tutorial';
 
 export default function App() {
 return (
@@ -38,6 +41,10 @@ return (
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />
+          <Route path="/tutorial" element={<DashboardPageTutorial />} />
+          <Route path="/tutorial/forum" element={<ForumPageTutorial />} />
+          <Route path="/tutorial/help-requests/new" element={<HelpRequestCreatePageTutorial />} />
+          <Route path="/tutorial/emergency-info" element={<EmergencyInfoPage tutorialMode />} />
           <Route
             path="/dashboard"
             element={
