@@ -2831,9 +2831,78 @@
   color: var(--text-primary);
 }
 
+.tutorial-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.tutorial-page {
+  position: relative;
+}
+
+.tutorial-tour-highlight {
+  position: relative;
+  outline: 2px solid rgba(56, 189, 248, 0.85);
+  box-shadow: 0 0 0 8px rgba(56, 189, 248, 0.16), 0 18px 40px rgba(2, 6, 23, 0.45);
+}
+
+.tutorial-guide-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.38);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.1rem;
+  margin: 1rem 0;
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.28);
+}
+
+.tutorial-tour-count {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+}
+
+.tutorial-guide-panel h3 {
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  margin-bottom: 0.45rem;
+}
+
+.tutorial-guide-panel p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.tutorial-tour-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 @media (max-width: 700px) {
   .tutorial-scenario-strip {
     grid-template-columns: 1fr;
+  }
+
+  .tutorial-guide-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .tutorial-tour-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
 
