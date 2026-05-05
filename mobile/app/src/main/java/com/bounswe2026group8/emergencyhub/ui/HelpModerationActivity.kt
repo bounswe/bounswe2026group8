@@ -1,6 +1,7 @@
 package com.bounswe2026group8.emergencyhub.ui
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -34,7 +35,10 @@ class HelpModerationActivity : AppCompatActivity() {
     private lateinit var txtStatus: TextView
     private lateinit var btnTabRequests: MaterialButton
     private lateinit var btnTabOffers: MaterialButton
-    private val adapter = HelpModerationAdapter { item -> showDeleteDialog(item) }
+    private val adapter = HelpModerationAdapter(
+        { item: HelpRequestModerationItem -> openHelpRequest(item) },
+        { item: Any -> showDeleteDialog(item) },
+    )
     private var currentTab = Tab.REQUESTS
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,6 +116,13 @@ class HelpModerationActivity : AppCompatActivity() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    private fun openHelpRequest(item: HelpRequestModerationItem) {
+        startActivity(
+            Intent(this, HelpRequestDetailActivity::class.java)
+                .putExtra(HelpRequestDetailActivity.EXTRA_REQUEST_ID, item.id),
+        )
     }
 
     private fun deleteItem(item: Any, reason: String) {

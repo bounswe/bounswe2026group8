@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   listForumModerationPosts,
   moderateForumPost,
@@ -6,6 +7,7 @@ import {
 import BackToDashboard from '../components/BackToDashboard';
 
 export default function ForumModerationPage() {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -42,6 +44,17 @@ export default function ForumModerationPage() {
     }
   };
 
+  const openPost = (post) => {
+    navigate(`/forum/posts/${post.id}`);
+  };
+
+  const handleCardKeyDown = (event, post) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openPost(post);
+    }
+  };
+
   return (
     <div className="page" style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto' }}>
       <BackToDashboard to="/staff" label="← Back to staff dashboard" />
@@ -63,7 +76,15 @@ export default function ForumModerationPage() {
       {!loading && !error && (
         <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '0.75rem' }}>
           {posts.map((post) => (
-            <li key={post.id} className="welcome-card" style={{ padding: '1rem' }}>
+            <li
+              key={post.id}
+              className="welcome-card"
+              role="link"
+              tabIndex={0}
+              onClick={() => openPost(post)}
+              onKeyDown={(event) => handleCardKeyDown(event, post)}
+              style={{ padding: '1rem', cursor: 'pointer' }}
+            >
               <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                 <div>
                   <strong>{post.title}</strong>
@@ -78,13 +99,38 @@ export default function ForumModerationPage() {
               </p>
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
                 {post.status !== 'HIDDEN' && (
-                  <button className="btn btn-secondary btn-sm" onClick={() => act(post, 'HIDE')}>Hide</button>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      act(post, 'HIDE');
+                    }}
+                  >
+                    Hide
+                  </button>
                 )}
                 {post.status !== 'ACTIVE' && (
-                  <button className="btn btn-secondary btn-sm" onClick={() => act(post, 'RESTORE')}>Restore</button>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      act(post, 'RESTORE');
+                    }}
+                  >
+                    Restore
+                  </button>
                 )}
                 {post.status !== 'REMOVED' && (
-                  <button className="btn btn-secondary btn-sm" onClick={() => act(post, 'REMOVE')} style={{ color: '#f87171' }}>Remove</button>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      act(post, 'REMOVE');
+                    }}
+                    style={{ color: '#f87171' }}
+                  >
+                    Remove
+                  </button>
                 )}
               </div>
             </li>

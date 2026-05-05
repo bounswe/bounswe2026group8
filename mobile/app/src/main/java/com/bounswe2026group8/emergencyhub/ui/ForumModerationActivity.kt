@@ -1,6 +1,7 @@
 package com.bounswe2026group8.emergencyhub.ui
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -55,7 +56,10 @@ class ForumModerationActivity : AppCompatActivity() {
         txtStatus = findViewById(R.id.txtStatus)
         spinner = findViewById(R.id.spinnerStatus)
 
-        adapter = ForumModerationAdapter { post, action -> moderate(post, action) }
+        adapter = ForumModerationAdapter(
+            { post: ForumModerationPost -> openPost(post) },
+            { post: ForumModerationPost, action: String -> moderate(post, action) },
+        )
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
@@ -117,6 +121,13 @@ class ForumModerationActivity : AppCompatActivity() {
         } else {
             submitModeration(post, action, null)
         }
+    }
+
+    private fun openPost(post: ForumModerationPost) {
+        startActivity(
+            Intent(this, PostDetailActivity::class.java)
+                .putExtra("post_id", post.id),
+        )
     }
 
     private fun submitModeration(post: ForumModerationPost, action: String, reason: String?) {

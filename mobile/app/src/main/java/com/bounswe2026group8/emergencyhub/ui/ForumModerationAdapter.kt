@@ -10,6 +10,7 @@ import com.bounswe2026group8.emergencyhub.api.ForumModerationPost
 import com.google.android.material.button.MaterialButton
 
 class ForumModerationAdapter(
+    private val onOpen: (post: ForumModerationPost) -> Unit,
     private val onAction: (post: ForumModerationPost, action: String) -> Unit,
 ) : RecyclerView.Adapter<ForumModerationAdapter.ViewHolder>() {
 
@@ -57,6 +58,7 @@ class ForumModerationAdapter(
             btnRestore.visibility = if (post.status != "ACTIVE") View.VISIBLE else View.GONE
             btnRemove.visibility = if (post.status != "REMOVED") View.VISIBLE else View.GONE
 
+            itemView.setOnClickListener { onOpen(post) }
             btnHide.setOnClickListener { onAction(post, "HIDE") }
             btnRestore.setOnClickListener { onAction(post, "RESTORE") }
             btnRemove.setOnClickListener { onAction(post, "REMOVE") }

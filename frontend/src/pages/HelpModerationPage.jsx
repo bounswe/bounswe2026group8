@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   listHelpRequestModeration,
   listHelpOfferModeration,
@@ -10,6 +11,7 @@ import BackToDashboard from '../components/BackToDashboard';
 const TABS = ['requests', 'offers'];
 
 export default function HelpModerationPage() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState('requests');
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,6 +43,20 @@ export default function HelpModerationPage() {
     else window.alert(data?.detail || 'Delete failed');
   };
 
+  const openItem = (item) => {
+    if (tab === 'requests') {
+      navigate(`/help-requests/${item.id}`);
+    }
+  };
+
+  const handleCardKeyDown = (event, item) => {
+    if (tab !== 'requests') return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openItem(item);
+    }
+  };
+
   return (
     <div className="page" style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto' }}>
       <BackToDashboard to="/staff" label="← Back to staff dashboard" />
@@ -63,7 +79,15 @@ export default function HelpModerationPage() {
       {!loading && !error && (
         <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '0.75rem' }}>
           {items.map((item) => (
-            <li key={item.id} className="welcome-card" style={{ padding: '1rem' }}>
+            <li
+              key={item.id}
+              className="welcome-card"
+              role={tab === 'requests' ? 'link' : undefined}
+              tabIndex={tab === 'requests' ? 0 : undefined}
+              onClick={() => openItem(item)}
+              onKeyDown={(event) => handleCardKeyDown(event, item)}
+              style={{ padding: '1rem', cursor: tab === 'requests' ? 'pointer' : 'default' }}
+            >
               <header style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <strong>
                   {tab === 'requests' ? item.title : item.skill_or_resource}
@@ -79,7 +103,10 @@ export default function HelpModerationPage() {
               )}
               <button
                 className="btn btn-secondary btn-sm"
-                onClick={() => handleDelete(item)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleDelete(item);
+                }}
                 style={{ color: '#f87171' }}
               >
                 Delete

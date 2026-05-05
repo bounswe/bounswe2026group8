@@ -17,6 +17,7 @@ import com.google.android.material.button.MaterialButton
  * [submitOffers], which clears the other list internally.
  */
 class HelpModerationAdapter(
+    private val onOpenRequest: (item: HelpRequestModerationItem) -> Unit,
     private val onDelete: (item: Any) -> Unit,
 ) : RecyclerView.Adapter<HelpModerationAdapter.ViewHolder>() {
 
@@ -80,6 +81,8 @@ class HelpModerationAdapter(
                 txtDescription.visibility = View.GONE
             }
 
+            itemView.isClickable = true
+            itemView.setOnClickListener { onOpenRequest(item) }
             btnDelete.setOnClickListener { onDelete(item) }
         }
 
@@ -100,6 +103,8 @@ class HelpModerationAdapter(
                 txtDescription.visibility = View.GONE
             }
 
+            itemView.isClickable = false
+            itemView.setOnClickListener(null)
             btnDelete.setOnClickListener { onDelete(item) }
         }
 
