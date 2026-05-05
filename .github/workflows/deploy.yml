@@ -222,10 +222,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: |
-            cd mobile
-            echo "sdk.dir=$ANDROID_HOME" > local.properties
-            ./gradlew connectedDebugAndroidTest --no-daemon
+          script: cd mobile && echo "sdk.dir=$ANDROID_HOME" > local.properties && ./gradlew connectedDebugAndroidTest --no-daemon
 
       - name: Upload instrumented test reports
         if: always()
