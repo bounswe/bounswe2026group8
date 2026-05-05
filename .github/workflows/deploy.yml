@@ -248,6 +248,14 @@ jobs:
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:5173
         run: cd frontend && npm run e2e
 
+      - name: Publish E2E test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: E2E Test Results
+          path: frontend/test-results/results.xml
+          reporter: java-junit
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
