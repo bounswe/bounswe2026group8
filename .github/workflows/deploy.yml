@@ -238,7 +238,7 @@ jobs:
       - name: Start Vite dev server
         env:
           VITE_API_BASE: http://127.0.0.1:8000
-        run: cd frontend && npm run dev &
+        run: cd frontend && npm run dev -- --host 127.0.0.1 &
 
       - name: Wait for servers
         run: npx wait-on tcp:127.0.0.1:8000 http://127.0.0.1:5173 --timeout 60000
