@@ -224,6 +224,14 @@ jobs:
           disable-animations: true
           script: cd mobile && echo "sdk.dir=$ANDROID_HOME" > local.properties && ./gradlew connectedDebugAndroidTest --no-daemon
 
+      - name: Publish instrumented test report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Android Instrumented Test Results
+          path: mobile/app/build/outputs/androidTest-results/connected/**/*.xml
+          reporter: java-junit
+
       - name: Upload instrumented test reports
         if: always()
         uses: actions/upload-artifact@v4
