@@ -53,12 +53,24 @@ class CreateHelpOfferActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
 
         // Category dropdown — no default so the hint shows as placeholder
-        val categoryLabels = arrayOf("Medical", "Food", "Shelter", "Transport")
+        val categoryLabels = arrayOf(
+            getString(R.string.category_medical),
+            getString(R.string.category_food),
+            getString(R.string.category_shelter),
+            getString(R.string.category_transport)
+        )
         val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categoryLabels)
         dropdownCategory.setAdapter(categoryAdapter)
 
         // Availability dropdown
-        val availabilityLabels = arrayOf("24/7", "Weekdays", "Weekends", "Mornings", "Evenings", "On-call")
+        val availabilityLabels = arrayOf(
+            getString(R.string.availability_247),
+            getString(R.string.availability_weekdays),
+            getString(R.string.availability_weekends),
+            getString(R.string.availability_mornings),
+            getString(R.string.availability_evenings),
+            getString(R.string.availability_oncall)
+        )
         val availabilityAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, availabilityLabels)
         dropdownAvailability.setAdapter(availabilityAdapter)
 
@@ -90,10 +102,10 @@ class CreateHelpOfferActivity : AppCompatActivity() {
         }
 
         val category = when (dropdownCategory.text.toString()) {
-            "Medical"   -> "MEDICAL"
-            "Food"      -> "FOOD"
-            "Shelter"   -> "SHELTER"
-            "Transport" -> "TRANSPORT"
+            getString(R.string.category_medical)   -> "MEDICAL"
+            getString(R.string.category_food)      -> "FOOD"
+            getString(R.string.category_shelter)   -> "SHELTER"
+            getString(R.string.category_transport) -> "TRANSPORT"
             else        -> "MEDICAL"
         }
 

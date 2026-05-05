@@ -4,12 +4,13 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User, Profile, Resource, ExpertiseField
+from .models import User, Profile, Resource, ExpertiseField, ExpertiseCategory
 from .models import Hub
 from .serializers import (
     RegisterSerializer, LoginSerializer, UserSerializer,
-    ProfileSerializer, ResourceSerializer, ExpertiseFieldSerializer,HubSerializer,
-) 
+    ProfileSerializer, ResourceSerializer, ExpertiseFieldSerializer, HubSerializer,
+    ExpertiseCategorySerializer,
+)
 
 
 class RegisterView(APIView):
@@ -305,3 +306,15 @@ class HubListView(APIView):
     def get(self, request):
         hubs = Hub.objects.all()
         return Response(HubSerializer(hubs, many=True).data, status=status.HTTP_200_OK)
+
+
+class ExpertiseCategoryListView(APIView):
+    """
+    GET /expertise-categories/
+    Public list of active expertise categories. No authentication required.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        qs = ExpertiseCategory.objects.filter(is_active=True)
+        return Response(ExpertiseCategorySerializer(qs, many=True).data)

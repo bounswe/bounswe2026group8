@@ -3,7 +3,7 @@ from .views import (
     RegisterView, LoginView, LogoutView, MeView, HubListView, ProfileView,
     ResourceListView, ResourceDetailView,
     ExpertiseFieldListView, ExpertiseFieldDetailView, FCMTokenView,
-    UserPublicProfileView,
+    UserPublicProfileView, ExpertiseCategoryListView,
 )
 from .staff_views import (
     StaffUserListView,
@@ -28,6 +28,7 @@ urlpatterns = [
     path('expertise/<int:pk>', ExpertiseFieldDetailView.as_view(), name='expertise-detail'),
     path('users/<int:pk>/', UserPublicProfileView.as_view(), name='user-public-profile'),
     path('hubs/', HubListView.as_view(), name='hub-list'),
+    path('expertise-categories/', ExpertiseCategoryListView.as_view(), name='expertise-category-list'),
     path('accounts/fcm-token/', FCMTokenView.as_view(), name='fcm-token'),
 
     # ── Staff (admin / verification coordinator) ─────────────────────────────

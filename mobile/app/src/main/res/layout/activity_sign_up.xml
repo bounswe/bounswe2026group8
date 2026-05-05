@@ -138,22 +138,24 @@
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <!-- Expertise field — visible only when EXPERT selected -->
+        <!-- Expertise category — visible only when EXPERT selected -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/expertiseLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/expertise_field"
             android:visibility="gone"
-            style="@style/Widget.EmergencyHub.TextInput">
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputExpertise"
+            <AutoCompleteTextView
+                android:id="@+id/dropdownExpertiseCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/text_primary" />
+                android:hint="@string/expertise_field"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:focusable="false"
+                android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

@@ -4,7 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.text import slugify
 
-from .models import Hub, User, Profile, Resource, ExpertiseField, StaffAuditLog
+from .models import Hub, User, Profile, Resource, ExpertiseField, StaffAuditLog, ExpertiseCategory
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -43,6 +43,14 @@ class ResourceSerializer(serializers.ModelSerializer):
         model = Resource
         fields = ['id', 'name', 'category', 'quantity', 'condition', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+class ExpertiseCategorySerializer(serializers.ModelSerializer):
+    """Read serializer for ExpertiseCategory — used nested inside ExpertiseFieldSerializer."""
+
+    class Meta:
+        model = ExpertiseCategory
+        fields = ['id', 'name', 'help_request_category', 'translations']
 
 
 class ExpertiseFieldSerializer(serializers.ModelSerializer):
@@ -235,8 +243,11 @@ class RegisterSerializer(serializers.Serializer):
     neighborhood_address = serializers.CharField(
         max_length=255, required=False, allow_blank=True, allow_null=True
     )
-    expertise_field = serializers.CharField(
-        max_length=255, required=False, allow_blank=True, allow_null=True
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=ExpertiseCategory.objects.filter(is_active=True),
+        required=False,
+        allow_null=True,
+        write_only=True,
     )
 
     def validate_email(self, value):
@@ -252,6 +263,8 @@ class RegisterSerializer(serializers.Serializer):
     def validate(self, data):
         if data['password'] != data['confirm_password']:
             raise serializers.ValidationError({'confirm_password': ['Passwords do not match.']})
+        if data.get('role') == User.Role.EXPERT and not data.get('category_id'):
+            raise serializers.ValidationError({'category_id': ['Expertise category is required for Expert users.']})
 
         # Validate password against Django's password validators
         try:
@@ -259,22 +272,13 @@ class RegisterSerializer(serializers.Serializer):
         except DjangoValidationError as e:
             raise serializers.ValidationError({'password': e.messages})
 
-        if data['role'] == User.Role.EXPERT:
-            expertise = data.get('expertise_field', '').strip() if data.get('expertise_field') else ''
-            if not expertise:
-                raise serializers.ValidationError(
-                    {'expertise_field': ['Expertise field is required for Expert users.']}
-                )
-
-        if data['role'] == User.Role.STANDARD:
-            data['expertise_field'] = None
-
         return data
 
     def create(self, validated_data):
         validated_data.pop('confirm_password')
         password = validated_data.pop('password')
         hub_id = validated_data.pop('hub_id', None)
+        category = validated_data.pop('category_id', None)
         if hub_id is not None:
             validated_data['hub_id'] = hub_id
         # Defensive: registration must never set staff authority or active state.
@@ -286,6 +290,8 @@ class RegisterSerializer(serializers.Serializer):
             password=password,
             **validated_data,
         )
+        if category:
+            ExpertiseField.objects.create(user=user, category=category)
         return user
 
 

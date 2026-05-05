@@ -63,15 +63,16 @@ export default function HelpRequestsPage() {
   const { user } = useAuth();
   const selectedHub = user?.hub;
   const navigate = useNavigate();
-  const { t } = useTranslation(); // 4. Initialize hook
+  const isExpert = user?.role === 'EXPERT';
+  const { t } = useTranslation();
 
-  // 5. Move mapping objects inside the component
   const CATEGORIES = [
     { value: '', label: t('help_requests.categories.all') },
     { value: 'MEDICAL', label: t('help_requests.categories.medical') },
     { value: 'FOOD', label: t('help_requests.categories.food') },
     { value: 'SHELTER', label: t('help_requests.categories.shelter') },
     { value: 'TRANSPORT', label: t('help_requests.categories.transport') },
+    { value: 'OTHER', label: t('help_requests.categories.other') },
   ];
 
   const FORM_CATEGORIES = CATEGORIES.filter((c) => c.value !== '');
@@ -79,7 +80,7 @@ export default function HelpRequestsPage() {
   const URGENCY_LABELS = {
     LOW: t('help_requests.urgency.low'),
     MEDIUM: t('help_requests.urgency.medium'),
-    HIGH: t('help_requests.urgency.high')
+    HIGH: t('help_requests.urgency.high'),
   };
 
   const STATUS_LABELS = {
@@ -90,6 +91,8 @@ export default function HelpRequestsPage() {
 
   const [activeTab, setActiveTab] = useState('requests');
   const [category, setCategory] = useState('');
+
+  const [expertiseMatch, setExpertiseMatch] = useState(true);
 
   const [requests, setRequests] = useState([]);
   const [reqLoading, setReqLoading] = useState(true);
@@ -121,15 +124,16 @@ export default function HelpRequestsPage() {
     const params = {};
     if (selectedHub?.id) params.hub_id = selectedHub.id;
     if (category) params.category = category;
+    if (isExpert && expertiseMatch) params.expertise_match = true;
 
     getHelpRequests(params)
-        .then(({ ok, data }) => {
-          if (ok) setRequests(data);
-          else setReqError(data.detail || t('help_requests.requests_tab.error_fetch'));
-        })
-        .catch(() => setReqError(t('help_requests.requests_tab.error_network')))
-        .finally(() => setReqLoading(false));
-  }, [user, category, activeTab, selectedHub, t]);
+      .then(({ ok, data }) => {
+        if (ok) setRequests(data);
+        else setReqError(data.detail || t('help_requests.requests_tab.error_fetch'));
+      })
+      .catch(() => setReqError(t('help_requests.requests_tab.error_network')))
+      .finally(() => setReqLoading(false));
+  }, [user, category, activeTab, expertiseMatch, isExpert, selectedHub, t]);
 
   useEffect(() => {
     if (!user || activeTab !== 'offers') return;
@@ -274,12 +278,20 @@ export default function HelpRequestsPage() {
           {CATEGORIES.map((cat) => (
               <button
                   key={cat.value}
-                  className={`btn btn-sm ${category === cat.value ? 'btn-primary' : 'btn-secondary'}`}
-                  onClick={() => setCategory(cat.value)}
+                  className={`btn btn-sm ${!expertiseMatch && category === cat.value ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => { setCategory(cat.value); setExpertiseMatch(false); }}
               >
                 {cat.label}
               </button>
           ))}
+          {isExpert && (
+              <button
+                  className={`btn btn-sm ${expertiseMatch ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => { setExpertiseMatch(true); setCategory(''); }}
+              >
+                {t('help_requests.my_expertise')}
+              </button>
+          )}
         </div>
 
         {/* ══════════════════════════ REQUESTS TAB ══════════════════════════════ */}

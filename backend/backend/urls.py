@@ -11,6 +11,7 @@ urlpatterns = [
     path('forum/', include('forum.urls')),
     path('help-requests/', include(help_request_urlpatterns)),
     path('help-offers/', include(help_offer_urlpatterns)),
+    path('mesh-messages/', include('mesh.urls')),
 ]
 
 if settings.DEBUG:

@@ -41,7 +41,8 @@
       "forum": {"title": "Forum", "desc": "Topluluk tartışmaları"},
       "help_requests": {"title": "Yardım Talepleri", "desc": "Yardım edin / talep edin"},
       "profile": {"title": "Profil", "desc": "Profilinizi düzenleyin"},
-      "emergency_info": {"title": "Acil Durum Bilgileri", "desc": "Kritik bilgi erişimi"}
+      "emergency_info": {"title": "Acil Durum Bilgileri", "desc": "Kritik bilgi erişimi"},
+      "offline_messages": {"title": "Çevrimdışı Mesajlar", "desc": "Sunucuya senkronlanan çevrimdışı forum"}
     }
   },
   "forum": {
@@ -132,7 +133,8 @@
       "medical": "Medikal",
       "food": "Yemek",
       "shelter": "Sığınak",
-      "transport": "Ulaşım"
+      "transport": "Ulaşım",
+      "other": "Diğer"
     },
     "urgencies": {
       "low": "Düşük",
@@ -187,7 +189,7 @@
     "availability": {
       "safe": "Güvenli",
       "needs_help": "Yardıma İhtiyacı Var",
-      "available": "Yarım Etmeye Müsait"
+      "available": "Yardım Etmeye Müsait"
     },
     "actions": {
       "resolving": "Çözümleniyor...",
@@ -214,7 +216,7 @@
   "help_requests": {
     "header": {
       "back": "Menü",
-      "title": "Yardı Merkezi",
+      "title": "Yardım Merkezi",
       "new_request": "+ Yeni Talep",
       "new_offer": "+ Yeni Teklif",
       "cancel": "İptal"
@@ -229,8 +231,10 @@
       "medical": "Medikal",
       "food": "Yemek",
       "shelter": "Sığınak",
-      "transport": "Ulaşım"
+      "transport": "Ulaşım",
+      "other": "Diğer"
     },
+    "my_expertise": "Uzmanlığım",
     "time": {
       "just_now": "Şimdi",
       "m_ago": "{{count}}d önce",
@@ -341,7 +345,8 @@
       "medical": "Medikal",
       "food": "Yemek",
       "shelter": "Sığınak",
-      "transport": "Ulaşım"
+      "transport": "Ulaşım",
+      "other": "Diğer"
     },
     "time": {
       "just_now": "şimdi",
@@ -802,6 +807,46 @@
       "no_filter_match_desc": "Başka bir kategori seçmeyi deneyin.",
       "no_facilities_title": "Yakınlarda tesis bulunamadı.",
       "no_facilities_desc": "Konumunuza {{radius}} km mesafede acil durum tesisi bulunamadı."
+    }
+  },
+  "offline_messages": {
+    "list": {
+      "title": "Çevrimdışı Mesajlar",
+      "back": "← Panel",
+      "subtitle": "Kullanıcıların çevrimdışı mesh ağında oluşturup tekrar çevrimiçi olduklarında yükledikleri gönderiler.",
+      "loading": "Yükleniyor…",
+      "error": "Yüklenemedi: {{error}}",
+      "empty": "Henüz hiç çevrimdışı mesaj yüklenmedi.",
+      "untitled": "(başlıksız)",
+      "location_attached": "📍 konum eklendi",
+      "device_fallback": "cihaz-{{id}}"
+    },
+    "detail": {
+      "back": "← Geri",
+      "loading": "Yükleniyor…",
+      "error_load": "Gönderi yüklenemedi (HTTP {{status}})",
+      "error_not_found": "Gönderi bulunamadı.",
+      "untitled": "(başlıksız)",
+      "comments_heading": "Yorumlar ({{count}})",
+      "no_comments": "Henüz yorum yok.",
+      "view_location": "Konumu görüntüle",
+      "device_fallback": "cihaz-{{id}}"
+    },
+    "post_type": {
+      "need_help": "Yardım Lazım",
+      "offer_help": "Yardım Sun"
+    },
+    "time": {
+      "just_now": "şimdi",
+      "m_ago": "{{count}}d önce",
+      "h_ago": "{{count}}s önce",
+      "d_ago": "{{count}}g önce"
+    },
+    "location": {
+      "fix_seconds": "konum {{count}}sn önce alındı",
+      "fix_minutes": "konum {{count}}d önce alındı",
+      "fix_hours": "konum {{count}}s önce alındı",
+      "fix_days": "konum {{count}}g önce alındı"
     }
   }
 }
