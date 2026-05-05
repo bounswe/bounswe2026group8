@@ -68,3 +68,66 @@ data class ExpertiseDecisionRequest(
     val status: String,
     val note: String? = null,
 )
+
+// ── Hubs (admin) ───────────────────────────────────────────────────────────────
+
+data class HubCreateRequest(
+    val name: String,
+    val slug: String? = null,
+)
+
+data class HubUpdateRequest(
+    val name: String? = null,
+    val slug: String? = null,
+)
+
+data class HubDeleteRequest(
+    val confirm: Boolean = true,
+)
+
+// ── Audit log (admin) ──────────────────────────────────────────────────────────
+
+data class AuditLogItem(
+    val id: Int,
+    @SerializedName("actor_email") val actorEmail: String?,
+    val action: String,
+    @SerializedName("target_type") val targetType: String?,
+    @SerializedName("target_id") val targetId: Int?,
+    @SerializedName("target_user_email") val targetUserEmail: String?,
+    val reason: String?,
+    @SerializedName("created_at") val createdAt: String?,
+)
+
+// ── Help moderation (mod / admin) ──────────────────────────────────────────────
+
+data class HelpModerationAuthor(
+    val id: Int,
+    val email: String,
+    @SerializedName("full_name") val fullName: String? = null,
+)
+
+data class HelpRequestModerationItem(
+    val id: Int,
+    val title: String,
+    val description: String? = null,
+    val category: String? = null,
+    val urgency: String? = null,
+    val status: String? = null,
+    @SerializedName("hub_name") val hubName: String? = null,
+    val author: HelpModerationAuthor? = null,
+    @SerializedName("created_at") val createdAt: String? = null,
+)
+
+data class HelpOfferModerationItem(
+    val id: Int,
+    @SerializedName("skill_or_resource") val skillOrResource: String,
+    val description: String? = null,
+    val category: String? = null,
+    @SerializedName("hub_name") val hubName: String? = null,
+    val author: HelpModerationAuthor? = null,
+    @SerializedName("created_at") val createdAt: String? = null,
+)
+
+data class ModerationDeleteRequest(
+    val reason: String? = null,
+)

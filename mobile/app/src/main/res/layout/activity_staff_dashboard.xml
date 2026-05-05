@@ -51,9 +51,9 @@
             android:paddingBottom="4dp"
             android:layout_marginBottom="20dp" />
 
-        <!-- ── User management (admin) ─────────────────────────────────── -->
+        <!-- ── Admin Tools (admin only, gateway to all admin functionality) ── -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardAdminUsers"
+            android:id="@+id/cardAdminTools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -82,7 +82,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/staff_admin_users"
+                    android:text="@string/staff_admin_tools"
                     android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold"
@@ -91,7 +91,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/staff_admin_users_desc"
+                    android:text="@string/staff_admin_tools_desc"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 
@@ -99,7 +99,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Forum moderation (mod / admin) ──────────────────────────── -->
+        <!-- ── Forum moderation (moderators) ───────────────────────────── -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardForumModeration"
             android:layout_width="match_parent"
@@ -147,7 +147,55 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ── Expertise verification (verifier / admin) ───────────────── -->
+        <!-- ── Help moderation (moderators) ────────────────────────────── -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardHelpModeration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardBackgroundColor="@color/bg_surface"
+            app:cardCornerRadius="14dp"
+            app:strokeColor="@color/border"
+            app:strokeWidth="1dp"
+            app:cardElevation="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🆘"
+                    android:textSize="28sp"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/staff_help_moderation"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/staff_help_moderation_desc"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ── Expertise verification (verification coordinators) ──────── -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardExpertiseVerification"
             android:layout_width="match_parent"

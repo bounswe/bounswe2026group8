@@ -165,6 +165,34 @@
     <string name="staff_status_hidden">Hidden</string>
     <string name="staff_status_removed">Removed</string>
     <string name="staff_status_reported_or_nonactive">Reported / non-active</string>
+
+    <!-- Admin tools (admin-only) -->
+    <string name="staff_admin_tools">Admin Tools</string>
+    <string name="staff_admin_tools_desc">All admin functionality in one place.</string>
+    <string name="staff_admin_hubs">Hub Management</string>
+    <string name="staff_admin_hubs_desc">Create, rename, or delete neighborhood hubs.</string>
+    <string name="staff_audit_log">Audit Log</string>
+    <string name="staff_audit_log_desc">Review every staff action taken on the platform.</string>
+    <string name="staff_help_moderation">Help Moderation</string>
+    <string name="staff_help_moderation_desc">Remove abusive help requests, offers, or comments.</string>
+
+    <!-- Hub management -->
+    <string name="hub_create">Create hub</string>
+    <string name="hub_name_hint">Name</string>
+    <string name="hub_slug_hint">Slug (optional)</string>
+    <string name="hub_action_rename">Rename</string>
+    <string name="hub_action_delete">Delete</string>
+    <string name="hub_delete_confirm_title">Delete hub?</string>
+    <string name="hub_delete_confirm_message">This will cascade-delete the hub\'s posts, help requests, and help offers. Continue?</string>
+
+    <!-- Help moderation -->
+    <string name="help_tab_requests">Requests</string>
+    <string name="help_tab_offers">Offers</string>
+
+    <!-- Audit log -->
+    <string name="audit_filter_action_hint">Filter action (e.g. STAFF_ROLE_CHANGED)</string>
+    <string name="audit_filter_target_hint">Filter target type (e.g. POST)</string>
+    <string name="audit_apply">Apply</string>
     <string name="profile_personal_info">Personal Information</string>
     <string name="profile_phone">Phone</string>
     <string name="profile_blood_type">Blood Type</string>

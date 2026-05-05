@@ -3,10 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { logout } from '../services/api';
 import { useTranslation } from 'react-i18next'; // 1. Import the hook
 import {
-  canModerate,
-  canVerifyExpertise,
   hasAnyStaffRole,
-  isAdmin,
   staffRoleLabel,
 } from '../utils/staffRoles';
 
@@ -45,15 +42,11 @@ export default function DashboardPage() {
   ];
 
   if (hasAnyStaffRole(user)) {
-    let staffPath = '/staff';
-    if (isAdmin(user)) staffPath = '/staff/users';
-    else if (canModerate(user)) staffPath = '/staff/moderation/forum';
-    else if (canVerifyExpertise(user)) staffPath = '/staff/verification/expertise';
     features.push({
       icon: '🛡️',
       title: 'Staff tools',
       desc: `Tools for ${staffRoleLabel(user.staff_role)}.`,
-      path: staffPath,
+      path: '/staff',
     });
   }
 

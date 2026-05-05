@@ -53,8 +53,12 @@
 
         <!-- Staff / admin -->
         <activity android:name=".ui.StaffDashboardActivity" android:exported="false" />
+        <activity android:name=".ui.AdminToolsActivity" android:exported="false" />
         <activity android:name=".ui.AdminUsersActivity" android:exported="false" />
+        <activity android:name=".ui.HubManagementActivity" android:exported="false" />
+        <activity android:name=".ui.AuditLogActivity" android:exported="false" />
         <activity android:name=".ui.ForumModerationActivity" android:exported="false" />
+        <activity android:name=".ui.HelpModerationActivity" android:exported="false" />
         <activity android:name=".ui.ExpertiseVerificationActivity" android:exported="false" />
 
         <service

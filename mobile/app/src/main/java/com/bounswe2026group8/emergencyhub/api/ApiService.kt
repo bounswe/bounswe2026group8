@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -250,4 +251,57 @@ interface ApiService {
         @Path("id") expertiseId: Int,
         @Body body: ExpertiseDecisionRequest,
     ): Response<ExpertiseVerificationItem>
+
+    // ── Staff: Hubs (admin) ────────────────────────────────────────────────────
+
+    @GET("staff/hubs/")
+    suspend fun listStaffHubs(): Response<List<Hub>>
+
+    @POST("staff/hubs/")
+    suspend fun createStaffHub(@Body body: HubCreateRequest): Response<Hub>
+
+    @PATCH("staff/hubs/{id}/")
+    suspend fun updateStaffHub(
+        @Path("id") hubId: Int,
+        @Body body: HubUpdateRequest,
+    ): Response<Hub>
+
+    /**
+     * Hub deletion requires `confirm: true` per the backend safeguard, so we
+     * route through @HTTP to send a JSON body with DELETE.
+     */
+    @HTTP(method = "DELETE", path = "staff/hubs/{id}/", hasBody = true)
+    suspend fun deleteStaffHub(
+        @Path("id") hubId: Int,
+        @Body body: HubDeleteRequest,
+    ): Response<ResponseBody?>
+
+    // ── Staff: Audit log (admin) ───────────────────────────────────────────────
+
+    @GET("staff/audit-logs/")
+    suspend fun listAuditLogs(
+        @Query("action") action: String? = null,
+        @Query("target_type") targetType: String? = null,
+    ): Response<List<AuditLogItem>>
+
+    // ── Staff: Help moderation (mod / admin) ───────────────────────────────────
+
+    @GET("help-requests/moderation/")
+    suspend fun listHelpRequestModeration(): Response<List<HelpRequestModerationItem>>
+
+    @GET("help-offers/moderation/")
+    suspend fun listHelpOfferModeration(): Response<List<HelpOfferModerationItem>>
+
+    /** DELETE with body so moderators can attach an audit-log reason. */
+    @HTTP(method = "DELETE", path = "help-requests/{id}/", hasBody = true)
+    suspend fun moderationDeleteHelpRequest(
+        @Path("id") id: Int,
+        @Body body: ModerationDeleteRequest,
+    ): Response<ResponseBody?>
+
+    @HTTP(method = "DELETE", path = "help-offers/{id}/", hasBody = true)
+    suspend fun moderationDeleteHelpOffer(
+        @Path("id") id: Int,
+        @Body body: ModerationDeleteRequest,
+    ): Response<ResponseBody?>
 }

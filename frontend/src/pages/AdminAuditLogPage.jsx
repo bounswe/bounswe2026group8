@@ -24,7 +24,7 @@ export default function AdminAuditLogPage() {
 
   return (
     <div className="page" style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto' }}>
-      <BackToDashboard />
+      <BackToDashboard to="/staff" label="← Back to staff dashboard" />
       <h2 className="gradient-text">Audit log</h2>
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
         <input

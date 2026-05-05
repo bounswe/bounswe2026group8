@@ -13,9 +13,14 @@ import com.google.android.material.card.MaterialCardView
 /**
  * Mobile entry point for the staff toolset.
  *
- * Mirrors the web `/staff` dashboard: shows only the cards the current user's
- * staff role grants access to, with an obvious back button to the regular
- * dashboard.
+ * Role-aware navigation hub:
+ *   - Admin       → single "Admin Tools" card opens [AdminToolsActivity],
+ *                    which surfaces every admin functionality (user/hub mgmt,
+ *                    moderation, verification, audit log) in one place.
+ *   - Moderator   → "Forum Moderation" + "Help Moderation" cards.
+ *   - Verifier    → "Expertise Verification" card.
+ *
+ * Backend authorization is the source of truth; these helpers only gate the UI.
  */
 class StaffDashboardActivity : AppCompatActivity() {
 
@@ -26,38 +31,44 @@ class StaffDashboardActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
 
         val user = TokenManager(this).getUser()
-        val staffRole = user?.staffRole ?: "NONE"
+        val staffRole = user?.staffRole ?: StaffRoleHelper.NONE
 
-        val txtRole = findViewById<TextView>(R.id.txtStaffRole)
-        txtRole.text = StaffRoleHelper.label(staffRole)
+        findViewById<TextView>(R.id.txtStaffRole).text = StaffRoleHelper.label(staffRole)
 
-        val cardAdminUsers = findViewById<MaterialCardView>(R.id.cardAdminUsers)
+        val cardAdminTools = findViewById<MaterialCardView>(R.id.cardAdminTools)
         val cardForumModeration = findViewById<MaterialCardView>(R.id.cardForumModeration)
+        val cardHelpModeration = findViewById<MaterialCardView>(R.id.cardHelpModeration)
         val cardExpertiseVerification = findViewById<MaterialCardView>(R.id.cardExpertiseVerification)
         val txtNoRoleHint = findViewById<TextView>(R.id.txtNoRoleHint)
 
         if (StaffRoleHelper.isAdmin(staffRole)) {
-            cardAdminUsers.visibility = View.VISIBLE
-        }
-        if (StaffRoleHelper.canModerate(staffRole)) {
-            cardForumModeration.visibility = View.VISIBLE
-        }
-        if (StaffRoleHelper.canVerifyExpertise(staffRole)) {
-            cardExpertiseVerification.visibility = View.VISIBLE
+            cardAdminTools.visibility = View.VISIBLE
+        } else {
+            if (StaffRoleHelper.canModerate(staffRole)) {
+                cardForumModeration.visibility = View.VISIBLE
+                cardHelpModeration.visibility = View.VISIBLE
+            }
+            if (StaffRoleHelper.canVerifyExpertise(staffRole)) {
+                cardExpertiseVerification.visibility = View.VISIBLE
+            }
         }
 
-        if (cardAdminUsers.visibility != View.VISIBLE &&
+        if (cardAdminTools.visibility != View.VISIBLE &&
             cardForumModeration.visibility != View.VISIBLE &&
+            cardHelpModeration.visibility != View.VISIBLE &&
             cardExpertiseVerification.visibility != View.VISIBLE
         ) {
             txtNoRoleHint.visibility = View.VISIBLE
         }
 
-        cardAdminUsers.setOnClickListener {
-            startActivity(Intent(this, AdminUsersActivity::class.java))
+        cardAdminTools.setOnClickListener {
+            startActivity(Intent(this, AdminToolsActivity::class.java))
         }
         cardForumModeration.setOnClickListener {
             startActivity(Intent(this, ForumModerationActivity::class.java))
+        }
+        cardHelpModeration.setOnClickListener {
+            startActivity(Intent(this, HelpModerationActivity::class.java))
         }
         cardExpertiseVerification.setOnClickListener {
             startActivity(Intent(this, ExpertiseVerificationActivity::class.java))
