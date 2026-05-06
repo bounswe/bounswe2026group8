@@ -5,8 +5,8 @@ import com.bounswe2026group8.emergencyhub.R
 
 /**
  * Locale-aware "fix Xs/m/h/d ago" formatter shared by every mesh UI surface.
- * Splitting this out lets us localize the strings via `values-*/strings.xml`
- * instead of hardcoding English in each adapter/activity.
+ * Splitting this out lets us localize the strings via per-locale strings.xml
+ * (values-xx/strings.xml) instead of hardcoding English in each adapter/activity.
  */
 internal fun formatFixAge(ctx: Context, ageSec: Long): String {
     return when {
