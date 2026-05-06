@@ -87,7 +87,16 @@ class BleTransport(
     private val connectedGatts = mutableMapOf<String, BluetoothGatt>()
     private val gattWriteLocks = mutableMapOf<String, Mutex>()
 
-    // Write completion signal — set when onCharacteristicWrite fires
+    // Serializes the actual radio write across ALL peers. Android's BLE stack only
+    // permits one outstanding GATT operation at a time per radio, and `writeComplete`
+    // below is a single shared field — without this, writes to peer B and peer C race
+    // and each receives the other's onCharacteristicWrite ack, scrambling chunked
+    // payloads. The per-peer mutex above only protects ordering within one peer's
+    // payload (header + chunks); this one protects the radio itself.
+    private val writeMutex = Mutex()
+
+    // Write completion signal — set when onCharacteristicWrite fires. Only ever
+    // touched while holding writeMutex, so the single field is safe.
     private var writeComplete: CompletableDeferred<Boolean>? = null
 
     // Map BLE addresses to mesh device IDs (bidirectional)
@@ -570,16 +579,19 @@ class BleTransport(
         characteristic: BluetoothGattCharacteristic,
         value: ByteArray
     ) {
-        writeComplete = CompletableDeferred()
-        @Suppress("DEPRECATION")
-        characteristic.value = value
-        characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-        @Suppress("DEPRECATION")
-        gatt.writeCharacteristic(characteristic)
+        writeMutex.withLock {
+            val deferred = CompletableDeferred<Boolean>()
+            writeComplete = deferred
+            @Suppress("DEPRECATION")
+            characteristic.value = value
+            characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+            @Suppress("DEPRECATION")
+            gatt.writeCharacteristic(characteristic)
 
-        val result = withTimeoutOrNull(WRITE_TIMEOUT_MS) { writeComplete?.await() }
-        if (result == null) {
-            Log.w(TAG, "Write timeout, continuing anyway")
+            val result = withTimeoutOrNull(WRITE_TIMEOUT_MS) { deferred.await() }
+            if (result == null) {
+                Log.w(TAG, "Write timeout, continuing anyway")
+            }
         }
     }
 }

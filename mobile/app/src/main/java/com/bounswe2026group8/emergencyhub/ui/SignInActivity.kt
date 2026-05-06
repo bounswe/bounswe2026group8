@@ -15,9 +15,13 @@ import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.LoginRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.mesh.MeshServerSyncManager
 
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 /**
@@ -89,6 +93,17 @@ class SignInActivity : AppCompatActivity() {
                     // Store JWT tokens and cached user data
                     tokenManager.saveToken(body.token!!, body.refresh)
                     body.user?.let { tokenManager.saveUser(it) }
+
+                    // Push the local mesh inventory to the server immediately on
+                    // login, so unsynced offline-mesh posts appear in the user's
+                    // archive without them having to open that screen first.
+                    // Idempotent — rows already marked syncedToServer=true are
+                    // skipped, so this is safe alongside DashboardActivity.onResume.
+                    // Runs on an app-scope so it survives this activity finishing.
+                    val appCtx = applicationContext
+                    CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+                        MeshServerSyncManager.uploadIfOnline(appCtx)
+                    }
 
                     // Navigate to Dashboard, clear back stack
                     val intent = Intent(this@SignInActivity, DashboardActivity::class.java)
