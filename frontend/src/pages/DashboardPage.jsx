@@ -34,6 +34,7 @@ export default function DashboardPage() {
     { icon: '💬', title: t('dashboard.features.forum.title'), desc: t('dashboard.features.forum.desc'), path: '/forum' },
     { icon: '🆘', title: t('dashboard.features.help_requests.title'), desc: t('dashboard.features.help_requests.desc'), path: '/help-requests' },
     { icon: '👤', title: t('dashboard.features.profile.title'), desc: t('dashboard.features.profile.desc'), path: '/profile' },
+    { icon: '⚙️', title: t('dashboard.features.settings.title'), desc: t('dashboard.features.settings.desc'), path: '/settings' },
     { icon: '📶', title: t('dashboard.features.emergency_info.title'), desc: t('dashboard.features.emergency_info.desc'), path: '/emergency-info' },
     { icon: '📡', title: t('dashboard.features.offline_messages.title'), desc: t('dashboard.features.offline_messages.desc'), path: '/offline-messages' },
   ];

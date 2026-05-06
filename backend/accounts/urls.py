@@ -3,7 +3,7 @@ from .views import (
     RegisterView, LoginView, LogoutView, MeView, HubListView, ProfileView,
     ResourceListView, ResourceDetailView,
     ExpertiseFieldListView, ExpertiseFieldDetailView, FCMTokenView,
-    UserPublicProfileView, ExpertiseCategoryListView,
+    UserPublicProfileView, ExpertiseCategoryListView, UserSettingsView,
 )
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name='logout'),
     path('me', MeView.as_view(), name='me'),
     path('profile', ProfileView.as_view(), name='profile'),
+    path('settings', UserSettingsView.as_view(), name='settings'),
     path('resources', ResourceListView.as_view(), name='resource-list'),
     path('resources/<int:pk>', ResourceDetailView.as_view(), name='resource-detail'),
     path('expertise', ExpertiseFieldListView.as_view(), name='expertise-list'),

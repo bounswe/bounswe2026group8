@@ -111,6 +111,19 @@ export function updateProfile(payload) {
   });
 }
 
+export function getSettings() {
+  return request('/settings', {
+    method: 'GET',
+  });
+}
+
+export function updateSettings(payload) {
+  return request('/settings', {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
 // --------------- Resources ---------------
 
 export function getResources() {

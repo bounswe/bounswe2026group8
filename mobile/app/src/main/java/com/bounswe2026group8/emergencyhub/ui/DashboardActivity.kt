@@ -187,6 +187,10 @@ class DashboardActivity : AppCompatActivity() {
                 Intent(this, com.bounswe2026group8.emergencyhub.mesh.ui.MeshArchiveActivity::class.java)
             )
         }
+
+        findViewById<MaterialCardView>(R.id.cardSettings).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
     }
 
     private fun sendFcmTokenToBackend() {

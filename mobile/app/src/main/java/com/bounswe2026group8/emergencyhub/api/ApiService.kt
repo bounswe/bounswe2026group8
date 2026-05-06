@@ -183,6 +183,12 @@ interface ApiService {
     @PATCH("profile")
     suspend fun updateProfile(@Body body: ProfileUpdateRequest): Response<ProfileData>
 
+    @GET("settings")
+    suspend fun getSettings(): Response<UserSettingsData>
+
+    @PATCH("settings")
+    suspend fun updateSettings(@Body body: UserSettingsUpdateRequest): Response<UserSettingsData>
+
     // ── Resources ───────────────────────────────────────────────────────────────
 
     @GET("resources")

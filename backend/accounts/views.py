@@ -4,12 +4,12 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User, Profile, Resource, ExpertiseField, ExpertiseCategory
+from .models import User, Profile, Resource, ExpertiseField, ExpertiseCategory, UserSettings
 from .models import Hub
 from .serializers import (
     RegisterSerializer, LoginSerializer, UserSerializer,
     ProfileSerializer, ResourceSerializer, ExpertiseFieldSerializer, HubSerializer,
-    ExpertiseCategorySerializer,
+    ExpertiseCategorySerializer, UserSettingsSerializer,
 )
 
 
@@ -138,6 +138,26 @@ class ProfileView(APIView):
         return Response({'message': 'Profile update failed', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserSettingsView(APIView):
+    """GET and PATCH /settings for notification and privacy preferences."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        settings_obj, _ = UserSettings.objects.get_or_create(user=request.user)
+        return Response(UserSettingsSerializer(settings_obj).data, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        settings_obj, _ = UserSettings.objects.get_or_create(user=request.user)
+        serializer = UserSettingsSerializer(settings_obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            {'message': 'Settings update failed', 'errors': serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
 class ResourceListView(APIView):
     """
     GET  /resources  — list all resources for the current user
@@ -264,7 +284,36 @@ class UserPublicProfileView(APIView):
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
             return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+        settings_obj, _ = UserSettings.objects.get_or_create(user=user)
+        data = UserSerializer(user).data
+
+        # Settings are private. They control this public shape, but are not exposed.
+        data.pop('settings', None)
+
+        if not settings_obj.show_location:
+            data['neighborhood_address'] = None
+        if not settings_obj.show_resources:
+            data['resources'] = []
+        if not settings_obj.show_expertise:
+            data['expertise_fields'] = []
+
+        profile = data.get('profile') or {}
+        if not settings_obj.show_phone_number:
+            profile['phone_number'] = None
+        if not settings_obj.show_emergency_contact:
+            profile['emergency_contact'] = None
+            profile['emergency_contact_phone'] = None
+        if not settings_obj.show_medical_info:
+            profile['blood_type'] = None
+            profile['has_disability'] = False
+            profile['special_needs'] = None
+        if not settings_obj.show_availability_status:
+            profile['availability_status'] = None
+        if not settings_obj.show_bio:
+            profile['bio'] = None
+        data['profile'] = profile
+
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class HubListView(APIView):

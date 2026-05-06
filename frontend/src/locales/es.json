@@ -41,6 +41,7 @@
       "forum": {"title": "Foro", "desc": "Discusiones de la comunidad"},
       "help_requests": {"title": "Solicitudes de Ayuda", "desc": "Pide u ofrece ayuda"},
       "profile": {"title": "Perfil", "desc": "Gestiona tu cuenta"},
+      "settings": {"title": "Configuración", "desc": "Notificaciones y privacidad"},
       "emergency_info": {"title": "Info de Emergencia", "desc": "Acceso a datos críticos"},
       "offline_messages": {"title": "Mensajes sin conexión", "desc": "Foro sin conexión sincronizado con el servidor"}
     }
