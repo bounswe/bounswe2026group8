@@ -171,6 +171,77 @@
     <!-- Profile -->
     <string name="profile_title">Your Profile</string>
     <string name="back_arrow">← Back</string>
+
+    <!-- Staff / admin -->
+    <string name="staff_tools">Staff Tools</string>
+    <string name="staff_tools_desc">Admin, moderation, and verification</string>
+    <string name="staff_dashboard_title">Staff Dashboard</string>
+    <string name="staff_no_role">No staff role assigned to your account.</string>
+    <string name="staff_admin_users">User Management</string>
+    <string name="staff_admin_users_desc">Search users, change staff roles, suspend.</string>
+    <string name="staff_forum_moderation">Forum Moderation</string>
+    <string name="staff_forum_moderation_desc">Review reported and hidden posts.</string>
+    <string name="staff_expertise_verification">Expertise Verification</string>
+    <string name="staff_expertise_verification_desc">Approve, reject, or reopen certifications.</string>
+    <string name="staff_search_users_hint">Search email or name</string>
+    <string name="staff_filter_all_roles">All staff roles</string>
+    <string name="staff_no_results">No items.</string>
+    <string name="staff_loading">Loading…</string>
+    <string name="staff_refresh">Refresh</string>
+    <string name="staff_action_suspend">Suspend</string>
+    <string name="staff_action_reactivate">Reactivate</string>
+    <string name="staff_action_change_role">Change Role</string>
+    <string name="staff_role_none">None</string>
+    <string name="staff_role_moderator">Moderator</string>
+    <string name="staff_role_verification_coordinator">Verification Coordinator</string>
+    <string name="staff_role_admin">Admin</string>
+    <string name="staff_action_hide">Hide</string>
+    <string name="staff_action_restore">Restore</string>
+    <string name="staff_action_remove">Remove</string>
+    <string name="staff_action_approve">Approve</string>
+    <string name="staff_action_reject">Reject</string>
+    <string name="staff_action_reopen">Reopen</string>
+    <string name="staff_reason_required">A reason is required.</string>
+    <string name="staff_note_required">A note is required when rejecting.</string>
+    <string name="staff_request_failed">Request failed.</string>
+    <string name="staff_action_succeeded">Done.</string>
+    <string name="staff_filter_status">Status:</string>
+    <string name="staff_status_pending">Pending</string>
+    <string name="staff_status_approved">Approved</string>
+    <string name="staff_status_rejected">Rejected</string>
+    <string name="staff_status_all">All</string>
+    <string name="staff_status_active">Active</string>
+    <string name="staff_status_hidden">Hidden</string>
+    <string name="staff_status_removed">Removed</string>
+    <string name="staff_status_reported_or_nonactive">Reported / non-active</string>
+
+    <!-- Admin tools (admin-only) -->
+    <string name="staff_admin_tools">Admin Tools</string>
+    <string name="staff_admin_tools_desc">All admin functionality in one place.</string>
+    <string name="staff_admin_hubs">Hub Management</string>
+    <string name="staff_admin_hubs_desc">Create, rename, or delete neighborhood hubs.</string>
+    <string name="staff_audit_log">Audit Log</string>
+    <string name="staff_audit_log_desc">Review every staff action taken on the platform.</string>
+    <string name="staff_help_moderation">Help Moderation</string>
+    <string name="staff_help_moderation_desc">Remove abusive help requests, offers, or comments.</string>
+
+    <!-- Hub management -->
+    <string name="hub_create">Create hub</string>
+    <string name="hub_name_hint">Name</string>
+    <string name="hub_slug_hint">Slug (optional)</string>
+    <string name="hub_action_rename">Rename</string>
+    <string name="hub_action_delete">Delete</string>
+    <string name="hub_delete_confirm_title">Delete hub?</string>
+    <string name="hub_delete_confirm_message">This will cascade-delete the hub\'s posts, help requests, and help offers. Continue?</string>
+
+    <!-- Help moderation -->
+    <string name="help_tab_requests">Requests</string>
+    <string name="help_tab_offers">Offers</string>
+
+    <!-- Audit log -->
+    <string name="audit_filter_action_hint">Filter action (e.g. STAFF_ROLE_CHANGED)</string>
+    <string name="audit_filter_target_hint">Filter target type (e.g. POST)</string>
+    <string name="audit_apply">Apply</string>
     <string name="profile_personal_info">Personal Information</string>
     <string name="profile_phone">Phone</string>
     <string name="profile_blood_type">Blood Type</string>

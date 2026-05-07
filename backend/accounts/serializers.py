@@ -2,8 +2,9 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.utils.text import slugify
 
-from .models import Hub, User, Profile, Resource, ExpertiseField, ExpertiseCategory, UserSettings
+from .models import Hub, User, Profile, Resource, ExpertiseField, ExpertiseCategory, UserSettings, StaffAuditLog
 
 
 class UserSettingsSerializer(serializers.ModelSerializer):
@@ -76,23 +77,44 @@ class ExpertiseCategorySerializer(serializers.ModelSerializer):
 
 
 class ExpertiseFieldSerializer(serializers.ModelSerializer):
-    """Serializer for expert-only expertise entries."""
+    """Serializer for expert-only expertise entries.
 
-    category = ExpertiseCategorySerializer(read_only=True)
-    category_id = serializers.PrimaryKeyRelatedField(
-        queryset=ExpertiseCategory.objects.filter(is_active=True),
-        source='category',
-        write_only=True,
-    )
+    Verification fields are read-only here. Non-staff users can never write
+    them through this endpoint; the verification workflow lives behind
+    `IsVerificationCoordinatorOrAdmin` endpoints.
+    """
+
+    reviewed_by_id = serializers.PrimaryKeyRelatedField(source='reviewed_by', read_only=True)
+    reviewed_by_name = serializers.SerializerMethodField()
 
     class Meta:
         model = ExpertiseField
         fields = [
-            'id', 'category', 'category_id', 'is_approved',
-            'certification_level', 'certification_document_url',
-            'created_at', 'updated_at',
+            'id',
+            'field',
+            'certification_level',
+            'certification_document_url',
+            'verification_status',
+            'reviewed_by_id',
+            'reviewed_by_name',
+            'reviewed_at',
+            'verification_note',
+            'created_at',
+            'updated_at',
         ]
-        read_only_fields = ['id', 'is_approved', 'created_at', 'updated_at']
+        read_only_fields = [
+            'id',
+            'verification_status',
+            'reviewed_by_id',
+            'reviewed_by_name',
+            'reviewed_at',
+            'verification_note',
+            'created_at',
+            'updated_at',
+        ]
+
+    def get_reviewed_by_name(self, obj):
+        return obj.reviewed_by.full_name if obj.reviewed_by_id else None
 
 
 class HubSerializer(serializers.ModelSerializer):
@@ -100,6 +122,31 @@ class HubSerializer(serializers.ModelSerializer):
         model = Hub
         fields = ['id', 'name', 'slug']
         read_only_fields = fields
+
+
+class HubWriteSerializer(serializers.ModelSerializer):
+    """Admin-only serializer for creating and updating hubs.
+
+    `slug` is auto-derived from `name` when omitted so admins don't have to
+    spell out the URL slug for every neighborhood.
+    """
+
+    slug = serializers.CharField(required=False, allow_blank=True, max_length=120)
+
+    class Meta:
+        model = Hub
+        fields = ['id', 'name', 'slug']
+        read_only_fields = ['id']
+
+    def validate(self, attrs):
+        slug = (attrs.get('slug') or '').strip()
+        if not slug:
+            base = attrs.get('name') or (self.instance.name if self.instance else '')
+            slug = slugify(base)
+        if not slug:
+            raise serializers.ValidationError({'slug': ['Could not derive a slug; provide one explicitly.']})
+        attrs['slug'] = slug
+        return attrs
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -117,13 +164,96 @@ class UserSerializer(serializers.ModelSerializer):
             'full_name',
             'email',
             'role',
+            'staff_role',
             'neighborhood_address',
             'profile',
             'resources',
             'expertise_fields',
-            'hub', 
+            'hub',
         ]
         read_only_fields = fields
+
+
+class StaffUserListSerializer(serializers.ModelSerializer):
+    """Compact, admin-only user representation for `/staff/users/`."""
+
+    hub = HubSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'full_name',
+            'email',
+            'role',
+            'staff_role',
+            'is_active',
+            'hub',
+            'created_at',
+        ]
+        read_only_fields = fields
+
+
+class StaffRoleUpdateSerializer(serializers.Serializer):
+    staff_role = serializers.ChoiceField(choices=User.StaffRole.choices)
+    reason = serializers.CharField(required=False, allow_blank=True, max_length=500)
+
+
+class AccountStatusUpdateSerializer(serializers.Serializer):
+    is_active = serializers.BooleanField()
+    reason = serializers.CharField(max_length=500)
+
+    def validate_reason(self, value):
+        if not value or not value.strip():
+            raise serializers.ValidationError('A reason is required.')
+        return value.strip()
+
+
+class ExpertiseVerificationDecisionSerializer(serializers.Serializer):
+    """
+    Used by VerificationCoordinator/Admin to decide on an expertise record.
+    Rejection requires a non-empty note; reopen clears the prior decision.
+    """
+
+    status = serializers.ChoiceField(choices=ExpertiseField.VerificationStatus.choices)
+    note = serializers.CharField(required=False, allow_blank=True, max_length=2000)
+
+    def validate(self, attrs):
+        decision = attrs.get('status')
+        note = (attrs.get('note') or '').strip()
+        if decision == ExpertiseField.VerificationStatus.REJECTED and not note:
+            raise serializers.ValidationError({'note': ['A note is required when rejecting.']})
+        attrs['note'] = note
+        return attrs
+
+
+class StaffAuditLogSerializer(serializers.ModelSerializer):
+    actor_email = serializers.SerializerMethodField()
+    target_user_email = serializers.SerializerMethodField()
+
+    class Meta:
+        model = StaffAuditLog
+        fields = [
+            'id',
+            'actor',
+            'actor_email',
+            'target_user',
+            'target_user_email',
+            'target_type',
+            'target_id',
+            'action',
+            'previous_state',
+            'new_state',
+            'reason',
+            'created_at',
+        ]
+        read_only_fields = fields
+
+    def get_actor_email(self, obj):
+        return obj.actor.email if obj.actor_id else None
+
+    def get_target_user_email(self, obj):
+        return obj.target_user.email if obj.target_user_id else None
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -174,6 +304,9 @@ class RegisterSerializer(serializers.Serializer):
         category = validated_data.pop('category_id', None)
         if hub_id is not None:
             validated_data['hub_id'] = hub_id
+        # Defensive: registration must never set staff authority or active state.
+        for forbidden in ('staff_role', 'is_active', 'is_staff', 'is_superuser'):
+            validated_data.pop(forbidden, None)
         user = User.objects.create_user(
             email=validated_data.pop('email'),
             full_name=validated_data.pop('full_name'),

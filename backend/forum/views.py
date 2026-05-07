@@ -17,7 +17,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 import firebase_admin
 from firebase_admin import messaging
 
-from accounts.models import User
+from accounts.audit import record_staff_action
+from accounts.models import StaffAuditLog, User
+from accounts.permissions import IsModeratorOrAdmin, user_is_moderator_or_admin
 
 from .models import Post, Comment, Vote, Report
 from .serializers import (
@@ -97,6 +99,15 @@ class PostDetailView(APIView):
 
     def get(self, request, pk):
         post = self.get_object(pk)
+        # Hidden/removed posts are visible only to the author or to moderators/admins.
+        if post.status != Post.Status.ACTIVE:
+            user = request.user
+            is_author = user.is_authenticated and post.author_id == user.id
+            if not is_author and not user_is_moderator_or_admin(user):
+                return Response(
+                    {'detail': 'This post is no longer available.'},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
         serializer = PostDetailSerializer(post, context={'request': request})
         return Response(serializer.data)
 
@@ -143,11 +154,21 @@ class CommentListCreateView(APIView):
 
     def get(self, request, post_pk):
         post = get_object_or_404(Post, pk=post_pk)
+        if post.status != Post.Status.ACTIVE and not user_is_moderator_or_admin(request.user):
+            return Response(
+                {'detail': 'This post is no longer available.'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         comments = post.comments.all()
         return Response(CommentSerializer(comments, many=True).data)
 
     def post(self, request, post_pk):
         post = get_object_or_404(Post, pk=post_pk)
+        if post.status != Post.Status.ACTIVE:
+            return Response(
+                {'detail': 'Comments are not allowed on this post.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         serializer = CommentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         with transaction.atomic():
@@ -158,21 +179,42 @@ class CommentListCreateView(APIView):
 
 class CommentDeleteView(APIView):
     """
-    DELETE /forum/comments/{id}/  — delete a comment (author only)
+    DELETE /forum/comments/{id}/  — delete a comment.
+
+    Authors may delete their own comments. Moderators and admins may delete
+    any comment; their deletes are recorded in the staff audit log.
     """
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk)
-        if comment.author != request.user:
+        is_author = comment.author_id == request.user.id
+        is_staff = user_is_moderator_or_admin(request.user)
+        if not is_author and not is_staff:
             return Response(
                 {'detail': 'You can only delete your own comments.'},
                 status=status.HTTP_403_FORBIDDEN,
             )
         post_pk = comment.post_id
+        snapshot = {
+            'id': comment.pk,
+            'post_id': post_pk,
+            'author_id': comment.author_id,
+            'content': comment.content,
+        }
+        reason = (request.data.get('reason') if hasattr(request, 'data') else '') or ''
         with transaction.atomic():
             comment.delete()
             Post.objects.filter(pk=post_pk).update(comment_count=F('comment_count') - 1)
+            if is_staff and not is_author:
+                record_staff_action(
+                    actor=request.user,
+                    action=StaffAuditLog.Action.FORUM_COMMENT_DELETED,
+                    target_type=StaffAuditLog.TargetType.COMMENT,
+                    target_id=snapshot['id'],
+                    previous_state=snapshot,
+                    reason=reason,
+                )
         return Response({'detail': 'Comment deleted.'}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -394,3 +436,127 @@ class ImageUploadView(APIView):
             urls.append(f'{settings.MEDIA_URL}{saved}')
 
         return Response({'urls': urls}, status=status.HTTP_201_CREATED)
+
+
+# ── Moderation ────────────────────────────────────────────────────────────────
+
+_MODERATION_ACTIONS = {
+    'HIDE': (Post.Status.HIDDEN, StaffAuditLog.Action.FORUM_POST_HIDDEN),
+    'RESTORE': (Post.Status.ACTIVE, StaffAuditLog.Action.FORUM_POST_RESTORED),
+    'REMOVE': (Post.Status.REMOVED, StaffAuditLog.Action.FORUM_POST_REMOVED),
+}
+
+
+class ForumModerationListView(APIView):
+    """
+    GET /forum/moderation/posts/
+
+    Lists posts that need moderator attention: anything that is no longer
+    `ACTIVE`, plus active posts with at least one report. Filterable by
+    `status`, `forum_type`, `hub`, and minimum `min_reports`.
+    """
+
+    permission_classes = [IsModeratorOrAdmin]
+
+    def get(self, request):
+        qs = Post.objects.all()
+
+        status_filter = request.query_params.get('status')
+        if status_filter:
+            qs = qs.filter(status=status_filter.upper())
+        else:
+            qs = qs.exclude(status=Post.Status.ACTIVE) | qs.filter(report_count__gt=0)
+            qs = qs.distinct()
+
+        forum_type = request.query_params.get('forum_type')
+        if forum_type:
+            qs = qs.filter(forum_type=forum_type.upper())
+
+        hub_id = request.query_params.get('hub')
+        if hub_id:
+            qs = qs.filter(hub_id=hub_id)
+
+        try:
+            min_reports = int(request.query_params.get('min_reports', '0'))
+        except (TypeError, ValueError):
+            min_reports = 0
+        if min_reports > 0:
+            qs = qs.filter(report_count__gte=min_reports)
+
+        return Response(PostListSerializer(qs, many=True, context={'request': request}).data)
+
+
+class ForumPostModerationView(APIView):
+    """
+    PATCH /forum/posts/<id>/moderation/
+
+    Body: {"action": "HIDE" | "RESTORE" | "REMOVE", "reason": "..."}.
+    Destructive actions (HIDE/REMOVE) require a non-empty reason; RESTORE
+    accepts an optional reason.
+    """
+
+    permission_classes = [IsModeratorOrAdmin]
+
+    def patch(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        action_key = (request.data.get('action') or '').upper()
+        reason = (request.data.get('reason') or '').strip()
+
+        if action_key not in _MODERATION_ACTIONS:
+            return Response(
+                {'detail': 'action must be one of HIDE, RESTORE, REMOVE.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        new_status, audit_action = _MODERATION_ACTIONS[action_key]
+        if action_key in ('HIDE', 'REMOVE') and not reason:
+            return Response(
+                {'detail': 'A reason is required for HIDE and REMOVE actions.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        previous = {'status': post.status}
+        with transaction.atomic():
+            post.status = new_status
+            post.save(update_fields=['status'])
+            record_staff_action(
+                actor=request.user,
+                action=audit_action,
+                target_type=StaffAuditLog.TargetType.POST,
+                target_id=post.pk,
+                target_user=post.author,
+                previous_state=previous,
+                new_state={'status': post.status},
+                reason=reason,
+            )
+
+        return Response(PostDetailSerializer(post, context={'request': request}).data)
+
+
+class ForumModerationCommentDeleteView(APIView):
+    """DELETE /forum/moderation/comments/<id>/ — moderator-only direct path."""
+
+    permission_classes = [IsModeratorOrAdmin]
+
+    def delete(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+        snapshot = {
+            'id': comment.pk,
+            'post_id': comment.post_id,
+            'author_id': comment.author_id,
+            'content': comment.content,
+        }
+        reason = (request.data.get('reason') if hasattr(request, 'data') else '') or ''
+        post_pk = comment.post_id
+        with transaction.atomic():
+            comment.delete()
+            Post.objects.filter(pk=post_pk).update(comment_count=F('comment_count') - 1)
+            record_staff_action(
+                actor=request.user,
+                action=StaffAuditLog.Action.FORUM_COMMENT_DELETED,
+                target_type=StaffAuditLog.TargetType.COMMENT,
+                target_id=snapshot['id'],
+                previous_state=snapshot,
+                reason=reason,
+            )
+        return Response({'detail': 'Comment deleted.'}, status=status.HTTP_204_NO_CONTENT)

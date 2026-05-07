@@ -152,6 +152,10 @@ class DashboardActivity : AppCompatActivity() {
         } else {
             txtNeighborhood.visibility = TextView.GONE
         }
+
+        val cardStaffTools = findViewById<MaterialCardView>(R.id.cardStaffTools)
+        cardStaffTools.visibility =
+            if (StaffRoleHelper.hasAnyStaffRole(user.staffRole)) View.VISIBLE else View.GONE
     }
 
     private fun performLogout() {
@@ -190,6 +194,8 @@ class DashboardActivity : AppCompatActivity() {
 
         findViewById<MaterialCardView>(R.id.cardSettings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
+        findViewById<MaterialCardView>(R.id.cardStaffTools).setOnClickListener {
+            startActivity(Intent(this, StaffDashboardActivity::class.java))
         }
     }
 

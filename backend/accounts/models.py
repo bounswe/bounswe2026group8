@@ -40,11 +40,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     Single user model covering both STANDARD and EXPERT users.
     Role is stored as a field; expertise is only meaningful for EXPERT users.
+
+    Application staff authority is independent of the community role and lives
+    on `staff_role`. It is intentionally decoupled from Django's `is_staff` /
+    `is_superuser` flags, which continue to control Django admin access only.
     """
 
     class Role(models.TextChoices):
         STANDARD = 'STANDARD', 'Standard'
         EXPERT = 'EXPERT', 'Expert'
+
+    class StaffRole(models.TextChoices):
+        NONE = 'NONE', 'None'
+        MODERATOR = 'MODERATOR', 'Moderator'
+        VERIFICATION_COORDINATOR = 'VERIFICATION_COORDINATOR', 'Verification Coordinator'
+        ADMIN = 'ADMIN', 'Admin'
 
     # Core identity fields
     email = models.EmailField(unique=True)
@@ -55,6 +65,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=10,
         choices=Role.choices,
         default=Role.STANDARD,
+    )
+    staff_role = models.CharField(
+        max_length=32,
+        choices=StaffRole.choices,
+        default=StaffRole.NONE,
     )
     hub = models.ForeignKey(
         Hub,
@@ -86,7 +101,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'{self.full_name} <{self.email}> [{self.role}]'
+        return f'{self.full_name} <{self.email}> [{self.role}/{self.staff_role}]'
 
 
 class UserSettings(models.Model):
@@ -218,6 +233,11 @@ class ExpertiseField(models.Model):
         BEGINNER = 'BEGINNER', 'Beginner'
         ADVANCED = 'ADVANCED', 'Advanced'
 
+    class VerificationStatus(models.TextChoices):
+        PENDING = 'PENDING', 'Pending'
+        APPROVED = 'APPROVED', 'Approved'
+        REJECTED = 'REJECTED', 'Rejected'
+
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='expertise_fields')
     category = models.ForeignKey(
         ExpertiseCategory,
@@ -232,11 +252,97 @@ class ExpertiseField(models.Model):
     )
     certification_document_url = models.CharField(max_length=500, blank=True, null=True)
 
+    # Verification workflow handled by VERIFICATION_COORDINATOR / ADMIN staff.
+    verification_status = models.CharField(
+        max_length=10,
+        choices=VerificationStatus.choices,
+        default=VerificationStatus.PENDING,
+    )
+    reviewed_by = models.ForeignKey(
+        'User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='reviewed_expertise_fields',
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    verification_note = models.TextField(blank=True, default='')
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.category.name} ({self.certification_level}) — {self.user.email}'
+
+
+class StaffAuditLog(models.Model):
+    """
+    Append-only record of every application staff action.
+
+    Stored in the same database transaction as the action itself so the log
+    always reflects what actually happened. There is no API for editing or
+    deleting these rows.
+    """
+
+    class TargetType(models.TextChoices):
+        USER = 'USER', 'User'
+        POST = 'POST', 'Forum Post'
+        COMMENT = 'COMMENT', 'Forum Comment'
+        HELP_REQUEST = 'HELP_REQUEST', 'Help Request'
+        HELP_OFFER = 'HELP_OFFER', 'Help Offer'
+        HELP_COMMENT = 'HELP_COMMENT', 'Help Comment'
+        EXPERTISE_FIELD = 'EXPERTISE_FIELD', 'Expertise Field'
+        HUB = 'HUB', 'Hub'
+
+    class Action(models.TextChoices):
+        STAFF_ROLE_CHANGED = 'STAFF_ROLE_CHANGED', 'Staff role changed'
+        USER_SUSPENDED = 'USER_SUSPENDED', 'User suspended'
+        USER_REACTIVATED = 'USER_REACTIVATED', 'User reactivated'
+        FORUM_POST_HIDDEN = 'FORUM_POST_HIDDEN', 'Forum post hidden'
+        FORUM_POST_RESTORED = 'FORUM_POST_RESTORED', 'Forum post restored'
+        FORUM_POST_REMOVED = 'FORUM_POST_REMOVED', 'Forum post removed'
+        FORUM_COMMENT_DELETED = 'FORUM_COMMENT_DELETED', 'Forum comment deleted'
+        HELP_REQUEST_DELETED = 'HELP_REQUEST_DELETED', 'Help request deleted'
+        HELP_OFFER_DELETED = 'HELP_OFFER_DELETED', 'Help offer deleted'
+        HELP_COMMENT_DELETED = 'HELP_COMMENT_DELETED', 'Help comment deleted'
+        EXPERTISE_APPROVED = 'EXPERTISE_APPROVED', 'Expertise approved'
+        EXPERTISE_REJECTED = 'EXPERTISE_REJECTED', 'Expertise rejected'
+        EXPERTISE_REOPENED = 'EXPERTISE_REOPENED', 'Expertise reopened'
+        HUB_CREATED = 'HUB_CREATED', 'Hub created'
+        HUB_UPDATED = 'HUB_UPDATED', 'Hub updated'
+        HUB_DELETED = 'HUB_DELETED', 'Hub deleted'
+
+    actor = models.ForeignKey(
+        'User',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='staff_audit_actions',
+    )
+    target_user = models.ForeignKey(
+        'User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='staff_audit_targets',
+    )
+    target_type = models.CharField(max_length=32, choices=TargetType.choices)
+    target_id = models.CharField(max_length=64, blank=True, default='')
+    action = models.CharField(max_length=64, choices=Action.choices)
+    previous_state = models.JSONField(default=dict, blank=True)
+    new_state = models.JSONField(default=dict, blank=True)
+    reason = models.TextField(blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['target_type', 'target_id']),
+            models.Index(fields=['action', '-created_at']),
+        ]
+
+    def __str__(self):
+        actor_label = self.actor.email if self.actor_id else 'system'
+        return f'{actor_label} {self.action} {self.target_type}:{self.target_id}'
 
 
 # Automatically create Profile when User is created
