@@ -8,6 +8,9 @@ from .views import (
     ReportView,
     RepostView,
     ImageUploadView,
+    ForumModerationListView,
+    ForumPostModerationView,
+    ForumModerationCommentDeleteView,
 )
 
 urlpatterns = [
@@ -19,4 +22,13 @@ urlpatterns = [
     path('posts/<int:post_pk>/repost/', RepostView.as_view(), name='repost'),
     path('comments/<int:pk>/', CommentDeleteView.as_view(), name='comment-delete'),
     path('upload/', ImageUploadView.as_view(), name='image-upload'),
+
+    # ── Moderation (moderators / admins) ──────────────────────────────────────
+    path('moderation/posts/', ForumModerationListView.as_view(), name='forum-moderation-list'),
+    path('posts/<int:pk>/moderation/', ForumPostModerationView.as_view(), name='forum-post-moderation'),
+    path(
+        'moderation/comments/<int:pk>/',
+        ForumModerationCommentDeleteView.as_view(),
+        name='forum-moderation-comment-delete',
+    ),
 ]
