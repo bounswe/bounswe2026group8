@@ -4,7 +4,30 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.text import slugify
 
-from .models import Hub, User, Profile, Resource, ExpertiseField, StaffAuditLog, ExpertiseCategory
+from .models import Hub, User, Profile, Resource, ExpertiseField, ExpertiseCategory, UserSettings, StaffAuditLog
+
+
+class UserSettingsSerializer(serializers.ModelSerializer):
+    """Serializer for notification and public-profile privacy settings."""
+
+    class Meta:
+        model = UserSettings
+        fields = [
+            'notify_help_requests',
+            'notify_urgent_posts',
+            'notify_expertise_matches_only',
+            'show_phone_number',
+            'show_emergency_contact',
+            'show_medical_info',
+            'show_availability_status',
+            'show_bio',
+            'show_location',
+            'show_resources',
+            'show_expertise',
+            'created_at',
+            'updated_at',
+        ]
+        read_only_fields = ['created_at', 'updated_at']
 
 
 class ProfileSerializer(serializers.ModelSerializer):

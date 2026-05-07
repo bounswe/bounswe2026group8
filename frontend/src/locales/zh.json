@@ -41,6 +41,7 @@
       "forum": {"title": "论坛", "desc": "社区讨论"},
       "help_requests": {"title": "求助", "desc": "寻求或提供帮助"},
       "profile": {"title": "个人资料", "desc": "管理您的账户"},
+      "settings": {"title": "设置", "desc": "通知和隐私"},
       "emergency_info": {"title": "应急信息", "desc": "获取关键数据"},
       "offline_messages": {"title": "离线消息", "desc": "已同步至服务器的离线论坛"}
     }

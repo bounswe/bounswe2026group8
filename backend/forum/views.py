@@ -361,7 +361,10 @@ def _send_urgent_post_notification(post):
         return
 
     # Determine target users: hub members or all users
-    users = User.objects.filter(is_active=True).exclude(fcm_token__isnull=True).exclude(fcm_token='')
+    users = User.objects.filter(
+        is_active=True,
+        settings__notify_urgent_posts=True,
+    ).exclude(fcm_token__isnull=True).exclude(fcm_token='')
     if post.hub_id:
         users = users.filter(hub_id=post.hub_id)
     # Exclude the post author

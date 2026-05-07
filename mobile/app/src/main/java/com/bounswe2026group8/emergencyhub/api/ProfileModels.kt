@@ -30,6 +30,36 @@ data class ProfileUpdateRequest(
     @SerializedName("emergency_contact") val emergencyContact: String? = null,
 )
 
+// Settings
+
+data class UserSettingsData(
+    @SerializedName("notify_help_requests") val notifyHelpRequests: Boolean,
+    @SerializedName("notify_urgent_posts") val notifyUrgentPosts: Boolean,
+    @SerializedName("notify_expertise_matches_only") val notifyExpertiseMatchesOnly: Boolean,
+    @SerializedName("show_phone_number") val showPhoneNumber: Boolean,
+    @SerializedName("show_emergency_contact") val showEmergencyContact: Boolean,
+    @SerializedName("show_medical_info") val showMedicalInfo: Boolean,
+    @SerializedName("show_availability_status") val showAvailabilityStatus: Boolean,
+    @SerializedName("show_bio") val showBio: Boolean,
+    @SerializedName("show_location") val showLocation: Boolean,
+    @SerializedName("show_resources") val showResources: Boolean,
+    @SerializedName("show_expertise") val showExpertise: Boolean,
+)
+
+data class UserSettingsUpdateRequest(
+    @SerializedName("notify_help_requests") val notifyHelpRequests: Boolean? = null,
+    @SerializedName("notify_urgent_posts") val notifyUrgentPosts: Boolean? = null,
+    @SerializedName("notify_expertise_matches_only") val notifyExpertiseMatchesOnly: Boolean? = null,
+    @SerializedName("show_phone_number") val showPhoneNumber: Boolean? = null,
+    @SerializedName("show_emergency_contact") val showEmergencyContact: Boolean? = null,
+    @SerializedName("show_medical_info") val showMedicalInfo: Boolean? = null,
+    @SerializedName("show_availability_status") val showAvailabilityStatus: Boolean? = null,
+    @SerializedName("show_bio") val showBio: Boolean? = null,
+    @SerializedName("show_location") val showLocation: Boolean? = null,
+    @SerializedName("show_resources") val showResources: Boolean? = null,
+    @SerializedName("show_expertise") val showExpertise: Boolean? = null,
+)
+
 // ── Resource ────────────────────────────────────────────────────────────────────
 
 data class ResourceData(

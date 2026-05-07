@@ -104,6 +104,40 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f'{self.full_name} <{self.email}> [{self.role}/{self.staff_role}]'
 
 
+class UserSettings(models.Model):
+    """User-controlled notification and public-profile privacy preferences."""
+
+    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='settings')
+
+    # Notifications
+    notify_help_requests = models.BooleanField(default=True)
+    notify_urgent_posts = models.BooleanField(default=True)
+    notify_expertise_matches_only = models.BooleanField(
+        default=False,
+        help_text='If true, expert fallback notifications are skipped unless expertise matches.',
+    )
+
+    # Public profile visibility
+    show_phone_number = models.BooleanField(default=False)
+    show_emergency_contact = models.BooleanField(default=False)
+    show_medical_info = models.BooleanField(default=False)
+    show_availability_status = models.BooleanField(default=True)
+    show_bio = models.BooleanField(default=True)
+    show_location = models.BooleanField(default=True)
+    show_resources = models.BooleanField(default=True)
+    show_expertise = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'User settings'
+        verbose_name_plural = 'User settings'
+
+    def __str__(self):
+        return f'Settings for {self.user.email}'
+
+
 class Profile(models.Model):
     """Extended profile attributes linked to a single user."""
 
@@ -320,6 +354,7 @@ from django.dispatch import receiver
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+        UserSettings.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
@@ -329,3 +364,8 @@ def save_user_profile(sender, instance, created, **kwargs):
             instance.profile.save()
         except Profile.DoesNotExist:
             Profile.objects.create(user=instance)
+        try:
+            instance.settings.save()
+        except UserSettings.DoesNotExist:
+            UserSettings.objects.create(user=instance)
+

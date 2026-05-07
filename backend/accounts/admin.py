@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Hub, User, Profile, StaffAuditLog, ExpertiseCategory, ExpertiseField
+from .models import Hub, User, Profile, StaffAuditLog, ExpertiseCategory, ExpertiseField, UserSettings
 
 
 @admin.register(ExpertiseCategory)
@@ -22,6 +22,27 @@ class ExpertiseFieldAdmin(admin.ModelAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'phone_number', 'preferred_language', 'created_at')
     search_fields = ('user__email', 'user__full_name', 'phone_number')
+    readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(UserSettings)
+class UserSettingsAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'notify_help_requests',
+        'notify_urgent_posts',
+        'show_phone_number',
+        'show_emergency_contact',
+        'updated_at',
+    )
+    list_filter = (
+        'notify_help_requests',
+        'notify_urgent_posts',
+        'notify_expertise_matches_only',
+        'show_resources',
+        'show_expertise',
+    )
+    search_fields = ('user__email', 'user__full_name')
     readonly_fields = ('created_at', 'updated_at')
 
 
