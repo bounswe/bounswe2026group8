@@ -72,6 +72,11 @@
       "most_liked": "En Çok Beğenilen",
       "hot": "Popüler"
     },
+    "filter": {
+      "all": "Tümü",
+      "experts": "Uzmanlar",
+      "standard_users": "Standart Kullanıcılar"
+    },
     "empty_states": {
       "loading": "Gönderiler yükleniyor...",
       "select_hub": "{{tab}} gönderilerini görmek için bir merkez seçin.",

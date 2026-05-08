@@ -58,6 +58,7 @@ export default function ForumPage() {
           : 'GLOBAL';
   const setTab = (t) => setSearchParams({ tab: t }, { replace: true });
   const [sortBy, setSortBy] = useState('newest');
+  const [roleFilter, setRoleFilter] = useState('ALL');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copiedId, setCopiedId] = useState(null);
@@ -86,8 +87,9 @@ export default function ForumPage() {
 
   useEffect(() => {
     setLoading(true);
+    const roleFilterParam = roleFilter !== 'ALL' ? roleFilter : null;
     if (tab === 'GLOBAL') {
-      getPosts({ forumType: 'GLOBAL' }).then(({ ok, data }) => {
+      getPosts({ forumType: 'GLOBAL', authorRole: roleFilterParam }).then(({ ok, data }) => {
         if (ok) setPosts(data);
         setLoading(false);
       });
@@ -98,11 +100,11 @@ export default function ForumPage() {
       setLoading(false);
       return;
     }
-    getPosts({ hub: selectedHub.id, forumType: tab }).then(({ ok, data }) => {
+    getPosts({ hub: selectedHub.id, forumType: tab, authorRole: roleFilterParam }).then(({ ok, data }) => {
       if (ok) setPosts(data);
       setLoading(false);
     });
-  }, [user, tab]);
+  }, [user, tab, roleFilter]);
 
   useEffect(() => {
     if (!loading && scrollRef.current) {
@@ -223,6 +225,18 @@ export default function ForumPage() {
                     onClick={() => setSortBy(s)}
                 >
                   {s === 'newest' ? t('forum.sort.newest') : s === 'most_liked' ? t('forum.sort.most_liked') : t('forum.sort.hot')}
+                </button>
+            ))}
+          </div>
+
+          <div className="forum-role-filter">
+            {['All', 'Experts', 'Standard Users'].map((role) => (
+                <button
+                    key={role}
+                    className={`forum-role-btn ${roleFilter === role ? 'forum-role-btn--active' : ''}`}
+                    onClick={() => setRoleFilter(role)}
+                >
+                  {role === 'All' ? t('forum.filter.all') : role === 'Experts' ? t('forum.filter.experts') : t('forum.filter.standard_users')}
                 </button>
             ))}
           </div>

@@ -51,6 +51,12 @@ class PostListCreateView(APIView):
         author_id = request.query_params.get('author')
         if author_id:
             qs = qs.filter(author_id=author_id)
+        
+        # Filter by author role (EXPERT, STANDARD, or ALL)
+        author_role = request.query_params.get('author_role')
+        if author_role and author_role.upper() in ('EXPERT', 'STANDARD'):
+            qs = qs.filter(author__role=author_role.upper())
+        
         forum_type = request.query_params.get('forum_type')
         if forum_type:
             ft = forum_type.upper()

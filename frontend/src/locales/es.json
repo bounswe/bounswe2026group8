@@ -72,6 +72,11 @@
       "most_liked": "Con Más Me Gusta",
       "hot": "Populares"
     },
+    "filter": {
+      "all": "Todos",
+      "experts": "Expertos",
+      "standard_users": "Usuarios Estándar"
+    },
     "empty_states": {
       "loading": "Cargando publicaciones...",
       "select_hub": "Selecciona un centro para ver las publicaciones en {{tab}}.",
