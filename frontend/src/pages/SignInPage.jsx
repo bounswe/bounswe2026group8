@@ -109,6 +109,18 @@ export default function SignInPage() {
             </button>
           </form>
 
+          <div className="auth-tutorial-divider">
+            <span>{t('tutorial.common.newHere')}</span>
+          </div>
+
+          <button
+              type="button"
+              className="btn btn-secondary btn-block auth-tutorial-btn"
+              onClick={() => navigate('/tutorial')}
+          >
+            {t('tutorial.common.tryScenario')}
+          </button>
+
           <p className="auth-footer">
             {t('sign_in.footer.no_account')}{' '}
             <Link to="/signup" className="link">

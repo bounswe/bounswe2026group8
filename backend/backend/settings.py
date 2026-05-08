@@ -139,7 +139,10 @@ if (
     and _firebase_cred_path.stat().st_size > 0
     and not firebase_admin._apps
 ):
-    _cred = credentials.Certificate(str(_firebase_cred_path))
-    firebase_admin.initialize_app(_cred)
+    try:
+        _cred = credentials.Certificate(str(_firebase_cred_path))
+        firebase_admin.initialize_app(_cred)
+    except Exception as exc:
+        print(f"Firebase credentials could not be loaded. Push notifications disabled. ({exc})")
 else:
     print("Firebase credentials missing or empty. Push notifications disabled.")

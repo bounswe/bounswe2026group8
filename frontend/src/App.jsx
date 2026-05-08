@@ -23,6 +23,13 @@ import EmergencyInfoPage from './pages/EmergencyInfoPage';
 import EmergencyMapPage from './pages/EmergencyMapPage';
 import OfflineMessagesPage from './pages/OfflineMessagesPage';
 import OfflineMessageDetailPage from './pages/OfflineMessageDetailPage';
+import DashboardPageTutorial from './pages/DashboardPage_tutorial';
+import ForumPageTutorial from './pages/ForumPage_tutorial';
+import PostDetailPageTutorial from './pages/PostDetailPage_tutorial';
+import PostCreatePageTutorial from './pages/PostCreatePage_tutorial';
+import HelpRequestsPageTutorial from './pages/HelpRequestsPage_tutorial';
+import HelpRequestDetailPageTutorial from './pages/HelpRequestDetailPage_tutorial';
+import HelpRequestCreatePageTutorial from './pages/HelpRequestCreatePage_tutorial';
 import StaffDashboardPage from './pages/StaffDashboardPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminHubsPage from './pages/AdminHubsPage';
@@ -48,6 +55,14 @@ return (
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />
+          <Route path="/tutorial" element={<DashboardPageTutorial />} />
+          <Route path="/tutorial/forum" element={<ForumPageTutorial />} />
+          <Route path="/tutorial/forum/posts/:id" element={<PostDetailPageTutorial />} />
+          <Route path="/tutorial/forum/new" element={<PostCreatePageTutorial />} />
+          <Route path="/tutorial/help-requests" element={<HelpRequestsPageTutorial />} />
+          <Route path="/tutorial/help-requests/:id" element={<HelpRequestDetailPageTutorial />} />
+          <Route path="/tutorial/help-requests/new" element={<HelpRequestCreatePageTutorial />} />
+          <Route path="/tutorial/emergency-info" element={<EmergencyInfoPage tutorialMode />} />
           <Route
             path="/dashboard"
             element={

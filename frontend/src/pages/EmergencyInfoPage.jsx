@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChecklistModal from './EmergencyChecklistPage';
 import { useTranslation } from 'react-i18next';
+import useTutorialGuide from '../components/TutorialGuide';
 
 const SECTIONS_META = [
     {
@@ -17,10 +18,22 @@ const SECTIONS_META = [
     },
 ];
 
-export default function EmergencyInfoPage() {
+export default function EmergencyInfoPage({ tutorialMode = false }) {
     const navigate = useNavigate();
     const [checklistOpen, setChecklistOpen] = useState(false);
     const { t } = useTranslation(); // Initialize hook
+    const EMERGENCY_INFO_TOUR_STEPS = [
+        { target: 'overview', title: t('tutorial.emergencyInfo.steps.overviewTitle'), text: t('tutorial.emergencyInfo.steps.overviewText') },
+        { target: 'checklist', title: t('tutorial.emergencyInfo.steps.checklistTitle'), text: t('tutorial.emergencyInfo.steps.checklistText') },
+        { target: 'map', title: t('tutorial.emergencyInfo.steps.mapTitle'), text: t('tutorial.emergencyInfo.steps.mapText') },
+    ];
+    const visibleSections = tutorialMode
+        ? SECTIONS_META.filter((s) => s.id !== 'map')
+        : SECTIONS_META;
+    const { activeStep, GuidePanel, RestartButton } = useTutorialGuide({
+        storageKey: 'emergencyHubEmergencyInfoTutorialSeen',
+        steps: EMERGENCY_INFO_TOUR_STEPS,
+    });
 
     const handleCardClick = (s) => {
         if (s.id === 'checklist') {
@@ -31,11 +44,11 @@ export default function EmergencyInfoPage() {
     };
 
     return (
-        <div className="page emergency-info-page">
+        <div className={`page emergency-info-page ${tutorialMode ? 'tutorial-page' : ''}`}>
             <header className="dashboard-header page-main-header">
                 <button
                     className="btn btn-secondary btn-sm"
-                    onClick={() => navigate('/dashboard')}
+                    onClick={() => navigate(tutorialMode ? '/tutorial' : '/dashboard')}
                 >
                     &larr; {t('emergency_info.header.back')}
                 </button>
@@ -47,7 +60,27 @@ export default function EmergencyInfoPage() {
                         {t('emergency_info.header.subtitle')}
                     </p>
                 </div>
+                {tutorialMode && (
+                    <div className="tutorial-header-actions">
+                        {RestartButton}
+                    </div>
+                )}
             </header>
+
+            {tutorialMode && GuidePanel}
+
+            {tutorialMode && (
+                <div className={`tutorial-scenario-strip ${activeStep?.target === 'overview' ? 'tutorial-tour-highlight' : ''}`}>
+                    <div>
+                        <strong>{t('tutorial.common.currentSituation')}</strong>
+                        <span>{t('tutorial.emergencyInfo.situationText')}</span>
+                    </div>
+                    <div>
+                        <strong>{t('tutorial.common.nextAction')}</strong>
+                        <span>{t('tutorial.emergencyInfo.actionText')}</span>
+                    </div>
+                </div>
+            )}
 
             <div
                 style={{
@@ -57,9 +90,10 @@ export default function EmergencyInfoPage() {
                     marginTop: '24px',
                 }}
             >
-                {SECTIONS_META.map((s) => (
+                {visibleSections.map((s) => (
                     <button
                         key={s.id}
+                        className={tutorialMode && activeStep?.target === s.id ? 'tutorial-tour-highlight' : ''}
                         onClick={() => handleCardClick(s)}
                         style={{
                             background: 'var(--bg-card)',
@@ -100,6 +134,39 @@ export default function EmergencyInfoPage() {
                         </p>
                     </button>
                 ))}
+                {tutorialMode && (
+                    <button
+                        className={activeStep?.target === 'map' ? 'tutorial-tour-highlight' : ''}
+                        style={{
+                            background: 'var(--bg-card)',
+                            border: '1px solid #38bdf833',
+                            borderRadius: 'var(--radius-lg)',
+                            padding: '28px 24px',
+                            cursor: 'not-allowed',
+                            textAlign: 'left',
+                            opacity: 0.72,
+                            backdropFilter: 'blur(8px)',
+                        }}
+                        disabled
+                    >
+                        <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '12px' }}>
+                            {t('tutorial.emergencyInfo.mapLabel')}
+                        </span>
+                        <h2
+                            style={{
+                                color: '#38bdf8',
+                                fontSize: '1.2rem',
+                                fontWeight: 700,
+                                marginBottom: '8px',
+                            }}
+                        >
+                            {t('tutorial.emergencyInfo.mapPreview')}
+                        </h2>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.5 }}>
+                            {t('tutorial.emergencyInfo.mapDesc')}
+                        </p>
+                    </button>
+                )}
             </div>
 
             <ChecklistModal open={checklistOpen} onClose={() => setChecklistOpen(false)} />
