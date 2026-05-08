@@ -11,7 +11,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Hub, User, Resource, ExpertiseField, ExpertiseCategory
+from .models import Hub, User, Resource, ExpertiseField, ExpertiseCategory, UserSettings
 
 
 class RegisterTests(TestCase):
@@ -275,6 +275,45 @@ class ProfileTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
+class UserSettingsTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            email='settings@example.com',
+            full_name='Settings User',
+            password='StrongPass123!',
+        )
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {str(refresh.access_token)}')
+
+    def test_settings_created_for_new_user(self):
+        """New users automatically get notification/privacy settings."""
+        self.assertTrue(UserSettings.objects.filter(user=self.user).exists())
+
+    def test_get_settings(self):
+        """GET /settings returns notification and privacy preferences."""
+        response = self.client.get('/settings')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['notify_help_requests'])
+        self.assertIn('show_phone_number', response.data)
+
+    def test_patch_settings(self):
+        """PATCH /settings updates individual preferences."""
+        response = self.client.patch(
+            '/settings',
+            {'notify_help_requests': False, 'show_resources': False},
+            format='json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data['notify_help_requests'])
+        self.assertFalse(response.data['show_resources'])
+
+    def test_settings_unauthenticated_returns_401(self):
+        """Unauthenticated GET /settings returns 401."""
+        response = APIClient().get('/settings')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
 class UserPublicProfileTests(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -296,6 +335,41 @@ class UserPublicProfileTests(TestCase):
         response = self.client.get(f'/users/{self.other.pk}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['full_name'], 'Other User')
+        self.assertNotIn('settings', response.data)
+
+    def test_public_profile_respects_privacy_settings(self):
+        """Public profile hides fields disabled in the target user's settings."""
+        self.other.profile.phone_number = '+905551112233'
+        self.other.profile.emergency_contact = 'Friend'
+        self.other.profile.emergency_contact_phone = '+905554445566'
+        self.other.profile.blood_type = 'A+'
+        self.other.profile.special_needs = 'Medication'
+        self.other.profile.bio = 'Public bio'
+        self.other.profile.save()
+        Resource.objects.create(user=self.other, name='Tent', category='SHELTER', quantity=1)
+        category = ExpertiseCategory.objects.get(name='First Aid')
+        self.other.role = User.Role.EXPERT
+        self.other.save(update_fields=['role'])
+        ExpertiseField.objects.create(user=self.other, category=category)
+        self.other.settings.show_phone_number = False
+        self.other.settings.show_emergency_contact = False
+        self.other.settings.show_medical_info = False
+        self.other.settings.show_bio = False
+        self.other.settings.show_resources = False
+        self.other.settings.show_expertise = False
+        self.other.settings.save()
+
+        response = self.client.get(f'/users/{self.other.pk}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNone(response.data['profile']['phone_number'])
+        self.assertIsNone(response.data['profile']['emergency_contact'])
+        self.assertIsNone(response.data['profile']['emergency_contact_phone'])
+        self.assertIsNone(response.data['profile']['blood_type'])
+        self.assertIsNone(response.data['profile']['special_needs'])
+        self.assertIsNone(response.data['profile']['bio'])
+        self.assertEqual(response.data['resources'], [])
+        self.assertEqual(response.data['expertise_fields'], [])
 
     def test_get_public_profile_unauthenticated_returns_401(self):
         """Unauthenticated request to /users/<id>/ returns 401."""

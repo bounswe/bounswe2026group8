@@ -38,26 +38,12 @@
       "available_to_help": "Yardım Edebilir"
     },
     "features": {
-      "forum": {
-        "title": "Forum",
-        "desc": "Topluluk tartışmaları"
-      },
-      "help_requests": {
-        "title": "Yardım Talepleri",
-        "desc": "Yardım edin / talep edin"
-      },
-      "profile": {
-        "title": "Profil",
-        "desc": "Profilinizi düzenleyin"
-      },
-      "emergency_info": {
-        "title": "Acil Durum Bilgileri",
-        "desc": "Kritik bilgi erişimi"
-      },
-      "offline_messages": {
-        "title": "Çevrimdışı Mesajlar",
-        "desc": "Sunucuya senkronlanan çevrimdışı forum"
-      }
+      "forum": {"title": "Forum", "desc": "Topluluk tartışmaları"},
+      "help_requests": {"title": "Yardım Talepleri", "desc": "Yardım edin / talep edin"},
+      "profile": {"title": "Profil", "desc": "Profilinizi düzenleyin"},
+      "settings": {"title": "Ayarlar", "desc": "Bildirimler ve gizlilik"},
+      "emergency_info": {"title": "Acil Durum Bilgileri", "desc": "Kritik bilgi erişimi"},
+      "offline_messages": {"title": "Çevrimdışı Mesajlar", "desc": "Sunucuya senkronlanan çevrimdışı forum"}
     }
   },
   "forum": {

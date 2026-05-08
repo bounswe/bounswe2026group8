@@ -34,6 +34,9 @@ class MeshSyncManager(
         private const val KEY_DISPLAY_NAME = "display_name"
         private const val KEY_SHARE_LOCATION = "share_location"
 
+        // Cap relay hops to bound flooding in dense meshes.
+        private const val MAX_RELAY_HOPS = 5
+
         /** Get or create the stable device ID without creating a full SyncManager. */
         fun getDeviceId(context: Context): String {
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -243,7 +246,7 @@ class MeshSyncManager(
         when (MeshProtocol.getType(data)) {
             MeshProtocol.TYPE_INVENTORY -> handleInventory(deviceId, data)
             MeshProtocol.TYPE_REQUEST -> handleRequest(deviceId, data)
-            MeshProtocol.TYPE_MESSAGES -> handleMessages(data)
+            MeshProtocol.TYPE_MESSAGES -> handleMessages(deviceId, data)
             else -> Log.w(TAG, "Unknown payload type: ${data[0]}")
         }
     }
@@ -298,17 +301,41 @@ class MeshSyncManager(
     }
 
     /**
-     * Received messages from a peer. Store them locally.
+     * Received messages from a peer. Store them locally and relay any that are
+     * new to us onward to our other connected peers — so that in a 3+ node
+     * mesh, a message reaches devices that aren't directly connected to the
+     * originator. Bounded by hopCount to prevent loops.
      */
-    private fun handleMessages(data: ByteArray) {
+    private fun handleMessages(fromDeviceId: String, data: ByteArray) {
         scope.launch {
             val messages = MeshProtocol.decodeMessages(data)
-            // Set receivedAt to now for all incoming messages
             val now = System.currentTimeMillis()
             val withTimestamp = messages.map { it.copy(receivedAt = now) }
-            dao.insertMessages(withTimestamp)
-            Log.d(TAG, "Stored ${messages.size} messages from peer")
+
+            val existingIds = dao.getAllMessageIds().toSet()
+            val newMessages = withTimestamp.filter { it.id !in existingIds }
+            if (newMessages.isEmpty()) {
+                Log.d(TAG, "Received ${messages.size} messages from $fromDeviceId — all already known")
+                return@launch
+            }
+
+            dao.insertMessages(newMessages)
+            Log.d(TAG, "Stored ${newMessages.size} new messages from $fromDeviceId")
             onMessagesUpdated?.invoke()
+
+            val toRelay = newMessages
+                .filter { it.hopCount < MAX_RELAY_HOPS }
+                .map { it.copy(hopCount = it.hopCount + 1) }
+            if (toRelay.isEmpty()) return@launch
+
+            val others = transport.getConnectedPeerIds().filter { it != fromDeviceId }
+            if (others.isEmpty()) return@launch
+
+            val payload = MeshProtocol.encodeMessages(toRelay)
+            for (peerId in others) {
+                transport.sendPayload(peerId, payload)
+            }
+            Log.d(TAG, "Relayed ${toRelay.size} messages to ${others.size} peers")
         }
     }
 

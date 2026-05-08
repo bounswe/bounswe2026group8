@@ -64,6 +64,7 @@
         <activity android:name=".ui.HelpOfferListActivity" android:exported="false" />
         <activity android:name=".ui.CreateHelpOfferActivity" android:exported="false" />
         <activity android:name=".ui.ProfileActivity" android:exported="false" />
+        <activity android:name=".ui.SettingsActivity" android:exported="false" />
         <activity android:name=".ui.ForumActivity" android:exported="false" />
         <activity android:name=".ui.CreatePostActivity" android:exported="false" />
         <activity android:name=".ui.PostDetailActivity" android:exported="false" />
@@ -89,6 +90,16 @@
             android:name=".mesh.MeshForegroundService"
             android:exported="false"
             android:foregroundServiceType="connectedDevice" />
+
+        <!-- Staff / admin -->
+        <activity android:name=".ui.StaffDashboardActivity" android:exported="false" />
+        <activity android:name=".ui.AdminToolsActivity" android:exported="false" />
+        <activity android:name=".ui.AdminUsersActivity" android:exported="false" />
+        <activity android:name=".ui.HubManagementActivity" android:exported="false" />
+        <activity android:name=".ui.AuditLogActivity" android:exported="false" />
+        <activity android:name=".ui.ForumModerationActivity" android:exported="false" />
+        <activity android:name=".ui.HelpModerationActivity" android:exported="false" />
+        <activity android:name=".ui.ExpertiseVerificationActivity" android:exported="false" />
 
         <service
             android:name=".fcm.MyFirebaseMessagingService"
