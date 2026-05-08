@@ -679,6 +679,17 @@
      flex: 1;
      overflow-y: auto;
      padding: 0.5rem 0;
+     min-height: 0;
+   }
+
+   .forum-layout.tutorial-page {
+     height: auto;
+     min-height: calc(100vh - 3.5rem);
+   }
+
+   .forum-layout.tutorial-page .forum-scroll {
+     flex: none;
+     overflow: visible;
    }
    
    .forum-bottom {
@@ -2800,7 +2811,23 @@
 }
 
 .tutorial-post-card .post-card-body {
-  cursor: default;
+  cursor: pointer;
+}
+
+.tutorial-post-card--selected {
+  border-color: rgba(56, 189, 248, 0.7);
+}
+
+.tutorial-post-card {
+  cursor: pointer;
+}
+
+.tutorial-help-request-card {
+  cursor: pointer;
+}
+
+.tutorial-help-request-card:hover {
+  border-color: var(--accent);
 }
 
 .tutorial-post-body {
@@ -2827,6 +2854,84 @@
   margin-bottom: 1rem;
 }
 
+.tutorial-practice-panel h3 {
+  font-size: 0.98rem;
+  margin-bottom: 0.45rem;
+}
+
+.tutorial-create-post-card {
+  max-width: 680px;
+}
+
+.tutorial-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tutorial-field-hint {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+}
+
+.tutorial-post-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.tutorial-post-preview h3 {
+  font-size: 1.05rem;
+  margin: 0.65rem 0 0.4rem;
+}
+
+.tutorial-post-preview p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.tutorial-preview-images {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.tutorial-preview-images span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.tutorial-comment-form {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.9rem 0;
+}
+
+.tutorial-comment-form input {
+  min-width: 0;
+}
+
+.tutorial-comment-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tutorial-comment-list p {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.75rem;
+  margin: 0;
+}
+
 .tutorial-alert {
   color: var(--text-primary);
 }
@@ -2845,8 +2950,19 @@
 
 .tutorial-tour-highlight {
   position: relative;
-  outline: 2px solid rgba(56, 189, 248, 0.85);
-  box-shadow: 0 0 0 8px rgba(56, 189, 248, 0.16), 0 18px 40px rgba(2, 6, 23, 0.45);
+  outline: 2px solid rgba(245, 158, 11, 0.95);
+  box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.2), 0 18px 40px rgba(2, 6, 23, 0.45);
+}
+
+button.tutorial-tour-highlight,
+.btn.tutorial-tour-highlight,
+.forum-sort-btn.tutorial-tour-highlight,
+.forum-tab.tutorial-tour-highlight,
+.help-tab.tutorial-tour-highlight {
+  border-color: #f59e0b;
+  outline: 3px solid rgba(251, 191, 36, 0.98);
+  box-shadow: 0 0 0 7px rgba(245, 158, 11, 0.34), 0 10px 28px rgba(245, 158, 11, 0.28);
+  filter: brightness(1.08);
 }
 
 .tutorial-guide-panel {
@@ -2903,6 +3019,10 @@
   .tutorial-tour-actions {
     justify-content: flex-start;
     flex-wrap: wrap;
+  }
+
+  .tutorial-comment-form {
+    flex-direction: column;
   }
 }
 

@@ -1,5 +1,35 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useTutorialGuide from '../components/TutorialGuide';
+import { saveTutorialHelpRequest } from '../utils/tutorialStorage';
+
+const HELP_REQUEST_TOUR_STEPS = [
+  {
+    target: 'scenario',
+    title: 'Start with the situation',
+    text: 'Start with the situation so neighbors understand who needs help and why.',
+  },
+  {
+    target: 'title',
+    title: 'Write a clear title',
+    text: 'A short title helps neighbors understand the need quickly while scanning a list.',
+  },
+  {
+    target: 'description',
+    title: 'Add useful details',
+    text: 'Describe who needs help, what is needed, and any safety details helpers should know.',
+  },
+  {
+    target: 'category',
+    title: 'Pick category and urgency',
+    text: 'These choices help neighbors find urgent needs and understand what they can do.',
+  },
+  {
+    target: 'submit',
+    title: 'Check before sending',
+    text: 'Review the details before adding the request to the list.',
+  },
+];
 
 const CATEGORIES = [
   { value: 'MEDICAL', label: 'Medical' },
@@ -26,6 +56,10 @@ export default function HelpRequestCreatePageTutorial() {
   });
   const [errors, setErrors] = useState({});
   const [previewed, setPreviewed] = useState(false);
+  const { activeStep, GuidePanel, RestartButton } = useTutorialGuide({
+    storageKey: 'emergencyHubHelpRequestTutorialSeen',
+    steps: HELP_REQUEST_TOUR_STEPS,
+  });
 
   const completion = useMemo(() => {
     const fields = ['title', 'description', 'category', 'urgency', 'location_text'];
@@ -52,19 +86,38 @@ export default function HelpRequestCreatePageTutorial() {
     if (!form.title.trim()) nextErrors.title = 'A clear title helps neighbors understand the need quickly.';
     if (!form.description.trim()) nextErrors.description = 'Describe who needs help, what is needed, and any safety details.';
     setErrors(nextErrors);
-    setPreviewed(Object.keys(nextErrors).length === 0);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    saveTutorialHelpRequest({
+      title: form.title.trim(),
+      description: form.description.trim(),
+      category: form.category,
+      urgency: form.urgency,
+      location_text: form.location_text.trim() || 'No location note added',
+      author: 'You',
+      status: 'Open',
+      createdLabel: 'just now',
+      local: true,
+    });
+    setPreviewed(true);
+    navigate('/tutorial/help-requests');
   };
 
   return (
     <div className="page help-create-page tutorial-page">
       <header className="help-requests-header">
-        <button className="btn btn-secondary btn-sm" onClick={() => navigate('/tutorial')}>
-          &larr; Tutorial dashboard
+        <button className="btn btn-secondary btn-sm" onClick={() => navigate('/tutorial/help-requests')}>
+          &larr; Help requests
         </button>
-        <h2 className="gradient-text">Practice Help Request</h2>
+        <h2 className="gradient-text">New Help Request</h2>
+        <div className="tutorial-header-actions">
+          {RestartButton}
+        </div>
       </header>
 
-      <div className="tutorial-scenario-strip">
+      {GuidePanel}
+
+      <div className={`tutorial-scenario-strip ${activeStep?.target === 'scenario' ? 'tutorial-tour-highlight' : ''}`}>
         <div>
           <strong>Scenario</strong>
           <span>A neighbor needs drinking water after a power outage.</span>
@@ -77,7 +130,7 @@ export default function HelpRequestCreatePageTutorial() {
 
       <div className="help-create-card">
         <div className="alert alert-success tutorial-alert">
-          This is a practice request, so you can try it without asking anyone for help.
+          Add enough detail so nearby neighbors can understand what kind of help is needed.
         </div>
 
         {previewed && (
@@ -87,7 +140,7 @@ export default function HelpRequestCreatePageTutorial() {
         )}
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
+          <div className={`form-group ${activeStep?.target === 'title' ? 'tutorial-tour-highlight' : ''}`}>
             <label htmlFor="tutorial-title">Title</label>
             <input
               id="tutorial-title"
@@ -101,7 +154,7 @@ export default function HelpRequestCreatePageTutorial() {
             {errors.title && <span className="field-error">{errors.title}</span>}
           </div>
 
-          <div className="form-group">
+          <div className={`form-group ${activeStep?.target === 'description' ? 'tutorial-tour-highlight' : ''}`}>
             <label htmlFor="tutorial-description">Description</label>
             <textarea
               id="tutorial-description"
@@ -115,7 +168,7 @@ export default function HelpRequestCreatePageTutorial() {
             {errors.description && <span className="field-error">{errors.description}</span>}
           </div>
 
-          <div className="help-create-row">
+          <div className={`help-create-row ${activeStep?.target === 'category' ? 'tutorial-tour-highlight' : ''}`}>
             <div className="form-group help-create-half">
               <label htmlFor="tutorial-category">Category</label>
               <select id="tutorial-category" name="category" value={form.category} onChange={handleChange}>
@@ -155,8 +208,11 @@ export default function HelpRequestCreatePageTutorial() {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block">
-            Check my practice request
+          <button
+            type="submit"
+            className={`btn btn-primary btn-block ${activeStep?.target === 'submit' ? 'tutorial-tour-highlight' : ''}`}
+          >
+            Save request
           </button>
         </form>
       </div>
