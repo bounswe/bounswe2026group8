@@ -5,7 +5,7 @@ import com.bounswe2026group8.emergencyhub.R
 
 /**
  * Locale-aware "fix Xs/m/h/d ago" formatter shared by every mesh UI surface.
- * Splitting this out lets us localize the strings via `values-*/strings.xml`
+ * Splitting this out lets us localize the strings via Android resource folders.
  * instead of hardcoding English in each adapter/activity.
  */
 internal fun formatFixAge(ctx: Context, ageSec: Long): String {
