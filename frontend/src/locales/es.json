@@ -41,7 +41,9 @@
       "forum": {"title": "Foro", "desc": "Discusiones de la comunidad"},
       "help_requests": {"title": "Solicitudes de Ayuda", "desc": "Pide u ofrece ayuda"},
       "profile": {"title": "Perfil", "desc": "Gestiona tu cuenta"},
-      "emergency_info": {"title": "Info de Emergencia", "desc": "Acceso a datos críticos"}
+      "settings": {"title": "Configuración", "desc": "Notificaciones y privacidad"},
+      "emergency_info": {"title": "Info de Emergencia", "desc": "Acceso a datos críticos"},
+      "offline_messages": {"title": "Mensajes sin conexión", "desc": "Foro sin conexión sincronizado con el servidor"}
     }
   },
   "forum": {
@@ -811,6 +813,46 @@
       "no_filter_match_desc": "Prueba a seleccionar una categoría diferente.",
       "no_facilities_title": "No se encontraron instalaciones cercanas",
       "no_facilities_desc": "No se encontraron instalaciones de emergencia a menos de {{radius}} km de tu ubicación."
+    }
+  },
+  "offline_messages": {
+    "list": {
+      "title": "Mensajes sin conexión",
+      "back": "← Panel",
+      "subtitle": "Publicaciones que los usuarios crearon en la red mesh sin conexión y subieron al volver a estar en línea.",
+      "loading": "Cargando…",
+      "error": "No se pudo cargar: {{error}}",
+      "empty": "Aún no se han subido mensajes sin conexión.",
+      "untitled": "(sin título)",
+      "location_attached": "📍 ubicación adjunta",
+      "device_fallback": "dispositivo-{{id}}"
+    },
+    "detail": {
+      "back": "← Atrás",
+      "loading": "Cargando…",
+      "error_load": "No se pudo cargar la publicación (HTTP {{status}})",
+      "error_not_found": "Publicación no encontrada.",
+      "untitled": "(sin título)",
+      "comments_heading": "Comentarios ({{count}})",
+      "no_comments": "Aún no hay comentarios.",
+      "view_location": "Ver ubicación",
+      "device_fallback": "dispositivo-{{id}}"
+    },
+    "post_type": {
+      "need_help": "Necesito ayuda",
+      "offer_help": "Ofrezco ayuda"
+    },
+    "time": {
+      "just_now": "ahora mismo",
+      "m_ago": "hace {{count}} min",
+      "h_ago": "hace {{count}} h",
+      "d_ago": "hace {{count}} d"
+    },
+    "location": {
+      "fix_seconds": "fijada hace {{count}} s",
+      "fix_minutes": "fijada hace {{count}} min",
+      "fix_hours": "fijada hace {{count}} h",
+      "fix_days": "fijada hace {{count}} d"
     }
   }
 }

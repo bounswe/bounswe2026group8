@@ -2,6 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { logout } from '../services/api';
 import { useTranslation } from 'react-i18next'; // 1. Import the hook
+import {
+  hasAnyStaffRole,
+  staffRoleLabel,
+} from '../utils/staffRoles';
 
 export default function DashboardPage() {
   const { user, logoutUser } = useAuth();
@@ -34,8 +38,19 @@ export default function DashboardPage() {
     { icon: '💬', title: t('dashboard.features.forum.title'), desc: t('dashboard.features.forum.desc'), path: '/forum' },
     { icon: '🆘', title: t('dashboard.features.help_requests.title'), desc: t('dashboard.features.help_requests.desc'), path: '/help-requests' },
     { icon: '👤', title: t('dashboard.features.profile.title'), desc: t('dashboard.features.profile.desc'), path: '/profile' },
+    { icon: '⚙️', title: t('dashboard.features.settings.title'), desc: t('dashboard.features.settings.desc'), path: '/settings' },
     { icon: '📶', title: t('dashboard.features.emergency_info.title'), desc: t('dashboard.features.emergency_info.desc'), path: '/emergency-info' },
+    { icon: '📡', title: t('dashboard.features.offline_messages.title'), desc: t('dashboard.features.offline_messages.desc'), path: '/offline-messages' },
   ];
+
+  if (hasAnyStaffRole(user)) {
+    features.push({
+      icon: '🛡️',
+      title: 'Staff tools',
+      desc: `Tools for ${staffRoleLabel(user.staff_role)}.`,
+      path: '/staff',
+    });
+  }
 
   return (
       <div className="page dashboard-page">

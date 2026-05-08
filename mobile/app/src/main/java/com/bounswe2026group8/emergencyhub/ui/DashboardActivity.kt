@@ -98,6 +98,14 @@ class DashboardActivity : AppCompatActivity() {
         }
         hubSelectorHelper.load()
         preCacheOfflineData()
+        // Push any locally-stored mesh messages up to the server. Fires on fresh
+        // login (user just landed on dashboard) and every time the user returns
+        // to dashboard — so any unsynced offline-mesh posts/comments get uploaded
+        // without the user having to open the archive screen explicitly.
+        lifecycleScope.launch {
+            com.bounswe2026group8.emergencyhub.mesh.MeshServerSyncManager
+                .uploadIfOnline(this@DashboardActivity)
+        }
     }
 
     private fun fetchMe() {
@@ -144,6 +152,10 @@ class DashboardActivity : AppCompatActivity() {
         } else {
             txtNeighborhood.visibility = TextView.GONE
         }
+
+        val cardStaffTools = findViewById<MaterialCardView>(R.id.cardStaffTools)
+        cardStaffTools.visibility =
+            if (StaffRoleHelper.hasAnyStaffRole(user.staffRole)) View.VISIBLE else View.GONE
     }
 
     private fun performLogout() {
@@ -172,6 +184,18 @@ class DashboardActivity : AppCompatActivity() {
 
         findViewById<MaterialCardView>(R.id.cardOfflineInfo).setOnClickListener {
             startActivity(Intent(this, OfflineFeaturesActivity::class.java))
+        }
+
+        findViewById<MaterialCardView>(R.id.cardOfflineMessages).setOnClickListener {
+            startActivity(
+                Intent(this, com.bounswe2026group8.emergencyhub.mesh.ui.MeshArchiveActivity::class.java)
+            )
+        }
+
+        findViewById<MaterialCardView>(R.id.cardSettings).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        findViewById<MaterialCardView>(R.id.cardStaffTools).setOnClickListener {
+            startActivity(Intent(this, StaffDashboardActivity::class.java))
         }
     }
 

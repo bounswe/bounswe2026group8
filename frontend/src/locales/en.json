@@ -41,7 +41,9 @@
       "forum": {"title": "Forum", "desc": "Community discussions"},
       "help_requests": {"title": "Help Requests", "desc": "Ask for or offer help"},
       "profile": {"title": "Profile", "desc": "Manage your account"},
-      "emergency_info": {"title": "Emergency Info", "desc": "Critical data access"}
+      "settings": {"title": "Settings", "desc": "Notifications and privacy"},
+      "emergency_info": {"title": "Emergency Info", "desc": "Critical data access"},
+      "offline_messages": {"title": "Offline Messages", "desc": "Server-synced offline forum"}
     }
   },
   "forum": {
@@ -715,6 +717,72 @@
       "length": "Must be 6–15 digits"
     }
   },
+  "settings": {
+    "header": {
+      "title": "Settings",
+      "back": "Back"
+    },
+    "sections": {
+      "notifications": "Notifications",
+      "privacy": "Public Profile Privacy"
+    },
+    "privacy_note": "Choose what other signed-in users can see on your public profile.",
+    "states": {
+      "loading": "Loading settings...",
+      "unavailable": "Settings are unavailable right now."
+    },
+    "toasts": {
+      "saved": "Saved",
+      "load_failed": "Could not load settings.",
+      "save_failed": "Could not save settings."
+    },
+    "fields": {
+      "notify_help_requests": {
+        "label": "Help request notifications",
+        "desc": "Receive push notifications when relevant help requests are created."
+      },
+      "notify_urgent_posts": {
+        "label": "Urgent forum notifications",
+        "desc": "Receive push notifications for urgent forum posts."
+      },
+      "notify_expertise_matches_only": {
+        "label": "Only notify for my expertise",
+        "desc": "Experts skip fallback help-request notifications outside their expertise."
+      },
+      "show_phone_number": {
+        "label": "Show phone number",
+        "desc": "Allow other users to see your phone number."
+      },
+      "show_emergency_contact": {
+        "label": "Show emergency contact",
+        "desc": "Allow other users to see your emergency contact details."
+      },
+      "show_medical_info": {
+        "label": "Show medical and accessibility info",
+        "desc": "Allow blood type, disability status, and special needs to appear publicly."
+      },
+      "show_availability_status": {
+        "label": "Show availability status",
+        "desc": "Show whether you are safe, need help, or are available to help."
+      },
+      "show_bio": {
+        "label": "Show bio",
+        "desc": "Display your bio on your public profile."
+      },
+      "show_location": {
+        "label": "Show neighborhood/address",
+        "desc": "Display your neighborhood or address on your public profile."
+      },
+      "show_resources": {
+        "label": "Show resources",
+        "desc": "Display the emergency resources you have listed."
+      },
+      "show_expertise": {
+        "label": "Show expertise",
+        "desc": "Display your expertise fields and certification links."
+      }
+    }
+  },
   "emergency_info": {
     "header": {
       "back": "Back",
@@ -810,6 +878,46 @@
       "no_filter_match_desc": "Try selecting a different category.",
       "no_facilities_title": "No facilities found nearby",
       "no_facilities_desc": "No emergency facilities found within {{radius}} km of your location."
+    }
+  },
+  "offline_messages": {
+    "list": {
+      "title": "Offline Messages",
+      "back": "← Dashboard",
+      "subtitle": "Posts that users created in the offline mesh and uploaded once they came back online.",
+      "loading": "Loading…",
+      "error": "Couldn't load: {{error}}",
+      "empty": "No offline messages have been uploaded yet.",
+      "untitled": "(untitled)",
+      "location_attached": "📍 location attached",
+      "device_fallback": "device-{{id}}"
+    },
+    "detail": {
+      "back": "← Back",
+      "loading": "Loading…",
+      "error_load": "Couldn't load post (HTTP {{status}})",
+      "error_not_found": "Post not found.",
+      "untitled": "(untitled)",
+      "comments_heading": "Comments ({{count}})",
+      "no_comments": "No comments yet.",
+      "view_location": "View location",
+      "device_fallback": "device-{{id}}"
+    },
+    "post_type": {
+      "need_help": "Need Help",
+      "offer_help": "Offer Help"
+    },
+    "time": {
+      "just_now": "just now",
+      "m_ago": "{{count}}m ago",
+      "h_ago": "{{count}}h ago",
+      "d_ago": "{{count}}d ago"
+    },
+    "location": {
+      "fix_seconds": "fix {{count}}s old",
+      "fix_minutes": "fix {{count}}m old",
+      "fix_hours": "fix {{count}}h old",
+      "fix_days": "fix {{count}}d old"
     }
   }
 }

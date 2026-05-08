@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import StaffRoute from './components/StaffRoute';
 import HubSelector from './components/HubSelector';
 import LanguageSelector from './components/LanguageSelector';
 
@@ -9,6 +10,7 @@ import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
 import ForumPage from './pages/ForumPage';
 import PostDetailPage from './pages/PostDetailPage';
 import PostCreatePage from './pages/PostCreatePage';
@@ -19,6 +21,16 @@ import MyPostsPage from './pages/MyPostsPage';
 import UserProfilePage from './pages/UserProfilePage';
 import EmergencyInfoPage from './pages/EmergencyInfoPage';
 import EmergencyMapPage from './pages/EmergencyMapPage';
+import OfflineMessagesPage from './pages/OfflineMessagesPage';
+import OfflineMessageDetailPage from './pages/OfflineMessageDetailPage';
+import StaffDashboardPage from './pages/StaffDashboardPage';
+import AdminUsersPage from './pages/AdminUsersPage';
+import AdminHubsPage from './pages/AdminHubsPage';
+import AdminAuditLogPage from './pages/AdminAuditLogPage';
+import ForumModerationPage from './pages/ForumModerationPage';
+import HelpModerationPage from './pages/HelpModerationPage';
+import ExpertiseVerificationPage from './pages/ExpertiseVerificationPage';
+import { STAFF_ROLE } from './utils/staffRoles';
 
 export default function App() {
 return (
@@ -81,6 +93,14 @@ return (
             }
           />
           <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/my-posts"
             element={
               <ProtectedRoute>
@@ -110,6 +130,88 @@ return (
               <ProtectedRoute>
                 <EmergencyMapPage />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/offline-messages"
+            element={
+              <ProtectedRoute>
+                <OfflineMessagesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/offline-messages/:id"
+            element={
+              <ProtectedRoute>
+                <OfflineMessageDetailPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ── Staff: any role with elevated authority ──────────────────── */}
+          <Route
+            path="/staff"
+            element={
+              <StaffRoute
+                allowedStaffRoles={[STAFF_ROLE.MODERATOR, STAFF_ROLE.VERIFICATION_COORDINATOR]}
+              >
+                <StaffDashboardPage />
+              </StaffRoute>
+            }
+          />
+
+          {/* ── Admin-only ───────────────────────────────────────────────── */}
+          <Route
+            path="/staff/users"
+            element={
+              <StaffRoute>
+                <AdminUsersPage />
+              </StaffRoute>
+            }
+          />
+          <Route
+            path="/staff/hubs"
+            element={
+              <StaffRoute>
+                <AdminHubsPage />
+              </StaffRoute>
+            }
+          />
+          <Route
+            path="/staff/audit-logs"
+            element={
+              <StaffRoute>
+                <AdminAuditLogPage />
+              </StaffRoute>
+            }
+          />
+
+          {/* ── Moderator / Admin ────────────────────────────────────────── */}
+          <Route
+            path="/staff/moderation/forum"
+            element={
+              <StaffRoute allowedStaffRoles={[STAFF_ROLE.MODERATOR]}>
+                <ForumModerationPage />
+              </StaffRoute>
+            }
+          />
+          <Route
+            path="/staff/moderation/help"
+            element={
+              <StaffRoute allowedStaffRoles={[STAFF_ROLE.MODERATOR]}>
+                <HelpModerationPage />
+              </StaffRoute>
+            }
+          />
+
+          {/* ── Verification coordinator / Admin ─────────────────────────── */}
+          <Route
+            path="/staff/verification/expertise"
+            element={
+              <StaffRoute allowedStaffRoles={[STAFF_ROLE.VERIFICATION_COORDINATOR]}>
+                <ExpertiseVerificationPage />
+              </StaffRoute>
             }
           />
         </Routes>

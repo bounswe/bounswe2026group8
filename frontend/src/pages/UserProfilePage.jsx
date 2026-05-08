@@ -81,7 +81,9 @@ export default function UserProfilePage() {
   if (loading) return <div className="page"><p>{t('user_profile.states.loading')}</p></div>;
   if (!profile) return <div className="page"><p>{t('user_profile.states.not_found')}</p></div>;
 
-  const avail = AVAILABILITY_LABELS[profile.profile?.availability_status] || AVAILABILITY_LABELS.SAFE;
+  const avail = profile.profile?.availability_status
+      ? AVAILABILITY_LABELS[profile.profile.availability_status] || AVAILABILITY_LABELS.SAFE
+      : null;
   const roleLabel = profile.role === 'EXPERT' ? t('user_profile.roles.expert') : t('user_profile.roles.standard');
 
   return (
@@ -99,9 +101,9 @@ export default function UserProfilePage() {
             <h3 className="profile-name">{profile.full_name}</h3>
             <div className="profile-badges">
               <span className="badge">{roleLabel}</span>
-              <span className="badge" style={{ color: avail.color, borderColor: avail.color + '44', background: avail.color + '11' }}>
+              {avail && <span className="badge" style={{ color: avail.color, borderColor: avail.color + '44', background: avail.color + '11' }}>
               ● {avail.label}
-            </span>
+            </span>}
               {profile.hub && <span className="badge badge-muted">{profile.hub.name}</span>}
             </div>
           </div>
@@ -152,10 +154,10 @@ export default function UserProfilePage() {
                   <span className="profile-field-value">{t('user_profile.fields.yes')}</span>
                 </div>
             )}
-            <div className="profile-field">
+            {avail && <div className="profile-field">
               <span className="profile-field-label"><span className="profile-field-icon">📡</span>{t('user_profile.fields.availability')}</span>
               <span className="profile-field-value" style={{ color: avail.color }}>● {avail.label}</span>
-            </div>
+            </div>}
             {profile.profile?.special_needs && (
                 <div className="profile-field profile-field-full">
                   <span className="profile-field-label"><span className="profile-field-icon">📋</span>{t('user_profile.fields.special_needs')}</span>

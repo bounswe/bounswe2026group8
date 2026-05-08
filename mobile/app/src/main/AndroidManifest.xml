@@ -11,6 +11,29 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
+    <!-- BLE Mesh permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Wi-Fi Direct permissions -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation" />
+
+    <!-- Foreground service permission -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+
+    <!-- BLE feature declaration (not required, so app works on non-BLE devices too) -->
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
+
     <application
         android:name=".EmergencyHubApp"
         android:allowBackup="true"
@@ -39,6 +62,7 @@
         <activity android:name=".ui.HelpOfferListActivity" android:exported="false" />
         <activity android:name=".ui.CreateHelpOfferActivity" android:exported="false" />
         <activity android:name=".ui.ProfileActivity" android:exported="false" />
+        <activity android:name=".ui.SettingsActivity" android:exported="false" />
         <activity android:name=".ui.ForumActivity" android:exported="false" />
         <activity android:name=".ui.CreatePostActivity" android:exported="false" />
         <activity android:name=".ui.PostDetailActivity" android:exported="false" />
@@ -51,6 +75,29 @@
         <activity android:name=".offline.ui.EmergencyContactsActivity" android:exported="false" />
         <activity android:name=".offline.ui.FirstAidActivity" android:exported="false" />
         <activity android:name=".offline.ui.FirstAidDetailActivity" android:exported="false" />
+        <activity android:name=".mesh.ui.MeshActivity" android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".mesh.ui.MeshCreatePostActivity" android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".mesh.ui.MeshPostDetailActivity" android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".mesh.ui.MeshArchiveActivity" android:exported="false" />
+        <activity android:name=".mesh.ui.MeshArchivePostDetailActivity" android:exported="false" />
+
+        <service
+            android:name=".mesh.MeshForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+
+        <!-- Staff / admin -->
+        <activity android:name=".ui.StaffDashboardActivity" android:exported="false" />
+        <activity android:name=".ui.AdminToolsActivity" android:exported="false" />
+        <activity android:name=".ui.AdminUsersActivity" android:exported="false" />
+        <activity android:name=".ui.HubManagementActivity" android:exported="false" />
+        <activity android:name=".ui.AuditLogActivity" android:exported="false" />
+        <activity android:name=".ui.ForumModerationActivity" android:exported="false" />
+        <activity android:name=".ui.HelpModerationActivity" android:exported="false" />
+        <activity android:name=".ui.ExpertiseVerificationActivity" android:exported="false" />
 
         <service
             android:name=".fcm.MyFirebaseMessagingService"

@@ -597,6 +597,34 @@ class HelpRequestNotificationTests(HelpTestBase):
 
     @patch('help_requests.notifications.messaging.send_each_for_multicast')
     @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_help_request_notifications_respect_opt_out(self, mock_send):
+        """Experts who disable help request notifications are not notified."""
+        self.expert_user.fcm_token = 'expert-token'
+        self.expert_user.save(update_fields=['fcm_token'])
+        self.expert_user.settings.notify_help_requests = False
+        self.expert_user.settings.save(update_fields=['notify_help_requests'])
+
+        res = self._create_help_request()
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        mock_send.assert_not_called()
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_expertise_only_setting_skips_fallback_notification(self, mock_send):
+        """Experts can opt out of fallback notifications outside their expertise."""
+        shelter_cat = ExpertiseCategory.objects.filter(help_request_category='SHELTER').first()
+        shelter_expert = self._setup_expert_with_token('shelter-optout@test.com', 'shelter-token')
+        ExpertiseField.objects.create(user=shelter_expert, category=shelter_cat, is_approved=True)
+        shelter_expert.settings.notify_expertise_matches_only = True
+        shelter_expert.settings.save(update_fields=['notify_expertise_matches_only'])
+
+        self._create_help_request(category='MEDICAL')
+
+        mock_send.assert_not_called()
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
     def test_notification_payload_contains_request_details(self, mock_send):
         """Notification data payload includes request_id, title, category, and urgency."""
         mock_send.return_value = MagicMock(failure_count=0)
