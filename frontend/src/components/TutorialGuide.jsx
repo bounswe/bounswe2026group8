@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function useTutorialGuide({ storageKey, steps, restartLabel = 'Show guide' }) {
+  const { t } = useTranslation();
   const [stepIndex, setStepIndex] = useState(() => (
     window.localStorage.getItem(storageKey) === 'true' ? null : 0
   ));
@@ -36,7 +38,7 @@ export default function useTutorialGuide({ storageKey, steps, restartLabel = 'Sh
       <section className="tutorial-guide-panel" aria-live="polite">
         <div>
           <span className="tutorial-tour-count">
-            Step {stepIndex + 1} of {steps.length}
+            {t('tutorial.guide.step', { current: stepIndex + 1, total: steps.length })}
           </span>
           <h3>{activeStep.title}</h3>
           <p>{activeStep.text}</p>
@@ -51,7 +53,7 @@ export default function useTutorialGuide({ storageKey, steps, restartLabel = 'Sh
             tabIndex={stepIndex === steps.length - 1 ? -1 : 0}
             style={stepIndex === steps.length - 1 ? { visibility: 'hidden' } : undefined}
           >
-            Skip guide
+            {t('tutorial.guide.skip')}
           </button>
           <button
             type="button"
@@ -59,17 +61,17 @@ export default function useTutorialGuide({ storageKey, steps, restartLabel = 'Sh
             onClick={previousGuideStep}
             disabled={stepIndex === 0}
           >
-            Previous
+            {t('tutorial.guide.previous')}
           </button>
           <button type="button" className="btn btn-primary btn-sm" onClick={nextGuideStep}>
-            {stepIndex === steps.length - 1 ? 'Finish guide' : 'Next'}
+            {stepIndex === steps.length - 1 ? t('tutorial.guide.finish') : t('tutorial.guide.next')}
           </button>
         </div>
       </section>
     ) : null,
     RestartButton: !activeStep ? (
       <button type="button" className="btn btn-secondary btn-sm" onClick={restartGuide}>
-        {restartLabel}
+        {restartLabel === 'Show guide' ? t('tutorial.guide.show') : restartLabel}
       </button>
     ) : null,
   };

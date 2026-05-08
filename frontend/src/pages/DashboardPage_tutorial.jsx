@@ -1,72 +1,60 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import useTutorialGuide from '../components/TutorialGuide';
-
-const TOUR_STEPS = [
-  {
-    target: 'welcome',
-    title: 'Start here',
-    text: 'Your main areas are grouped here so you can move quickly during an emergency.',
-  },
-  {
-    target: 'scenario',
-    title: 'Current situation',
-    text: 'A neighborhood power outage is affecting nearby buildings. You can ask for water, offer help, and share updates.',
-  },
-  {
-    target: 'Forum',
-    title: 'Read community updates',
-    text: 'Use the forum when you want to share or follow public neighborhood information.',
-  },
-  {
-    target: 'Help Requests',
-    title: 'Ask for help',
-    text: 'Use help requests when someone needs supplies, shelter, transport, or medical help.',
-  },
-  {
-    target: 'Emergency Info',
-    title: 'Keep guidance close',
-    text: 'Emergency Info gives you quick steps to check when things feel urgent. Map tools are available after signing in.',
-  },
-];
 
 export default function DashboardPageTutorial() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const tourSteps = [
+    { target: 'welcome', title: t('tutorial.dashboard.steps.startTitle'), text: t('tutorial.dashboard.steps.startText') },
+    { target: 'scenario', title: t('tutorial.dashboard.steps.situationTitle'), text: t('tutorial.dashboard.steps.situationText') },
+    { target: 'Forum', title: t('tutorial.dashboard.steps.forumTitle'), text: t('tutorial.dashboard.steps.forumText') },
+    { target: 'Help Requests', title: t('tutorial.dashboard.steps.helpTitle'), text: t('tutorial.dashboard.steps.helpText') },
+    { target: 'Emergency Info', title: t('tutorial.dashboard.steps.infoTitle'), text: t('tutorial.dashboard.steps.infoText') },
+  ];
+
   const { activeStep, GuidePanel, RestartButton } = useTutorialGuide({
     storageKey: 'emergencyHubTutorialTourSeen',
-    steps: TOUR_STEPS,
+    steps: tourSteps,
   });
 
   const features = [
     {
       icon: '💬',
-      title: 'Forum',
-      desc: 'Browse community updates, comment on posts, and write a new post.',
+      title: t('dashboard.features.forum.title'),
+      target: 'Forum',
+      desc: t('tutorial.dashboard.featureDesc.forum'),
       path: '/tutorial/forum',
     },
     {
       icon: '🆘',
-      title: 'Help Requests',
-      desc: 'Review nearby needs, create a request, and see it in the list.',
+      title: t('dashboard.features.help_requests.title'),
+      target: 'Help Requests',
+      desc: t('tutorial.dashboard.featureDesc.help'),
       path: '/tutorial/help-requests',
     },
     {
       icon: '👤',
-      title: 'Profile',
-      desc: 'Profiles are saved for signed-in community members.',
-      lockLabel: 'Sign in to use Profile',
+      title: t('dashboard.features.profile.title'),
+      target: 'Profile',
+      desc: t('tutorial.dashboard.featureDesc.profile'),
+      lockLabel: t('tutorial.dashboard.signInProfile'),
       path: null,
     },
     {
       icon: '📶',
-      title: 'Emergency Info',
-      desc: 'Review emergency guidance you can keep handy offline.',
+      title: t('dashboard.features.emergency_info.title'),
+      target: 'Emergency Info',
+      desc: t('tutorial.dashboard.featureDesc.info'),
       path: '/tutorial/emergency-info',
     },
     {
       icon: '📡',
-      title: 'Offline Messages',
-      desc: 'Offline messages are available once you sign in on your own account.',
-      lockLabel: 'Sign in to use Offline Messages',
+      title: t('dashboard.features.offline_messages.title'),
+      target: 'Offline Messages',
+      desc: t('tutorial.dashboard.featureDesc.messages'),
+      lockLabel: t('tutorial.dashboard.signInMessages'),
       path: null,
     },
   ];
@@ -74,11 +62,11 @@ export default function DashboardPageTutorial() {
   return (
     <div className="page dashboard-page tutorial-page">
       <header className="dashboard-header">
-        <h2 className="gradient-text">Emergency Hub</h2>
+        <h2 className="gradient-text">{t('dashboard.header_title')}</h2>
         <div className="tutorial-header-actions">
           {RestartButton}
           <button className="btn btn-secondary btn-sm" onClick={() => navigate('/signin')}>
-            Back to sign in
+            {t('tutorial.common.backSignIn')}
           </button>
         </div>
       </header>
@@ -86,33 +74,33 @@ export default function DashboardPageTutorial() {
       {GuidePanel}
 
       <div className={`welcome-card ${activeStep?.target === 'welcome' ? 'tutorial-tour-highlight' : ''}`}>
-        <h1>Welcome, Neighbor</h1>
+        <h1>{t('tutorial.dashboard.welcome')}</h1>
 
         <div className="welcome-meta">
-          <span className="badge">👤 Standard Member</span>
+          <span className="badge">👤 {t('tutorial.dashboard.standardMember')}</span>
           <span className="badge" style={{ color: '#34d399', borderColor: '#34d39944', background: '#34d39911' }}>
-            ● Safe
+            ● {t('tutorial.dashboard.safe')}
           </span>
-          <span className="badge badge-muted">📍 Besiktas Neighborhood</span>
+          <span className="badge badge-muted">📍 {t('tutorial.dashboard.neighborhood')}</span>
         </div>
       </div>
 
       <div className={`tutorial-scenario-strip ${activeStep?.target === 'scenario' ? 'tutorial-tour-highlight' : ''}`}>
         <div>
-          <strong>Current situation</strong>
-          <span>A neighborhood power outage is affecting nearby buildings.</span>
+          <strong>{t('tutorial.common.currentSituation')}</strong>
+          <span>{t('tutorial.dashboard.steps.situationText')}</span>
         </div>
         <div>
-          <strong>What you can do</strong>
-          <span>Share an update, request help, or check emergency guidance.</span>
+          <strong>{t('tutorial.dashboard.whatCanDo')}</strong>
+          <span>{t('tutorial.dashboard.actionText')}</span>
         </div>
       </div>
 
       <div className="dashboard-grid">
         {features.map((f) => (
           <div
-            className={`dashboard-card ${f.path ? 'dashboard-card--clickable' : ''} ${activeStep?.target === f.title ? 'tutorial-tour-highlight' : ''}`}
-            key={f.title}
+            className={`dashboard-card ${f.path ? 'dashboard-card--clickable' : ''} ${activeStep?.target === f.target ? 'tutorial-tour-highlight' : ''}`}
+            key={f.target}
             onClick={() => f.path && navigate(f.path)}
             role={f.path ? 'link' : undefined}
           >

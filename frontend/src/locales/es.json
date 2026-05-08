@@ -38,11 +38,26 @@
       "available_to_help": "Disponible para Ayudar"
     },
     "features": {
-      "forum": {"title": "Foro", "desc": "Discusiones de la comunidad"},
-      "help_requests": {"title": "Solicitudes de Ayuda", "desc": "Pide u ofrece ayuda"},
-      "profile": {"title": "Perfil", "desc": "Gestiona tu cuenta"},
-      "emergency_info": {"title": "Info de Emergencia", "desc": "Acceso a datos críticos"},
-      "offline_messages": {"title": "Mensajes sin conexión", "desc": "Foro sin conexión sincronizado con el servidor"}
+      "forum": {
+        "title": "Foro",
+        "desc": "Discusiones de la comunidad"
+      },
+      "help_requests": {
+        "title": "Solicitudes de Ayuda",
+        "desc": "Pide u ofrece ayuda"
+      },
+      "profile": {
+        "title": "Perfil",
+        "desc": "Gestiona tu cuenta"
+      },
+      "emergency_info": {
+        "title": "Info de Emergencia",
+        "desc": "Acceso a datos críticos"
+      },
+      "offline_messages": {
+        "title": "Mensajes sin conexión",
+        "desc": "Foro sin conexión sincronizado con el servidor"
+      }
     }
   },
   "forum": {
@@ -847,6 +862,229 @@
       "fix_minutes": "fijada hace {{count}} min",
       "fix_hours": "fijada hace {{count}} h",
       "fix_days": "fijada hace {{count}} d"
+    }
+  },
+  "tutorial": {
+    "guide": {
+      "show": "Mostrar gua",
+      "step": "Paso {{current}} de {{total}}",
+      "skip": "Saltar gua",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "finish": "Finalizar gua"
+    },
+    "common": {
+      "dashboard": "Panel",
+      "backDashboard": "<- Panel",
+      "backForum": "<- Foro",
+      "backForumTutorial": "<- Tutorial del foro",
+      "backHelpRequests": "<- Solicitudes de ayuda",
+      "backSignIn": "Volver a iniciar sesion",
+      "currentSituation": "Situacin actual",
+      "nextAction": "Siguiente accin",
+      "nextStep": "Siguiente paso",
+      "ready": "{{percent}}% ready",
+      "comments": "Comentarios",
+      "commentsCount": "{{count}} comentarios",
+      "writeComment": "Escribe un comentario",
+      "postComment": "Publicar comentario",
+      "yourPost": "Tu publicacin",
+      "yourComment": "Tu comentario",
+      "yourRequest": "Tu solicitud",
+      "expert": "Experto",
+      "recentUpdate": "actualizacin reciente",
+      "viewProfileAfterSignIn": "Ver perfil despus de iniciar sesin",
+      "openPost": "Abrir publicacin",
+      "newHere": "Nuevo aqu",
+      "tryScenario": "Probar el escenario tutorial",
+      "notFoundPost": "Publicacin no encontrada.",
+      "notFoundRequest": "Solicitud no encontrada."
+    },
+    "dashboard": {
+      "steps": {
+        "startTitle": "Empieza aqu",
+        "startText": "Tus reas principales estn agrupadas aqu para moverte rpido durante una emergencia.",
+        "situationTitle": "Situacin actual",
+        "situationText": "Un corte de energa afecta edificios cercanos. Puedes pedir agua, ofrecer ayuda y compartir novedades.",
+        "forumTitle": "Lee novedades de la comunidad",
+        "forumText": "Usa el foro cuando quieras compartir o seguir informacin pblica del barrio.",
+        "helpTitle": "Pide ayuda",
+        "helpText": "Usa solicitudes de ayuda cuando alguien necesite suministros, refugio, transporte o ayuda mdica.",
+        "infoTitle": "Ten la gua a mano",
+        "infoText": "Informacin de emergencia te da pasos rpidos para revisar cuando la situacin se vuelve urgente. Las herramientas de mapa estn disponibles despus de iniciar sesin."
+      },
+      "featureDesc": {
+        "forum": "Explora novedades comunitarias, comenta publicaciones y escribe una nueva publicacin.",
+        "help": "Revisa necesidades cercanas, crea una solicitud y vela en la lista.",
+        "profile": "Los perfiles se guardan para miembros de la comunidad con sesin iniciada.",
+        "info": "Revisa gua de emergencia que puedes conservar sin conexin.",
+        "messages": "Los mensajes sin conexin estn disponibles cuando inicias sesin con tu cuenta."
+      },
+      "signInProfile": "Sign in to use Profile",
+      "signInMessages": "Sign in to use Offline Messages",
+      "welcome": "Bienvenido, Vecino",
+      "standardMember": "Miembro estndar",
+      "safe": "Seguro",
+      "neighborhood": "Barrio Besiktas",
+      "whatCanDo": "Qu puedes hacer",
+      "actionText": "Comparte una actualizacin, solicita ayuda o revisa la gua de emergencia."
+    },
+    "forum": {
+      "steps": {
+        "feedTitle": "Elige el feed",
+        "feedText": "Las pestaas del foro separan actualizaciones pblicas de conversaciones del hub y urgentes.",
+        "sortTitle": "Ordena las actualizaciones",
+        "sortText": "Usa Ms recientes, Ms gustadas y Populares para revisar novedades recientes, publicaciones populares y conversaciones activas.",
+        "openTitle": "Abre una publicacin",
+        "openText": "Haz clic en una publicacin para ver la actualizacin completa y unirte a la conversacin.",
+        "createTitle": "Crea una publicacin",
+        "createText": "Usa el botn de nueva publicacin para escribir una actualizacin comunitaria.",
+        "requestTitle": "Sepa cundo pedir ayuda",
+        "requestText": "Las publicaciones del foro son actualizaciones pblicas. Si alguien necesita agua, refugio, transporte o apoyo mdico, usa una solicitud de ayuda."
+      },
+      "title": "Foro comunitario",
+      "subtitle": "Actualizaciones de vecinos en tu zona.",
+      "newPost": "Nueva publicacin",
+      "standardHub": "Hub estndar",
+      "urgentHub": "Hub urgente",
+      "mostLiked": "Ms gustadas",
+      "nextBody": "En una emergencia real, puedes usar publicaciones del foro para actualizaciones pblicas. Si personalmente necesitas suministros, transporte, refugio o ayuda mdica, crea una solicitud de ayuda.",
+      "createHelpRequest": "Crear solicitud de ayuda"
+    },
+    "postCreate": {
+      "steps": {
+        "typeTitle": "Elige dnde va la publicacin",
+        "typeText": "Las publicaciones globales son actualizaciones amplias. Las del hub son locales. Las urgentes deben reservarse para avisos sensibles al tiempo.",
+        "titleTitle": "Usa un ttulo fcil de leer",
+        "titleText": "Un ttulo claro ayuda a los vecinos a entender la actualizacin antes de abrir la publicacin completa.",
+        "contentTitle": "Escribe los detalles tiles",
+        "contentText": "Comparte qu pas, dnde pas y qu deberan hacer los vecinos despus.",
+        "previewTitle": "Revisa la vista previa",
+        "previewText": "Comprueba cmo se ver la publicacin antes de aadirla al foro.",
+        "submitTitle": "Gurdala con seguridad",
+        "submitText": "Guarda la publicacin cuando el ttulo y los detalles estn claros."
+      },
+      "title": "Nueva publicacin del foro",
+      "subtitle": "Redacta una actualizacin pblica para vecinos.",
+      "forumType": "Tipo de foro",
+      "typeHints": {
+        "global": "Actualizacin pblica para todo el barrio",
+        "standard": "Actualizacin local para tu hub",
+        "urgent": "Aviso inmediato de seguridad"
+      },
+      "shortTitle": "Ttulo corto de actualizacin",
+      "content": "Contenido",
+      "contentPlaceholder": "Qu pas Dnde Qu deberan hacer los vecinos",
+      "imageLinks": "Enlaces de imgenes",
+      "optional": "opcional",
+      "imagePlaceholder": "Un enlace de imagen por lnea",
+      "previewTitleFallback": "Ttulo de tu publicacin",
+      "previewBodyFallback": "Los detalles de tu publicacin aparecern aqu.",
+      "save": "Guardar publicacin",
+      "saved": "Guardado. Aparecer en el foro.",
+      "titleError": "Aade un ttulo corto antes de guardar.",
+      "contentError": "Aade detalles que los vecinos puedan usar.",
+      "situationText": "Los vecinos necesitan saber dnde pueden cargar telfonos durante el corte.",
+      "readyText": "Las publicaciones claras reducen la confusin y las preguntas repetidas."
+    },
+    "helpList": {
+      "steps": {
+        "filterTitle": "Filtra por necesidad",
+        "filterText": "Las categoras ayudan a los vecinos a encontrar solicitudes que pueden responder rpido.",
+        "reviewTitle": "Revisa solicitudes",
+        "reviewText": "Abre una solicitud para ver qu se necesita y cmo podras responder.",
+        "createTitle": "Crea una solicitud",
+        "createText": "Crea una solicitud cuando alguien necesite suministros, transporte, refugio o ayuda mdica."
+      },
+      "newRequest": "Nueva solicitud",
+      "neighborhoodNeeds": "Necesidades del barrio",
+      "situationText": "Los vecinos comparten necesidades prcticas despus de un corte de energa.",
+      "needsText": "Las solicitudes se mantienen organizadas para que quienes ayudan encuentren rpido dnde se necesitan.",
+      "categories": {
+        "all": "All",
+        "medical": "Medical",
+        "food": "Food / water",
+        "shelter": "Shelter",
+        "transport": "Transport",
+        "other": "Other"
+      },
+      "urgency": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
+    },
+    "helpDetail": {
+      "steps": {
+        "reviewTitle": "Revisa la solicitud",
+        "reviewText": "Empieza con la categora, urgencia, descripcin y quin la public.",
+        "locationTitle": "Revisa la ubicacin",
+        "locationText": "La nota de ubicacin ayuda a entender dnde se necesita apoyo.",
+        "commentsTitle": "Coordina en comentarios",
+        "commentsText": "Los comentarios sirven para hacer preguntas de seguimiento u ofrecer ayuda.",
+        "manageTitle": "Gestiona tu solicitud",
+        "manageText": "Solo puedes gestionar solicitudes que creaste. Cuando la necesidad est atendida, mrcala como resuelta o elimnala si ya no se necesita."
+      },
+      "title": "Solicitud de ayuda",
+      "by": "Por",
+      "markResolved": "Marcar como resuelta",
+      "delete": "Eliminar",
+      "cancel": "Cancelar",
+      "deleteTitle": "Eliminar solicitud",
+      "deleteBody": "Esto elimina la solicitud de la lista.",
+      "location": "Ubicacin",
+      "noComments": "An no hay comentarios."
+    },
+    "helpCreate": {
+      "steps": {
+        "scenarioTitle": "Empieza con la situacin",
+        "scenarioText": "Empieza con la situacin para que los vecinos entiendan quin necesita ayuda y por qu.",
+        "titleTitle": "Escribe un ttulo claro",
+        "titleText": "Un ttulo corto ayuda a entender la necesidad rpidamente al revisar una lista.",
+        "detailsTitle": "Aade detalles tiles",
+        "detailsText": "Describe quin necesita ayuda, qu se necesita y cualquier detalle de seguridad.",
+        "categoryTitle": "Elige categora y urgencia",
+        "categoryText": "Estas opciones ayudan a encontrar necesidades urgentes y entender qu se puede hacer.",
+        "submitTitle": "Revisa antes de enviar",
+        "submitText": "Revisa los detalles antes de aadir la solicitud a la lista."
+      },
+      "title": "Nueva solicitud de ayuda",
+      "situationText": "Un vecino necesita agua potable despus de un corte de energa.",
+      "readyText": "Los detalles claros ayudan a vecinos cercanos a entender qu tipo de ayuda se necesita.",
+      "info": "Aade suficiente detalle para que vecinos cercanos entiendan qu tipo de ayuda se necesita.",
+      "previewed": "Se ve bien. Una solicitud as da a quienes ayudan los detalles principales para responder.",
+      "titleLabel": "Ttulo",
+      "titlePlaceholder": "Short summary of the need",
+      "descLabel": "Descripcin",
+      "descPlaceholder": "Explain who needs help and what would be useful.",
+      "category": "Categora",
+      "urgency": "Urgencia",
+      "locationNote": "Nota de ubicacin",
+      "recommended": "recomendado",
+      "locationPlaceholder": "Example: apartment entrance, street corner, shelter desk",
+      "imagesGps": "Imgenes y GPS preciso",
+      "afterSignIn": "disponible despus de iniciar sesin",
+      "addPhoto": "Aadir foto",
+      "useLocation": "Usar mi ubicacin",
+      "save": "Guardar solicitud",
+      "titleError": "Un ttulo claro ayuda a entender la necesidad rpidamente.",
+      "descError": "Describe quin necesita ayuda, qu se necesita y cualquier detalle de seguridad.",
+      "noLocation": "No se aadi nota de ubicacin"
+    },
+    "emergencyInfo": {
+      "steps": {
+        "overviewTitle": "Usa informacin de emergencia como referencia rpida",
+        "overviewText": "Esta pgina ofrece gua prctica que podras necesitar durante un incidente.",
+        "checklistTitle": "Abre la lista de verificacin",
+        "checklistText": "Toca la tarjeta de lista para encontrar gua de emergencia paso a paso.",
+        "mapTitle": "Los mapas estn disponibles tras iniciar sesin",
+        "mapText": "La app real tambin tiene herramientas de mapa para puntos de reunin cercanos despus de iniciar sesin."
+      },
+      "situationText": "Necesitas instrucciones rpidas de emergencia durante el mismo corte del barrio.",
+      "actionText": "Abre la lista y revisa primero la gua que podras necesitar.",
+      "mapLabel": "Mapa",
+      "mapPreview": "Vista previa del mapa",
+      "mapDesc": "Inicia sesin para usar mapas en vivo y puntos de reunin guardados."
     }
   }
 }

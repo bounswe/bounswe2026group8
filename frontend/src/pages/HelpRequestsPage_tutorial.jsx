@@ -1,34 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import useTutorialGuide from '../components/TutorialGuide';
 import { getAllTutorialHelpRequests } from '../utils/tutorialHelpData';
-
-const HELP_LIST_TOUR_STEPS = [
-  {
-    target: 'filters',
-    title: 'Filter by need',
-    text: 'Categories help neighbors find requests they can answer quickly.',
-  },
-  {
-    target: 'requests',
-    title: 'Review requests',
-    text: 'Open a request to see what is needed and how you might respond.',
-  },
-  {
-    target: 'create',
-    title: 'Create a request',
-    text: 'Create a request when someone needs supplies, transport, shelter, or medical help.',
-  },
-];
-
-const CATEGORIES = [
-  { value: '', label: 'All' },
-  { value: 'MEDICAL', label: 'Medical' },
-  { value: 'FOOD', label: 'Food / water' },
-  { value: 'SHELTER', label: 'Shelter' },
-  { value: 'TRANSPORT', label: 'Transport' },
-  { value: 'OTHER', label: 'Other' },
-];
 
 const URGENCY_CLASSES = {
   LOW: 'badge-muted',
@@ -42,6 +16,20 @@ function labelFor(items, value) {
 
 export default function HelpRequestsPageTutorial() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const HELP_LIST_TOUR_STEPS = [
+    { target: 'filters', title: t('tutorial.helpList.steps.filterTitle'), text: t('tutorial.helpList.steps.filterText') },
+    { target: 'requests', title: t('tutorial.helpList.steps.reviewTitle'), text: t('tutorial.helpList.steps.reviewText') },
+    { target: 'create', title: t('tutorial.helpList.steps.createTitle'), text: t('tutorial.helpList.steps.createText') },
+  ];
+  const CATEGORIES = [
+    { value: '', label: t('tutorial.helpList.categories.all') },
+    { value: 'MEDICAL', label: t('tutorial.helpList.categories.medical') },
+    { value: 'FOOD', label: t('tutorial.helpList.categories.food') },
+    { value: 'SHELTER', label: t('tutorial.helpList.categories.shelter') },
+    { value: 'TRANSPORT', label: t('tutorial.helpList.categories.transport') },
+    { value: 'OTHER', label: t('tutorial.helpList.categories.other') },
+  ];
   const [category, setCategory] = useState('');
   const [allRequests] = useState(() => getAllTutorialHelpRequests());
   const { activeStep, GuidePanel, RestartButton } = useTutorialGuide({
@@ -57,16 +45,16 @@ export default function HelpRequestsPageTutorial() {
     <div className="page help-requests-page tutorial-page">
       <header className="help-requests-header page-main-header">
         <button className="btn btn-secondary btn-sm" onClick={() => navigate('/tutorial')}>
-          &larr; Dashboard
+          {t('tutorial.common.backDashboard')}
         </button>
-        <h2 className="gradient-text">Help Requests</h2>
+        <h2 className="gradient-text">{t('dashboard.features.help_requests.title')}</h2>
         <div className="tutorial-header-actions">
           {RestartButton}
           <button
             className={`btn btn-primary btn-sm ${activeStep?.target === 'create' ? 'tutorial-tour-highlight' : ''}`}
             onClick={() => navigate('/tutorial/help-requests/new')}
           >
-            New request
+            {t('tutorial.helpList.newRequest')}
           </button>
         </div>
       </header>
@@ -75,12 +63,12 @@ export default function HelpRequestsPageTutorial() {
 
       <div className="tutorial-scenario-strip">
         <div>
-          <strong>Current situation</strong>
-          <span>Neighbors are sharing practical needs after a power outage.</span>
+          <strong>{t('tutorial.common.currentSituation')}</strong>
+          <span>{t('tutorial.helpList.situationText')}</span>
         </div>
         <div>
-          <strong>Neighborhood needs</strong>
-          <span>Requests stay organized so helpers can quickly find where they are needed.</span>
+          <strong>{t('tutorial.helpList.neighborhoodNeeds')}</strong>
+          <span>{t('tutorial.helpList.needsText')}</span>
         </div>
       </div>
 
@@ -107,9 +95,9 @@ export default function HelpRequestsPageTutorial() {
               <h3 className="help-request-card-title">{request.title}</h3>
               <span className={`badge ${URGENCY_CLASSES[request.urgency] || 'badge-muted'}`}>
                 {labelFor([
-                  { value: 'LOW', label: 'Low' },
-                  { value: 'MEDIUM', label: 'Medium' },
-                  { value: 'HIGH', label: 'High' },
+                  { value: 'LOW', label: t('tutorial.helpList.urgency.low') },
+                  { value: 'MEDIUM', label: t('tutorial.helpList.urgency.medium') },
+                  { value: 'HIGH', label: t('tutorial.helpList.urgency.high') },
                 ], request.urgency)}
               </span>
             </div>
@@ -117,7 +105,7 @@ export default function HelpRequestsPageTutorial() {
             <p className="tutorial-post-body">{request.description}</p>
 
             <div className="help-request-card-meta">
-              {request.local && <span className="badge badge-accent">Your request</span>}
+              {request.local && <span className="badge badge-accent">{t('tutorial.common.yourRequest')}</span>}
               <span className="badge">{labelFor(CATEGORIES, request.category)}</span>
               <span className="badge badge-muted">{request.status}</span>
             </div>

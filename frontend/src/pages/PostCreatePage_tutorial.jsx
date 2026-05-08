@@ -1,44 +1,24 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import useTutorialGuide from '../components/TutorialGuide';
 import { saveTutorialPost } from '../utils/tutorialStorage';
 
-const POST_CREATE_TOUR_STEPS = [
-  {
-    target: 'type',
-    title: 'Choose where the post belongs',
-    text: 'Global posts are broad updates. Hub posts are local. Urgent posts should be reserved for time-sensitive warnings.',
-  },
-  {
-    target: 'title',
-    title: 'Use a scan-friendly title',
-    text: 'A clear title helps neighbors understand the update before opening the full post.',
-  },
-  {
-    target: 'content',
-    title: 'Write the useful details',
-    text: 'Share what happened, where it happened, and what neighbors should do next.',
-  },
-  {
-    target: 'preview',
-    title: 'Review the preview',
-    text: 'Check how the post will look before adding it to the forum.',
-  },
-  {
-    target: 'submit',
-    title: 'Save it safely',
-    text: 'Save the post when the title and details are clear.',
-  },
-];
-
-const TYPES = [
-  { value: 'GLOBAL', label: 'Global', hint: 'Public neighborhood-wide update' },
-  { value: 'STANDARD', label: 'Standard hub', hint: 'Local update for your hub' },
-  { value: 'URGENT', label: 'Urgent hub', hint: 'Immediate safety warning' },
-];
-
 export default function PostCreatePageTutorial() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const POST_CREATE_TOUR_STEPS = [
+    { target: 'type', title: t('tutorial.postCreate.steps.typeTitle'), text: t('tutorial.postCreate.steps.typeText') },
+    { target: 'title', title: t('tutorial.postCreate.steps.titleTitle'), text: t('tutorial.postCreate.steps.titleText') },
+    { target: 'content', title: t('tutorial.postCreate.steps.contentTitle'), text: t('tutorial.postCreate.steps.contentText') },
+    { target: 'preview', title: t('tutorial.postCreate.steps.previewTitle'), text: t('tutorial.postCreate.steps.previewText') },
+    { target: 'submit', title: t('tutorial.postCreate.steps.submitTitle'), text: t('tutorial.postCreate.steps.submitText') },
+  ];
+  const TYPES = [
+    { value: 'GLOBAL', label: t('forum.tabs.global'), hint: t('tutorial.postCreate.typeHints.global') },
+    { value: 'STANDARD', label: t('tutorial.forum.standardHub'), hint: t('tutorial.postCreate.typeHints.standard') },
+    { value: 'URGENT', label: t('tutorial.forum.urgentHub'), hint: t('tutorial.postCreate.typeHints.urgent') },
+  ];
   const [form, setForm] = useState({
     forumType: 'GLOBAL',
     title: 'Charging station open at the community center',
@@ -83,8 +63,8 @@ export default function PostCreatePageTutorial() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const nextErrors = {};
-    if (!form.title.trim()) nextErrors.title = 'Add a short title before saving.';
-    if (!form.content.trim()) nextErrors.content = 'Add details neighbors can act on.';
+    if (!form.title.trim()) nextErrors.title = t('tutorial.postCreate.titleError');
+    if (!form.content.trim()) nextErrors.content = t('tutorial.postCreate.contentError');
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -110,40 +90,40 @@ export default function PostCreatePageTutorial() {
       <div className="auth-card tutorial-create-post-card">
         <header className="tutorial-form-header">
           <button className="btn btn-secondary btn-sm" onClick={() => navigate('/tutorial/forum')}>
-          &larr; Forum
+          {t('tutorial.common.backForum')}
           </button>
           <div className="tutorial-header-actions">
             {RestartButton}
           </div>
         </header>
 
-        <h2 className="auth-title gradient-text">New Forum Post</h2>
+        <h2 className="auth-title gradient-text">{t('tutorial.postCreate.title')}</h2>
         <p className="auth-subtitle">
-          Compose a public update for neighbors.
+          {t('tutorial.postCreate.subtitle')}
         </p>
 
         {GuidePanel}
 
         <div className="tutorial-scenario-strip">
           <div>
-          <strong>Current situation</strong>
-          <span>Neighbors need to know where they can charge phones during the outage.</span>
+          <strong>{t('tutorial.common.currentSituation')}</strong>
+          <span>{t('tutorial.postCreate.situationText')}</span>
           </div>
           <div>
-            <strong>{completion}% ready</strong>
-            <span>Clear posts reduce confusion and repeated questions.</span>
+            <strong>{t('tutorial.common.ready', { percent: completion })}</strong>
+            <span>{t('tutorial.postCreate.readyText')}</span>
           </div>
         </div>
 
         {saved && (
           <div className="alert alert-success">
-            Saved. It will appear in the forum.
+            {t('tutorial.postCreate.saved')}
           </div>
         )}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className={`form-group ${activeStep?.target === 'type' ? 'tutorial-tour-highlight' : ''}`}>
-            <label htmlFor="tutorial-forum-type">Forum type</label>
+            <label htmlFor="tutorial-forum-type">{t('tutorial.postCreate.forumType')}</label>
             <select id="tutorial-forum-type" name="forumType" value={form.forumType} onChange={handleChange}>
               {TYPES.map((type) => (
                 <option key={type.value} value={type.value}>{type.label}</option>
@@ -153,12 +133,12 @@ export default function PostCreatePageTutorial() {
           </div>
 
           <div className={`form-group ${activeStep?.target === 'title' ? 'tutorial-tour-highlight' : ''}`}>
-            <label htmlFor="tutorial-post-title">Title</label>
+            <label htmlFor="tutorial-post-title">{t('help_request_create.labels.title')}</label>
             <input
               id="tutorial-post-title"
               name="title"
               type="text"
-              placeholder="Short update title"
+              placeholder={t('tutorial.postCreate.shortTitle')}
               value={form.title}
               onChange={handleChange}
               className={errors.title ? 'input-error' : ''}
@@ -167,12 +147,12 @@ export default function PostCreatePageTutorial() {
           </div>
 
           <div className={`form-group ${activeStep?.target === 'content' ? 'tutorial-tour-highlight' : ''}`}>
-            <label htmlFor="tutorial-post-content">Content</label>
+            <label htmlFor="tutorial-post-content">{t('tutorial.postCreate.content')}</label>
             <textarea
               id="tutorial-post-content"
               name="content"
               rows={6}
-              placeholder="What happened? Where? What should neighbors do?"
+              placeholder={t('tutorial.postCreate.contentPlaceholder')}
               value={form.content}
               onChange={handleChange}
               className={`post-edit-content${errors.content ? ' input-error' : ''}`}
@@ -181,12 +161,12 @@ export default function PostCreatePageTutorial() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="tutorial-image-urls">Image links <span className="optional-tag">optional</span></label>
+            <label htmlFor="tutorial-image-urls">{t('tutorial.postCreate.imageLinks')} <span className="optional-tag">{t('tutorial.postCreate.optional')}</span></label>
             <textarea
               id="tutorial-image-urls"
               name="image_urls"
               rows={2}
-              placeholder="One image link per line"
+              placeholder={t('tutorial.postCreate.imagePlaceholder')}
               value={form.image_urls}
               onChange={handleChange}
               className="post-edit-content"
@@ -195,8 +175,8 @@ export default function PostCreatePageTutorial() {
 
           <div className={`tutorial-post-preview ${activeStep?.target === 'preview' ? 'tutorial-tour-highlight' : ''}`}>
             <span className="badge">{selectedType.label}</span>
-            <h3>{form.title || 'Your post title'}</h3>
-            <p>{form.content || 'Your post details will appear here.'}</p>
+            <h3>{form.title || t('tutorial.postCreate.previewTitleFallback')}</h3>
+            <p>{form.content || t('tutorial.postCreate.previewBodyFallback')}</p>
             {imageUrls.length > 0 && (
               <div className="tutorial-preview-images">
                 {imageUrls.slice(0, 3).map((url) => (
@@ -210,7 +190,7 @@ export default function PostCreatePageTutorial() {
             type="submit"
             className={`btn btn-primary btn-block ${activeStep?.target === 'submit' ? 'tutorial-tour-highlight' : ''}`}
           >
-            Save post
+            {t('tutorial.postCreate.save')}
           </button>
         </form>
       </div>

@@ -140,7 +140,7 @@ class TutorialActivity : AppCompatActivity() {
         }
         header.addView(text(title, 24, accent, bold = true), weightParams())
         val navButton = when (screen) {
-            Screen.DASHBOARD -> button("Exit", secondary = true) { finish() }
+            Screen.DASHBOARD -> button(getString(R.string.tutorial_exit), secondary = true) { finish() }
             Screen.INFO_AID_DETAIL -> button("←", secondary = true) { renderInfoChecklist() }.apply { minWidth = dp(48) }
             Screen.INFO_MAP, Screen.INFO_CHECKLIST, Screen.INFO_CONTACTS -> button("←", secondary = true) { renderInfo() }.apply { minWidth = dp(48) }
             else -> button("←", secondary = true) { renderDashboard() }.apply { minWidth = dp(48) }
@@ -169,16 +169,16 @@ class TutorialActivity : AppCompatActivity() {
             gravity = Gravity.END
             setPadding(0, dp(10), 0, 0)
         }
-        skipButton = button("Skip guide", secondary = true) {
+        skipButton = button(getString(R.string.tutorial_skip_guide), secondary = true) {
             hideGuide()
         }
-        previousButton = button("Previous", secondary = true) {
+        previousButton = button(getString(R.string.tutorial_previous), secondary = true) {
             if (guideIndex > 0) {
                 guideIndex -= 1
                 updateGuide()
             }
         }
-        nextButton = button("Next") {
+        nextButton = button(getString(R.string.tutorial_next)) {
             if (guideIndex == guideSteps.lastIndex) {
                 hideGuide()
             } else {
@@ -209,7 +209,7 @@ class TutorialActivity : AppCompatActivity() {
         guideCard.addView(guideLayout)
         root.addView(guideCard, margins(bottom = 16))
 
-        showTutorialButton = button("Show tutorial", secondary = true) {
+        showTutorialButton = button(getString(R.string.tutorial_show_tutorial), secondary = true) {
             guideIndex = 0
             guideCard.visibility = View.VISIBLE
             showTutorialButton.visibility = View.GONE
@@ -225,20 +225,20 @@ class TutorialActivity : AppCompatActivity() {
     private fun renderDashboard() {
         screen = Screen.DASHBOARD
         buildShell(
-            "Emergency Hub",
+            getString(R.string.emergency_hub),
             listOf(
-                GuideStep("welcome", "Start here", "Your main areas are grouped here so you can move quickly during an emergency."),
-                GuideStep("hub", "This is your hub", "Your hub keeps nearby posts and requests focused on the right neighborhood."),
-                GuideStep("scenario", "Current situation", "A neighborhood power outage is affecting buildings nearby. Use the app to share updates and ask for help."),
-                GuideStep("forum", "Read community updates", "Open the forum to follow what neighbors are reporting and add useful information."),
-                GuideStep("help", "Ask for help", "Open help requests when someone needs supplies, shelter, transport, or medical support."),
-                GuideStep("info", "Keep guidance close", "Offline info gives you quick steps to check when things feel urgent.")
+                GuideStep("welcome", getString(R.string.tutorial_dashboard_start_title), getString(R.string.tutorial_dashboard_start_text)),
+                GuideStep("hub", getString(R.string.tutorial_dashboard_hub_title), getString(R.string.tutorial_dashboard_hub_text)),
+                GuideStep("scenario", getString(R.string.tutorial_dashboard_situation_title), getString(R.string.tutorial_dashboard_situation_text)),
+                GuideStep("forum", getString(R.string.tutorial_dashboard_forum_title), getString(R.string.tutorial_dashboard_forum_text)),
+                GuideStep("help", getString(R.string.tutorial_dashboard_help_title), getString(R.string.tutorial_dashboard_help_text)),
+                GuideStep("info", getString(R.string.tutorial_dashboard_info_title), getString(R.string.tutorial_dashboard_info_text))
             )
         )
 
-        val hub = pill("Besiktas Hub", active = true).apply {
+        val hub = pill(getString(R.string.tutorial_hub_name), active = true).apply {
             gravity = Gravity.CENTER
-            setOnClickListener { showMainAppOnly("Hub selection") }
+            setOnClickListener { showMainAppOnly(getString(R.string.hub_label)) }
         }
         register("hub", hub)
         content.addView(hub, margins(bottom = 14))
@@ -247,20 +247,20 @@ class TutorialActivity : AppCompatActivity() {
         register("welcome", welcome)
         content.addView(welcome, margins(bottom = 12))
 
-        val scenario = cardBlock("Current situation", "A neighborhood power outage is affecting nearby buildings. You can ask for water, offer help, and share updates.")
+        val scenario = cardBlock(getString(R.string.tutorial_dashboard_situation_title), getString(R.string.tutorial_scenario_body))
         register("scenario", scenario)
         content.addView(scenario, margins(bottom = 12))
 
         content.addView(featureRow(
-            featureCard("💬", "Forum", "Community updates", "forum") { renderForum() },
-            featureCard("🆘", "Help Requests", "Ask or answer", "help") { renderHelpList() }
+            featureCard("💬", getString(R.string.feature_forum), getString(R.string.tutorial_forum_desc), "forum") { renderForum() },
+            featureCard("🆘", getString(R.string.feature_help), getString(R.string.tutorial_help_desc), "help") { renderHelpList() }
         ))
         content.addView(featureRow(
-            featureCard("👤", "Profile", "Sign in to use Profile", null, enabled = false) { showMainAppOnly("Profile") },
-            featureCard("📶", "Offline Info", "Offline guidance", "info") { renderInfo() }
+            featureCard("👤", getString(R.string.feature_profile), getString(R.string.tutorial_sign_in_profile), null, enabled = false) { showMainAppOnly(getString(R.string.feature_profile)) },
+            featureCard("📶", getString(R.string.feature_offline), getString(R.string.tutorial_offline_guidance), "info") { renderInfo() }
         ), margins(top = 12))
         content.addView(featureRow(
-            featureCard("📡", "Offline Messages", "Sign in to use Offline Messages", null, enabled = false) { showMainAppOnly("Offline messages") },
+            featureCard("📡", getString(R.string.feature_offline_messages), getString(R.string.tutorial_sign_in_offline_messages), null, enabled = false) { showMainAppOnly(getString(R.string.feature_offline_messages)) },
             View(this)
         ), margins(top = 12))
         updateGuide()
@@ -269,36 +269,36 @@ class TutorialActivity : AppCompatActivity() {
     private fun renderForum() {
         screen = Screen.FORUM
         buildShell(
-            "Forum",
+            getString(R.string.forum_title),
             listOf(
-                GuideStep("tabs", "Switch forum areas", "Use Global, Standard, and Urgent to focus on the kind of update you need."),
-                GuideStep("sort", "Sort updates", "Newest, Most liked, and Hot help you scan active conversations quickly."),
-                GuideStep("posts", "Open a post", "Tap a post to read the full update and add a comment."),
-                GuideStep("create", "Create a post", "Write a post when you have information that can help others nearby.")
+                GuideStep("tabs", getString(R.string.tutorial_forum_tabs_title), getString(R.string.tutorial_forum_tabs_text)),
+                GuideStep("sort", getString(R.string.tutorial_forum_sort_title), getString(R.string.tutorial_forum_sort_text)),
+                GuideStep("posts", getString(R.string.tutorial_forum_posts_title), getString(R.string.tutorial_forum_posts_text)),
+                GuideStep("create", getString(R.string.tutorial_forum_create_title), getString(R.string.tutorial_forum_create_text))
             )
         )
-        val newPost = button("New post") { renderPostCreate() }
+        val newPost = button(getString(R.string.tutorial_new_post)) { renderPostCreate() }
         register("create", newPost)
-        content.addView(labelRow("All hubs", "Besiktas Hub") { showMainAppOnly("Hub selection") }, margins(bottom = 10))
+        content.addView(labelRow(getString(R.string.tutorial_all_hubs), getString(R.string.tutorial_hub_name)) { showMainAppOnly(getString(R.string.hub_label)) }, margins(bottom = 10))
         val tabs = forumTabs()
         register("tabs", tabs)
         content.addView(tabs, margins(bottom = 12))
         content.addView(newPost, margins(bottom = 10))
 
         val sortRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        sortRow.addView(pill("Newest", active = selectedForumSort == "newest").apply {
+        sortRow.addView(pill(getString(R.string.sort_newest), active = selectedForumSort == "newest").apply {
             setOnClickListener {
                 selectedForumSort = "newest"
                 renderForum()
             }
         })
-        sortRow.addView(pill("Most liked", active = selectedForumSort == "most_liked").apply {
+        sortRow.addView(pill(getString(R.string.tutorial_sort_most_liked), active = selectedForumSort == "most_liked").apply {
             setOnClickListener {
                 selectedForumSort = "most_liked"
                 renderForum()
             }
         })
-        sortRow.addView(pill("Hot", active = selectedForumSort == "hot").apply {
+        sortRow.addView(pill(getString(R.string.tutorial_sort_hot), active = selectedForumSort == "hot").apply {
             setOnClickListener {
                 selectedForumSort = "hot"
                 renderForum()
@@ -317,7 +317,7 @@ class TutorialActivity : AppCompatActivity() {
                 }
             }
         if (visiblePosts.isEmpty()) {
-            content.addView(cardBlock("No posts here yet", "Create a post to add the first ${selectedForumType.lowercase()} update."), margins(bottom = 10))
+            content.addView(cardBlock(getString(R.string.tutorial_no_posts_title), getString(R.string.tutorial_no_posts_body, selectedForumType.lowercase())), margins(bottom = 10))
         }
         visiblePosts.forEach { post ->
             val postCard = forumPostCard(post)
@@ -335,11 +335,11 @@ class TutorialActivity : AppCompatActivity() {
         screen = Screen.POST_DETAIL
         val post = SampleData.posts.firstOrNull { it.id == selectedPostId } ?: return renderForum()
         buildShell(
-            "Forum Post",
+            getString(R.string.tutorial_forum_post_title),
             listOf(
-                GuideStep("summary", "Read the update", "Check the type, title, author, and details before responding."),
-                GuideStep("votes", "React to the post", "Upvote helpful updates or downvote information that is not useful."),
-                GuideStep("comments", "Join the conversation", "Add a comment when you can answer a question or share more detail.")
+                GuideStep("summary", getString(R.string.tutorial_read_update_title), getString(R.string.tutorial_read_update_text)),
+                GuideStep("votes", getString(R.string.tutorial_react_post_title), getString(R.string.tutorial_react_post_text)),
+                GuideStep("comments", getString(R.string.tutorial_join_conversation_title), getString(R.string.tutorial_join_conversation_text))
             )
         )
         val summary = forumDetailCard(post)
@@ -359,8 +359,8 @@ class TutorialActivity : AppCompatActivity() {
                 renderPostDetail()
             }
         })
-        votes.addView(pill("Share").apply {
-            setOnClickListener { showMainAppOnly("Sharing") }
+        votes.addView(pill(getString(R.string.share)).apply {
+            setOnClickListener { showMainAppOnly(getString(R.string.share)) }
         })
         register("votes", votes)
         content.addView(votes, margins(bottom = 12))
@@ -377,23 +377,23 @@ class TutorialActivity : AppCompatActivity() {
     private fun renderPostCreate() {
         screen = Screen.POST_CREATE
         buildShell(
-            "Create Post",
+            getString(R.string.tutorial_create_post_title),
             listOf(
-                GuideStep("type", "Choose where it belongs", "Pick the forum type that best matches your update."),
-                GuideStep("title", "Use a clear title", "A short title helps neighbors understand the update quickly."),
-                GuideStep("content", "Write useful details", "Share what happened, where it happened, and what people should know next."),
-                GuideStep("images", "Add images if useful", "Photos can help others understand the situation more quickly."),
-                GuideStep("save", "Save the post", "Post it once the information is clear and ready for others to read.")
+                GuideStep("type", getString(R.string.tutorial_post_type_title), getString(R.string.tutorial_post_type_text)),
+                GuideStep("title", getString(R.string.tutorial_clear_title_title), getString(R.string.tutorial_clear_title_text)),
+                GuideStep("content", getString(R.string.tutorial_post_details_title), getString(R.string.tutorial_post_details_text)),
+                GuideStep("images", getString(R.string.tutorial_add_images_title), getString(R.string.tutorial_add_images_text)),
+                GuideStep("save", getString(R.string.tutorial_save_post_title), getString(R.string.tutorial_save_post_text))
             )
         )
         val titleInput = edit("Charging station open at the community center")
         val bodyInput = edit("Volunteers can help people charge phones until 18:00. Bring your own cable if possible.", minLines = 6)
 
-        content.addView(labelRow("Posting to", "Besiktas Hub") { showMainAppOnly("Hub selection") }, margins(bottom = 8))
-        content.addView(text("Share an update with neighbors nearby.", 14, textSecondary), margins(bottom = 20))
+        content.addView(labelRow(getString(R.string.tutorial_posting_to), getString(R.string.tutorial_hub_name)) { showMainAppOnly(getString(R.string.hub_label)) }, margins(bottom = 8))
+        content.addView(text(getString(R.string.tutorial_share_update), 14, textSecondary), margins(bottom = 20))
 
         val typeSelector = toggleRow(
-            listOf("Global", "Standard", "Urgent"),
+            listOf(getString(R.string.tab_global), getString(R.string.tab_standard), getString(R.string.tab_urgent)),
             activeIndex = when (selectedForumType) {
                 "STANDARD" -> 1
                 "URGENT" -> 2
@@ -401,23 +401,23 @@ class TutorialActivity : AppCompatActivity() {
             }
         )
         register("type", typeSelector)
-        content.addView(sectionLabel("Post type"))
+        content.addView(sectionLabel(getString(R.string.tutorial_post_type)))
         content.addView(typeSelector, margins(bottom = 18))
 
         register("title", titleInput)
-        content.addView(labeled("Title", titleInput))
+        content.addView(labeled(getString(R.string.title_label), titleInput))
         register("content", bodyInput)
-        content.addView(labeled("Content", bodyInput))
+        content.addView(labeled(getString(R.string.tutorial_content), bodyInput))
 
-        val images = formBlock("Images", listOf("Upload from device", "Image URLs"), "Optional")
+        val images = formBlock(getString(R.string.images_label), listOf(getString(R.string.upload_from_device), getString(R.string.tutorial_image_urls)), getString(R.string.tutorial_optional))
         register("images", images)
         content.addView(images, margins(bottom = 16))
 
-        val save = fullWidthButton("Create post") {
+        val save = fullWidthButton(getString(R.string.tutorial_create_post_button)) {
             val title = titleInput.text.toString().trim()
             val body = bodyInput.text.toString().trim()
             if (title.isBlank() || body.isBlank()) {
-                Toast.makeText(this, "Add a title and details.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.tutorial_post_validation), Toast.LENGTH_SHORT).show()
             } else {
                 SampleData.posts.add(0, ForumPost("local-post-${System.nanoTime()}", title, body, "You", selectedForumType, upvotes = 1, isMine = true))
                 renderForum()
@@ -430,19 +430,22 @@ class TutorialActivity : AppCompatActivity() {
 
     private fun renderHelpList() {
         screen = Screen.HELP_LIST
+        if (selectedHelpCategory == "All") {
+            selectedHelpCategory = getString(R.string.tutorial_filter_all)
+        }
         buildShell(
-            "Help Center",
+            getString(R.string.help_center_title),
             listOf(
-                GuideStep("tabs", "Switch lists", "Requests show people who need help. Offers show people who can help."),
-                GuideStep("filters", "Filter by need", "Categories make it easier to find medical, food, shelter, or transport needs."),
-                GuideStep("requests", "Review requests", "Open a request to see what is needed and how you might respond."),
-                GuideStep("create", "Create a request", "Create a request when someone needs supplies, transport, shelter, or medical help.")
+                GuideStep("tabs", getString(R.string.tutorial_help_switch_title), getString(R.string.tutorial_help_switch_text)),
+                GuideStep("filters", getString(R.string.tutorial_help_filter_title), getString(R.string.tutorial_help_filter_text)),
+                GuideStep("requests", getString(R.string.tutorial_help_review_title), getString(R.string.tutorial_help_review_text)),
+                GuideStep("create", getString(R.string.tutorial_help_create_title), getString(R.string.tutorial_help_create_text))
             )
         )
-        content.addView(labelRow("Hub", "Besiktas Hub") { showMainAppOnly("Hub selection") }, margins(bottom = 10))
+        content.addView(labelRow(getString(R.string.hub_label), getString(R.string.tutorial_hub_name)) { showMainAppOnly(getString(R.string.hub_label)) }, margins(bottom = 10))
         val tabs = segmentedTabs(
-            first = "Requests",
-            second = "Offers",
+            first = getString(R.string.tab_requests),
+            second = getString(R.string.tab_offers),
             firstActive = selectedHelpMode == "REQUESTS",
             onFirstClick = {
                 selectedHelpMode = "REQUESTS"
@@ -455,16 +458,16 @@ class TutorialActivity : AppCompatActivity() {
         )
         register("tabs", tabs)
         content.addView(tabs, margins(bottom = 10))
-        val create = button("New") { renderHelpCreate() }
+        val create = button(getString(R.string.tutorial_new)) { renderHelpCreate() }
         register("create", create)
         content.addView(create, margins(bottom = 10))
-        val filters = chipScroller(listOf("All", "Medical", "Food", "Shelter", "Transport", "Other"))
+        val filters = chipScroller(listOf(getString(R.string.tutorial_filter_all), getString(R.string.tutorial_filter_medical), getString(R.string.tutorial_filter_food), getString(R.string.tutorial_filter_shelter), getString(R.string.tutorial_filter_transport), getString(R.string.tutorial_filter_other)))
         register("filters", filters)
         content.addView(filters, margins(bottom = 8))
 
         if (selectedHelpMode == "REQUESTS") {
             val visibleRequests = SampleData.requests.filter {
-                selectedHelpCategory == "All" || it.category.equals(selectedHelpCategory, ignoreCase = true) || it.category.contains(selectedHelpCategory, ignoreCase = true)
+                helpCategoryMatches(it.category)
             }
             visibleRequests.forEach { request ->
                 val card = helpRequestCard(request)
@@ -477,7 +480,7 @@ class TutorialActivity : AppCompatActivity() {
             }
         } else {
             val visibleOffers = SampleData.offers.filter {
-                selectedHelpCategory == "All" || it.category.equals(selectedHelpCategory, ignoreCase = true) || it.category.contains(selectedHelpCategory, ignoreCase = true)
+                helpCategoryMatches(it.category)
             }
             visibleOffers.forEach { offer ->
                 val card = helpOfferCard(offer)
@@ -492,12 +495,12 @@ class TutorialActivity : AppCompatActivity() {
         screen = Screen.HELP_DETAIL
         val request = SampleData.requests.firstOrNull { it.id == selectedRequestId } ?: return renderHelpList()
         buildShell(
-            "Help Request Detail",
+            getString(R.string.tutorial_help_detail_title),
             listOf(
-                GuideStep("summary", "Review the request", "Check the category, urgency, description, and who posted it."),
-                GuideStep("actions", "Manage your request", "You can only manage requests you created. Mark it as resolved when the need is handled, or delete it if it is no longer needed."),
-                GuideStep("location", "Check the location", "Use the location note to understand where support is needed."),
-                GuideStep("comments", "Coordinate in comments", "Comment to ask a follow-up question, offer help, or share an update.")
+                GuideStep("summary", getString(R.string.tutorial_review_request_title), getString(R.string.tutorial_review_request_text)),
+                GuideStep("actions", getString(R.string.tutorial_manage_request_title), getString(R.string.tutorial_manage_request_text)),
+                GuideStep("location", getString(R.string.tutorial_check_location_title), getString(R.string.tutorial_check_location_text)),
+                GuideStep("comments", getString(R.string.tutorial_coordinate_comments_title), getString(R.string.tutorial_coordinate_comments_text))
             )
         )
         val summary = helpDetailCard(request)
@@ -507,20 +510,20 @@ class TutorialActivity : AppCompatActivity() {
         if (request.isMine) {
             val actions = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
             if (request.status != "RESOLVED") {
-                actions.addView(button("Mark as resolved") {
+                actions.addView(button(getString(R.string.mark_resolved)) {
                     request.status = "RESOLVED"
                     renderHelpDetail()
                 })
             }
-            actions.addView(button("Delete", secondary = true) {
+            actions.addView(button(getString(R.string.delete), secondary = true) {
                 AlertDialog.Builder(this)
-                    .setTitle("Delete request?")
-                    .setMessage("This removes the request from the list.")
-                    .setPositiveButton("Delete") { _, _ ->
+                    .setTitle(getString(R.string.tutorial_delete_request_title))
+                    .setMessage(getString(R.string.tutorial_delete_request_message))
+                    .setPositiveButton(getString(R.string.delete)) { _, _ ->
                         SampleData.requests.removeAll { it.id == request.id }
                         renderHelpList()
                     }
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton(getString(R.string.cancel), null)
                     .show()
             }, margins(top = 6))
             register("actions", actions)
@@ -543,49 +546,49 @@ class TutorialActivity : AppCompatActivity() {
     private fun renderHelpCreate() {
         screen = Screen.HELP_CREATE
         buildShell(
-            "Create Help Request",
+            getString(R.string.tutorial_create_help_title),
             listOf(
-                GuideStep("title", "Write a clear title", "A short title helps neighbors understand the need quickly."),
-                GuideStep("description", "Add useful details", "Describe who needs help, what is needed, and any safety details."),
-                GuideStep("category", "Pick category and urgency", "These choices help the right people notice the request faster."),
-                GuideStep("location", "Add location details", "A clear location helps nearby people understand where support is needed."),
-                GuideStep("images", "Attach images if helpful", "Images are optional, but they can make the request clearer."),
-                GuideStep("save", "Review before saving", "Save the request once the details are accurate.")
+                GuideStep("title", getString(R.string.tutorial_clear_title_title), getString(R.string.tutorial_clear_title_text)),
+                GuideStep("description", getString(R.string.tutorial_help_desc_title), getString(R.string.tutorial_help_desc_text)),
+                GuideStep("category", getString(R.string.tutorial_category_urgency_title), getString(R.string.tutorial_category_urgency_text)),
+                GuideStep("location", getString(R.string.tutorial_location_details_title), getString(R.string.tutorial_location_details_text)),
+                GuideStep("images", getString(R.string.tutorial_add_images_title), getString(R.string.tutorial_add_images_text)),
+                GuideStep("save", getString(R.string.tutorial_review_save_title), getString(R.string.tutorial_review_save_text))
             )
         )
         val titleInput = edit("Need drinking water for an elderly neighbor")
         val descInput = edit("Our building has no running water. One elderly neighbor cannot walk to the distribution point.", minLines = 4)
         val locationInput = edit("Besiktas community center, Block B entrance")
-        content.addView(text("Tell neighbors what is needed and where they can help.", 14, textSecondary), margins(bottom = 20))
+        content.addView(text(getString(R.string.tutorial_help_intro), 14, textSecondary), margins(bottom = 20))
         register("title", titleInput)
-        content.addView(labeled("Title", titleInput))
+        content.addView(labeled(getString(R.string.title_label), titleInput))
         register("description", descInput)
-        content.addView(labeled("Description", descInput))
+        content.addView(labeled(getString(R.string.help_description), descInput))
 
         val categoryCard = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            addView(dropdownLike("Food / water"))
-            addView(dropdownLike("Medium urgency"), margins(top = 10))
+            addView(dropdownLike(getString(R.string.tutorial_food_water)))
+            addView(dropdownLike(getString(R.string.tutorial_medium_urgency)), margins(top = 10))
         }
         register("category", categoryCard)
-        content.addView(sectionLabel("Category and urgency"))
+        content.addView(sectionLabel(getString(R.string.tutorial_category_urgency)))
         content.addView(categoryCard, margins(bottom = 16))
 
         register("location", locationInput)
-        content.addView(labeled("Location", locationInput))
-        content.addView(button("Use my location", secondary = true) {
-            showMainAppOnly("Using your current location")
+        content.addView(labeled(getString(R.string.location_label), locationInput))
+        content.addView(button(getString(R.string.use_my_location), secondary = true) {
+            showMainAppOnly(getString(R.string.use_my_location))
         }, margins(bottom = 16))
 
-        val images = formBlock("Images", listOf("Upload from gallery", "Take photo"), "Optional")
+        val images = formBlock(getString(R.string.images_label), listOf(getString(R.string.tutorial_upload_gallery), getString(R.string.tutorial_take_photo)), getString(R.string.tutorial_optional))
         register("images", images)
         content.addView(images, margins(bottom = 16))
 
-        val save = fullWidthButton("Submit") {
+        val save = fullWidthButton(getString(R.string.submit)) {
             val title = titleInput.text.toString().trim()
             val desc = descInput.text.toString().trim()
             if (title.isBlank() || desc.isBlank()) {
-                Toast.makeText(this, "Add a title and description.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.tutorial_help_validation), Toast.LENGTH_SHORT).show()
             } else {
                 val location = locationInput.text.toString().trim().ifBlank { "Besiktas community center, Block B entrance" }
                 SampleData.requests.add(0, HelpRequest("local-help-${System.nanoTime()}", title, desc, "Food / water", "MEDIUM", location, "You", isMine = true))
@@ -602,29 +605,29 @@ class TutorialActivity : AppCompatActivity() {
         buildShell(
             "",
             listOf(
-                GuideStep("overview", "Offline features", "Use these tools when internet access is limited or you need quick emergency guidance."),
-                GuideStep("map", "Open offline map", "This opens the same offline map used in the main app."),
-                GuideStep("checklist", "Open the checklist", "Use checklists to follow clear steps during a stressful moment."),
-                GuideStep("contacts", "Open offline contacts", "Emergency contacts keep important numbers easy to reach.")
+                GuideStep("overview", getString(R.string.tutorial_offline_features_title), getString(R.string.tutorial_offline_features_text)),
+                GuideStep("map", getString(R.string.tutorial_open_offline_map_title), getString(R.string.tutorial_open_offline_map_text)),
+                GuideStep("checklist", getString(R.string.tutorial_open_checklist_title), getString(R.string.tutorial_open_checklist_text)),
+                GuideStep("contacts", getString(R.string.tutorial_open_contacts_title), getString(R.string.tutorial_open_contacts_text))
             )
         )
         content.gravity = Gravity.CENTER_HORIZONTAL
 
-        val overview = text("Offline Features", 24, textPrimary, bold = true).apply {
+        val overview = text(getString(R.string.offline_features_title), 24, textPrimary, bold = true).apply {
             gravity = Gravity.CENTER
         }
         register("overview", overview)
         content.addView(overview, margins(bottom = 24))
 
-        val map = offlineFeatureButton("Offline Map") { renderInfoMap() }
+        val map = offlineFeatureButton(getString(R.string.offline_map)) { renderInfoMap() }
         register("map", map)
         content.addView(map, margins(bottom = 12))
 
-        val checklist = offlineFeatureButton("Emergency Checklist") { renderInfoChecklist() }
+        val checklist = offlineFeatureButton(getString(R.string.emergency_checklist)) { renderInfoChecklist() }
         register("checklist", checklist)
         content.addView(checklist, margins(bottom = 12))
 
-        val contacts = offlineFeatureButton("Offline Contacts") { renderInfoContacts() }
+        val contacts = offlineFeatureButton(getString(R.string.offline_contacts)) { renderInfoContacts() }
         register("contacts", contacts)
         content.addView(contacts)
         updateGuide()
@@ -635,10 +638,10 @@ class TutorialActivity : AppCompatActivity() {
         buildShell(
             "",
             listOf(
-                GuideStep("title", "Basic skills guide", "Use these first aid topics when you need quick guidance."),
-                GuideStep("displacement", "Displacement skills", "Open this topic to review how to move someone away from danger."),
-                GuideStep("checking", "Checking skills", "Open this topic to review the first checks before help arrives."),
-                GuideStep("cpr", "CPR guidance", "Open this topic to review cardiopulmonary resuscitation guidance.")
+                GuideStep("title", getString(R.string.tutorial_basic_skills_title), getString(R.string.tutorial_basic_skills_text)),
+                GuideStep("displacement", getString(R.string.first_aid_displacement_title), getString(R.string.tutorial_displacement_text)),
+                GuideStep("checking", getString(R.string.first_aid_checking_title), getString(R.string.tutorial_checking_text)),
+                GuideStep("cpr", getString(R.string.tutorial_cpr_title), getString(R.string.tutorial_cpr_text))
             )
         )
         val title = text(getString(R.string.first_aid_guide_title), 22, accent, bold = true)
@@ -709,9 +712,9 @@ class TutorialActivity : AppCompatActivity() {
         buildShell(
             "",
             listOf(
-                GuideStep("title", "Emergency numbers", "Keep the most important public numbers easy to reach."),
-                GuideStep("general", "Call emergency services", "Use the call button when there is an urgent situation."),
-                GuideStep("custom", "Add custom number", "Save personal emergency contacts from the main app.")
+                GuideStep("title", getString(R.string.tutorial_emergency_numbers_title), getString(R.string.tutorial_emergency_numbers_text)),
+                GuideStep("general", getString(R.string.tutorial_call_services_title), getString(R.string.tutorial_call_services_text)),
+                GuideStep("custom", getString(R.string.tutorial_custom_number_title), getString(R.string.tutorial_custom_number_text))
             )
         )
         val title = text(getString(R.string.emergency_numbers), 22, accent, bold = true)
@@ -747,18 +750,18 @@ class TutorialActivity : AppCompatActivity() {
         buildShell(
             "",
             listOf(
-                GuideStep("map", "Offline map", "Open the same offline map used in the main app."),
-                GuideStep("openMap", "Open map", "The map will ask for location permission when needed and show nearby gathering points.")
+                GuideStep("map", getString(R.string.offline_map), getString(R.string.tutorial_open_offline_map_text)),
+                GuideStep("openMap", getString(R.string.tutorial_open_map_title), getString(R.string.tutorial_open_map_text))
             )
         )
         val map = cardBlock(
-            "Offline Map",
-            "Use the app map to find nearby gathering points. It can use your current location if you allow permission."
+            getString(R.string.offline_map),
+            getString(R.string.tutorial_map_card_body)
         )
         register("map", map)
         content.addView(map, margins(bottom = 12))
 
-        val openMap = fullWidthButton("Open offline map") {
+        val openMap = fullWidthButton(getString(R.string.tutorial_open_offline_map_button)) {
             startActivity(Intent(this, MapActivity::class.java))
         }
         register("openMap", openMap)
@@ -769,11 +772,11 @@ class TutorialActivity : AppCompatActivity() {
     private fun dashboardWelcomeCard(): MaterialCardView {
         val card = card(radiusDp = 16)
         val layout = vertical(dp(20))
-        layout.addView(text("Welcome, Neighbor", 20, textPrimary, bold = true), margins(bottom = 10))
+        layout.addView(text(getString(R.string.dashboard_welcome_format, getString(R.string.tutorial_neighbor)), 20, textPrimary, bold = true), margins(bottom = 10))
         val badges = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        badges.addView(badge("Standard Member", accent))
-        badges.addView(badge("Safe", accentSecondary))
-        badges.addView(badge("Besiktas", textSecondary))
+        badges.addView(badge(getString(R.string.role_standard), accent))
+        badges.addView(badge(getString(R.string.status_safe), accentSecondary))
+        badges.addView(badge(getString(R.string.tutorial_hub_name), textSecondary))
         layout.addView(badges)
         card.addView(layout)
         return card
@@ -781,19 +784,19 @@ class TutorialActivity : AppCompatActivity() {
 
     private fun forumTabs(): LinearLayout {
         val tabs = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        tabs.addView(underlineTab("Global", active = selectedForumType == "GLOBAL", color = ContextCompat.getColor(this, R.color.forum_global)).apply {
+        tabs.addView(underlineTab(getString(R.string.tab_global), active = selectedForumType == "GLOBAL", color = ContextCompat.getColor(this, R.color.forum_global)).apply {
             setOnClickListener {
                 selectedForumType = "GLOBAL"
                 renderForum()
             }
         }, weightParams())
-        tabs.addView(underlineTab("Standard", active = selectedForumType == "STANDARD", color = ContextCompat.getColor(this, R.color.forum_standard)).apply {
+        tabs.addView(underlineTab(getString(R.string.tab_standard), active = selectedForumType == "STANDARD", color = ContextCompat.getColor(this, R.color.forum_standard)).apply {
             setOnClickListener {
                 selectedForumType = "STANDARD"
                 renderForum()
             }
         }, weightParams())
-        tabs.addView(underlineTab("Urgent", active = selectedForumType == "URGENT", color = ContextCompat.getColor(this, R.color.forum_urgent)).apply {
+        tabs.addView(underlineTab(getString(R.string.tab_urgent), active = selectedForumType == "URGENT", color = ContextCompat.getColor(this, R.color.forum_urgent)).apply {
             setOnClickListener {
                 selectedForumType = "URGENT"
                 renderForum()
@@ -843,8 +846,8 @@ class TutorialActivity : AppCompatActivity() {
             gravity = Gravity.CENTER_VERTICAL
         }
         stats.addView(text("💬 ${post.comments.size} comments", 12, textMuted), weightParams())
-        stats.addView(pill("Share").apply {
-            setOnClickListener { showMainAppOnly("Sharing") }
+        stats.addView(pill(getString(R.string.share)).apply {
+            setOnClickListener { showMainAppOnly(getString(R.string.share)) }
         })
         body.addView(stats)
         row.addView(body, weightParams())
@@ -857,7 +860,7 @@ class TutorialActivity : AppCompatActivity() {
         val layout = vertical(dp(20))
         val badges = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         badges.addView(badge(post.type, forumTypeColor(post.type)))
-        badges.addView(badge("Besiktas Hub", textSecondary))
+        badges.addView(badge(getString(R.string.tutorial_hub_name), textSecondary))
         layout.addView(badges, margins(bottom = 12))
         layout.addView(text(post.title, 20, textPrimary, bold = true), margins(bottom = 8))
         layout.addView(text("${post.author} · 8 min ago", 13, textSecondary), margins(bottom = 16))
@@ -924,12 +927,12 @@ class TutorialActivity : AppCompatActivity() {
             orientation = LinearLayout.VERTICAL
             setPadding(0, dp(4), 0, dp(4))
         }
-        section.addView(text("Comments (${comments.size})", 18, textPrimary, bold = true), margins(bottom = 10))
+        section.addView(text(getString(R.string.tutorial_comments_count, comments.size), 18, textPrimary, bold = true), margins(bottom = 10))
         val inputCard = card(radiusDp = 12)
         val inputLayout = vertical(dp(14))
-        val input = edit("", minLines = 2).apply { hint = "Write a comment" }
+        val input = edit("", minLines = 2).apply { hint = getString(R.string.tutorial_write_comment) }
         inputLayout.addView(input, margins(bottom = 8))
-        inputLayout.addView(button("Post comment") {
+        inputLayout.addView(button(getString(R.string.tutorial_post_comment)) {
             val body = input.text.toString().trim()
             if (body.isNotBlank()) onSubmit(body)
         })
@@ -980,7 +983,7 @@ class TutorialActivity : AppCompatActivity() {
             minHeight = dp(52)
             setPadding(dp(14), 0, dp(14), 0)
             background = rounded(bgInput, border, 1, 8)
-            setOnClickListener { showMainAppOnly("Changing this field") }
+            setOnClickListener { showMainAppOnly(getString(R.string.tutorial_changing_field)) }
         }
 
     private fun formBlock(title: String, actions: List<String>, caption: String): MaterialCardView {
@@ -1027,6 +1030,18 @@ class TutorialActivity : AppCompatActivity() {
                 }
             })
         }
+
+    private fun helpCategoryMatches(category: String): Boolean {
+        val selected = selectedHelpCategory
+        if (selected == "All" || selected == getString(R.string.tutorial_filter_all)) return true
+        return category.equals(selected, ignoreCase = true) ||
+                category.contains(selected, ignoreCase = true) ||
+                selected.equals(getString(R.string.tutorial_filter_medical), ignoreCase = true) && category.contains("Medical", ignoreCase = true) ||
+                selected.equals(getString(R.string.tutorial_filter_food), ignoreCase = true) && category.contains("Food", ignoreCase = true) ||
+                selected.equals(getString(R.string.tutorial_filter_shelter), ignoreCase = true) && category.contains("Shelter", ignoreCase = true) ||
+                selected.equals(getString(R.string.tutorial_filter_transport), ignoreCase = true) && category.contains("Transport", ignoreCase = true) ||
+                selected.equals(getString(R.string.tutorial_filter_other), ignoreCase = true) && category.contains("Other", ignoreCase = true)
+    }
 
     private fun cardBlock(title: String, body: String): MaterialCardView {
         val card = card()
@@ -1091,14 +1106,14 @@ class TutorialActivity : AppCompatActivity() {
         labels.addView(text(number, 14, textMuted))
         row.addView(labels, weightParams())
         row.addView(MaterialButton(this).apply {
-            text = "Call"
+            text = getString(R.string.tutorial_call)
             isAllCaps = false
             textSize = 12f
             cornerRadius = dp(8)
             minHeight = dp(40)
             setTextColor(ContextCompat.getColor(this@TutorialActivity, R.color.white))
             backgroundTintList = ColorStateList.valueOf(Color.parseColor("#E63946"))
-            setOnClickListener { showMainAppOnly("Calling $title") }
+            setOnClickListener { showMainAppOnly(getString(R.string.tutorial_calling, title)) }
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(40))
         })
         card.addView(row)
@@ -1242,7 +1257,7 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun showMainAppOnly(feature: String) {
-        Toast.makeText(this, "$feature is available in the main app.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.tutorial_main_app_only, feature), Toast.LENGTH_SHORT).show()
     }
 
     private fun updateGuide() {
@@ -1252,11 +1267,11 @@ class TutorialActivity : AppCompatActivity() {
         }
         showTutorialButton.visibility = View.GONE
         val step = guideSteps[guideIndex]
-        guideCount.text = "Step ${guideIndex + 1} of ${guideSteps.size}"
+        guideCount.text = getString(R.string.tutorial_step_count, guideIndex + 1, guideSteps.size)
         guideTitle.text = step.title
         guideText.text = step.text
         previousButton.isEnabled = guideIndex > 0
-        nextButton.text = if (guideIndex == guideSteps.lastIndex) "Finish" else "Next"
+        nextButton.text = if (guideIndex == guideSteps.lastIndex) getString(R.string.tutorial_finish) else getString(R.string.tutorial_next)
         skipButton.visibility = if (guideIndex == guideSteps.lastIndex) View.INVISIBLE else View.VISIBLE
         clearHighlights()
         highlight(targetViews[step.target])

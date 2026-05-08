@@ -110,7 +110,7 @@ export default function SignInPage() {
           </form>
 
           <div className="auth-tutorial-divider">
-            <span>New here?</span>
+            <span>{t('tutorial.common.newHere')}</span>
           </div>
 
           <button
@@ -118,7 +118,7 @@ export default function SignInPage() {
               className="btn btn-secondary btn-block auth-tutorial-btn"
               onClick={() => navigate('/tutorial')}
           >
-            Try the tutorial scenario
+            {t('tutorial.common.tryScenario')}
           </button>
 
           <p className="auth-footer">

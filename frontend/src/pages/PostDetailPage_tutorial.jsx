@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   addTutorialPostComment,
   getTutorialPostComments,
@@ -11,6 +12,7 @@ import { getTutorialPostById } from '../utils/tutorialForumData';
 export default function PostDetailPageTutorial() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const post = useMemo(() => getTutorialPostById(id), [id]);
   const [commentText, setCommentText] = useState('');
   const [commentOverrides, setCommentOverrides] = useState(() => getTutorialPostComments());
@@ -20,9 +22,9 @@ export default function PostDetailPageTutorial() {
     return (
       <div className="page post-detail-page tutorial-page">
         <button className="btn btn-secondary btn-sm post-back-link" onClick={() => navigate('/tutorial/forum')}>
-          &larr; Forum tutorial
+          {t('tutorial.common.backForumTutorial')}
         </button>
-        <p className="forum-empty">Post not found.</p>
+        <p className="forum-empty">{t('tutorial.common.notFoundPost')}</p>
       </div>
     );
   }
@@ -59,15 +61,15 @@ export default function PostDetailPageTutorial() {
   return (
     <div className="page post-detail-page tutorial-page">
       <button className="btn btn-secondary btn-sm post-back-link" onClick={() => navigate('/tutorial/forum')}>
-        &larr; Forum
+        {t('tutorial.common.backForum')}
       </button>
 
       <article className="post-article">
         <div className="post-header-row">
           <div>
             <span className="badge badge-global">{post.forumType || 'GLOBAL'}</span>
-            {post.local && <span className="badge badge-accent">Your post</span>}
-            <span className="badge badge-muted">Besiktas Neighborhood</span>
+            {post.local && <span className="badge badge-accent">{t('tutorial.common.yourPost')}</span>}
+            <span className="badge badge-muted">{t('tutorial.dashboard.neighborhood')}</span>
           </div>
         </div>
 
@@ -75,12 +77,12 @@ export default function PostDetailPageTutorial() {
 
         <div className="post-meta">
           <span className="author-link">{post.author}</span>
-          {post.role === 'EXPERT' && <span className="badge badge-expert-responding">Expert</span>}
+          {post.role === 'EXPERT' && <span className="badge badge-expert-responding">{t('tutorial.common.expert')}</span>}
           <span className="badge" style={{ color: '#38bdf8', borderColor: '#38bdf844', background: '#38bdf811' }}>
             {post.status}
           </span>
           <span className="post-card-dot">&middot;</span>
-          <span>{post.createdLabel || 'recent update'}</span>
+          <span>{post.createdLabel || t('tutorial.common.recentUpdate')}</span>
         </div>
 
         <div className="post-content">{post.body}</div>
@@ -100,23 +102,23 @@ export default function PostDetailPageTutorial() {
           <button className="vote-btn vote-down" onClick={() => handleVote('downvotes')}>
             &#9660; {downvotes}
           </button>
-          <span className="post-stat">{comments.length} comments</span>
+          <span className="post-stat">{t('tutorial.common.commentsCount', { count: comments.length })}</span>
         </div>
       </article>
 
       <section className="comments-section">
-        <h2 className="comments-heading">Comments</h2>
+        <h2 className="comments-heading">{t('tutorial.common.comments')}</h2>
 
         <form className="comment-form" onSubmit={handleCommentSubmit}>
           <textarea
             className="comment-input"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Write a comment"
+            placeholder={t('tutorial.common.writeComment')}
             rows={3}
           />
           <button type="submit" className="btn btn-primary btn-sm" disabled={!commentText.trim()}>
-            Post comment
+            {t('tutorial.common.postComment')}
           </button>
         </form>
 
@@ -125,7 +127,7 @@ export default function PostDetailPageTutorial() {
             <div className="comment-card" key={comment.id}>
               <div className="comment-header">
                 <span className="comment-author">{comment.author}</span>
-                {comment.local && <span className="badge badge-accent">Your comment</span>}
+                {comment.local && <span className="badge badge-accent">{t('tutorial.common.yourComment')}</span>}
                 <span className="post-card-dot">&middot;</span>
                 <span className="comment-time">{comment.createdLabel}</span>
               </div>

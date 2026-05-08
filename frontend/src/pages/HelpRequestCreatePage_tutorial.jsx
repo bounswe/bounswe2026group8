@@ -1,52 +1,31 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import useTutorialGuide from '../components/TutorialGuide';
 import { saveTutorialHelpRequest } from '../utils/tutorialStorage';
 
-const HELP_REQUEST_TOUR_STEPS = [
-  {
-    target: 'scenario',
-    title: 'Start with the situation',
-    text: 'Start with the situation so neighbors understand who needs help and why.',
-  },
-  {
-    target: 'title',
-    title: 'Write a clear title',
-    text: 'A short title helps neighbors understand the need quickly while scanning a list.',
-  },
-  {
-    target: 'description',
-    title: 'Add useful details',
-    text: 'Describe who needs help, what is needed, and any safety details helpers should know.',
-  },
-  {
-    target: 'category',
-    title: 'Pick category and urgency',
-    text: 'These choices help neighbors find urgent needs and understand what they can do.',
-  },
-  {
-    target: 'submit',
-    title: 'Check before sending',
-    text: 'Review the details before adding the request to the list.',
-  },
-];
-
-const CATEGORIES = [
-  { value: 'MEDICAL', label: 'Medical' },
-  { value: 'FOOD', label: 'Food / water' },
-  { value: 'SHELTER', label: 'Shelter' },
-  { value: 'TRANSPORT', label: 'Transport' },
-  { value: 'OTHER', label: 'Other' },
-];
-
-const URGENCIES = [
-  { value: 'LOW', label: 'Low' },
-  { value: 'MEDIUM', label: 'Medium' },
-  { value: 'HIGH', label: 'High' },
-];
-
 export default function HelpRequestCreatePageTutorial() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const HELP_REQUEST_TOUR_STEPS = [
+    { target: 'scenario', title: t('tutorial.helpCreate.steps.scenarioTitle'), text: t('tutorial.helpCreate.steps.scenarioText') },
+    { target: 'title', title: t('tutorial.helpCreate.steps.titleTitle'), text: t('tutorial.helpCreate.steps.titleText') },
+    { target: 'description', title: t('tutorial.helpCreate.steps.detailsTitle'), text: t('tutorial.helpCreate.steps.detailsText') },
+    { target: 'category', title: t('tutorial.helpCreate.steps.categoryTitle'), text: t('tutorial.helpCreate.steps.categoryText') },
+    { target: 'submit', title: t('tutorial.helpCreate.steps.submitTitle'), text: t('tutorial.helpCreate.steps.submitText') },
+  ];
+  const CATEGORIES = [
+    { value: 'MEDICAL', label: t('tutorial.helpList.categories.medical') },
+    { value: 'FOOD', label: t('tutorial.helpList.categories.food') },
+    { value: 'SHELTER', label: t('tutorial.helpList.categories.shelter') },
+    { value: 'TRANSPORT', label: t('tutorial.helpList.categories.transport') },
+    { value: 'OTHER', label: t('tutorial.helpList.categories.other') },
+  ];
+  const URGENCIES = [
+    { value: 'LOW', label: t('tutorial.helpList.urgency.low') },
+    { value: 'MEDIUM', label: t('tutorial.helpList.urgency.medium') },
+    { value: 'HIGH', label: t('tutorial.helpList.urgency.high') },
+  ];
   const [form, setForm] = useState({
     title: 'Need drinking water for an elderly neighbor',
     description: 'Our building has no running water after the outage. One elderly neighbor cannot walk to the distribution point.',
@@ -83,8 +62,8 @@ export default function HelpRequestCreatePageTutorial() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const nextErrors = {};
-    if (!form.title.trim()) nextErrors.title = 'A clear title helps neighbors understand the need quickly.';
-    if (!form.description.trim()) nextErrors.description = 'Describe who needs help, what is needed, and any safety details.';
+    if (!form.title.trim()) nextErrors.title = t('tutorial.helpCreate.titleError');
+    if (!form.description.trim()) nextErrors.description = t('tutorial.helpCreate.descError');
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -93,7 +72,7 @@ export default function HelpRequestCreatePageTutorial() {
       description: form.description.trim(),
       category: form.category,
       urgency: form.urgency,
-      location_text: form.location_text.trim() || 'No location note added',
+      location_text: form.location_text.trim() || t('tutorial.helpCreate.noLocation'),
       author: 'You',
       status: 'Open',
       createdLabel: 'just now',
@@ -107,9 +86,9 @@ export default function HelpRequestCreatePageTutorial() {
     <div className="page help-create-page tutorial-page">
       <header className="help-requests-header">
         <button className="btn btn-secondary btn-sm" onClick={() => navigate('/tutorial/help-requests')}>
-          &larr; Help requests
+          {t('tutorial.common.backHelpRequests')}
         </button>
-        <h2 className="gradient-text">New Help Request</h2>
+        <h2 className="gradient-text">{t('tutorial.helpCreate.title')}</h2>
         <div className="tutorial-header-actions">
           {RestartButton}
         </div>
@@ -119,34 +98,34 @@ export default function HelpRequestCreatePageTutorial() {
 
       <div className={`tutorial-scenario-strip ${activeStep?.target === 'scenario' ? 'tutorial-tour-highlight' : ''}`}>
         <div>
-          <strong>Current situation</strong>
-          <span>A neighbor needs drinking water after a power outage.</span>
+          <strong>{t('tutorial.common.currentSituation')}</strong>
+          <span>{t('tutorial.helpCreate.situationText')}</span>
         </div>
         <div>
-          <strong>{completion}% ready</strong>
-          <span>Clear details help nearby neighbors understand what kind of help is needed.</span>
+          <strong>{t('tutorial.common.ready', { percent: completion })}</strong>
+          <span>{t('tutorial.helpCreate.readyText')}</span>
         </div>
       </div>
 
       <div className="help-create-card">
         <div className="alert alert-success tutorial-alert">
-          Add enough detail so nearby neighbors can understand what kind of help is needed.
+          {t('tutorial.helpCreate.info')}
         </div>
 
         {previewed && (
           <div className="alert alert-success">
-            Looks good. A request like this gives helpers the main details they need to respond.
+            {t('tutorial.helpCreate.previewed')}
           </div>
         )}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className={`form-group ${activeStep?.target === 'title' ? 'tutorial-tour-highlight' : ''}`}>
-            <label htmlFor="tutorial-title">Title</label>
+            <label htmlFor="tutorial-title">{t('tutorial.helpCreate.titleLabel')}</label>
             <input
               id="tutorial-title"
               name="title"
               type="text"
-              placeholder="Short summary of the need"
+              placeholder={t('tutorial.helpCreate.titlePlaceholder')}
               value={form.title}
               onChange={handleChange}
               className={errors.title ? 'input-error' : ''}
@@ -155,12 +134,12 @@ export default function HelpRequestCreatePageTutorial() {
           </div>
 
           <div className={`form-group ${activeStep?.target === 'description' ? 'tutorial-tour-highlight' : ''}`}>
-            <label htmlFor="tutorial-description">Description</label>
+            <label htmlFor="tutorial-description">{t('tutorial.helpCreate.descLabel')}</label>
             <textarea
               id="tutorial-description"
               name="description"
               className={`help-create-textarea${errors.description ? ' input-error' : ''}`}
-              placeholder="Explain who needs help and what would be useful."
+              placeholder={t('tutorial.helpCreate.descPlaceholder')}
               value={form.description}
               onChange={handleChange}
               rows={5}
@@ -170,7 +149,7 @@ export default function HelpRequestCreatePageTutorial() {
 
           <div className={`help-create-row ${activeStep?.target === 'category' ? 'tutorial-tour-highlight' : ''}`}>
             <div className="form-group help-create-half">
-              <label htmlFor="tutorial-category">Category</label>
+              <label htmlFor="tutorial-category">{t('tutorial.helpCreate.category')}</label>
               <select id="tutorial-category" name="category" value={form.category} onChange={handleChange}>
                 {CATEGORIES.map((category) => (
                   <option key={category.value} value={category.value}>{category.label}</option>
@@ -179,7 +158,7 @@ export default function HelpRequestCreatePageTutorial() {
             </div>
 
             <div className="form-group help-create-half">
-              <label htmlFor="tutorial-urgency">Urgency</label>
+              <label htmlFor="tutorial-urgency">{t('tutorial.helpCreate.urgency')}</label>
               <select id="tutorial-urgency" name="urgency" value={form.urgency} onChange={handleChange}>
                 {URGENCIES.map((urgency) => (
                   <option key={urgency.value} value={urgency.value}>{urgency.label}</option>
@@ -189,22 +168,22 @@ export default function HelpRequestCreatePageTutorial() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="tutorial-location">Location note <span className="optional-tag">recommended</span></label>
+            <label htmlFor="tutorial-location">{t('tutorial.helpCreate.locationNote')} <span className="optional-tag">{t('tutorial.helpCreate.recommended')}</span></label>
             <input
               id="tutorial-location"
               name="location_text"
               type="text"
-              placeholder="Example: apartment entrance, street corner, shelter desk"
+              placeholder={t('tutorial.helpCreate.locationPlaceholder')}
               value={form.location_text}
               onChange={handleChange}
             />
           </div>
 
           <div className="form-group">
-            <label>Images and precise GPS <span className="optional-tag">available after sign in</span></label>
+            <label>{t('tutorial.helpCreate.imagesGps')} <span className="optional-tag">{t('tutorial.helpCreate.afterSignIn')}</span></label>
             <div className="help-create-location-row">
-              <button type="button" className="btn btn-secondary btn-sm" disabled>Add photo</button>
-              <button type="button" className="btn btn-secondary btn-sm" disabled>Use my location</button>
+              <button type="button" className="btn btn-secondary btn-sm" disabled>{t('tutorial.helpCreate.addPhoto')}</button>
+              <button type="button" className="btn btn-secondary btn-sm" disabled>{t('tutorial.helpCreate.useLocation')}</button>
             </div>
           </div>
 
@@ -212,7 +191,7 @@ export default function HelpRequestCreatePageTutorial() {
             type="submit"
             className={`btn btn-primary btn-block ${activeStep?.target === 'submit' ? 'tutorial-tour-highlight' : ''}`}
           >
-            Save request
+            {t('tutorial.helpCreate.save')}
           </button>
         </form>
       </div>

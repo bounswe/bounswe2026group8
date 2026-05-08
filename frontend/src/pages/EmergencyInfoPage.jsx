@@ -4,24 +4,6 @@ import ChecklistModal from './EmergencyChecklistPage';
 import { useTranslation } from 'react-i18next';
 import useTutorialGuide from '../components/TutorialGuide';
 
-const EMERGENCY_INFO_TOUR_STEPS = [
-    {
-        target: 'overview',
-        title: 'Use emergency info as a quick reference',
-        text: 'This page is for practical guidance you may need during an incident.',
-    },
-    {
-        target: 'checklist',
-        title: 'Open the checklist',
-        text: 'Tap the checklist card to find step-by-step emergency guidance.',
-    },
-    {
-        target: 'map',
-        title: 'Maps are available after sign in',
-        text: 'The real app also has map tools for nearby gathering points once you are signed in.',
-    },
-];
-
 const SECTIONS_META = [
     {
         id: 'checklist',
@@ -40,6 +22,11 @@ export default function EmergencyInfoPage({ tutorialMode = false }) {
     const navigate = useNavigate();
     const [checklistOpen, setChecklistOpen] = useState(false);
     const { t } = useTranslation(); // Initialize hook
+    const EMERGENCY_INFO_TOUR_STEPS = [
+        { target: 'overview', title: t('tutorial.emergencyInfo.steps.overviewTitle'), text: t('tutorial.emergencyInfo.steps.overviewText') },
+        { target: 'checklist', title: t('tutorial.emergencyInfo.steps.checklistTitle'), text: t('tutorial.emergencyInfo.steps.checklistText') },
+        { target: 'map', title: t('tutorial.emergencyInfo.steps.mapTitle'), text: t('tutorial.emergencyInfo.steps.mapText') },
+    ];
     const visibleSections = tutorialMode
         ? SECTIONS_META.filter((s) => s.id !== 'map')
         : SECTIONS_META;
@@ -85,12 +72,12 @@ export default function EmergencyInfoPage({ tutorialMode = false }) {
             {tutorialMode && (
                 <div className={`tutorial-scenario-strip ${activeStep?.target === 'overview' ? 'tutorial-tour-highlight' : ''}`}>
                     <div>
-                        <strong>Current situation</strong>
-                        <span>You need fast emergency instructions during the same neighborhood outage.</span>
+                        <strong>{t('tutorial.common.currentSituation')}</strong>
+                        <span>{t('tutorial.emergencyInfo.situationText')}</span>
                     </div>
                     <div>
-                        <strong>Next action</strong>
-                        <span>Open the checklist and review the guidance you may need first.</span>
+                        <strong>{t('tutorial.common.nextAction')}</strong>
+                        <span>{t('tutorial.emergencyInfo.actionText')}</span>
                     </div>
                 </div>
             )}
@@ -163,7 +150,7 @@ export default function EmergencyInfoPage({ tutorialMode = false }) {
                         disabled
                     >
                         <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '12px' }}>
-                            Map
+                            {t('tutorial.emergencyInfo.mapLabel')}
                         </span>
                         <h2
                             style={{
@@ -173,10 +160,10 @@ export default function EmergencyInfoPage({ tutorialMode = false }) {
                                 marginBottom: '8px',
                             }}
                         >
-                            Map preview
+                            {t('tutorial.emergencyInfo.mapPreview')}
                         </h2>
                         <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', lineHeight: 1.5 }}>
-                            Sign in to use live map tools and saved gathering points.
+                            {t('tutorial.emergencyInfo.mapDesc')}
                         </p>
                     </button>
                 )}
