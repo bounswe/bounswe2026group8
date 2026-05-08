@@ -98,7 +98,7 @@
     },
     "actions": {
       "back_to_top": "Back to Top",
-      "back_to_dashboard": "Back to Dashboard"
+      "back_to_dashboard": "Back"
     }
   },
   "help_request_create": {
@@ -216,7 +216,7 @@
   },
   "help_requests": {
     "header": {
-      "back": "Dashboard",
+      "back": "Back",
       "title": "Help Center",
       "new_request": "+ New Request",
       "new_offer": "+ New Offer",
@@ -878,7 +878,7 @@
   "offline_messages": {
     "list": {
       "title": "Offline Messages",
-      "back": "← Dashboard",
+      "back": "Back",
       "subtitle": "Posts that users created in the offline mesh and uploaded once they came back online.",
       "loading": "Loading…",
       "error": "Couldn't load: {{error}}",

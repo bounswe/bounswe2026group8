@@ -31,20 +31,19 @@ export default function EmergencyInfoPage() {
     };
 
     return (
-        <div className="page">
-            <header style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+        <div className="page emergency-info-page">
+            <header className="dashboard-header page-main-header">
                 <button
                     className="btn btn-secondary btn-sm"
-                    onClick={() => navigate(-1)}
-                    style={{ flexShrink: 0 }}
+                    onClick={() => navigate('/dashboard')}
                 >
-                    ← {t('emergency_info.header.back')}
+                    &larr; {t('emergency_info.header.back')}
                 </button>
-                <div>
-                    <h1 className="gradient-text" style={{ fontSize: '1.6rem', lineHeight: 1.2 }}>
+                <div className="page-title-block">
+                    <h2 className="gradient-text">
                         {t('emergency_info.header.title')}
-                    </h1>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '2px' }}>
+                    </h2>
+                    <p>
                         {t('emergency_info.header.subtitle')}
                     </p>
                 </div>

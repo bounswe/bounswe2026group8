@@ -98,7 +98,7 @@
     },
     "actions": {
       "back_to_top": "Volver Arriba",
-      "back_to_dashboard": "Volver al Panel"
+      "back_to_dashboard": "Atrás"
     }
   },
   "help_request_create": {
@@ -216,7 +216,7 @@
   },
   "help_requests": {
     "header": {
-      "back": "Panel",
+      "back": "Atrás",
       "title": "Centro de Ayuda",
       "new_request": "+ Nueva Solicitud",
       "new_offer": "+ Nueva Oferta",
@@ -813,7 +813,7 @@
   "offline_messages": {
     "list": {
       "title": "Mensajes sin conexión",
-      "back": "← Panel",
+      "back": "Atrás",
       "subtitle": "Publicaciones que los usuarios crearon en la red mesh sin conexión y subieron al volver a estar en línea.",
       "loading": "Cargando…",
       "error": "No se pudo cargar: {{error}}",

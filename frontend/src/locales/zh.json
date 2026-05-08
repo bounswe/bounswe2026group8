@@ -98,7 +98,7 @@
     },
     "actions": {
       "back_to_top": "回到顶部",
-      "back_to_dashboard": "返回控制台"
+      "back_to_dashboard": "返回"
     }
   },
   "help_request_create": {
@@ -216,7 +216,7 @@
   },
   "help_requests": {
     "header": {
-      "back": "控制台",
+      "back": "返回",
       "title": "帮助中心",
       "new_request": "+ 新求助",
       "new_offer": "+ 新帮助",
@@ -813,7 +813,7 @@
   "offline_messages": {
     "list": {
       "title": "离线消息",
-      "back": "← 仪表板",
+      "back": "返回",
       "subtitle": "用户在离线 mesh 网络中创建并在重新联网后上传的帖子。",
       "loading": "加载中…",
       "error": "无法加载：{{error}}",

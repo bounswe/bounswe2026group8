@@ -98,7 +98,7 @@
     },
     "actions": {
       "back_to_top": "Başa Dön",
-      "back_to_dashboard": "Menüye Dön"
+      "back_to_dashboard": "Geri"
     }
   },
   "help_request_create": {
@@ -216,7 +216,7 @@
   },
   "help_requests": {
     "header": {
-      "back": "Menü",
+      "back": "Geri",
       "title": "Yardım Merkezi",
       "new_request": "+ Yeni Talep",
       "new_offer": "+ Yeni Teklif",
@@ -813,7 +813,7 @@
   "offline_messages": {
     "list": {
       "title": "Çevrimdışı Mesajlar",
-      "back": "← Panel",
+      "back": "Geri",
       "subtitle": "Kullanıcıların çevrimdışı mesh ağında oluşturup tekrar çevrimiçi olduklarında yükledikleri gönderiler.",
       "loading": "Yükleniyor…",
       "error": "Yüklenemedi: {{error}}",
