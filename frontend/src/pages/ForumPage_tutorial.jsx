@@ -13,7 +13,7 @@ const FORUM_TOUR_STEPS = [
   {
     target: 'sort',
     title: 'Sort the updates',
-    text: 'Try switching between newest and most liked to see how the same posts can be scanned differently.',
+    text: 'Use Newest, Most liked, and Hot to scan recent updates, popular posts, and active conversations.',
   },
   {
     target: 'posts',
@@ -31,6 +31,10 @@ const FORUM_TOUR_STEPS = [
     text: 'Forum posts are public updates. If someone needs water, shelter, transport, or medical support, use a help request.',
   },
 ];
+
+function hotScore(post) {
+  return (post.upvotes || 0) + (post.downvotes || 0) + (post.comments || 0);
+}
 
 export default function ForumPageTutorial() {
   const navigate = useNavigate();
@@ -51,6 +55,7 @@ export default function ForumPageTutorial() {
       comments: (post.comments || 0) + (commentOverrides[String(post.id)]?.length || 0),
     }));
     if (sortBy === 'most_liked') copy.sort((a, b) => b.upvotes - a.upvotes);
+    if (sortBy === 'hot') copy.sort((a, b) => hotScore(b) - hotScore(a));
     return copy;
   }, [allPosts, commentOverrides, sortBy, voteOverrides]);
 
@@ -67,7 +72,7 @@ export default function ForumPageTutorial() {
             &larr; Dashboard
           </button>
           <div className="forum-header-title">
-            <h1 className="gradient-text">Community Forum Preview</h1>
+            <h1 className="gradient-text">Community Forum</h1>
             <p className="forum-hub-label">Community updates from neighbors in your area.</p>
           </div>
           <div className="tutorial-header-actions">
@@ -90,13 +95,13 @@ export default function ForumPageTutorial() {
         </div>
 
         <div className={`forum-sort-bar ${activeStep?.target === 'sort' ? 'tutorial-tour-highlight' : ''}`}>
-          {['newest', 'most_liked'].map((s) => (
+          {['newest', 'most_liked', 'hot'].map((s) => (
             <button
               key={s}
               className={`forum-sort-btn ${sortBy === s ? 'forum-sort-btn--active' : ''}`}
               onClick={() => setSortBy(s)}
             >
-              {s === 'newest' ? 'Newest' : 'Most liked'}
+              {s === 'newest' ? 'Newest' : s === 'most_liked' ? 'Most liked' : 'Hot'}
             </button>
           ))}
         </div>

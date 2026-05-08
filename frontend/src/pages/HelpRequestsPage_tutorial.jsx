@@ -12,7 +12,7 @@ const HELP_LIST_TOUR_STEPS = [
   {
     target: 'requests',
     title: 'Review requests',
-    text: 'Your requests appear here alongside other neighborhood needs.',
+    text: 'Open a request to see what is needed and how you might respond.',
   },
   {
     target: 'create',
@@ -75,7 +75,7 @@ export default function HelpRequestsPageTutorial() {
 
       <div className="tutorial-scenario-strip">
         <div>
-          <strong>Scenario</strong>
+          <strong>Current situation</strong>
           <span>Neighbors are sharing practical needs after a power outage.</span>
         </div>
         <div>

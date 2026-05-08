@@ -22,7 +22,7 @@ const POST_CREATE_TOUR_STEPS = [
   {
     target: 'preview',
     title: 'Review the preview',
-    text: 'The preview shows how your post will look in the forum.',
+    text: 'Check how the post will look before adding it to the forum.',
   },
   {
     target: 'submit',
@@ -126,8 +126,8 @@ export default function PostCreatePageTutorial() {
 
         <div className="tutorial-scenario-strip">
           <div>
-            <strong>Scenario</strong>
-            <span>Neighbors need to know where they can charge phones during the outage.</span>
+          <strong>Current situation</strong>
+          <span>Neighbors need to know where they can charge phones during the outage.</span>
           </div>
           <div>
             <strong>{completion}% ready</strong>

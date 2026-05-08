@@ -13,7 +13,7 @@ const EMERGENCY_INFO_TOUR_STEPS = [
     {
         target: 'checklist',
         title: 'Open the checklist',
-        text: 'Tap the checklist card to practice finding step-by-step emergency guidance.',
+        text: 'Tap the checklist card to find step-by-step emergency guidance.',
     },
     {
         target: 'map',
@@ -85,12 +85,12 @@ export default function EmergencyInfoPage({ tutorialMode = false }) {
             {tutorialMode && (
                 <div className={`tutorial-scenario-strip ${activeStep?.target === 'overview' ? 'tutorial-tour-highlight' : ''}`}>
                     <div>
-                        <strong>Scenario</strong>
+                        <strong>Current situation</strong>
                         <span>You need fast emergency instructions during the same neighborhood outage.</span>
                     </div>
                     <div>
-                        <strong>Practice task</strong>
-                        <span>Open the checklist and explore the guidance without changing account data.</span>
+                        <strong>Next action</strong>
+                        <span>Open the checklist and review the guidance you may need first.</span>
                     </div>
                 </div>
             )}

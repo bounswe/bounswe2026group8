@@ -119,7 +119,7 @@ export default function HelpRequestCreatePageTutorial() {
 
       <div className={`tutorial-scenario-strip ${activeStep?.target === 'scenario' ? 'tutorial-tour-highlight' : ''}`}>
         <div>
-          <strong>Scenario</strong>
+          <strong>Current situation</strong>
           <span>A neighbor needs drinking water after a power outage.</span>
         </div>
         <div>

@@ -5,12 +5,12 @@ const TOUR_STEPS = [
   {
     target: 'welcome',
     title: 'Start here',
-    text: 'Explore the main areas of the app and learn what to do during an emergency.',
+    text: 'Your main areas are grouped here so you can move quickly during an emergency.',
   },
   {
     target: 'scenario',
-    title: 'Follow the story',
-    text: 'The guide follows one neighborhood emergency so each step feels connected.',
+    title: 'Current situation',
+    text: 'A neighborhood power outage is affecting nearby buildings. You can ask for water, offer help, and share updates.',
   },
   {
     target: 'Forum',
@@ -25,7 +25,7 @@ const TOUR_STEPS = [
   {
     target: 'Emergency Info',
     title: 'Keep guidance close',
-    text: 'Emergency Info gives you practical offline guidance. You can explore the map later after signing in.',
+    text: 'Emergency Info gives you quick steps to check when things feel urgent. Map tools are available after signing in.',
   },
 ];
 
@@ -74,7 +74,7 @@ export default function DashboardPageTutorial() {
   return (
     <div className="page dashboard-page tutorial-page">
       <header className="dashboard-header">
-        <h2 className="gradient-text">Guided Tour</h2>
+        <h2 className="gradient-text">Emergency Hub</h2>
         <div className="tutorial-header-actions">
           {RestartButton}
           <button className="btn btn-secondary btn-sm" onClick={() => navigate('/signin')}>
@@ -99,12 +99,12 @@ export default function DashboardPageTutorial() {
 
       <div className={`tutorial-scenario-strip ${activeStep?.target === 'scenario' ? 'tutorial-tour-highlight' : ''}`}>
         <div>
-          <strong>Scenario</strong>
-          <span>After a neighborhood power outage, learn how to ask for water safely.</span>
+          <strong>Current situation</strong>
+          <span>A neighborhood power outage is affecting nearby buildings.</span>
         </div>
         <div>
-          <strong>Guided flow</strong>
-          <span>Try the key actions and see how information moves through the app.</span>
+          <strong>What you can do</strong>
+          <span>Share an update, request help, or check emergency guidance.</span>
         </div>
       </div>
 
