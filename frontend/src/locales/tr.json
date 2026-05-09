@@ -377,6 +377,10 @@
     "forum_active": {
       "title": "Aktif Forumcu",
       "description": "Topluluk forumunda yeni gönderiler oluşturduğunuz için verilir."
+    },
+    "responder": {
+      "title": "Yardımsever",
+      "description": "Topluluk yardım taleplerinin sorumluluğunu üstlendiğiniz için verilir."
     }
   },
   "my_badges": {

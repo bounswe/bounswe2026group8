@@ -9,6 +9,7 @@ class Badge(models.Model):
         POSTS = 'POSTS', 'Forum Posts Created'
         COMMENTS = 'COMMENTS', 'Comments Made'
         VOTES = 'VOTES', 'Votes Cast'
+        HELP_RESPONSES = 'HELP_RESPONSES', 'Help Responses'
         # You can easily add more later, e.g., HELP_REQUESTS = 'HELP_REQUESTS'
 
     name = models.CharField(max_length=100)

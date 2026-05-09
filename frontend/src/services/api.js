@@ -551,3 +551,13 @@ export function getMyBadges() {
     method: 'GET' 
   });
 }
+
+/**
+ * GET /api/badges/users/{id}/
+ * Fetches the badge progress for a specific user.
+ */
+export function getUserBadges(userId) {
+  return request(`/api/badges/users/${userId}/`, { 
+    method: 'GET' 
+  });
+}

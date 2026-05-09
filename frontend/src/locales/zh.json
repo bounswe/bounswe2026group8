@@ -377,6 +377,10 @@
     "forum_active": {
       "title": "論壇活躍者",
       "description": "獎勵給在社區論壇中發佈新貼文的用戶。"
+    },
+    "responder": {
+      "title": "響應者",
+      "description": "獎勵給承擔社區求助請求責任的用戶。"
     }
   },
   "my_badges": {

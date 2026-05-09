@@ -377,6 +377,10 @@
     "forum_active": {
       "title": "Foro Activo",
       "description": "Otorgada por crear nuevas publicaciones en el foro de la comunidad."
+    },
+    "responder": {
+      "title": "Respondedor",
+      "description": "Otorgada por asumir la responsabilidad de las solicitudes de ayuda de la comunidad."
     }
   },
   "my_badges": {

@@ -7,48 +7,49 @@ from forum.models import Comment
 from .models import Badge, UserBadge
 from forum.models import Vote
 from forum.models import Post
+from help_requests.models import HelpComment
+from help_requests.models import HelpRequest
 
 @receiver(post_save, sender=Comment)
+@receiver(post_save, sender=HelpComment)
 def update_comment_badge_progress(sender, instance, created, **kwargs):
     """
-    This signal runs every time a Comment is saved to the database.
-    If it's a NEW comment (created=True), we update the author's badge progress.
+    Updates the Conversationalist badge progress for both Forum 
+    and Help Request comments.
     """
     if created:
         with transaction.atomic():
-            # 1. Find the specific Badge Blueprint for Comments
-            # Use try/except just in case the admin hasn't created the badge yet
             try:
+                # Use the CriteriaType to find the badge blueprint
                 comment_badge = Badge.objects.get(criteria_type=Badge.CriteriaType.COMMENTS)
             except Badge.DoesNotExist:
-                return # If the badge doesn't exist, just do nothing
+                # Log a warning or just return if the admin hasn't set this up
+                print(f"Badge with criteria_type {Badge.CriteriaType.COMMENTS} not found.")
+                return 
 
-            # 2. Get or Create the specific UserBadge for this author
-            user_badge, was_created = UserBadge.objects.get_or_create(
+            # Get or Create the specific UserBadge for this author
+            user_badge, _ = UserBadge.objects.select_for_update().get_or_create(
                 user=instance.author,
                 badge=comment_badge,
                 defaults={'current_progress': 0, 'current_level': 0}
             )
 
-            # 3. Add 1 to their progress
+            # Increment progress
             user_badge.current_progress += 1
 
-            # 4. Check if they leveled up!
-            # Compare their progress to the next milestone in the JSON array
+            # Check for Level Up logic
             if not user_badge.is_max_level:
-                # Need to use user_badge.current_level (not next_level_goal directly) 
-                # as an index to access the JSON array safely
-                next_milestone_index = user_badge.current_level
+                # We use the current level as the index to find the 'next' milestone
+                # e.g. Level 0 looks at milestones[0] to get to Level 1
+                milestones = comment_badge.milestones # Assuming this is your JSON list
                 
-                # Double check the array isn't empty to prevent errors
-                if next_milestone_index < len(comment_badge.milestones):
-                    next_goal = comment_badge.milestones[next_milestone_index]
+                if user_badge.current_level < len(milestones):
+                    next_goal = milestones[user_badge.current_level]
                     
                     if user_badge.current_progress >= next_goal:
                         user_badge.current_level += 1
                         print(f"🎉 LEVEL UP! {instance.author.email} reached Level {user_badge.current_level} for {comment_badge.name}!")
 
-            # 5. Save the progress
             user_badge.save()
 
 @receiver(post_save, sender=Vote)
@@ -105,3 +106,45 @@ def update_post_badge_progress(sender, instance, created, **kwargs):
                 
         except Badge.DoesNotExist:
             print("Warning: 'Forum Active' badge not found in database.")
+
+@receiver(post_save, sender=HelpRequest)
+def update_responder_badge_progress(sender, instance, created, **kwargs):
+    """
+    Awards progress for the Responder badge ONLY when a Help Request
+    is officially marked as RESOLVED and has an assigned expert.
+    """
+    # 1. We don't care about brand new requests (they aren't resolved yet)
+    if created:
+        return
+
+    # 2. Only proceed if status is RESOLVED and someone was actually assigned to help
+    if instance.status == HelpRequest.Status.RESOLVED and instance.assigned_expert:
+        with transaction.atomic():
+            try:
+                # Find the 'Responder' badge blueprint
+                responder_badge = Badge.objects.get(criteria_type=Badge.CriteriaType.HELP_RESPONSES)
+            except Badge.DoesNotExist:
+                return
+
+            # 3. Get or Create the specific UserBadge for the ASSIGNED EXPERT
+            # We use select_for_update to prevent race conditions
+            user_badge, _ = UserBadge.objects.select_for_update().get_or_create(
+                user=instance.assigned_expert,
+                badge=responder_badge,
+                defaults={'current_progress': 0, 'current_level': 0}
+            )
+
+            # 4. Increment progress
+            user_badge.current_progress += 1
+
+            # 5. Check for Level Up
+            if not user_badge.is_max_level:
+                milestones = responder_badge.milestones
+                if user_badge.current_level < len(milestones):
+                    next_goal = milestones[user_badge.current_level]
+                    
+                    if user_badge.current_progress >= next_goal:
+                        user_badge.current_level += 1
+                        print(f"🎉 MISSION ACCOMPLISHED! {instance.assigned_expert.email} resolved a request and reached Level {user_badge.current_level} Responder!")
+
+            user_badge.save()
