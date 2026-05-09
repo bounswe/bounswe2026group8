@@ -211,6 +211,21 @@ jobs:
           DB_PORT: 5432
         run: cd backend && python manage.py migrate --noinput
 
+      - name: Create test hub
+        env:
+          DJANGO_SECRET_KEY: ci-secret-key
+          DJANGO_DEBUG: 'True'
+          DB_NAME: testdb
+          DB_USER: testuser
+          DB_PASSWORD: testpass
+          DB_HOST: localhost
+          DB_PORT: 5432
+        run: |
+          cd backend && python manage.py shell -c "
+          from accounts.models import Hub
+          Hub.objects.get_or_create(name='Istanbul', slug='istanbul')
+          "
+
       - name: Start Django backend
         env:
           DJANGO_SECRET_KEY: ci-secret-key
