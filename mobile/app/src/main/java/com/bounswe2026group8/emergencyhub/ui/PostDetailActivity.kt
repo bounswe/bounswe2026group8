@@ -30,6 +30,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
+import com.bounswe2026group8.emergencyhub.util.VoiceInputManager
 
 class PostDetailActivity : AppCompatActivity() {
 
@@ -39,12 +41,14 @@ class PostDetailActivity : AppCompatActivity() {
     private var postId = -1
     private var post: Post? = null
     private var commentCount = 0
+    private lateinit var voiceInputManager: VoiceInputManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
 
         tokenManager = TokenManager(this)
+        voiceInputManager = VoiceInputManager(this)
         postId = intent.getIntExtra("post_id", -1)
         if (postId == -1) {
             finish()
@@ -63,6 +67,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         if (tokenManager.isLoggedIn()) {
             findViewById<MaterialCardView>(R.id.commentInputCard).visibility = View.VISIBLE
+            voiceInputManager.bind(findViewById<TextInputEditText>(R.id.inputComment))
             findViewById<MaterialButton>(R.id.btnPostComment).setOnClickListener { submitComment() }
         }
 
