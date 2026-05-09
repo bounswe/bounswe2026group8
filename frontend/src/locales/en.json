@@ -382,11 +382,28 @@
       "posted": "Posted"
     }
   },
+  "badges": {
+    "commenter": {
+      "title": "Commenter",
+      "description": "Awarded for being an active participant in community discussions."
+    },
+    "voter": {
+      "title": "Voter",
+      "description": "Awarded for voting on community posts."
+    },
+    "forum_active": {
+      "title": "Forum Active",
+      "description": "Awarded for creating new posts in the community forum."
+    }
+  },
   "my_badges": {
     "header": {
       "title": "My Badges",
       "back": "Back"
-    }
+    },
+    "loading": "Loading your achievements...",
+    "empty": "You haven't earned any badges yet. Start participating in the community!",
+    "max_level": "MAX LEVEL REACHED"
   },
   "post_create": {
     "types": {

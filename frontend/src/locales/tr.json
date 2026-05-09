@@ -365,11 +365,28 @@
       "posted": "GÖnderildi"
     }
   },
+  "badges": {
+    "commenter": {
+      "title": "Sohbetçi",
+      "description": "Topluluk tartışmalarına aktif olarak katıldığınız için verilir."
+    },
+    "voter": {
+      "title": "Oy Veren",
+      "description": "Topluluk gönderilerini oyladığınız için verilir."
+    },
+    "forum_active": {
+      "title": "Aktif Forumcu",
+      "description": "Topluluk forumunda yeni gönderiler oluşturduğunuz için verilir."
+    }
+  },
   "my_badges": {
     "header": {
       "title": "Rozetlerim",
       "back": "Geri"
-    }
+    },
+    "loading": "Başarılarınız yükleniyor...",
+    "empty": "Henüz bir rozet kazanmadınız. Topluluğa katılarak ilk rozetinizi kazanın!",
+    "max_level": "MAKSİMUM SEVİYE"
   },
   "post_create": {
     "types": {

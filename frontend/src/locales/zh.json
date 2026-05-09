@@ -365,11 +365,28 @@
       "posted": "发布时间"
     }
   },
+  "badges": {
+    "commenter": {
+      "title": "社交達人",
+      "description": "獎勵給積極參與社區討論的用戶。"
+    },
+    "voter": {
+      "title": "投票者",
+      "description": "獎勵給對社區貼文進行投票的用戶。"
+    },
+    "forum_active": {
+      "title": "論壇活躍者",
+      "description": "獎勵給在社區論壇中發佈新貼文的用戶。"
+    }
+  },
   "my_badges": {
     "header": {
       "title": "我的徽章",
       "back": "返回"
-    }
+    },
+    "loading": "正在載入您的成就...",
+    "empty": "您還沒有獲得任何徽章。快來參與社區討論吧！",
+    "max_level": "已達到最高等級"
   },
   "post_create": {
     "types": {

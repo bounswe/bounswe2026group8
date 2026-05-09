@@ -537,3 +537,17 @@ export function decideExpertiseVerification(expertiseId, decision, note = '') {
     body: JSON.stringify({ status: decision, note }),
   });
 }
+
+// ── Badges ───────────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/badges/my-badges/
+ * Fetches the current user's badge progress.
+ * Requires Authorization header.
+ * * Success → array of badge objects
+ */
+export function getMyBadges() {
+  return request('/api/badges/my-badges/', { 
+    method: 'GET' 
+  });
+}

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'forum',
     'help_requests',
     'mesh',
+    'badges',
 ]
 
 MIDDLEWARE = [

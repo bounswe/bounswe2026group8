@@ -164,6 +164,10 @@ class Profile(models.Model):
         default=AvailabilityStatus.SAFE,
     )
 
+    completed_help_count = models.IntegerField(default=0)
+    # (Optional, but usually if there is a completed count, there is also a given count. Add this if your DB complains about it next)
+    # given_help_count = models.IntegerField(default=0)
+
     # General profile fields (kept from original)
     bio = models.TextField(blank=True, null=True)
     preferred_language = models.CharField(max_length=100, blank=True, null=True)
