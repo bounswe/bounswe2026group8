@@ -24,6 +24,7 @@ class HelpRequestAdapter(
         val txtAuthor: TextView = view.findViewById(R.id.txtAuthor)
         val txtCommentCount: TextView = view.findViewById(R.id.txtCommentCount)
         val txtTimeAgo: TextView = view.findViewById(R.id.txtTimeAgo)
+        val txtAssignedExpert: TextView = view.findViewById(R.id.txtAssignedExpert)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -52,6 +53,14 @@ class HelpRequestAdapter(
         holder.txtAuthor.text = item.author.fullName
         holder.txtCommentCount.text = "\uD83D\uDCAC ${item.commentCount}"
         holder.txtTimeAgo.text = TimeUtils.timeAgo(item.createdAt)
+
+        if (item.isExpertResponding == true && item.assignedExpertUsername != null) {
+            holder.txtAssignedExpert.text = "Assigned to: ${item.assignedExpertUsername}"
+            holder.txtAssignedExpert.visibility = View.VISIBLE
+        } else {
+            holder.txtAssignedExpert.visibility = View.GONE
+        }
+
         holder.itemView.setOnClickListener { onItemClick(item) }
     }
 

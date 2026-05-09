@@ -72,6 +72,16 @@ interface ApiService {
         @Body body: UpdateHelpRequestStatusRequest
     ): Response<HelpRequestDetail>
 
+    @POST("help-requests/{id}/take-on/")
+    suspend fun takeOnHelpRequest(
+        @Path("id") id: Int
+    ): Response<HelpRequestDetail>
+
+    @POST("help-requests/{id}/release/")
+    suspend fun releaseHelpRequest(
+        @Path("id") id: Int
+    ): Response<HelpRequestDetail>
+
     // ── Help Request Comments ────────────────────────────────────────────
 
     @GET("help-requests/{id}/comments/")
