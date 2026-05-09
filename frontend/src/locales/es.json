@@ -365,6 +365,12 @@
       "posted": "Publicado"
     }
   },
+  "my_badges": {
+    "header": {
+      "title": "Mis Insignias",
+      "back": "Volver"
+    }
+  },
   "post_create": {
     "types": {
       "global": "Global",
@@ -634,6 +640,10 @@
     "my_posts": {
       "title": "Mis Publicaciones",
       "desc": "Mira tus publicaciones del foro, solicitudes de ayuda y ofertas de ayuda"
+    },
+    "my_badges": {
+      "title": "Mis Insignias",
+      "desc": "Mira tus insignias ganadas y tus logros"
     },
     "sections": {
       "personal_info": "Información Personal",

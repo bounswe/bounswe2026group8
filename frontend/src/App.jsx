@@ -18,6 +18,7 @@ import HelpRequestsPage from './pages/HelpRequestsPage';
 import HelpRequestCreatePage from './pages/HelpRequestCreatePage';
 import HelpRequestDetailPage from './pages/HelpRequestDetailPage';
 import MyPostsPage from './pages/MyPostsPage';
+import MyBadgesPage from './pages/MyBadgesPage';
 import UserProfilePage from './pages/UserProfilePage';
 import EmergencyInfoPage from './pages/EmergencyInfoPage';
 import EmergencyMapPage from './pages/EmergencyMapPage';
@@ -126,6 +127,14 @@ return (
             element={
               <ProtectedRoute>
                 <MyPostsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-badges"
+            element={
+              <ProtectedRoute>
+                <MyBadgesPage />
               </ProtectedRoute>
             }
           />

@@ -315,6 +315,16 @@ export default function ProfilePage() {
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.25rem' }}>{t('profile.my_posts.desc')}</p>
         </div>
 
+        {/* ADDED: My Badges Section */}
+        <div className="profile-section-card profile-my-badges-card" onClick={() => navigate('/my-badges')} role="link" style={{ cursor: 'pointer' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h4 className="profile-section-title" style={{ margin: 0 }}>{t('profile.my_badges.title')}</h4>
+            <span style={{ color: 'var(--accent)', fontSize: '1.2rem' }}>&rarr;</span>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.25rem' }}>{t('profile.my_badges.desc')}</p>
+        </div>
+        {/* END ADDED SECTION */}
+
         <div className="profile-section-card">
           <h4 className="profile-section-title">{t('profile.sections.personal_info')}</h4>
           <div className="profile-fields-grid">

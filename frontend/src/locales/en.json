@@ -382,6 +382,12 @@
       "posted": "Posted"
     }
   },
+  "my_badges": {
+    "header": {
+      "title": "My Badges",
+      "back": "Back"
+    }
+  },
   "post_create": {
     "types": {
       "global": "Global",
@@ -651,6 +657,10 @@
     "my_posts": {
       "title": "My Posts",
       "desc": "View your forum posts, help requests, and help offers"
+    },
+    "my_badges": {
+      "title": "My Badges",
+      "desc": "View your earned badges and achievements"
     },
     "sections": {
       "personal_info": "Personal Information",

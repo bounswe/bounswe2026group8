@@ -365,6 +365,12 @@
       "posted": "GÖnderildi"
     }
   },
+  "my_badges": {
+    "header": {
+      "title": "Rozetlerim",
+      "back": "Geri"
+    }
+  },
   "post_create": {
     "types": {
       "global": "Global",
@@ -628,12 +634,16 @@
   },
   "profile": {
     "header": {
-      "title": "Sizin Profiliniz",
+      "title": "Profiliniz",
       "back": "Geri"
     },
     "my_posts": {
       "title": "Gönderilerim",
       "desc": "Forum gönderileriniz, yardım talep ve tekliflerinizi görüntüleyin."
+    },
+    "my_badges": {
+      "title": "Rozetlerim",
+      "desc": "Kazandığınız rozetleri ve başarımları görüntüleyin"
     },
     "sections": {
       "personal_info": "Kişisel Bilgiler",
