@@ -91,7 +91,7 @@ class ExpertiseFieldSerializer(serializers.ModelSerializer):
         model = ExpertiseField
         fields = [
             'id',
-            'field',
+            'category',
             'certification_level',
             'certification_document_url',
             'verification_status',
