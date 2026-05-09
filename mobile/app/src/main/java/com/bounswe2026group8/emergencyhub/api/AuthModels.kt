@@ -11,7 +11,7 @@ data class RegisterRequest(
     @SerializedName("confirm_password") val confirmPassword: String,
     val role: String,
     @SerializedName("neighborhood_address") val neighborhoodAddress: String? = null,
-    @SerializedName("expertise_field") val expertiseField: String? = null,
+    @SerializedName("category_id") val categoryId: Int? = null,
     @SerializedName("hub_id") val hubId: Int? = null
 )
 
@@ -33,6 +33,12 @@ data class UserData(
     @SerializedName("full_name") val fullName: String,
     val email: String,
     val role: String,
+    /**
+     * Application staff authority. One of: NONE, MODERATOR,
+     * VERIFICATION_COORDINATOR, ADMIN. Defaulted to "NONE" so older
+     * server payloads that don't include the field still parse.
+     */
+    @SerializedName("staff_role") val staffRole: String = "NONE",
     val hub: Hub?,
     @SerializedName("neighborhood_address") val neighborhoodAddress: String?,
     @SerializedName("expertise_field") val expertiseField: String?

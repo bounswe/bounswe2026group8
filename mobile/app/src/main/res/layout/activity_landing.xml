@@ -12,6 +12,18 @@
         android:orientation="vertical"
         android:padding="32dp">
 
+        <!-- Language selector (top-left) -->
+        <Spinner
+            android:id="@+id/spinnerLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="start"
+            android:minWidth="80dp"
+            android:background="@drawable/sort_pill_active_bg"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:layout_marginBottom="24dp" />
+
         <!-- Spacer -->
         <View
             android:layout_width="0dp"
@@ -71,12 +83,31 @@
             android:textSize="16sp"
             style="@style/Widget.EmergencyHub.Button.Secondary" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGuidedTour"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/tutorial_try_guided_tour"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp"
+            style="@style/Widget.EmergencyHub.Button.Secondary" />
+
         <!-- Offline Info button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnOfflineInfo"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:text="@string/feature_offline"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp"
+            style="@style/Widget.EmergencyHub.Button.Secondary" />
+
+        <!-- Offline Messaging button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMeshMessaging"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/mesh_landing_button"
             android:textSize="16sp"
             android:layout_marginTop="12dp"
             style="@style/Widget.EmergencyHub.Button.Secondary" />

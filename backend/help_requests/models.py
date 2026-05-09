@@ -21,6 +21,7 @@ class Category(models.TextChoices):
     FOOD = 'FOOD', 'Food'
     SHELTER = 'SHELTER', 'Shelter'
     TRANSPORT = 'TRANSPORT', 'Transport'
+    OTHER = 'OTHER', 'Other'
 
 
 class HelpRequest(models.Model):

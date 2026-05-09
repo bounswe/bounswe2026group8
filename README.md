@@ -18,7 +18,49 @@ A community platform for disaster preparedness, mutual aid, and neighbourhood re
 
 ## Local Development
 
-### Prerequisites
+Two options: **Docker Compose** (easiest, no local installs needed) or **native** setup.
+
+---
+
+### Option A — Docker Compose (recommended)
+
+#### Prerequisites
+
+| Tool | Version |
+|------|---------|
+| Docker | Latest |
+| Android Studio | Latest (for mobile only) |
+
+#### Running
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build
+```
+
+- Frontend: **http://localhost**
+- API: **http://localhost/api/**
+
+Subsequent runs (no code changes):
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.local.yml up
+```
+
+To stop:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.local.yml down
+```
+
+> On first run, sample users, posts, help requests, and offers are automatically populated. Login with `standard1@example.com` / `expert1@example.com` and password `password123`.
+
+> If you have a `backend/firebase-credentials.json` file it will be used for push notifications. Without it the app runs normally — only push notifications to mobile are disabled.
+
+> **Mobile:** Android emulator debug builds automatically connect to `http://10.0.2.2:8000` — this works out of the box since the local Docker Compose exposes port 8000 directly. Run the emulator from Android Studio while Docker Compose is up.
+
+---
+
+### Option B — Native Setup
+
+#### Prerequisites
 
 | Tool | Version |
 |------|---------|

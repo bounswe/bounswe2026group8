@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function SignInPage() {
   const navigate = useNavigate();
   const { loginUser, isAuthenticated, loading } = useAuth();
+  const { t } = useTranslation(); // Initialize hook
 
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -14,9 +16,9 @@ export default function SignInPage() {
 
   if (loading) {
     return (
-      <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <p style={{ color: 'var(--text-secondary)' }}>Loading…</p>
-      </div>
+        <div className="page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <p style={{ color: 'var(--text-secondary)' }}>{t('sign_in.loading')}</p>
+        </div>
     );
   }
 
@@ -34,7 +36,7 @@ export default function SignInPage() {
     setError('');
 
     if (!form.email.trim() || !form.password) {
-      setError('Please enter both email and password.');
+      setError(t('sign_in.errors.empty_fields'));
       return;
     }
 
@@ -51,69 +53,81 @@ export default function SignInPage() {
       navigate('/dashboard', { replace: true });
     } else {
       // Backend returns { message: "Invalid email or password" }
-      setError(data.message || 'Invalid email or password');
+      setError(data.message || t('sign_in.errors.invalid_credentials'));
     }
   };
 
   return (
-    <div className="page auth-page">
-      <div className="auth-card">
-        <h2 className="auth-title">Welcome Back</h2>
-        <p className="auth-subtitle">Sign in to your emergency hub account</p>
+      <div className="page auth-page">
+        <div className="auth-card">
+          <h2 className="auth-title">{t('sign_in.header.title')}</h2>
+          <p className="auth-subtitle">{t('sign_in.header.subtitle')}</p>
 
-        {error && <div className="alert alert-error">{error}</div>}
+          {error && <div className="alert alert-error">{error}</div>}
 
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="sheila@example.com"
-              value={form.email}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div className="password-input-wrapper">
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="form-group">
+              <label htmlFor="email">{t('sign_in.labels.email')}</label>
               <input
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Your password"
-                value={form.password}
-                onChange={handleChange}
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder={t('sign_in.placeholders.email')}
+                  value={form.email}
+                  onChange={handleChange}
               />
-              <button
-                type="button"
-                className="password-toggle-btn"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? '👁️' : '👁️‍🗨️'}
-              </button>
             </div>
+
+            <div className="form-group">
+              <label htmlFor="password">{t('sign_in.labels.password')}</label>
+              <div className="password-input-wrapper">
+                <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder={t('sign_in.placeholders.password')}
+                    value={form.password}
+                    onChange={handleChange}
+                />
+                <button
+                    type="button"
+                    className="password-toggle-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? t('sign_in.actions.hide_password') : t('sign_in.actions.show_password')}
+                >
+                  {showPassword ? '👁️' : '👁️‍🗨️'}
+                </button>
+              </div>
+            </div>
+
+            <button
+                type="submit"
+                className="btn btn-primary btn-block"
+                disabled={submitting}
+            >
+              {submitting ? t('sign_in.actions.signing_in') : t('sign_in.actions.sign_in')}
+            </button>
+          </form>
+
+          <div className="auth-tutorial-divider">
+            <span>{t('tutorial.common.newHere')}</span>
           </div>
 
           <button
-            type="submit"
-            className="btn btn-primary btn-block"
-            disabled={submitting}
+              type="button"
+              className="btn btn-secondary btn-block auth-tutorial-btn"
+              onClick={() => navigate('/tutorial')}
           >
-            {submitting ? 'Signing in…' : 'Sign In'}
+            {t('tutorial.common.tryScenario')}
           </button>
-        </form>
 
-        <p className="auth-footer">
-          Don&rsquo;t have an account?{' '}
-          <Link to="/signup" className="link">
-            Sign Up
-          </Link>
-        </p>
+          <p className="auth-footer">
+            {t('sign_in.footer.no_account')}{' '}
+            <Link to="/signup" className="link">
+              {t('sign_in.actions.sign_up')}
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
   );
 }

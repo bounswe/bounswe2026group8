@@ -3,8 +3,6 @@ package com.bounswe2026group8.emergencyhub.ui
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import com.bounswe2026group8.emergencyhub.util.BadgeUtils
-import com.bounswe2026group8.emergencyhub.util.TimeUtils
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
@@ -19,11 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.CreateCommentRequest
-import com.bounswe2026group8.emergencyhub.api.HelpRequestComment
 import com.bounswe2026group8.emergencyhub.api.HelpRequestDetail
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.api.UpdateHelpRequestStatusRequest
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.util.BadgeUtils
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
@@ -36,12 +35,6 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import com.bounswe2026group8.emergencyhub.util.VoiceInputManager
 
-/**
- * Displays full details of a help request including location map,
- * comments with expert badges, and a comment input form.
- *
- * Receives the request ID via [EXTRA_REQUEST_ID] intent extra.
- */
 class HelpRequestDetailActivity : AppCompatActivity() {
 
     companion object {
@@ -51,7 +44,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     private lateinit var tokenManager: TokenManager
     private lateinit var commentAdapter: HelpRequestCommentAdapter
 
-    // Detail views
     private lateinit var txtDetailTitle: TextView
     private lateinit var txtDetailCategory: TextView
     private lateinit var txtDetailUrgency: TextView
@@ -59,18 +51,12 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     private lateinit var txtDetailDescription: TextView
     private lateinit var txtDetailAuthor: TextView
     private lateinit var txtDetailTimeAgo: TextView
-
-    // Map
     private lateinit var cardMap: MaterialCardView
     private lateinit var txtMapLocationText: TextView
     private lateinit var txtLocationOnly: TextView
     private var mapView: MapView? = null
-
-    // Images
     private lateinit var imageGalleryScroll: HorizontalScrollView
     private lateinit var imageGallery: LinearLayout
-
-    // Comments
     private lateinit var txtCommentsHeader: TextView
     private lateinit var recyclerComments: RecyclerView
     private lateinit var progressComments: ProgressBar
@@ -84,7 +70,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // osmdroid configuration — must be before setContentView
         Configuration.getInstance().load(this, getSharedPreferences("osmdroid", MODE_PRIVATE))
         Configuration.getInstance().userAgentValue = packageName
 
@@ -99,7 +84,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
 
         requestId = intent.getIntExtra(EXTRA_REQUEST_ID, -1)
         if (requestId == -1) {
-            Toast.makeText(this, "Invalid request", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.help_request_invalid), Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -110,16 +95,8 @@ class HelpRequestDetailActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
         btnSendComment.setOnClickListener { submitComment() }
-
-        // Delete request button — shown only after displayDetail() confirms authorship
-        findViewById<MaterialButton>(R.id.btnDeleteRequest).setOnClickListener {
-            confirmDeleteRequest()
-        }
-
-        // Resolve button — shown only after displayDetail() confirms authorship + not resolved
-        findViewById<MaterialButton>(R.id.btnResolveRequest).setOnClickListener {
-            resolveRequest()
-        }
+        findViewById<MaterialButton>(R.id.btnDeleteRequest).setOnClickListener { confirmDeleteRequest() }
+        findViewById<MaterialButton>(R.id.btnResolveRequest).setOnClickListener { resolveRequest() }
 
         fetchDetail()
         fetchComments()
@@ -140,8 +117,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         mapView?.onDetach()
     }
 
-    // ── View binding ─────────────────────────────────────────────────────
-
     private fun bindViews() {
         txtDetailTitle = findViewById(R.id.txtDetailTitle)
         txtDetailCategory = findViewById(R.id.txtDetailCategory)
@@ -150,14 +125,12 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         txtDetailDescription = findViewById(R.id.txtDetailDescription)
         txtDetailAuthor = findViewById(R.id.txtDetailAuthor)
         txtDetailTimeAgo = findViewById(R.id.txtDetailTimeAgo)
-
         cardMap = findViewById(R.id.cardMap)
         mapView = findViewById(R.id.mapView)
         txtMapLocationText = findViewById(R.id.txtMapLocationText)
         txtLocationOnly = findViewById(R.id.txtLocationOnly)
         imageGalleryScroll = findViewById(R.id.imageGalleryScroll)
         imageGallery = findViewById(R.id.imageGallery)
-
         txtCommentsHeader = findViewById(R.id.txtCommentsHeader)
         recyclerComments = findViewById(R.id.recyclerComments)
         progressComments = findViewById(R.id.progressComments)
@@ -167,18 +140,15 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val currentUserId = tokenManager.getUser()?.id
         commentAdapter = HelpRequestCommentAdapter(
             items = emptyList(),
-            currentUserId = currentUserId,
-            onDeleteClick = { comment -> confirmDeleteComment(comment.id) },
+            currentUserId = tokenManager.getUser()?.id,
+            onDeleteClick = { comment -> confirmDeleteComment(comment.id) }
         )
         recyclerComments.layoutManager = LinearLayoutManager(this)
         recyclerComments.isNestedScrollingEnabled = false
         recyclerComments.adapter = commentAdapter
     }
-
-    // ── Fetch detail ─────────────────────────────────────────────────────
 
     private fun fetchDetail() {
         lifecycleScope.launch {
@@ -194,14 +164,14 @@ class HelpRequestDetailActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this@HelpRequestDetailActivity,
-                        "Failed to load details",
+                        getString(R.string.help_request_detail_load_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(
                     this@HelpRequestDetailActivity,
-                    "Network error: ${e.localizedMessage}",
+                    getString(R.string.network_error_with_message, e.localizedMessage ?: ""),
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -211,22 +181,19 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     private fun displayDetail(detail: HelpRequestDetail) {
         txtDetailTitle.text = detail.title
         txtDetailDescription.text = detail.description
-        txtDetailAuthor.text = "Posted by ${detail.author.fullName}"
+        txtDetailAuthor.text = getString(R.string.help_request_author_format, detail.author.fullName)
         txtDetailTimeAgo.text = TimeUtils.timeAgo(detail.createdAt)
 
-        // Category badge
-        txtDetailCategory.text = BadgeUtils.formatLabel(detail.category)
+        txtDetailCategory.text = BadgeUtils.formatCategoryLabel(this, detail.category)
         val (catText, catBg) = BadgeUtils.categoryColors(detail.category)
         txtDetailCategory.setTextColor(ContextCompat.getColor(this, catText))
         txtDetailCategory.background.mutate().setTint(ContextCompat.getColor(this, catBg))
 
-        // Urgency badge
-        txtDetailUrgency.text = BadgeUtils.formatLabel(detail.urgency)
+        txtDetailUrgency.text = BadgeUtils.formatUrgencyLabel(this, detail.urgency)
         val (urgText, urgBg) = BadgeUtils.urgencyColors(detail.urgency)
         txtDetailUrgency.setTextColor(ContextCompat.getColor(this, urgText))
         txtDetailUrgency.background.mutate().setTint(ContextCompat.getColor(this, urgBg))
 
-        // Status badge — highlight EXPERT_RESPONDING
         when (detail.status) {
             "EXPERT_RESPONDING" -> {
                 txtDetailStatus.text = getString(R.string.status_expert_responding)
@@ -240,12 +207,9 @@ class HelpRequestDetailActivity : AppCompatActivity() {
                 txtDetailStatus.background.mutate()
                     .setTint(ContextCompat.getColor(this, R.color.urgency_low_bg))
             }
-            else -> {
-                txtDetailStatus.text = getString(R.string.status_open)
-            }
+            else -> txtDetailStatus.text = getString(R.string.status_open)
         }
 
-        // Images
         if (detail.imageUrls.isNotEmpty()) {
             imageGalleryScroll.visibility = View.VISIBLE
             imageGallery.removeAllViews()
@@ -269,7 +233,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             imageGalleryScroll.visibility = View.GONE
         }
 
-        // Map / location
         val lat = detail.latitude?.toDoubleOrNull()
         val lng = detail.longitude?.toDoubleOrNull()
 
@@ -278,36 +241,35 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             txtLocationOnly.visibility = View.GONE
             setupMap(lat, lng)
             if (!detail.locationText.isNullOrBlank()) {
-                txtMapLocationText.text = "📍 ${detail.locationText}"
+                txtMapLocationText.text = getString(R.string.location_pin_format, detail.locationText)
                 txtMapLocationText.visibility = View.VISIBLE
+            } else {
+                txtMapLocationText.visibility = View.GONE
             }
         } else if (!detail.locationText.isNullOrBlank()) {
             cardMap.visibility = View.GONE
-            txtLocationOnly.text = "📍 ${detail.locationText}"
+            txtLocationOnly.text = getString(R.string.location_pin_format, detail.locationText)
             txtLocationOnly.visibility = View.VISIBLE
         } else {
             cardMap.visibility = View.GONE
             txtLocationOnly.visibility = View.GONE
         }
 
-        // Comments header count
         txtCommentsHeader.text = getString(R.string.comments_count_label, detail.commentCount)
 
-        // Show author-only actions
         val currentUserId = tokenManager.getUser()?.id
         val isAuthor = currentUserId == detail.author.id
-        val btnDelete = findViewById<MaterialButton>(R.id.btnDeleteRequest)
-        btnDelete.visibility = if (isAuthor) View.VISIBLE else View.GONE
+        findViewById<MaterialButton>(R.id.btnDeleteRequest).visibility =
+            if (isAuthor) View.VISIBLE else View.GONE
 
-        val btnResolve = findViewById<MaterialButton>(R.id.btnResolveRequest)
-        btnResolve.visibility = if (isAuthor && detail.status != "RESOLVED") View.VISIBLE else View.GONE
+        findViewById<MaterialButton>(R.id.btnResolveRequest).visibility =
+            if (isAuthor && detail.status != "RESOLVED") View.VISIBLE else View.GONE
     }
 
     private fun setupMap(lat: Double, lng: Double) {
         mapView?.let { map ->
             map.setTileSource(TileSourceFactory.MAPNIK)
             map.setMultiTouchControls(true)
-
             val point = GeoPoint(lat, lng)
             map.controller.setZoom(15.0)
             map.controller.setCenter(point)
@@ -315,12 +277,10 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             val marker = Marker(map)
             marker.position = point
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = "Request location"
+            marker.title = getString(R.string.help_request_map_marker_title)
             map.overlays.add(marker)
         }
     }
-
-    // ── Fetch comments ───────────────────────────────────────────────────
 
     private fun fetchComments() {
         progressComments.visibility = View.VISIBLE
@@ -343,14 +303,14 @@ class HelpRequestDetailActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this@HelpRequestDetailActivity,
-                        "Failed to load comments",
+                        getString(R.string.help_request_comments_load_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(
                     this@HelpRequestDetailActivity,
-                    "Network error: ${e.localizedMessage}",
+                    getString(R.string.network_error_with_message, e.localizedMessage ?: ""),
                     Toast.LENGTH_SHORT
                 ).show()
             } finally {
@@ -359,14 +319,10 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         }
     }
 
-    // ── Submit comment ───────────────────────────────────────────────────
-
-    // ── Resolve request ─────────────────────────────────────────────────
-
     private fun resolveRequest() {
         val btnResolve = findViewById<MaterialButton>(R.id.btnResolveRequest)
         btnResolve.isEnabled = false
-        btnResolve.text = "Resolving\u2026"
+        btnResolve.text = getString(R.string.resolving)
 
         lifecycleScope.launch {
             try {
@@ -374,29 +330,26 @@ class HelpRequestDetailActivity : AppCompatActivity() {
                     .updateHelpRequestStatus(requestId, UpdateHelpRequestStatusRequest("RESOLVED"))
                 if (response.isSuccessful) {
                     response.body()?.let { displayDetail(it) }
-                    Toast.makeText(this@HelpRequestDetailActivity, "Marked as resolved.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.help_request_resolved), Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to update status.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.help_request_status_update_failed), Toast.LENGTH_SHORT).show()
                     btnResolve.isEnabled = true
-                    btnResolve.text = "Mark Resolved"
+                    btnResolve.text = getString(R.string.mark_resolved)
                 }
             } catch (_: Exception) {
-                Toast.makeText(this@HelpRequestDetailActivity, "Network error.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
                 btnResolve.isEnabled = true
-                btnResolve.text = "Mark Resolved"
+                btnResolve.text = getString(R.string.mark_resolved)
             }
         }
     }
 
-    // ── Delete request ───────────────────────────────────────────────────
-
-    /** Shows a confirmation dialog then deletes the help request. */
     private fun confirmDeleteRequest() {
         AlertDialog.Builder(this)
-            .setTitle("Delete Help Request")
-            .setMessage("Are you sure you want to delete this help request? This cannot be undone.")
-            .setPositiveButton("Delete") { _, _ -> deleteRequest() }
-            .setNegativeButton("Cancel", null)
+            .setTitle(getString(R.string.help_request_delete_title))
+            .setMessage(getString(R.string.help_request_delete_confirm))
+            .setPositiveButton(getString(R.string.delete)) { _, _ -> deleteRequest() }
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -406,32 +359,27 @@ class HelpRequestDetailActivity : AppCompatActivity() {
                 val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
                     .deleteHelpRequest(requestId)
                 if (response.code() == 403) {
-                    Toast.makeText(this@HelpRequestDetailActivity, "You can only delete your own requests.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.help_request_delete_forbidden), Toast.LENGTH_SHORT).show()
                     return@launch
                 }
             } catch (_: Exception) {
-                // Delete likely succeeded; fall through to finish
             }
-            Toast.makeText(this@HelpRequestDetailActivity, "Help request deleted.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.help_request_deleted), Toast.LENGTH_SHORT).show()
             setResult(RESULT_OK)
             finish()
         }
     }
 
-    // ── Delete comment ───────────────────────────────────────────────────
-
-    /** Shows a confirmation dialog then deletes the comment and updates the UI. */
     private fun confirmDeleteComment(commentId: Int) {
         AlertDialog.Builder(this)
-            .setTitle("Delete Comment")
-            .setMessage("Are you sure you want to delete this comment?")
-            .setPositiveButton("Delete") { _, _ -> deleteComment(commentId) }
-            .setNegativeButton("Cancel", null)
+            .setTitle(getString(R.string.comment_delete_title))
+            .setMessage(getString(R.string.comment_delete_confirm))
+            .setPositiveButton(getString(R.string.delete)) { _, _ -> deleteComment(commentId) }
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
     private fun deleteComment(commentId: Int) {
-        // Optimistic UI update: remove immediately
         commentAdapter.removeComment(commentId)
         if (commentAdapter.itemCount == 0) {
             recyclerComments.visibility = View.GONE
@@ -443,15 +391,12 @@ class HelpRequestDetailActivity : AppCompatActivity() {
                 val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
                     .deleteHelpRequestComment(commentId)
                 if (response.isSuccessful || response.code() == 204) {
-                    // Refresh detail to sync comment count
                     fetchDetail()
                 } else {
-                    // Deletion failed on server — reload to restore
                     fetchComments()
-                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to delete comment.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.comment_delete_failed), Toast.LENGTH_SHORT).show()
                 }
             } catch (_: Exception) {
-                // Deletion may have succeeded; reload to get the true state
                 fetchComments()
             }
         }
@@ -460,7 +405,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     private fun submitComment() {
         val content = inputComment.text.toString().trim()
         if (content.isEmpty()) {
-            Toast.makeText(this, "Comment cannot be empty.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.comment_empty_error), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -475,35 +420,25 @@ class HelpRequestDetailActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val comment = response.body()!!
                     inputComment.text?.clear()
-
-                    // Show the new comment immediately
                     txtNoComments.visibility = View.GONE
                     recyclerComments.visibility = View.VISIBLE
                     commentAdapter.addComment(comment)
-
-                    // Scroll to bottom to show the new comment
                     recyclerComments.post {
-                        val scrollView = findViewById<androidx.core.widget.NestedScrollView>(R.id.scrollView)
-                        scrollView.fullScroll(View.FOCUS_DOWN)
+                        findViewById<androidx.core.widget.NestedScrollView>(R.id.scrollView)
+                            .fullScroll(View.FOCUS_DOWN)
                     }
-
-                    // Re-fetch detail — status may have changed to EXPERT_RESPONDING
                     fetchDetail()
                 } else if (response.code() == 401) {
                     tokenManager.clear()
                     navigateToLanding()
                 } else {
-                    val errorText = response.errorBody()?.string() ?: "Failed to post comment."
-                    Toast.makeText(
-                        this@HelpRequestDetailActivity,
-                        errorText,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    val errorText = response.errorBody()?.string() ?: getString(R.string.comment_post_failed)
+                    Toast.makeText(this@HelpRequestDetailActivity, errorText, Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(
                     this@HelpRequestDetailActivity,
-                    "Network error: ${e.localizedMessage}",
+                    getString(R.string.network_error_with_message, e.localizedMessage ?: ""),
                     Toast.LENGTH_LONG
                 ).show()
             } finally {
@@ -512,8 +447,6 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             }
         }
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────
 
     private fun navigateToLanding() {
         val intent = Intent(this, LandingActivity::class.java)

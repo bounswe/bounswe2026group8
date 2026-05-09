@@ -21,7 +21,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from accounts.models import Hub, User
+from accounts.models import Hub, User, ExpertiseCategory, ExpertiseField
 from .models import HelpRequest, HelpComment, HelpOffer
 
 
@@ -515,11 +515,12 @@ class HelpRequestNotificationTests(HelpTestBase):
         message = mock_send.call_args[0][0]
         self.assertCountEqual(message.tokens, ['token-1', 'token-2'])
 
+    @patch('help_requests.notifications.messaging.send')
     @patch('help_requests.notifications.messaging.send_each_for_multicast')
     @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
-    def test_author_excluded_from_notification(self, mock_send):
+    def test_author_excluded_from_notification(self, mock_multicast, mock_send):
         """The request author does not receive a notification, even if they are an expert."""
-        mock_send.return_value = MagicMock(failure_count=0)
+        mock_multicast.return_value = MagicMock(failure_count=0)
         # Make the standard_user an expert with a token.
         self.standard_user.role = User.Role.EXPERT
         self.standard_user.fcm_token = 'author-token'
@@ -530,8 +531,10 @@ class HelpRequestNotificationTests(HelpTestBase):
         res = self._create_help_request()
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
-        mock_send.assert_called_once()
-        tokens = mock_send.call_args[0][0].tokens
+        # Fallback path: no matching expertise → other expert notified via multicast,
+        # requester (author) notified via messaging.send (not via multicast).
+        mock_multicast.assert_called_once()
+        tokens = mock_multicast.call_args[0][0].tokens
         self.assertNotIn('author-token', tokens)
         self.assertIn('other-token', tokens)
 
@@ -594,6 +597,34 @@ class HelpRequestNotificationTests(HelpTestBase):
 
     @patch('help_requests.notifications.messaging.send_each_for_multicast')
     @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_help_request_notifications_respect_opt_out(self, mock_send):
+        """Experts who disable help request notifications are not notified."""
+        self.expert_user.fcm_token = 'expert-token'
+        self.expert_user.save(update_fields=['fcm_token'])
+        self.expert_user.settings.notify_help_requests = False
+        self.expert_user.settings.save(update_fields=['notify_help_requests'])
+
+        res = self._create_help_request()
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        mock_send.assert_not_called()
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_expertise_only_setting_skips_fallback_notification(self, mock_send):
+        """Experts can opt out of fallback notifications outside their expertise."""
+        shelter_cat = ExpertiseCategory.objects.filter(help_request_category='SHELTER').first()
+        shelter_expert = self._setup_expert_with_token('shelter-optout@test.com', 'shelter-token')
+        ExpertiseField.objects.create(user=shelter_expert, category=shelter_cat, is_approved=True)
+        shelter_expert.settings.notify_expertise_matches_only = True
+        shelter_expert.settings.save(update_fields=['notify_expertise_matches_only'])
+
+        self._create_help_request(category='MEDICAL')
+
+        mock_send.assert_not_called()
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
     def test_notification_payload_contains_request_details(self, mock_send):
         """Notification data payload includes request_id, title, category, and urgency."""
         mock_send.return_value = MagicMock(failure_count=0)
@@ -621,6 +652,131 @@ class HelpRequestNotificationTests(HelpTestBase):
         res = self._create_help_request()
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertTrue(HelpRequest.objects.filter(pk=res.data['id']).exists())
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_only_matching_expert_notified_primary(self, mock_send):
+        """Only experts whose approved expertise matches the request category are notified."""
+        mock_send.return_value = MagicMock(failure_count=0)
+
+        medical_cat = ExpertiseCategory.objects.filter(help_request_category='MEDICAL').first()
+        shelter_cat = ExpertiseCategory.objects.filter(help_request_category='SHELTER').first()
+
+        medical_expert = self._setup_expert_with_token('med@test.com', 'medical-token')
+        ExpertiseField.objects.create(user=medical_expert, category=medical_cat, is_approved=True)
+
+        shelter_expert = self._setup_expert_with_token('shelter@test.com', 'shelter-token')
+        ExpertiseField.objects.create(user=shelter_expert, category=shelter_cat, is_approved=True)
+
+        self._create_help_request(category='MEDICAL')
+
+        mock_send.assert_called_once()
+        tokens = mock_send.call_args[0][0].tokens
+        self.assertIn('medical-token', tokens)
+        self.assertNotIn('shelter-token', tokens)
+
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_fallback_notifies_all_hub_experts_when_no_match(self, mock_send):
+        """When no matching expert exists, all hub experts are notified as fallback."""
+        mock_send.return_value = MagicMock(failure_count=0)
+
+        shelter_cat = ExpertiseCategory.objects.filter(help_request_category='SHELTER').first()
+        shelter_expert = self._setup_expert_with_token('shelter@test.com', 'shelter-token')
+        ExpertiseField.objects.create(user=shelter_expert, category=shelter_cat, is_approved=True)
+
+        # MEDICAL request — shelter expert has no MEDICAL expertise → fallback
+        self._create_help_request(category='MEDICAL')
+
+        mock_send.assert_called_once()
+        tokens = mock_send.call_args[0][0].tokens
+        self.assertIn('shelter-token', tokens)
+
+    @patch('help_requests.notifications.messaging.send')
+    @patch('help_requests.notifications.messaging.send_each_for_multicast')
+    @patch('help_requests.notifications.firebase_admin._apps', {'default': True})
+    def test_requester_notified_when_no_matching_expert(self, mock_multicast, mock_send):
+        """Requester receives an FCM notification when no matching expert is found."""
+        mock_multicast.return_value = MagicMock(failure_count=0)
+
+        # Give the requester an FCM token.
+        self.standard_user.fcm_token = 'requester-token'
+        self.standard_user.save(update_fields=['fcm_token'])
+
+        # A shelter expert exists — but the request is MEDICAL → fallback triggered.
+        shelter_cat = ExpertiseCategory.objects.filter(help_request_category='SHELTER').first()
+        shelter_expert = self._setup_expert_with_token('shelter@test.com', 'shelter-token')
+        ExpertiseField.objects.create(user=shelter_expert, category=shelter_cat, is_approved=True)
+
+        self._create_help_request(category='MEDICAL')
+
+        mock_send.assert_called_once()
+        call_message = mock_send.call_args[0][0]
+        self.assertEqual(call_message.token, 'requester-token')
+        self.assertEqual(call_message.data['type'], 'no_expert_available')
+
+    def test_other_category_valid_for_help_request(self):
+        """Help request can be created with category OTHER."""
+        res = self._create_help_request(category='OTHER')
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.data['category'], 'OTHER')
+
+
+# ── Expertise Match Filter Tests ──────────────────────────────────────────────
+
+class ExpertiseMatchFilterTests(HelpTestBase):
+    """Tests for ?expertise_match=true on GET /help-requests/."""
+
+    def setUp(self):
+        super().setUp()
+        self.medical_cat = ExpertiseCategory.objects.filter(help_request_category='MEDICAL').first()
+        ExpertiseField.objects.create(
+            user=self.expert_user, category=self.medical_cat, is_approved=True,
+        )
+        HelpRequest.objects.create(
+            author=self.standard_user, hub=self.hub, category='MEDICAL',
+            urgency='LOW', title='Medical request', description='test',
+        )
+        HelpRequest.objects.create(
+            author=self.standard_user, hub=self.hub, category='FOOD',
+            urgency='LOW', title='Food request', description='test',
+        )
+
+    def test_expertise_match_shows_only_matching_requests(self):
+        """Expert with MEDICAL expertise only sees MEDICAL requests when filtering."""
+        res = self.expert_client.get('/help-requests/?expertise_match=true')
+        self.assertEqual(res.status_code, 200)
+        categories = [r['category'] for r in res.data]
+        self.assertIn('MEDICAL', categories)
+        self.assertNotIn('FOOD', categories)
+
+    def test_no_filter_shows_all_requests(self):
+        """Without expertise_match, expert sees all requests."""
+        res = self.expert_client.get('/help-requests/')
+        categories = [r['category'] for r in res.data]
+        self.assertIn('MEDICAL', categories)
+        self.assertIn('FOOD', categories)
+
+    def test_standard_user_unaffected_by_expertise_match(self):
+        """Standard users see all requests even with expertise_match=true."""
+        res = self.standard_client.get('/help-requests/?expertise_match=true')
+        categories = [r['category'] for r in res.data]
+        self.assertIn('MEDICAL', categories)
+        self.assertIn('FOOD', categories)
+
+    def test_expert_with_no_expertise_fields_sees_empty_list(self):
+        """Expert with no approved expertise fields gets an empty list when filtering."""
+        other_expert = User.objects.create_user(
+            email='noexpertise@example.com', full_name='No Expertise',
+            password='Pass1234', hub=self.hub, role=User.Role.EXPERT,
+        )
+        token = RefreshToken.for_user(other_expert).access_token
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+
+        res = client.get('/help-requests/?expertise_match=true')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.data), 0)
 
 
 # ── Image Upload Tests ────────────────────────────────────────────────────────

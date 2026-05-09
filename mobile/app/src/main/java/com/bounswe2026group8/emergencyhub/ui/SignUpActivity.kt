@@ -4,14 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.ExpertiseCategoryData
 import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.RegisterRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
+import com.bounswe2026group8.emergencyhub.util.LocaleManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -25,7 +28,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var inputPassword: TextInputEditText
     private lateinit var inputConfirmPassword: TextInputEditText
     private lateinit var inputNeighborhood: TextInputEditText
-    private lateinit var inputExpertise: TextInputEditText
+    private lateinit var dropdownExpertise: AutoCompleteTextView
     private lateinit var expertiseLayout: TextInputLayout
     private lateinit var toggleGroup: MaterialButtonToggleGroup
     private lateinit var btnSubmit: MaterialButton
@@ -33,6 +36,8 @@ class SignUpActivity : AppCompatActivity() {
 
     private var selectedRole = "STANDARD"
     private var hubs: List<Hub> = emptyList()
+    private var expertiseCategories: List<ExpertiseCategoryData> = emptyList()
+    private var selectedCategoryId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +48,7 @@ class SignUpActivity : AppCompatActivity() {
         inputPassword = findViewById(R.id.inputPassword)
         inputConfirmPassword = findViewById(R.id.inputConfirmPassword)
         inputNeighborhood = findViewById(R.id.inputNeighborhood)
-        inputExpertise = findViewById(R.id.inputExpertise)
+        dropdownExpertise = findViewById(R.id.dropdownExpertiseCategory)
         expertiseLayout = findViewById(R.id.expertiseLayout)
         toggleGroup = findViewById(R.id.roleToggleGroup)
         btnSubmit = findViewById(R.id.btnSignUp)
@@ -64,6 +69,26 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         loadHubs()
+        loadCategories()
+    }
+
+    private fun loadCategories() {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@SignUpActivity).getExpertiseCategories()
+                if (response.isSuccessful) {
+                    expertiseCategories = response.body() ?: emptyList()
+                    val langCode = LocaleManager.getLanguage(this@SignUpActivity)
+                    val names = expertiseCategories.map { it.displayName(langCode) }
+                    dropdownExpertise.setAdapter(
+                        ArrayAdapter(this@SignUpActivity, android.R.layout.simple_dropdown_item_1line, names)
+                    )
+                    dropdownExpertise.setOnItemClickListener { _, _, pos, _ ->
+                        selectedCategoryId = expertiseCategories[pos].id
+                    }
+                }
+            } catch (_: Exception) { }
+        }
     }
 
     private fun loadHubs() {
@@ -98,7 +123,6 @@ class SignUpActivity : AppCompatActivity() {
         val password = inputPassword.text.toString()
         val confirmPassword = inputConfirmPassword.text.toString()
         val neighborhood = inputNeighborhood.text.toString().trim().ifEmpty { null }
-        val expertise = inputExpertise.text.toString().trim().ifEmpty { null }
         val hubId = getSelectedHubId()
 
         if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
@@ -109,8 +133,8 @@ class SignUpActivity : AppCompatActivity() {
             Toast.makeText(this, "Passwords do not match.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (selectedRole == "EXPERT" && expertise.isNullOrBlank()) {
-            Toast.makeText(this, "Expertise field is required for Expert users.", Toast.LENGTH_SHORT).show()
+        if (selectedRole == "EXPERT" && selectedCategoryId == null) {
+            Toast.makeText(this, "Expertise category is required for Expert users.", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -124,7 +148,7 @@ class SignUpActivity : AppCompatActivity() {
             confirmPassword = confirmPassword,
             role = selectedRole,
             neighborhoodAddress = neighborhood,
-            expertiseField = if (selectedRole == "EXPERT") expertise else null,
+            categoryId = if (selectedRole == "EXPERT") selectedCategoryId else null,
             hubId = hubId
         )
 
