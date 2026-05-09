@@ -245,6 +245,16 @@ export function getHelpRequest(id) {
   return request(`/help-requests/${id}/`, { method: 'GET' });
 }
 
+/** POST /help-requests/{id}/take-on/ — expert takes responsibility. */
+export function takeOnHelpRequest(id) {
+  return request(`/help-requests/${id}/take-on/`, { method: 'POST' });
+}
+
+/** POST /help-requests/{id}/release/ — assigned expert releases responsibility. */
+export function releaseHelpRequest(id) {
+  return request(`/help-requests/${id}/release/`, { method: 'POST' });
+}
+
 /** GET /help-requests/{id}/comments/ — list comments on a help request. */
 export function getHelpComments(requestId) {
   return request(`/help-requests/${requestId}/comments/`, { method: 'GET' });
