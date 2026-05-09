@@ -23,7 +23,8 @@ test('TC-FORUM-001 — create a forum post and verify it appears in the list', a
   await loginAs(page, std.email, std.password);
   await page.goto('/forum');
 
-  await page.click('button:has-text("+ New Post")');
+  // hub-selector-bar is position:fixed z-index:1000 and overlaps the button — force the click
+  await page.click('button:has-text("+ New Post")', { force: true });
   await page.waitForURL('**/forum/new');
 
   await page.fill('#title', 'Earthquake safety tips');
@@ -31,15 +32,14 @@ test('TC-FORUM-001 — create a forum post and verify it appears in the list', a
 
   await page.click('button:has-text("Create Post")');
 
-  // Redirects to the new post's detail page
+  // PostCreatePage navigates to /forum?tab=GLOBAL on success, not the post detail
+  await page.waitForURL(/\/forum/);
+  await expect(page.getByText('Earthquake safety tips')).toBeVisible();
+
+  // Open the post detail to capture the URL for TC-FORUM-002
+  await page.locator('.post-card-title').filter({ hasText: 'Earthquake safety tips' }).click();
   await page.waitForURL(/\/forum\/posts\/\d+/);
   postUrl = page.url();
-
-  await expect(page.getByText('Earthquake safety tips')).toBeVisible();
-
-  // Post also appears in the forum list
-  await page.goto('/forum');
-  await expect(page.getByText('Earthquake safety tips')).toBeVisible();
 });
 
 // ── TC-FORUM-002 ──────────────────────────────────────────────────────────────

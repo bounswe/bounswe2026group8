@@ -77,6 +77,9 @@ test('another user cannot edit or delete a post they did not create', async ({ p
   await page.fill('#title', 'Auth guard test post');
   await page.fill('#content', 'This post belongs to std.');
   await page.click('button:has-text("Create Post")');
+  // PostCreatePage navigates to /forum?tab=GLOBAL on success, not the post detail
+  await page.waitForURL(/\/forum/);
+  await page.locator('.post-card-title').filter({ hasText: 'Auth guard test post' }).click();
   await page.waitForURL(/\/forum\/posts\/\d+/);
   const postUrl = page.url();
 
