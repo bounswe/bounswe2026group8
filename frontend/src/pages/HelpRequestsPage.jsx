@@ -341,6 +341,13 @@ export default function HelpRequestsPage() {
                             <Link to={`/users/${req.author.id}`} className="help-request-card-author author-link" onClick={(e) => e.stopPropagation()}>{req.author.full_name}</Link>
                             {req.author.role === 'EXPERT' && <span className="badge badge-expert-responding">{t('help_requests.labels.expert')}</span>}
                             <AuthorStatus profile={req.author.profile} t={t} />
+                            
+                            {req.is_expert_responding && req.assigned_expert_username && (
+                                <span className="badge badge-expert-responding">
+                                  Assigned to: {req.assigned_expert_username}
+                                </span>
+                            )}
+
                             <span>{formatDate(req.created_at, t)}</span>
                             {req.comment_count > 0 && (
                                 <span className="help-request-card-comments">

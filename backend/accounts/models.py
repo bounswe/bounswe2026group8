@@ -164,10 +164,19 @@ class Profile(models.Model):
         default=AvailabilityStatus.SAFE,
     )
 
+    completed_help_count = models.IntegerField(default=0)
+    # (Optional, but usually if there is a completed count, there is also a given count. Add this if your DB complains about it next)
+    # given_help_count = models.IntegerField(default=0)
+
     # General profile fields (kept from original)
     bio = models.TextField(blank=True, null=True)
     preferred_language = models.CharField(max_length=100, blank=True, null=True)
     emergency_contact = models.CharField(max_length=255, blank=True, null=True)
+
+    # Reward / badge tracking (populated by accounts.rewards)
+    trust_points = models.PositiveIntegerField(default=10)
+    contribution_count = models.PositiveIntegerField(default=0)
+    completed_help_count = models.PositiveIntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -343,6 +352,37 @@ class StaffAuditLog(models.Model):
     def __str__(self):
         actor_label = self.actor.email if self.actor_id else 'system'
         return f'{actor_label} {self.action} {self.target_type}:{self.target_id}'
+
+
+class RewardEvent(models.Model):
+    """
+    Records a single reward event (e.g. comment created, offer created,
+    help request resolved).  Each (user, source_key) pair is unique so a user
+    cannot be rewarded twice for the same action.
+    """
+
+    class EventType(models.TextChoices):
+        HELP_COMMENT_CREATED = 'HELP_COMMENT_CREATED', 'Help comment created'
+        HELP_OFFER_CREATED = 'HELP_OFFER_CREATED', 'Help offer created'
+        HELP_REQUEST_RESOLVED = 'HELP_REQUEST_RESOLVED', 'Help request resolved'
+
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='reward_events')
+    event_type = models.CharField(max_length=32, choices=EventType.choices)
+    points = models.PositiveIntegerField()
+    source_key = models.CharField(max_length=120)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=('user', 'source_key'),
+                name='unique_reward_source_per_user',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.event_type} +{self.points}pts — {self.user_id}'
 
 
 # Automatically create Profile when User is created

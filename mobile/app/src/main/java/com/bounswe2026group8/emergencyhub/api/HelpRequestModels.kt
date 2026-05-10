@@ -39,6 +39,11 @@ data class HelpRequestItem(
     val title: String,
     val status: String,
     @SerializedName("comment_count") val commentCount: Int,
+    @SerializedName("is_expert_responding") val isExpertResponding: Boolean?,
+    @SerializedName("assigned_expert") val assignedExpert: HelpRequestAuthor?,
+    @SerializedName("assigned_expert_username") val assignedExpertUsername: String?,
+    @SerializedName("assigned_at") val assignedAt: String?,
+    @SerializedName("resolved_at") val resolvedAt: String?,
     @SerializedName("created_at") val createdAt: String
 )
 
@@ -71,6 +76,11 @@ data class HelpRequestDetail(
     @SerializedName("location_text") val locationText: String?,
     val status: String,
     @SerializedName("comment_count") val commentCount: Int,
+    @SerializedName("is_expert_responding") val isExpertResponding: Boolean?,
+    @SerializedName("assigned_expert") val assignedExpert: HelpRequestAuthor?,
+    @SerializedName("assigned_expert_username") val assignedExpertUsername: String?,
+    @SerializedName("assigned_at") val assignedAt: String?,
+    @SerializedName("resolved_at") val resolvedAt: String?,
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String
 )

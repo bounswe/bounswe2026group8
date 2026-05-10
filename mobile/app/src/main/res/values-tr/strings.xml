@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
     <string name="app_name">Emergency Hub</string>
@@ -522,5 +522,54 @@
     <string name="tutorial_call">Ara</string>
     <string name="tutorial_calling">%1$s aranıyor</string>
     <string name="tutorial_changing_field">Bu alanı değiştirme</string>
+
+    <!-- Badges -->
+    <string name="badges_title">Rozetlerim</string>
+    <string name="badges_card_desc">Başarılarınızı ve ilerlemenizi görüntüleyin</string>
+    <string name="badges_empty">Henüz rozet kazanmadınız. Toplulukta yer almaya başlayın!</string>
+    <string name="badges_load_failed">Rozetler yüklenemedi</string>
+    <string name="badges_max_level">MAKSİMUM SEVİYEYE ULAŞILDI</string>
+    <!-- Settings -->
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_notifications">Bildirimler</string>
+    <string name="settings_privacy">Gizlilik</string>
+    <string name="settings_privacy_note">Diğer kullanıcıların genel profilinizde neleri görebileceğini seçin.</string>
+    <string name="settings_load_failed">Ayarlar yüklenemedi</string>
+    <string name="settings_save_failed">Ayar kaydedilemedi</string>
+    <string name="settings_notify_help_requests">Yardım talebi uyarıları</string>
+    <string name="settings_notify_help_requests_desc">Yakındaki yardım taleplerinde bildirim alın.</string>
+    <string name="settings_notify_urgent_posts">Acil forum uyarıları</string>
+    <string name="settings_notify_urgent_posts_desc">Acil topluluk gönderileri için bildirim alın.</string>
+    <string name="settings_notify_expertise_matches_only">Sadece uzmanlığım</string>
+    <string name="settings_notify_expertise_matches_only_desc">Yardım talebi uyarılarını uzmanlığınızla eşleşen kategorilerle sınırlayın.</string>
+    <string name="settings_show_phone_number">Telefon numarasını göster</string>
+    <string name="settings_show_phone_number_desc">Diğerlerinin telefon numaranızı görmesine izin verin.</string>
+    <string name="settings_show_emergency_contact">Acil durum kişisini göster</string>
+    <string name="settings_show_emergency_contact_desc">Diğerlerinin acil durum iletişim bilgilerinizi görmesine izin verin.</string>
+    <string name="settings_show_medical_info">Tıbbi bilgileri göster</string>
+    <string name="settings_show_medical_info_desc">Diğerlerinin kan grubu, engellilik ve özel ihtiyaç alanlarını görmesine izin verin.</string>
+    <string name="settings_show_availability_status">Müsaitlik durumunu göster</string>
+    <string name="settings_show_availability_status_desc">Diğerlerinin güvende, yardıma ihtiyacı var veya yardım edebilir durumda olduğunuzu görmesine izin verin.</string>
+    <string name="settings_show_bio">Biyografiyi göster</string>
+    <string name="settings_show_bio_desc">Diğerlerinin profil biyografinizi görmesine izin verin.</string>
+    <string name="settings_show_location">Konumu göster</string>
+    <string name="settings_show_location_desc">Diğerlerinin mahallenizi veya adresinizi görmesine izin verin.</string>
+    <string name="settings_show_resources">Kaynakları göster</string>
+    <string name="settings_show_resources_desc">Diğerlerinin listelediğiniz kaynakları görmesine izin verin.</string>
+    <string name="settings_show_expertise">Uzmanlığı göster</string>
+    <string name="settings_show_expertise_desc">Diğerlerinin uzmanlık alanlarınızı görmesine izin verin.</string>
+
+    <string name="feature_settings">Ayarlar</string>
+    <string name="feature_settings_desc">Gizlilik ve uyarılar</string>
+
+    <string name="badge_name_commenter">Yorumcu</string>
+    <string name="badge_desc_commenter">Yorum yaptığınız için verilir.</string>
+    <string name="badge_name_voter">Oylayıcı</string>
+    <string name="badge_desc_voter">Gönderilere oy verdiğiniz için verilir.</string>
+    <string name="badge_name_forum_active">Forum Aktifi</string>
+    <string name="badge_desc_forum_active">Forum gönderileri oluşturarak kazanılır.</string>
+    <string name="badge_name_responder">Yanıtlayıcı</string>
+    <string name="badge_desc_responder">Yardım taleplerine yanıt verdiğiniz için verilir.</string>
 </resources>
+
 

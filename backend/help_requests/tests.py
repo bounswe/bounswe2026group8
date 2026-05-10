@@ -333,6 +333,12 @@ class HelpCommentTests(HelpTestBase):
 # ── Auto Status Update Tests ─────────────────────────────────────────────────
 
 class StatusUpdateTests(HelpTestBase):
+    """
+    Verify that expert comments do NOT trigger status changes.
+
+    The 'expert responding' label now depends solely on assigned_expert,
+    not on comments.  These tests confirm the old behaviour is removed.
+    """
 
     def test_standard_user_comment_does_not_change_status(self):
         """A standard user commenting does NOT change the request status."""
@@ -345,25 +351,22 @@ class StatusUpdateTests(HelpTestBase):
             HelpRequest.Status.OPEN,
         )
 
-    def test_expert_comment_sets_status_to_expert_responding(self):
-        """An expert commenting on an OPEN request sets status to EXPERT_RESPONDING."""
+    def test_expert_comment_does_not_change_status(self):
+        """An expert commenting on an OPEN request does NOT change status."""
         pk = self._create_help_request().data['id']
         self.expert_client.post(
             f'/help-requests/{pk}/comments/', {'content': 'On my way'}, format='json',
         )
         self.assertEqual(
             HelpRequest.objects.get(pk=pk).status,
-            HelpRequest.Status.EXPERT_RESPONDING,
+            HelpRequest.Status.OPEN,
         )
 
     def test_expert_comment_on_already_expert_responding(self):
         """An expert commenting on an EXPERT_RESPONDING request keeps the same status."""
         pk = self._create_help_request().data['id']
-        # First expert comment: OPEN -> EXPERT_RESPONDING.
-        self.expert_client.post(
-            f'/help-requests/{pk}/comments/', {'content': 'First'}, format='json',
-        )
-        # Second expert comment: stays EXPERT_RESPONDING.
+        # Manually set status to EXPERT_RESPONDING (via take-on flow).
+        HelpRequest.objects.filter(pk=pk).update(status=HelpRequest.Status.EXPERT_RESPONDING)
         self.expert_client.post(
             f'/help-requests/{pk}/comments/', {'content': 'Update'}, format='json',
         )
@@ -912,3 +915,229 @@ class HelpCommentDeleteTests(HelpTestBase):
         """Deleting a comment that does not exist returns 404."""
         res = self.standard_client.delete('/help-requests/comments/99999/')
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+
+
+# ── Take-On / Release / Resolve Tests ─────────────────────────────────────────
+
+class HelpRequestTakeOnReleaseTests(HelpTestBase):
+    """
+    Tests for the take-on / release / resolve flow.
+
+    Covers all 16 acceptance criteria from the spec:
+      1.  Standard user cannot take on
+      2.  Expert with matching expertise can take on
+      3.  Expert without matching expertise cannot take on
+      4.  Requester cannot take on own request
+      5.  Already-assigned request cannot be taken by another expert
+      6.  Assigned expert can release
+      7.  Non-assigned expert cannot release
+      8.  Resolved request cannot be taken on
+      9.  Resolved request cannot be released
+      10. Requester can resolve with assigned expert
+      11. Requester can resolve without assigned expert
+      12. Resolved request keeps assigned_expert
+      13. Resolved without expert keeps null
+      14. is_expert_responding true when assigned
+      15. is_expert_responding false when not assigned
+      16. Expert comments alone don't trigger label
+    """
+
+    def setUp(self):
+        super().setUp()
+        # Give the expert user an approved expertise that matches MEDICAL requests.
+        self.medical_cat = ExpertiseCategory.objects.filter(
+            help_request_category='MEDICAL',
+        ).first()
+        ExpertiseField.objects.create(
+            user=self.expert_user,
+            category=self.medical_cat,
+            is_approved=True,
+        )
+
+    # ── Helpers ────────────────────────────────────────────────────────────
+
+    def _make_second_expert(self, expertise_category_name='MEDICAL'):
+        """Create a second expert user with matching expertise and return (user, client)."""
+        user = User.objects.create_user(
+            email='expert2@example.com', full_name='Expert Two',
+            password='Pass1234', hub=self.hub, role=User.Role.EXPERT,
+        )
+        cat = ExpertiseCategory.objects.filter(
+            help_request_category=expertise_category_name,
+        ).first()
+        ExpertiseField.objects.create(user=user, category=cat, is_approved=True)
+        client = APIClient()
+        token = RefreshToken.for_user(user).access_token
+        client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+        return user, client
+
+    # ── 1. Standard user cannot take on ────────────────────────────────────
+
+    def test_standard_user_cannot_take_on(self):
+        """Standard users are rejected with 403."""
+        pk = self._create_help_request(client=self.expert_client, category='MEDICAL').data['id']
+        # Avoid self-take-on: use standard_client (who is not the author).
+        # Actually the expert created it, so standard can try to take on.
+        res = self.standard_client.post(f'/help-requests/{pk}/take-on/')
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('Only experts', res.data['detail'])
+
+    # ── 2. Expert with matching expertise can take on ──────────────────────
+
+    def test_expert_with_matching_expertise_can_take_on(self):
+        """Expert with MEDICAL expertise can take on a MEDICAL request."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        res = self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        hr = HelpRequest.objects.get(pk=pk)
+        self.assertEqual(hr.assigned_expert_id, self.expert_user.id)
+        self.assertIsNotNone(hr.assigned_at)
+        self.assertEqual(hr.status, HelpRequest.Status.EXPERT_RESPONDING)
+
+    # ── 3. Expert without matching expertise cannot take on ────────────────
+
+    def test_expert_without_matching_expertise_cannot_take_on(self):
+        """Expert with MEDICAL expertise cannot take on a SHELTER request."""
+        pk = self._create_help_request(category='SHELTER').data['id']
+        res = self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('expertise does not match', res.data['detail'])
+
+    # ── 4. Requester cannot take on own request ────────────────────────────
+
+    def test_requester_cannot_take_on_own_request(self):
+        """Even an expert cannot take on a request they authored."""
+        pk = self._create_help_request(client=self.expert_client, category='MEDICAL').data['id']
+        res = self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('your own', res.data['detail'])
+
+    # ── 5. Already-assigned request cannot be taken by another expert ──────
+
+    def test_already_assigned_cannot_be_taken(self):
+        """A second expert gets 409 when trying to take on an already-assigned request."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        _, expert2_client = self._make_second_expert()
+        res = expert2_client.post(f'/help-requests/{pk}/take-on/')
+        self.assertEqual(res.status_code, status.HTTP_409_CONFLICT)
+
+    # ── 6. Assigned expert can release ─────────────────────────────────────
+
+    def test_assigned_expert_can_release(self):
+        """The assigned expert can release the request, returning it to OPEN."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        res = self.expert_client.post(f'/help-requests/{pk}/release/')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        hr = HelpRequest.objects.get(pk=pk)
+        self.assertIsNone(hr.assigned_expert_id)
+        self.assertIsNone(hr.assigned_at)
+        self.assertEqual(hr.status, HelpRequest.Status.OPEN)
+
+    # ── 7. Non-assigned expert cannot release ──────────────────────────────
+
+    def test_non_assigned_expert_cannot_release(self):
+        """An expert who is not assigned gets 403 on release."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        _, expert2_client = self._make_second_expert()
+        res = expert2_client.post(f'/help-requests/{pk}/release/')
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
+    # ── 8. Resolved request cannot be taken on ─────────────────────────────
+
+    def test_resolved_request_cannot_be_taken_on(self):
+        """A RESOLVED request rejects take-on with 400."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        HelpRequest.objects.filter(pk=pk).update(status=HelpRequest.Status.RESOLVED)
+        res = self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # ── 9. Resolved request cannot be released ─────────────────────────────
+
+    def test_resolved_request_cannot_be_released(self):
+        """A RESOLVED request rejects release with 400."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        HelpRequest.objects.filter(pk=pk).update(status=HelpRequest.Status.RESOLVED)
+        res = self.expert_client.post(f'/help-requests/{pk}/release/')
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # ── 10. Requester can resolve with assigned expert ─────────────────────
+
+    def test_requester_can_resolve_with_assigned_expert(self):
+        """Requester can mark a request as RESOLVED even when an expert is assigned."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        res = self.standard_client.patch(
+            f'/help-requests/{pk}/status/', {'status': 'RESOLVED'}, format='json',
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data['status'], 'RESOLVED')
+
+    # ── 11. Requester can resolve without assigned expert ──────────────────
+
+    def test_requester_can_resolve_without_assigned_expert(self):
+        """Requester can resolve a request that has no assigned expert."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        res = self.standard_client.patch(
+            f'/help-requests/{pk}/status/', {'status': 'RESOLVED'}, format='json',
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data['status'], 'RESOLVED')
+
+    # ── 12. Resolved request keeps assigned_expert ─────────────────────────
+
+    def test_resolved_keeps_assigned_expert(self):
+        """After resolving, assigned_expert is preserved (not cleared)."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        self.standard_client.patch(
+            f'/help-requests/{pk}/status/', {'status': 'RESOLVED'}, format='json',
+        )
+        hr = HelpRequest.objects.get(pk=pk)
+        self.assertEqual(hr.status, HelpRequest.Status.RESOLVED)
+        self.assertEqual(hr.assigned_expert_id, self.expert_user.id)
+        self.assertIsNotNone(hr.resolved_at)
+
+    # ── 13. Resolved without expert keeps null ─────────────────────────────
+
+    def test_resolved_without_expert_keeps_null(self):
+        """Resolving with no assigned expert leaves assigned_expert as null."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.standard_client.patch(
+            f'/help-requests/{pk}/status/', {'status': 'RESOLVED'}, format='json',
+        )
+        hr = HelpRequest.objects.get(pk=pk)
+        self.assertIsNone(hr.assigned_expert_id)
+        self.assertIsNotNone(hr.resolved_at)
+
+    # ── 14. is_expert_responding true when assigned ────────────────────────
+
+    def test_is_expert_responding_true_when_assigned(self):
+        """API response shows is_expert_responding=true when an expert is assigned."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.expert_client.post(f'/help-requests/{pk}/take-on/')
+        res = self.standard_client.get(f'/help-requests/{pk}/')
+        self.assertTrue(res.data['is_expert_responding'])
+
+    # ── 15. is_expert_responding false when not assigned ───────────────────
+
+    def test_is_expert_responding_false_when_not_assigned(self):
+        """API response shows is_expert_responding=false when no expert is assigned."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        res = self.standard_client.get(f'/help-requests/{pk}/')
+        self.assertFalse(res.data['is_expert_responding'])
+
+    # ── 16. Expert comments alone don't trigger label ──────────────────────
+
+    def test_expert_comment_does_not_trigger_expert_responding_label(self):
+        """An expert commenting does NOT set is_expert_responding to true."""
+        pk = self._create_help_request(category='MEDICAL').data['id']
+        self.expert_client.post(
+            f'/help-requests/{pk}/comments/', {'content': 'I can help!'}, format='json',
+        )
+        res = self.standard_client.get(f'/help-requests/{pk}/')
+        self.assertFalse(res.data['is_expert_responding'])
+        self.assertEqual(res.data['status'], 'OPEN')

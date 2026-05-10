@@ -365,6 +365,33 @@
       "posted": "Publicado"
     }
   },
+  "badges": {
+    "commenter": {
+      "title": "Conversador",
+      "description": "Otorgada por participar activamente en las discusiones de la comunidad."
+    },
+    "voter": {
+      "title": "Votante",
+      "description": "Otorgada por votar en las publicaciones de la comunidad."
+    },
+    "forum_active": {
+      "title": "Foro Activo",
+      "description": "Otorgada por crear nuevas publicaciones en el foro de la comunidad."
+    },
+    "responder": {
+      "title": "Respondedor",
+      "description": "Otorgada por asumir la responsabilidad de las solicitudes de ayuda de la comunidad."
+    }
+  },
+  "my_badges": {
+    "header": {
+      "title": "Mis Insignias",
+      "back": "Volver"
+    },
+    "loading": "Cargando tus logros...",
+    "empty": "Aún no has ganado ninguna medalla. ¡Empieza a participar en la comunidad!",
+    "max_level": "NIVEL MÁXIMO ALCANZADO"
+  },
   "post_create": {
     "types": {
       "global": "Global",
@@ -634,6 +661,10 @@
     "my_posts": {
       "title": "Mis Publicaciones",
       "desc": "Mira tus publicaciones del foro, solicitudes de ayuda y ofertas de ayuda"
+    },
+    "my_badges": {
+      "title": "Mis Insignias",
+      "desc": "Mira tus insignias ganadas y tus logros"
     },
     "sections": {
       "personal_info": "Información Personal",

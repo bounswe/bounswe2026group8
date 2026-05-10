@@ -2458,6 +2458,14 @@
    .profile-my-posts-card:hover {
      border-color: var(--accent);
    }
+   .profile-my-posts-card:hover {
+     border-color: var(--accent);
+     box-shadow: 0 0 15px var(--accent-glow); /* Adds the glow */
+   }
+   .profile-my-badges-card:hover {
+     border-color: var(--accent);
+     box-shadow: 0 0 15px var(--accent-glow); /* Adds the glow */
+   }
 
    /* Settings Page */
    .settings-page {

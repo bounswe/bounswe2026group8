@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
     <string name="app_name">Emergency Hub</string>
@@ -654,4 +654,24 @@
     <string name="tutorial_call">Call</string>
     <string name="tutorial_calling">Calling %1$s</string>
     <string name="tutorial_changing_field">Changing this field</string>
+
+    <!-- Badges -->
+    <string name="badges_title">My Badges</string>
+    <string name="badges_card_desc">View your achievements and progress</string>
+    <string name="badges_empty">You haven\'t earned any badges yet. Start participating in the community!</string>
+    <string name="badges_load_failed">Failed to load badges</string>
+    <string name="badges_max_level">MAX LEVEL REACHED</string>
+    <string name="badges_name_with_level" translatable="false">%1$s %2$d</string>
+    <string name="badges_progress_format" translatable="false">%1$d / %2$d</string>
+    <string name="badges_pill_format" translatable="false">%1$s %2$s</string>
+    <string name="arrow_right" translatable="false">→</string>
+    <string name="badge_name_commenter">Commenter</string>
+    <string name="badge_desc_commenter">Awarded for commenting.</string>
+    <string name="badge_name_voter">Voter</string>
+    <string name="badge_desc_voter">Awarded for voting on posts.</string>
+    <string name="badge_name_forum_active">Forum Active</string>
+    <string name="badge_desc_forum_active">Gained by creating Forum Posts</string>
+    <string name="badge_name_responder">Responder</string>
+    <string name="badge_desc_responder">Awarded for responding to Help Requests</string>
 </resources>
+
