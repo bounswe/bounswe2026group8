@@ -13,7 +13,6 @@ def create_default_badges(apps, schema_editor):
             "description": "Awarded for commenting.",
             "icon": "🗣️",
             "criteria_type": "COMMENTS", # Adjust to whatever your exact string is
-            "max_level": 5,
             "milestones": [1, 5, 10, 20, 100]
         },
         {
@@ -21,7 +20,6 @@ def create_default_badges(apps, schema_editor):
             "description": "Awarded for voting on posts.",
             "icon": "⚖️",
             "criteria_type": "VOTES", # Adjust if you added this criteria
-            "max_level": 6,
             "milestones": [1, 5, 10, 50, 100, 200]
         },
         {
@@ -29,7 +27,6 @@ def create_default_badges(apps, schema_editor):
             "description": "Gained by creating Forum Posts",
             "icon": "📣",
             "criteria_type": "POSTS", # Adjust if you added this criteria
-            "max_level": 7,
             "milestones": [1, 3, 5, 10, 20, 35, 50]
         },
         {
@@ -37,22 +34,22 @@ def create_default_badges(apps, schema_editor):
             "description": "Awarded for responding to Help Requests",
             "icon": "⛑️",
             "criteria_type": "HELP_RESPONSES",
-            "max_level": 7,
             "milestones": [1, 2, 3, 5, 10, 20, 30]
         }
     ]
 
     for badge_data in default_badges:
         # get_or_create ensures we don't accidentally create duplicates
+        # We use criteria_type since it's unique
         Badge.objects.get_or_create(
-            name=badge_data["name"],
+            criteria_type=badge_data["criteria_type"],
             defaults=badge_data
         )
 
 def reverse_badges(apps, schema_editor):
     # Optional: Logic to delete them if we ever un-migrate
     Badge = apps.get_model('badges', 'Badge')
-    Badge.objects.filter(name__in=["Conversationalist", "Voter", "Forum Active", "Responder"]).delete()
+    Badge.objects.filter(name__in=["Commenter", "Voter", "Forum Active", "Responder"]).delete()
 
 class Migration(migrations.Migration):
 
