@@ -277,7 +277,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             if (isAuthor && detail.status != "RESOLVED") View.VISIBLE else View.GONE
 
         if (detail.isExpertResponding == true && detail.assignedExpertUsername != null) {
-            txtAssignedExpert.text = "Assigned to: ${detail.assignedExpertUsername}"
+            txtAssignedExpert.text = getString(R.string.assigned_expert_format, detail.assignedExpertUsername)
             txtAssignedExpert.visibility = View.VISIBLE
         } else {
             txtAssignedExpert.visibility = View.GONE

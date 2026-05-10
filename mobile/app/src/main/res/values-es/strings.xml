@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
     <string name="app_name">Emergency Hub</string>
@@ -538,14 +538,15 @@
     <string name="feature_settings">Ajustes</string>
     <string name="feature_settings_desc">Privacidad y alertas</string>
 
-    <string name="badge_name_commenter">Comentarista</string>
-    <string name="badge_desc_commenter">Otorgado por comentar.</string>
+    <string name="badge_name_commenter">Conversador</string>
+    <string name="badge_desc_commenter">Otorgada por participar activamente en las discusiones de la comunidad.</string>
     <string name="badge_name_voter">Votante</string>
-    <string name="badge_desc_voter">Otorgado por votar en publicaciones.</string>
+    <string name="badge_desc_voter">Otorgada por votar en las publicaciones de la comunidad.</string>
     <string name="badge_name_forum_active">Foro Activo</string>
-    <string name="badge_desc_forum_active">Obtenido por crear publicaciones en el foro.</string>
+    <string name="badge_desc_forum_active">Otorgada por crear nuevas publicaciones en el foro de la comunidad.</string>
     <string name="badge_name_responder">Respondedor</string>
-    <string name="badge_desc_responder">Otorgado por responder a solicitudes de ayuda.</string>
+    <string name="badge_desc_responder">Otorgada por asumir la responsabilidad de las solicitudes de ayuda de la comunidad.</string>
+    <string name="assigned_expert_format">Asignado a: %1$s</string>
 </resources>
 
 
