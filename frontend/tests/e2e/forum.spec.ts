@@ -23,8 +23,9 @@ test('TC-FORUM-001 — create a forum post and verify it appears in the list', a
   await loginAs(page, std.email, std.password);
   await page.goto('/forum');
 
-  // hub-selector-bar is position:fixed z-index:1000 and overlaps the button — force the click
-  await page.click('button:has-text("+ New Post")', { force: true });
+  // hub-selector-bar is position:fixed z-index:1000 and intercepts pointer events over this button;
+  // use JS .click() to fire the React handler directly, bypassing pointer routing
+  await page.locator('button:has-text("+ New Post")').evaluate(el => (el as HTMLElement).click());
   await page.waitForURL('**/forum/new');
 
   await page.fill('#title', 'Earthquake safety tips');
