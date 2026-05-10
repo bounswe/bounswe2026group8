@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
     <string name="app_name">Emergency Hub</string>
@@ -666,12 +666,13 @@
     <string name="badges_pill_format" translatable="false">%1$s %2$s</string>
     <string name="arrow_right" translatable="false">→</string>
     <string name="badge_name_commenter">Commenter</string>
-    <string name="badge_desc_commenter">Awarded for commenting.</string>
+    <string name="badge_desc_commenter">Awarded for being an active participant in community discussions.</string>
     <string name="badge_name_voter">Voter</string>
-    <string name="badge_desc_voter">Awarded for voting on posts.</string>
+    <string name="badge_desc_voter">Awarded for voting on community posts.</string>
     <string name="badge_name_forum_active">Forum Active</string>
-    <string name="badge_desc_forum_active">Gained by creating Forum Posts</string>
+    <string name="badge_desc_forum_active">Awarded for creating new posts in the community forum.</string>
     <string name="badge_name_responder">Responder</string>
-    <string name="badge_desc_responder">Awarded for responding to Help Requests</string>
+    <string name="badge_desc_responder">Awarded for taking responsibility for community help requests.</string>
+    <string name="assigned_expert_format">Assigned to: %1$s</string>
 </resources>
 

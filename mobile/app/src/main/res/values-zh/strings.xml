@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
     <string name="app_name">Emergency Hub</string>
@@ -538,14 +538,15 @@
     <string name="feature_settings">设置</string>
     <string name="feature_settings_desc">隐私和警报</string>
 
-    <string name="badge_name_commenter">评论者</string>
-    <string name="badge_desc_commenter">因发表评论而获得。</string>
+    <string name="badge_name_commenter">社交達人</string>
+    <string name="badge_desc_commenter">獎勵給積極參與社區討論的用戶。</string>
     <string name="badge_name_voter">投票者</string>
-    <string name="badge_desc_voter">因对帖子投票而获得。</string>
-    <string name="badge_name_forum_active">活跃论坛</string>
-    <string name="badge_desc_forum_active">通过创建论坛帖子获得。</string>
-    <string name="badge_name_responder">响应者</string>
-    <string name="badge_desc_responder">因响应帮助请求而获得。</string>
+    <string name="badge_desc_voter">獎勵給對社區貼文進行投票的用戶。</string>
+    <string name="badge_name_forum_active">論壇活躍者</string>
+    <string name="badge_desc_forum_active">獎勵給在社區論壇中發佈新貼文的用戶。</string>
+    <string name="badge_name_responder">響應者</string>
+    <string name="badge_desc_responder">獎勵給承擔社區求助請求責任的用戶。</string>
+    <string name="assigned_expert_format">已分配给: %1$s</string>
 </resources>
 
 

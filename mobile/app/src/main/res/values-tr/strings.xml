@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
     <string name="app_name">Emergency Hub</string>
@@ -562,14 +562,15 @@
     <string name="feature_settings">Ayarlar</string>
     <string name="feature_settings_desc">Gizlilik ve uyarılar</string>
 
-    <string name="badge_name_commenter">Yorumcu</string>
-    <string name="badge_desc_commenter">Yorum yaptığınız için verilir.</string>
-    <string name="badge_name_voter">Oylayıcı</string>
-    <string name="badge_desc_voter">Gönderilere oy verdiğiniz için verilir.</string>
-    <string name="badge_name_forum_active">Forum Aktifi</string>
-    <string name="badge_desc_forum_active">Forum gönderileri oluşturarak kazanılır.</string>
-    <string name="badge_name_responder">Yanıtlayıcı</string>
-    <string name="badge_desc_responder">Yardım taleplerine yanıt verdiğiniz için verilir.</string>
+    <string name="badge_name_commenter">Sohbetçi</string>
+    <string name="badge_desc_commenter">Topluluk tartışmalarına aktif olarak katıldığınız için verilir.</string>
+    <string name="badge_name_voter">Oy Veren</string>
+    <string name="badge_desc_voter">Topluluk gönderilerini oyladığınız için verilir.</string>
+    <string name="badge_name_forum_active">Aktif Forumcu</string>
+    <string name="badge_desc_forum_active">Topluluk forumunda yeni gönderiler oluşturduğunuz için verilir.</string>
+    <string name="badge_name_responder">Yardımsever</string>
+    <string name="badge_desc_responder">Topluluk yardım taleplerinin sorumluluğunu üstlendiğiniz için verilir.</string>
+    <string name="assigned_expert_format">Atanan: %1$s</string>
 </resources>
 
 

@@ -55,7 +55,7 @@ class HelpRequestAdapter(
         holder.txtTimeAgo.text = TimeUtils.timeAgo(item.createdAt)
 
         if (item.isExpertResponding == true && item.assignedExpertUsername != null) {
-            holder.txtAssignedExpert.text = "Assigned to: ${item.assignedExpertUsername}"
+            holder.txtAssignedExpert.text = ctx.getString(R.string.assigned_expert_format, item.assignedExpertUsername)
             holder.txtAssignedExpert.visibility = View.VISIBLE
         } else {
             holder.txtAssignedExpert.visibility = View.GONE
