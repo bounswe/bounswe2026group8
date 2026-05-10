@@ -713,6 +713,72 @@
       "length": "必须是 6–15 位数字"
     }
   },
+  "settings": {
+    "header": {
+      "title": "设置",
+      "back": "返回"
+    },
+    "sections": {
+      "notifications": "通知",
+      "privacy": "隐私"
+    },
+    "privacy_note": "选择其他已登录用户可以在你的公开资料中看到哪些内容。",
+    "states": {
+      "loading": "正在加载设置...",
+      "unavailable": "设置目前不可用。"
+    },
+    "toasts": {
+      "saved": "已保存",
+      "load_failed": "无法加载设置。",
+      "save_failed": "无法保存设置。"
+    },
+    "fields": {
+      "notify_help_requests": {
+        "label": "求助请求通知",
+        "desc": "当创建相关求助请求时接收推送通知。"
+      },
+      "notify_urgent_posts": {
+        "label": "紧急论坛通知",
+        "desc": "接收紧急论坛帖子的推送通知。"
+      },
+      "notify_expertise_matches_only": {
+        "label": "仅通知我的专业领域",
+        "desc": "专家会跳过专业领域之外的备用求助请求通知。"
+      },
+      "show_phone_number": {
+        "label": "显示电话号码",
+        "desc": "允许其他用户查看你的电话号码。"
+      },
+      "show_emergency_contact": {
+        "label": "显示紧急联系人",
+        "desc": "允许其他用户查看你的紧急联系人信息。"
+      },
+      "show_medical_info": {
+        "label": "显示医疗和无障碍信息",
+        "desc": "允许血型、残障状态和特殊需求公开显示。"
+      },
+      "show_availability_status": {
+        "label": "显示可用状态",
+        "desc": "显示你是否安全、需要帮助或可以提供帮助。"
+      },
+      "show_bio": {
+        "label": "显示简介",
+        "desc": "在公开资料中显示你的简介。"
+      },
+      "show_location": {
+        "label": "显示社区/地址",
+        "desc": "在公开资料中显示你的社区或地址。"
+      },
+      "show_resources": {
+        "label": "显示资源",
+        "desc": "显示你列出的应急资源。"
+      },
+      "show_expertise": {
+        "label": "显示专业能力",
+        "desc": "显示你的专业领域和证书链接。"
+      }
+    }
+  },
   "emergency_info": {
     "header": {
       "back": "返回",

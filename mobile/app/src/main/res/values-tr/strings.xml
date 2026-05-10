@@ -42,6 +42,8 @@
     <string name="feature_profile_desc">Hesabınızı yönetin</string>
     <string name="feature_offline">Çevrimdışı Bilgi</string>
     <string name="feature_offline_desc">Kritik veri erişimi</string>
+    <string name="feature_settings">Ayarlar</string>
+    <string name="feature_settings_desc">Gizlilik ve uyarılar</string>
 
     <!-- Help Center -->
     <string name="help_center_title">Yardım Merkezi</string>
@@ -207,6 +209,34 @@
     <!-- Language -->
     <string name="language">Dil</string>
     <string name="select_language">Dil Seç</string>
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_notifications">Bildirimler</string>
+    <string name="settings_privacy">Gizlilik</string>
+    <string name="settings_privacy_note">Diğer kullanıcıların herkese açık profilinizde neleri görebileceğini seçin.</string>
+    <string name="settings_load_failed">Ayarlar yüklenemedi</string>
+    <string name="settings_save_failed">Ayar kaydedilemedi</string>
+    <string name="settings_notify_help_requests">Yardım talebi uyarıları</string>
+    <string name="settings_notify_help_requests_desc">Yakındaki yardım talepleri ilgi gerektirdiğinde bildirim alın.</string>
+    <string name="settings_notify_urgent_posts">Acil forum uyarıları</string>
+    <string name="settings_notify_urgent_posts_desc">Acil topluluk gönderileri için bildirim alın.</string>
+    <string name="settings_notify_expertise_matches_only">Yalnızca uzmanlığım</string>
+    <string name="settings_notify_expertise_matches_only_desc">Yardım talebi uyarılarını uzmanlığınızla eşleşen kategorilerle sınırlayın.</string>
+    <string name="settings_show_phone_number">Telefon numarasını göster</string>
+    <string name="settings_show_phone_number_desc">Başkalarının telefon numaranızı görmesine izin verin.</string>
+    <string name="settings_show_emergency_contact">Acil durum kişisini göster</string>
+    <string name="settings_show_emergency_contact_desc">Başkalarının acil durum kişi bilgilerinizi görmesine izin verin.</string>
+    <string name="settings_show_medical_info">Tıbbi bilgileri göster</string>
+    <string name="settings_show_medical_info_desc">Başkalarının kan grubu, engellilik ve özel ihtiyaç alanlarını görmesine izin verin.</string>
+    <string name="settings_show_availability_status">Uygunluk durumunu göster</string>
+    <string name="settings_show_availability_status_desc">Başkalarının güvende, yardıma muhtaç veya yardım edebilir durumda olduğunuzu görmesine izin verin.</string>
+    <string name="settings_show_bio">Biyografiyi göster</string>
+    <string name="settings_show_bio_desc">Başkalarının profil biyografinizi görmesine izin verin.</string>
+    <string name="settings_show_location">Konumu göster</string>
+    <string name="settings_show_location_desc">Başkalarının mahallenizi veya adresinizi görmesine izin verin.</string>
+    <string name="settings_show_resources">Kaynakları göster</string>
+    <string name="settings_show_resources_desc">Başkalarının listelediğiniz kaynakları görmesine izin verin.</string>
+    <string name="settings_show_expertise">Uzmanlığı göster</string>
+    <string name="settings_show_expertise_desc">Başkalarının uzmanlık alanlarınızı görmesine izin verin.</string>
     <string name="dashboard_welcome_format">Hoş geldin, %1$s!</string>
     <string name="dashboard_role_expert">Uzman</string>
     <string name="dashboard_role_standard">Standart</string>
