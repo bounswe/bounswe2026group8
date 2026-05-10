@@ -23,4 +23,7 @@ module.exports = {
 
   // Do not transform node_modules (except packages that ship ESM only)
   transformIgnorePatterns: ['/node_modules/(?!(.*\\.mjs$))'],
+
+  // Playwright e2e specs live under tests/ — Jest must not pick them up
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/tests/'],
 };

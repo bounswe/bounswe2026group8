@@ -28,7 +28,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from forum.models import Comment, Post, Report
 from help_requests.models import HelpComment, HelpOffer, HelpRequest
 
-from .models import ExpertiseField, Hub, StaffAuditLog, User
+from .models import ExpertiseCategory, ExpertiseField, Hub, StaffAuditLog, User
 from .permissions import (
     user_is_admin,
     user_is_moderator_or_admin,
@@ -55,7 +55,7 @@ class StaffBase(TestCase):
         )
         self.expert = User.objects.create_user(
             email='expert@example.com', full_name='Expert', password='Pass1234',
-            role=User.Role.EXPERT, expertise_field='First Aid', hub=self.hub,
+            role=User.Role.EXPERT, hub=self.hub,
         )
         self.moderator = User.objects.create_user(
             email='mod@example.com', full_name='Moderator', password='Pass1234',
@@ -549,9 +549,10 @@ class HelpModerationTests(StaffBase):
 class ExpertiseVerificationTests(StaffBase):
     def setUp(self):
         super().setUp()
+        self.cat = ExpertiseCategory.objects.first()
         self.expertise = ExpertiseField.objects.create(
             user=self.expert,
-            field='Cardiology',
+            category=self.cat,
             certification_level=ExpertiseField.CertificationLevel.ADVANCED,
             certification_document_url='https://example.com/cert.pdf',
         )
@@ -641,8 +642,9 @@ class ExpertiseVerificationTests(StaffBase):
         self.assertEqual(self.expertise.verification_note, '')
 
     def test_pending_queue(self):
+        other_cat = ExpertiseCategory.objects.exclude(pk=self.cat.pk).first()
         approved = ExpertiseField.objects.create(
-            user=self.expert, field='Surgery',
+            user=self.expert, category=other_cat,
             verification_status=ExpertiseField.VerificationStatus.APPROVED,
         )
         response = self.verifier_client.get('/staff/expertise-verifications/')
