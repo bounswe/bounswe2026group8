@@ -767,6 +767,7 @@
       "back": "Back"
     },
     "sections": {
+      "appearance": "Appearance",
       "notifications": "Notifications",
       "privacy": "Public Profile Privacy"
     },
@@ -781,6 +782,10 @@
       "save_failed": "Could not save settings."
     },
     "fields": {
+      "dark_mode": {
+        "label": "Dark mode",
+        "desc": "Use the dark blue theme. Turn this off for a light background."
+      },
       "notify_help_requests": {
         "label": "Help request notifications",
         "desc": "Receive push notifications when relevant help requests are created."

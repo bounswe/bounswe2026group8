@@ -744,6 +744,77 @@
       "length": "Debe tener entre 6 y 15 dígitos"
     }
   },
+  "settings": {
+    "header": {
+      "title": "Configuraci\u00f3n",
+      "back": "Atr\u00e1s"
+    },
+    "sections": {
+      "appearance": "Apariencia",
+      "notifications": "Notificaciones",
+      "privacy": "Privacidad del perfil p\u00fablico"
+    },
+    "privacy_note": "Elige qu\u00e9 pueden ver otros usuarios con sesi\u00f3n iniciada en tu perfil p\u00fablico.",
+    "states": {
+      "loading": "Cargando configuraci\u00f3n...",
+      "unavailable": "La configuraci\u00f3n no est\u00e1 disponible ahora."
+    },
+    "toasts": {
+      "saved": "Guardado",
+      "load_failed": "No se pudo cargar la configuraci\u00f3n.",
+      "save_failed": "No se pudo guardar la configuraci\u00f3n."
+    },
+    "fields": {
+      "dark_mode": {
+        "label": "Modo oscuro",
+        "desc": "Usa el tema azul oscuro. Desact\u00edvalo para un fondo claro."
+      },
+      "notify_help_requests": {
+        "label": "Notificaciones de solicitudes de ayuda",
+        "desc": "Recibe notificaciones push cuando se creen solicitudes de ayuda relevantes."
+      },
+      "notify_urgent_posts": {
+        "label": "Notificaciones urgentes del foro",
+        "desc": "Recibe notificaciones push para publicaciones urgentes del foro."
+      },
+      "notify_expertise_matches_only": {
+        "label": "Notificar solo por mi experiencia",
+        "desc": "Los expertos omiten notificaciones de solicitudes fuera de su experiencia."
+      },
+      "show_phone_number": {
+        "label": "Mostrar tel\u00e9fono",
+        "desc": "Permite que otros usuarios vean tu n\u00famero de tel\u00e9fono."
+      },
+      "show_emergency_contact": {
+        "label": "Mostrar contacto de emergencia",
+        "desc": "Permite que otros usuarios vean tus datos de contacto de emergencia."
+      },
+      "show_medical_info": {
+        "label": "Mostrar informaci\u00f3n m\u00e9dica y de accesibilidad",
+        "desc": "Permite que el tipo de sangre, discapacidad y necesidades especiales aparezcan p\u00fablicamente."
+      },
+      "show_availability_status": {
+        "label": "Mostrar estado de disponibilidad",
+        "desc": "Muestra si est\u00e1s a salvo, necesitas ayuda o puedes ayudar."
+      },
+      "show_bio": {
+        "label": "Mostrar biograf\u00eda",
+        "desc": "Muestra tu biograf\u00eda en tu perfil p\u00fablico."
+      },
+      "show_location": {
+        "label": "Mostrar barrio/direcci\u00f3n",
+        "desc": "Muestra tu barrio o direcci\u00f3n en tu perfil p\u00fablico."
+      },
+      "show_resources": {
+        "label": "Mostrar recursos",
+        "desc": "Muestra los recursos de emergencia que has listado."
+      },
+      "show_expertise": {
+        "label": "Mostrar experiencia",
+        "desc": "Muestra tus campos de experiencia y enlaces de certificaci\u00f3n."
+      }
+    }
+  },
   "emergency_info": {
     "header": {
       "back": "Atrás",

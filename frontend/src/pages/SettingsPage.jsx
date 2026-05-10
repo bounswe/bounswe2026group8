@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getSettings, updateSettings } from '../services/api';
+import { getStoredTheme, isDarkTheme, saveTheme } from '../utils/theme';
 
 const NOTIFICATION_FIELDS = [
   'notify_help_requests',
@@ -45,6 +46,7 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [settings, setSettings] = useState(null);
+  const [theme, setTheme] = useState(() => getStoredTheme());
   const [loading, setLoading] = useState(true);
   const [savingField, setSavingField] = useState(null);
   const [toast, setToast] = useState(null);
@@ -60,6 +62,11 @@ export default function SettingsPage() {
   const notify = (msg, type = 'success') => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 2500);
+  };
+
+  const toggleTheme = () => {
+    const nextTheme = isDarkTheme(theme) ? 'light' : 'dark';
+    setTheme(saveTheme(nextTheme));
   };
 
   const toggleField = async (field) => {
@@ -109,6 +116,18 @@ export default function SettingsPage() {
           {t('settings.header.back')}
         </button>
       </header>
+
+      <div className="profile-section-card">
+        <h4 className="profile-section-title">{t('settings.sections.appearance')}</h4>
+        <div className="settings-list">
+          <SettingsToggle
+            checked={isDarkTheme(theme)}
+            label={t('settings.fields.dark_mode.label')}
+            desc={t('settings.fields.dark_mode.desc')}
+            onChange={toggleTheme}
+          />
+        </div>
+      </div>
 
       <div className="profile-section-card">
         <h4 className="profile-section-title">{t('settings.sections.notifications')}</h4>
