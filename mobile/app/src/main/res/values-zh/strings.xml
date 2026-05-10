@@ -507,6 +507,9 @@
     <string name="badges_max_level">已达到最高等级</string>
     <!-- Settings -->
     <string name="settings_title">设置</string>
+    <string name="settings_appearance">&#x5916;&#x89C2;</string>
+    <string name="settings_dark_mode">&#x6DF1;&#x8272;&#x6A21;&#x5F0F;</string>
+    <string name="settings_dark_mode_desc">&#x4F7F;&#x7528;&#x6DF1;&#x84DD;&#x8272;&#x4E3B;&#x9898;&#x3002;&#x5173;&#x95ED;&#x6B64;&#x9009;&#x9879;&#x53EF;&#x4F7F;&#x7528;&#x6D45;&#x8272;&#x80CC;&#x666F;&#x3002;</string>
     <string name="settings_notifications">通知</string>
     <string name="settings_privacy">隐私</string>
     <string name="settings_privacy_note">选择其他用户可以在您的公开个人资料中看到的内容。</string>
