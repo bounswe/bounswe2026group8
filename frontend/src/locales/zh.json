@@ -755,6 +755,7 @@
       "back": "返回"
     },
     "sections": {
+      "appearance": "\u5916\u89c2",
       "notifications": "通知",
       "privacy": "隐私"
     },
@@ -769,6 +770,10 @@
       "save_failed": "无法保存设置。"
     },
     "fields": {
+      "dark_mode": {
+        "label": "\u6df1\u8272\u6a21\u5f0f",
+        "desc": "\u4f7f\u7528\u6df1\u84dd\u8272\u4e3b\u9898\u3002\u5173\u95ed\u6b64\u9009\u9879\u53ef\u4f7f\u7528\u6d45\u8272\u80cc\u666f\u3002"
+      },
       "notify_help_requests": {
         "label": "求助请求通知",
         "desc": "当创建相关求助请求时接收推送通知。"

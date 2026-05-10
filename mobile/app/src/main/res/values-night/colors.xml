@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base palette for dark theme -->
+    <color name="bg_base">#FF0B1120</color>
+    <color name="bg_surface">#FF111827</color>
+    <color name="bg_card">#A9111827</color>
+    <color name="bg_input">#FF1E293B</color>
+
+    <color name="border">#1F94A3B8</color>
+    <color name="border_focus">#FF38BDF8</color>
+
+    <color name="text_primary">#FFF1F5F9</color>
+    <color name="text_secondary">#FF94A3B8</color>
+    <color name="text_muted">#FF64748B</color>
+
+    <color name="accent">#FF38BDF8</color>
+    <color name="accent_hover">#FF0EA5E9</color>
+    <color name="accent_glow">#4038BDF8</color>
+    <color name="accent_secondary">#FFA5B4FC</color>
+
+    <color name="success">#FF34D399</color>
+    <color name="error">#FFF87171</color>
+
+    <color name="gradient_start">#FF38BDF8</color>
+    <color name="gradient_end">#FF818CF8</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <!-- Badge backgrounds -->
+    <color name="badge_bg">#1A38BDF8</color>
+    <color name="badge_accent_bg">#1A818CF8</color>
+    <color name="badge_muted_bg">#1494A3B8</color>
+
+    <!-- Urgency badge colors -->
+    <color name="urgency_high">#FFF87171</color>
+    <color name="urgency_high_bg">#1AF87171</color>
+    <color name="urgency_medium">#FFFBBF24</color>
+    <color name="urgency_medium_bg">#1AFBBF24</color>
+    <color name="urgency_low">#FF34D399</color>
+    <color name="urgency_low_bg">#1A34D399</color>
+
+    <!-- Category badge colors -->
+    <color name="category_medical">#FFF87171</color>
+    <color name="category_medical_bg">#1AF87171</color>
+    <color name="category_food">#FF34D399</color>
+    <color name="category_food_bg">#1A34D399</color>
+    <color name="category_shelter">#FF38BDF8</color>
+    <color name="category_shelter_bg">#1A38BDF8</color>
+    <color name="category_transport">#FFFBBF24</color>
+    <color name="category_transport_bg">#1AFBBF24</color>
+
+    <!-- Forum type colors -->
+    <color name="forum_global">#FFA78BFA</color>
+    <color name="forum_global_bg">#1AA78BFA</color>
+    <color name="forum_standard">#FF38BDF8</color>
+    <color name="forum_standard_bg">#1A38BDF8</color>
+    <color name="forum_urgent">#FFF87171</color>
+    <color name="forum_urgent_bg">#1AF87171</color>
+
+    <!-- Vote colors -->
+    <color name="vote_up_active">#FF34D399</color>
+    <color name="vote_down_active">#FFF87171</color>
+
+    <!-- Sort pill -->
+    <color name="sort_active_bg">#1E38BDF8</color>
+    <color name="sort_active_border">#4038BDF8</color>
+</resources>

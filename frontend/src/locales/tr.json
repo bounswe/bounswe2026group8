@@ -755,6 +755,7 @@
       "back": "Geri"
     },
     "sections": {
+      "appearance": "G\u00f6r\u00fcn\u00fcm",
       "notifications": "Bildirimler",
       "privacy": "Gizlilik"
     },
@@ -769,6 +770,10 @@
       "save_failed": "Ayarlar kaydedilemedi."
     },
     "fields": {
+      "dark_mode": {
+        "label": "Koyu mod",
+        "desc": "Koyu mavi temay\u0131 kullan\u0131n. A\u00e7\u0131k arka plan i\u00e7in bunu kapat\u0131n."
+      },
       "notify_help_requests": {
         "label": "Yardım talebi bildirimleri",
         "desc": "İlgili yardım talepleri oluşturulduğunda anlık bildirim alın."

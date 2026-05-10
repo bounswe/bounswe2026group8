@@ -537,6 +537,9 @@
     <string name="badges_max_level">NIVEL MÁXIMO ALCANZADO</string>
     <!-- Settings -->
     <string name="settings_title">Ajustes</string>
+    <string name="settings_appearance">Apariencia</string>
+    <string name="settings_dark_mode">Modo oscuro</string>
+    <string name="settings_dark_mode_desc">Usa el tema azul oscuro. Desact&#x00ED;valo para un fondo claro.</string>
     <string name="settings_notifications">Notificaciones</string>
     <string name="settings_privacy">Privacidad</string>
     <string name="settings_privacy_note">Elige lo que otros usuarios pueden ver en tu perfil público.</string>

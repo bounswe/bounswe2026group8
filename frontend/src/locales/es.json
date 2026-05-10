@@ -755,6 +755,7 @@
       "back": "Atrás"
     },
     "sections": {
+      "appearance": "Apariencia",
       "notifications": "Notificaciones",
       "privacy": "Privacidad"
     },
@@ -769,6 +770,10 @@
       "save_failed": "No se pudo guardar la configuración."
     },
     "fields": {
+      "dark_mode": {
+        "label": "Modo oscuro",
+        "desc": "Usa el tema azul oscuro. Desact\u00edvalo para un fondo claro."
+      },
       "notify_help_requests": {
         "label": "Notificaciones de solicitudes de ayuda",
         "desc": "Recibe notificaciones push cuando se creen solicitudes de ayuda relevantes."
