@@ -42,6 +42,8 @@
     <string name="feature_profile_desc">管理您的账户</string>
     <string name="feature_offline">离线信息</string>
     <string name="feature_offline_desc">关键数据访问</string>
+    <string name="feature_settings">设置</string>
+    <string name="feature_settings_desc">隐私和提醒</string>
 
     <!-- Help Center -->
     <string name="help_center_title">帮助中心</string>
@@ -207,6 +209,34 @@
     <!-- Language -->
     <string name="language">语言</string>
     <string name="select_language">选择语言</string>
+    <string name="settings_title">设置</string>
+    <string name="settings_notifications">通知</string>
+    <string name="settings_privacy">隐私</string>
+    <string name="settings_privacy_note">选择其他用户可以在你的公开资料中看到哪些内容。</string>
+    <string name="settings_load_failed">无法加载设置</string>
+    <string name="settings_save_failed">无法保存设置</string>
+    <string name="settings_notify_help_requests">求助请求提醒</string>
+    <string name="settings_notify_help_requests_desc">当附近的求助请求需要关注时接收通知。</string>
+    <string name="settings_notify_urgent_posts">紧急论坛提醒</string>
+    <string name="settings_notify_urgent_posts_desc">接收紧急社区帖子的通知。</string>
+    <string name="settings_notify_expertise_matches_only">仅限我的专业领域</string>
+    <string name="settings_notify_expertise_matches_only_desc">将求助请求提醒限制为与你专业领域匹配的类别。</string>
+    <string name="settings_show_phone_number">显示电话号码</string>
+    <string name="settings_show_phone_number_desc">允许其他人查看你的电话号码。</string>
+    <string name="settings_show_emergency_contact">显示紧急联系人</string>
+    <string name="settings_show_emergency_contact_desc">允许其他人查看你的紧急联系人信息。</string>
+    <string name="settings_show_medical_info">显示医疗信息</string>
+    <string name="settings_show_medical_info_desc">允许其他人查看血型、残障状态和特殊需求字段。</string>
+    <string name="settings_show_availability_status">显示可用状态</string>
+    <string name="settings_show_availability_status_desc">允许其他人查看你是否安全、需要帮助或可以提供帮助。</string>
+    <string name="settings_show_bio">显示简介</string>
+    <string name="settings_show_bio_desc">允许其他人查看你的个人简介。</string>
+    <string name="settings_show_location">显示位置</string>
+    <string name="settings_show_location_desc">允许其他人查看你的社区或地址。</string>
+    <string name="settings_show_resources">显示资源</string>
+    <string name="settings_show_resources_desc">允许其他人查看你列出的资源。</string>
+    <string name="settings_show_expertise">显示专业能力</string>
+    <string name="settings_show_expertise_desc">允许其他人查看你的专业领域。</string>
     <string name="dashboard_welcome_format">欢迎，%1$s！</string>
     <string name="dashboard_role_expert">专家</string>
     <string name="dashboard_role_standard">标准用户</string>
