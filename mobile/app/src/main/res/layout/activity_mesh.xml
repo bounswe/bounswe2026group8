@@ -144,14 +144,25 @@
         android:layout_height="1dp"
         android:background="@color/border" />
 
-    <!-- New Post button -->
+    <!-- SOS + New Post buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:orientation="vertical"
         android:padding="12dp"
         android:background="@color/bg_surface">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSos"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/mesh_sos"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/error"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"
+            style="@style/Widget.MaterialComponents.Button" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNewPost"

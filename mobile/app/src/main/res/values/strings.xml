@@ -333,6 +333,11 @@
     <string name="mesh_content_required">Content is required</string>
     <string name="mesh_type_required">Pick a post type</string>
     <string name="mesh_post_created">Post created</string>
+    <string name="mesh_sos">SEND SOS</string>
+    <string name="mesh_sos_title">Help needed!</string>
+    <string name="mesh_sos_body">A person needs immediate help!</string>
+    <string name="mesh_sos_sent">SOS broadcast sent with your location</string>
+    <string name="mesh_sos_sent_no_location">SOS broadcast sent (no location available)</string>
     <string name="mesh_comment_created">Comment posted</string>
     <string name="mesh_comments_heading">Comments (%1$d)</string>
     <string name="mesh_no_comments">No comments yet.</string>
