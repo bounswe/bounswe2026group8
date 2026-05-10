@@ -227,6 +227,16 @@ interface ApiService {
     @DELETE("expertise/{id}")
     suspend fun deleteExpertiseField(@Path("id") id: Int): Response<Unit>
 
+    // ── Badges ──────────────────────────────────────────────────────────────────
+
+    /** GET /api/badges/my-badges/ — current user's badge progress. */
+    @GET("api/badges/my-badges/")
+    suspend fun getMyBadges(): Response<List<UserBadgeItem>>
+
+    /** GET /api/badges/users/{id}/ — badge progress for a specific user. */
+    @GET("api/badges/users/{userId}/")
+    suspend fun getUserBadges(@Path("userId") userId: Int): Response<List<UserBadgeItem>>
+
     // ── Mesh (offline messages archive) ─────────────────────────────────────────
 
     /** Upload a batch of mesh messages. Idempotent — server skips ids it already has. */

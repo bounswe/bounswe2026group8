@@ -639,4 +639,11 @@
     <string name="tutorial_call">Call</string>
     <string name="tutorial_calling">Calling %1$s</string>
     <string name="tutorial_changing_field">Changing this field</string>
+
+    <!-- Badges -->
+    <string name="badges_title">My Badges</string>
+    <string name="badges_card_desc">View your achievements and progress</string>
+    <string name="badges_empty">You haven\'t earned any badges yet. Start participating in the community!</string>
+    <string name="badges_load_failed">Failed to load badges</string>
+    <string name="badges_max_level">MAX LEVEL REACHED</string>
 </resources>

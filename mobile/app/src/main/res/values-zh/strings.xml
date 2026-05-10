@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
     <string name="app_name">Emergency Hub</string>
@@ -498,4 +498,12 @@
     <string name="tutorial_call">呼叫</string>
     <string name="tutorial_calling">正在呼叫 %1$s</string>
     <string name="tutorial_changing_field">更改此字段</string>
+
+    <!-- Badges -->
+    <string name="badges_title">我的徽章</string>
+    <string name="badges_card_desc">查看您的成就和进度</string>
+    <string name="badges_empty">您还没有获得任何徽章。开始参与社区活动吧！</string>
+    <string name="badges_load_failed">加载徽章失败</string>
+    <string name="badges_max_level">已达到最高等级</string>
 </resources>
+

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
     <string name="app_name">Emergency Hub</string>
@@ -498,4 +498,12 @@
     <string name="tutorial_call">Llamar</string>
     <string name="tutorial_calling">Llamando a %1$s</string>
     <string name="tutorial_changing_field">Cambiar este campo</string>
+
+    <!-- Badges -->
+    <string name="badges_title">Mis Insignias</string>
+    <string name="badges_card_desc">Ver tus logros y progreso</string>
+    <string name="badges_empty">Aún no has ganado ninguna insignia. ¡Empieza a participar en la comunidad!</string>
+    <string name="badges_load_failed">No se pudieron cargar las insignias</string>
+    <string name="badges_max_level">NIVEL MÁXIMO ALCANZADO</string>
 </resources>
+

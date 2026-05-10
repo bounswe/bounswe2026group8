@@ -522,5 +522,12 @@
     <string name="tutorial_call">Ara</string>
     <string name="tutorial_calling">%1$s aranıyor</string>
     <string name="tutorial_changing_field">Bu alanı değiştirme</string>
+
+    <!-- Badges -->
+    <string name="badges_title">Rozetlerim</string>
+    <string name="badges_card_desc">Başarılarınızı ve ilerlemenizi görüntüleyin</string>
+    <string name="badges_empty">Henüz rozet kazanmadınız. Toplulukta yer almaya başlayın!</string>
+    <string name="badges_load_failed">Rozetler yüklenemedi</string>
+    <string name="badges_max_level">MAKSİMUM SEVİYEYE ULAŞILDI</string>
 </resources>
 
