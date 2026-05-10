@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getUserProfile, getPosts, getHelpRequests, getHelpOffers, resolveImageUrl } from '../services/api';
-import { useTranslation } from 'react-i18next'; // 1. Import hook
+import { getUserProfile, getPosts, getHelpRequests, getHelpOffers, resolveImageUrl, getUserBadges } from '../services/api';
+import { useTranslation } from 'react-i18next'; 
 
-// 2. Pass 't' to timeAgo
 function timeAgo(dateStr, t) {
   const seconds = Math.floor((Date.now() - new Date(dateStr)) / 1000);
   if (seconds < 60) return t('user_profile.time.just_now');
@@ -20,15 +19,15 @@ export default function UserProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
-  const { t } = useTranslation(); // 3. Initialize hook
+  const { t } = useTranslation(); 
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('posts');
   const [items, setItems] = useState([]);
   const [itemsLoading, setItemsLoading] = useState(false);
+  const [topBadges, setTopBadges] = useState([]);
 
-  // 4. Map the static styles to the dynamic translation keys
   const AVAILABILITY_LABELS = {
     SAFE: { label: t('user_profile.status.safe'), color: '#34d399' },
     NEEDS_HELP: { label: t('user_profile.status.needs_help'), color: '#f87171' },
@@ -49,9 +48,20 @@ export default function UserProfilePage() {
 
   useEffect(() => {
     setLoading(true);
+    
+    // Fetch Profile
     getUserProfile(id).then(({ ok, data }) => {
       if (ok) setProfile(data);
       setLoading(false);
+    });
+
+    // Fetch Badges for this specific user
+    getUserBadges(id).then(({ ok, data }) => {
+      if (ok) {
+        const earnedBadges = data.filter(b => b.current_level > 0);
+        const sortedBadges = earnedBadges.sort((a, b) => b.current_level - a.current_level);
+        setTopBadges(sortedBadges.slice(0, 3));
+      }
     });
   }, [id]);
 
@@ -98,8 +108,47 @@ export default function UserProfilePage() {
         <div className="profile-identity-card">
           <div className="profile-avatar">{profile.full_name?.[0]?.toUpperCase() ?? '?'}</div>
           <div className="profile-identity-info">
-            <h3 className="profile-name">{profile.full_name}</h3>
-            <div className="profile-badges">
+            
+            {/* 4. Flex container for Name + Badges exactly like ProfilePage */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px', flexWrap: 'wrap' }}>
+              <h3 className="profile-name" style={{ margin: 0 }}>{profile.full_name}</h3>
+              
+              {/* Render Top 3 Badges */}
+              {topBadges.length > 0 && (
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {topBadges.map(badge => {
+                    const badgeKey = badge.badge_name.toLowerCase().replace(/\s+/g, '_');
+                    const baseTitle = t(`badges.${badgeKey}.title`, badge.badge_name);
+                    const displayTitle = badge.current_level > 0 
+                      ? `${baseTitle} ${badge.current_level}` 
+                      : baseTitle;
+                    
+                    return (
+                      <span 
+                        key={badge.id}
+                        style={{ 
+                          fontSize: '0.9rem',
+                          fontWeight: '500',
+                          color: '#f8fafc',
+                          background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(37, 99, 235, 0.15) 100%)',
+                          border: '1px solid rgba(56, 189, 248, 0.25)',
+                          borderRadius: '20px', 
+                          padding: '4px 12px',  
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px', 
+                        }}
+                      >
+                        <span style={{ fontSize: '1.2rem' }}>{badge.badge_icon}</span>
+                        {displayTitle}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="profile-badges" style={{ marginTop: '4px' }}>
               <span className="badge">{roleLabel}</span>
               {avail && <span className="badge" style={{ color: avail.color, borderColor: avail.color + '44', background: avail.color + '11' }}>
               ● {avail.label}

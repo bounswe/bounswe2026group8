@@ -15,6 +15,7 @@ from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
@@ -191,7 +192,76 @@ class HelpRequestStatusView(APIView):
             )
 
         help_request.status = HelpRequest.Status.RESOLVED
-        help_request.save(update_fields=['status'])
+        help_request.resolved_at = timezone.now()
+        help_request.save(update_fields=['status', 'resolved_at'])
+
+        return Response(
+            HelpRequestDetailSerializer(help_request, context={'request': request}).data,
+        )
+
+
+class HelpRequestTakeOnView(APIView):
+    """
+    POST /help-requests/{id}/take-on/  — an expert takes responsibility for a request.
+
+    Eligibility rules are centralised in HelpRequest.can_be_taken_by().
+    On success the request status becomes EXPERT_RESPONDING and the expert
+    is recorded in assigned_expert.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        help_request = get_object_or_404(HelpRequest, pk=pk)
+
+        ok, error = help_request.can_be_taken_by(request.user)
+        if not ok:
+            # Use 409 for "already assigned" to distinguish from auth errors.
+            if 'already has an assigned expert' in error:
+                http_status = status.HTTP_409_CONFLICT
+            elif 'Resolved' in error:
+                http_status = status.HTTP_400_BAD_REQUEST
+            else:
+                http_status = status.HTTP_403_FORBIDDEN
+            return Response({'detail': error}, status=http_status)
+
+        help_request.assigned_expert = request.user
+        help_request.assigned_at = timezone.now()
+        help_request.status = HelpRequest.Status.EXPERT_RESPONDING
+        help_request.save(update_fields=['assigned_expert', 'assigned_at', 'status'])
+
+        return Response(
+            HelpRequestDetailSerializer(help_request, context={'request': request}).data,
+        )
+
+
+class HelpRequestReleaseView(APIView):
+    """
+    POST /help-requests/{id}/release/  — the assigned expert releases responsibility.
+
+    Only the currently assigned expert can release.  Resolved requests cannot
+    be released.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        help_request = get_object_or_404(HelpRequest, pk=pk)
+
+        if help_request.status == HelpRequest.Status.RESOLVED:
+            return Response(
+                {'detail': 'Resolved requests cannot be released.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if help_request.assigned_expert_id != request.user.id:
+            return Response(
+                {'detail': 'Only the assigned expert can release this request.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        help_request.assigned_expert = None
+        help_request.assigned_at = None
+        help_request.status = HelpRequest.Status.OPEN
+        help_request.save(update_fields=['assigned_expert', 'assigned_at', 'status'])
 
         return Response(
             HelpRequestDetailSerializer(help_request, context={'request': request}).data,
@@ -236,10 +306,9 @@ class HelpCommentListCreateView(APIView):
                 comment_count=F('comment_count') + 1,
             )
 
-            # If the commenter is an expert, promote the request status.
-            # This call is safe — it won't overwrite RESOLVED status.
-            if request.user.role == User.Role.EXPERT:
-                update_status_on_expert_comment(help_request)
+            # Expert comments no longer trigger status promotion.
+            # The "expert responding" label now depends solely on
+            # assigned_expert being set via the take-on endpoint.
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

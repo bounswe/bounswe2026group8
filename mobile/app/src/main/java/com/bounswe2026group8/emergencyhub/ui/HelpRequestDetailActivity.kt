@@ -33,6 +33,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import com.bounswe2026group8.emergencyhub.util.VoiceInputManager
 
 class HelpRequestDetailActivity : AppCompatActivity() {
 
@@ -62,8 +63,12 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     private lateinit var txtNoComments: TextView
     private lateinit var inputComment: TextInputEditText
     private lateinit var btnSendComment: MaterialButton
+    private lateinit var txtAssignedExpert: TextView
+    private lateinit var btnTakeOnRequest: MaterialButton
+    private lateinit var btnReleaseRequest: MaterialButton
 
     private var requestId: Int = -1
+    private lateinit var voiceInputManager: VoiceInputManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +79,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_help_request_detail)
 
         tokenManager = TokenManager(this)
+        voiceInputManager = VoiceInputManager(this)
         if (!tokenManager.isLoggedIn()) {
             navigateToLanding()
             return
@@ -87,12 +93,15 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         }
 
         bindViews()
+        voiceInputManager.bind(inputComment)
         setupRecyclerView()
 
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
         btnSendComment.setOnClickListener { submitComment() }
         findViewById<MaterialButton>(R.id.btnDeleteRequest).setOnClickListener { confirmDeleteRequest() }
         findViewById<MaterialButton>(R.id.btnResolveRequest).setOnClickListener { resolveRequest() }
+        btnTakeOnRequest.setOnClickListener { takeOnRequest() }
+        btnReleaseRequest.setOnClickListener { releaseRequest() }
 
         fetchDetail()
         fetchComments()
@@ -133,6 +142,9 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         txtNoComments = findViewById(R.id.txtNoComments)
         inputComment = findViewById(R.id.inputComment)
         btnSendComment = findViewById(R.id.btnSendComment)
+        txtAssignedExpert = findViewById(R.id.txtAssignedExpert)
+        btnTakeOnRequest = findViewById(R.id.btnTakeOnRequest)
+        btnReleaseRequest = findViewById(R.id.btnReleaseRequest)
     }
 
     private fun setupRecyclerView() {
@@ -253,13 +265,40 @@ class HelpRequestDetailActivity : AppCompatActivity() {
 
         txtCommentsHeader.text = getString(R.string.comments_count_label, detail.commentCount)
 
-        val currentUserId = tokenManager.getUser()?.id
+        val currentUser = tokenManager.getUser()
+        val currentUserId = currentUser?.id
         val isAuthor = currentUserId == detail.author.id
+        val isExpertUser = currentUser?.role == "EXPERT"
+
         findViewById<MaterialButton>(R.id.btnDeleteRequest).visibility =
             if (isAuthor) View.VISIBLE else View.GONE
 
         findViewById<MaterialButton>(R.id.btnResolveRequest).visibility =
             if (isAuthor && detail.status != "RESOLVED") View.VISIBLE else View.GONE
+
+        if (detail.isExpertResponding == true && detail.assignedExpertUsername != null) {
+            txtAssignedExpert.text = getString(R.string.assigned_expert_format, detail.assignedExpertUsername)
+            txtAssignedExpert.visibility = View.VISIBLE
+        } else {
+            txtAssignedExpert.visibility = View.GONE
+        }
+
+        if (isExpertUser && !isAuthor) {
+            if (detail.isExpertResponding != true && detail.status != "RESOLVED") {
+                btnTakeOnRequest.visibility = View.VISIBLE
+            } else {
+                btnTakeOnRequest.visibility = View.GONE
+            }
+
+            if (detail.isExpertResponding == true && detail.assignedExpert?.id == currentUserId && detail.status != "RESOLVED") {
+                btnReleaseRequest.visibility = View.VISIBLE
+            } else {
+                btnReleaseRequest.visibility = View.GONE
+            }
+        } else {
+            btnTakeOnRequest.visibility = View.GONE
+            btnReleaseRequest.visibility = View.GONE
+        }
     }
 
     private fun setupMap(lat: Double, lng: Double) {
@@ -336,6 +375,61 @@ class HelpRequestDetailActivity : AppCompatActivity() {
                 Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
                 btnResolve.isEnabled = true
                 btnResolve.text = getString(R.string.mark_resolved)
+            }
+        }
+    }
+
+    private fun takeOnRequest() {
+        btnTakeOnRequest.isEnabled = false
+        btnTakeOnRequest.text = "Taking On..."
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
+                    .takeOnHelpRequest(requestId)
+                if (response.isSuccessful) {
+                    response.body()?.let { displayDetail(it) }
+                    Toast.makeText(this@HelpRequestDetailActivity, "Took on request successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    var errorMsg = "Failed to take on request."
+                    if (response.code() == 403) {
+                        errorMsg = "Failed to take on request. You might not have the required expertise."
+                        val errorBody = response.errorBody()?.string()
+                        if (errorBody?.contains("detail") == true) {
+                            // Extract detail if possible, simple approach
+                            errorMsg = "You don't have the matching approved expertise."
+                        }
+                    }
+                    Toast.makeText(this@HelpRequestDetailActivity, errorMsg, Toast.LENGTH_LONG).show()
+                }
+            } catch (_: Exception) {
+                Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
+            } finally {
+                btnTakeOnRequest.isEnabled = true
+                btnTakeOnRequest.text = "Take On Request"
+            }
+        }
+    }
+
+    private fun releaseRequest() {
+        btnReleaseRequest.isEnabled = false
+        btnReleaseRequest.text = "Releasing..."
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@HelpRequestDetailActivity)
+                    .releaseHelpRequest(requestId)
+                if (response.isSuccessful) {
+                    response.body()?.let { displayDetail(it) }
+                    Toast.makeText(this@HelpRequestDetailActivity, "Released request successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@HelpRequestDetailActivity, "Failed to release request.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (_: Exception) {
+                Toast.makeText(this@HelpRequestDetailActivity, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
+            } finally {
+                btnReleaseRequest.isEnabled = true
+                btnReleaseRequest.text = "Release Request"
             }
         }
     }

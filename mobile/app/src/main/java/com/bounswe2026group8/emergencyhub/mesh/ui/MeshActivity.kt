@@ -103,6 +103,7 @@ class MeshActivity : AppCompatActivity() {
         // --- Start/Stop toggle ---
         val btnToggle = findViewById<MaterialButton>(R.id.btnToggleMesh)
         val btnNewPost = findViewById<MaterialButton>(R.id.btnNewPost)
+        val btnSos = findViewById<MaterialButton>(R.id.btnSos)
         val txtStatus = findViewById<View>(R.id.txtStatus) as TextView
         val statusDot = findViewById<View>(R.id.statusDot)
 
@@ -113,6 +114,15 @@ class MeshActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             startActivity(Intent(this, MeshCreatePostActivity::class.java))
+        }
+
+        btnSos.setOnClickListener {
+            val mgr = syncManager
+            if (mgr == null) {
+                Toast.makeText(this, getString(R.string.mesh_start_first), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            sendSos(mgr)
         }
 
         btnToggle.setOnClickListener {
@@ -220,6 +230,46 @@ class MeshActivity : AppCompatActivity() {
             )
         } else {
             listOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    private fun sendSos(mgr: MeshSyncManager) {
+        val title = getString(R.string.mesh_sos_title)
+        val body = getString(R.string.mesh_sos_body)
+        val type = "NEED_HELP"
+
+        val granted = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (!granted) {
+            mgr.sendPost(title = title, body = body, postType = type)
+            Toast.makeText(
+                this, getString(R.string.mesh_sos_sent_no_location), Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        MeshLocationFetcher.fetch(this) { location ->
+            if (location != null) {
+                mgr.sendPost(
+                    title = title,
+                    body = body,
+                    postType = type,
+                    latitude = location.latitude,
+                    longitude = location.longitude,
+                    locAccuracyMeters = if (location.hasAccuracy()) location.accuracy else null,
+                    locCapturedAt = location.time
+                )
+                Toast.makeText(
+                    this, getString(R.string.mesh_sos_sent), Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                mgr.sendPost(title = title, body = body, postType = type)
+                Toast.makeText(
+                    this, getString(R.string.mesh_sos_sent_no_location), Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

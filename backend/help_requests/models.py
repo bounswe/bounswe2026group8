@@ -9,7 +9,7 @@ discussion, while help_requests is for actionable assistance.
 from django.conf import settings
 from django.db import models
 
-from accounts.models import Hub
+from accounts.models import Hub, User
 
 
 class Category(models.TextChoices):
@@ -24,12 +24,24 @@ class Category(models.TextChoices):
     OTHER = 'OTHER', 'Other'
 
 
+# Maps each help-request category to the set of ExpertiseCategory names that
+# qualify an expert to take on requests in that category.  Used by
+# HelpRequest.can_be_taken_by() to enforce expertise-matching.
+CATEGORY_EXPERTISE_MAP = {
+    'MEDICAL': {'First Aid', 'Doctor/Nurse', 'Paramedic', 'Psychologist', 'Pharmacist'},
+    'SHELTER': {'Search & Rescue', 'Civil Engineer', 'Firefighter'},
+    'TRANSPORT': {'Driver', 'Logistics'},
+    'FOOD': {'Food Safety', 'Nutrition'},
+    'OTHER': {'General Volunteer'},
+}
+
+
 class HelpRequest(models.Model):
     """
     A request for help posted by a user.
 
     Lifecycle: starts as OPEN, moves to EXPERT_RESPONDING when an expert
-    comments (handled in views), and finally RESOLVED when the issue is done.
+    takes on the request, and finally RESOLVED when the requester marks it done.
     Status never reverts from RESOLVED.
     """
 
@@ -75,6 +87,16 @@ class HelpRequest(models.Model):
     # Kept in sync via F() expressions in the views layer.
     comment_count = models.PositiveIntegerField(default=0)
 
+    # ── Expert assignment (responsibility tracking) ────────────────────────
+    # The expert who has formally taken responsibility for this request.
+    # Remains stored after resolve so we can later query resolved-by-expert counts.
+    assigned_expert = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='assigned_help_requests',
+    )
+    assigned_at = models.DateTimeField(null=True, blank=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -87,6 +109,40 @@ class HelpRequest(models.Model):
 
     def __str__(self):
         return f'[{self.urgency}] {self.title}'
+
+    # ── Eligibility check ──────────────────────────────────────────────────
+
+    def can_be_taken_by(self, user):
+        """
+        Check whether *user* is eligible to take on this help request.
+
+        Returns (True, '') on success, or (False, error_message) on failure.
+        All eligibility rules are centralised here so they are not scattered
+        across views.
+        """
+        if user.role != User.Role.EXPERT:
+            return False, 'Only experts can take on help requests.'
+
+        if self.author_id == user.id:
+            return False, 'You cannot take on your own help request.'
+
+        if self.assigned_expert_id is not None:
+            return False, 'This help request already has an assigned expert.'
+
+        if self.status == self.Status.RESOLVED:
+            return False, 'Resolved requests cannot be taken on.'
+
+        # Check expertise match: at least one of the expert's approved
+        # expertise fields must be in the allowed set for this category.
+        allowed_names = CATEGORY_EXPERTISE_MAP.get(self.category, set())
+        has_match = user.expertise_fields.filter(
+            is_approved=True,
+            category__name__in=allowed_names,
+        ).exists()
+        if not has_match:
+            return False, 'Your expertise does not match this request category.'
+
+        return True, ''
 
 
 class HelpComment(models.Model):

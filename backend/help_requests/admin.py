@@ -11,8 +11,8 @@ from .models import HelpRequest, HelpComment, HelpOffer
 
 @admin.register(HelpRequest)
 class HelpRequestAdmin(admin.ModelAdmin):
-    list_display = ('title', 'hub', 'category', 'urgency', 'author', 'status', 'comment_count', 'created_at')
-    list_filter = ('category', 'urgency', 'status', 'hub')
+    list_display = ('title', 'hub', 'category', 'urgency', 'author', 'assigned_expert', 'status', 'comment_count', 'created_at')
+    list_filter = ('category', 'urgency', 'status', 'hub', 'assigned_expert')
     search_fields = ('title', 'description')
 
 

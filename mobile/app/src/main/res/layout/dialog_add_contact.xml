@@ -19,22 +19,22 @@
         android:id="@+id/et_alias"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:hint="@string/offline_contact_name_hint"
         android:textColorHint="#9CA3AF"
         android:textColor="#FFFFFF"
         android:backgroundTint="#38BDF8"
-        android:layout_marginBottom="12dp"
         android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/et_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:hint="@string/offline_contact_phone_hint"
         android:textColorHint="#9CA3AF"
         android:textColor="#FFFFFF"
         android:backgroundTint="#38BDF8"
-        android:layout_marginBottom="24dp"
         android:inputType="phone"/>
 
 </LinearLayout>
