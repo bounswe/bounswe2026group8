@@ -233,13 +233,17 @@ export default function ForumPage() {
           </div>
 
           <div className="forum-role-filter">
-            {['All', 'Experts', 'Standard Users'].map((role) => (
+            {[
+              { value: 'ALL', label: t('forum.filter.all') },
+              { value: 'EXPERT', label: t('forum.filter.experts') },
+              { value: 'STANDARD', label: t('forum.filter.standard_users') },
+            ].map((role) => (
                 <button
-                    key={role}
-                    className={`forum-role-btn ${roleFilter === role ? 'forum-role-btn--active' : ''}`}
-                    onClick={() => setRoleFilter(role)}
+                    key={role.value}
+                    className={`forum-role-btn ${roleFilter === role.value ? 'forum-role-btn--active' : ''}`}
+                    onClick={() => setRoleFilter(role.value)}
                 >
-                  {role === 'All' ? t('forum.filter.all') : role === 'Experts' ? t('forum.filter.experts') : t('forum.filter.standard_users')}
+                  {role.label}
                 </button>
             ))}
           </div>
