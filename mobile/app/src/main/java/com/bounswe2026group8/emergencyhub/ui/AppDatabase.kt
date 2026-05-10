@@ -23,9 +23,42 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        // v2 → v3: add nullable location columns to mesh_messages.
+        private fun tableExists(db: SupportSQLiteDatabase, name: String): Boolean {
+            db.query(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+                arrayOf<Any>(name)
+            ).use { c -> return c.moveToFirst() }
+        }
+
+        // v2 → v3: add nullable location columns to mesh_messages. Some installs
+        // landed on v3 before the MeshMessage entity existed and so have no
+        // mesh_messages table at all — create it fresh with the v3 schema in
+        // that case instead of ALTERing a non-existent table.
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                if (!tableExists(db, "mesh_messages")) {
+                    db.execSQL(
+                        """
+                        CREATE TABLE IF NOT EXISTS `mesh_messages` (
+                          `id` TEXT NOT NULL,
+                          `authorDeviceId` TEXT NOT NULL,
+                          `authorDisplayName` TEXT,
+                          `body` TEXT NOT NULL,
+                          `createdAt` INTEGER NOT NULL,
+                          `receivedAt` INTEGER NOT NULL,
+                          `ttlHours` INTEGER NOT NULL,
+                          `hopCount` INTEGER NOT NULL,
+                          `syncedToServer` INTEGER NOT NULL,
+                          `latitude` REAL,
+                          `longitude` REAL,
+                          `locAccuracyMeters` REAL,
+                          `locCapturedAt` INTEGER,
+                          PRIMARY KEY(`id`)
+                        )
+                        """.trimIndent()
+                    )
+                    return
+                }
                 db.execSQL("ALTER TABLE mesh_messages ADD COLUMN latitude REAL")
                 db.execSQL("ALTER TABLE mesh_messages ADD COLUMN longitude REAL")
                 db.execSQL("ALTER TABLE mesh_messages ADD COLUMN locAccuracyMeters REAL")
@@ -36,6 +69,32 @@ abstract class AppDatabase : RoomDatabase() {
         // v3 → v4: convert flat messaging into forum (posts + comments in one table).
         private val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                if (!tableExists(db, "mesh_messages")) {
+                    db.execSQL(
+                        """
+                        CREATE TABLE IF NOT EXISTS `mesh_messages` (
+                          `id` TEXT NOT NULL,
+                          `authorDeviceId` TEXT NOT NULL,
+                          `authorDisplayName` TEXT,
+                          `body` TEXT NOT NULL,
+                          `createdAt` INTEGER NOT NULL,
+                          `receivedAt` INTEGER NOT NULL,
+                          `ttlHours` INTEGER NOT NULL,
+                          `hopCount` INTEGER NOT NULL,
+                          `syncedToServer` INTEGER NOT NULL,
+                          `latitude` REAL,
+                          `longitude` REAL,
+                          `locAccuracyMeters` REAL,
+                          `locCapturedAt` INTEGER,
+                          `title` TEXT,
+                          `postType` TEXT,
+                          `parentPostId` TEXT,
+                          PRIMARY KEY(`id`)
+                        )
+                        """.trimIndent()
+                    )
+                    return
+                }
                 db.execSQL("ALTER TABLE mesh_messages ADD COLUMN title TEXT")
                 db.execSQL("ALTER TABLE mesh_messages ADD COLUMN postType TEXT")
                 db.execSQL("ALTER TABLE mesh_messages ADD COLUMN parentPostId TEXT")
