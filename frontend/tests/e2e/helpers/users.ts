@@ -15,6 +15,11 @@ export function uniqueEmail(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}@e2e.test`;
 }
 
+/** Returns a unique title/name to prevent duplicate-content collisions across runs. */
+export function uniqueTitle(prefix: string): string {
+  return `${prefix} ${Date.now()}`;
+}
+
 /**
  * Creates a user via the Django register API.
  * hub_id is omitted — optional in the backend, keeps tests hub-independent.

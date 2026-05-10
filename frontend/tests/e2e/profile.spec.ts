@@ -4,7 +4,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { createUser, loginAs, logout, uniqueEmail, UserData } from './helpers/users';
+import { createUser, loginAs, logout, uniqueEmail, uniqueTitle, UserData } from './helpers/users';
 
 let std: UserData;
 let exp: UserData;
@@ -71,15 +71,16 @@ test('expertise accordion is visible for expert user', async ({ page }) => {
 // ── Authorization guard ───────────────────────────────────────────────────────
 
 test('another user cannot edit or delete a post they did not create', async ({ page }) => {
+  const postTitle = uniqueTitle('Auth guard test post');
   // std creates a forum post
   await loginAs(page, std.email, std.password);
   await page.goto('/forum/new');
-  await page.fill('#title', 'Auth guard test post');
+  await page.fill('#title', postTitle);
   await page.fill('#content', 'This post belongs to std.');
   await page.click('button:has-text("Create Post")');
   // PostCreatePage navigates to /forum?tab=GLOBAL on success, not the post detail
   await page.waitForURL(/\/forum/);
-  await page.locator('.post-card-title').filter({ hasText: 'Auth guard test post' }).click();
+  await page.locator('.post-card-title').filter({ hasText: postTitle }).click();
   await page.waitForURL(/\/forum\/posts\/\d+/);
   const postUrl = page.url();
 

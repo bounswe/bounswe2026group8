@@ -42,9 +42,11 @@ class RegisterTests(TestCase):
 
     def test_register_expert_user(self):
         """Expert user can register; expertise areas are added separately via /expertise."""
+        category = ExpertiseCategory.objects.filter(is_active=True).first()
         payload = self._base_payload(
             role='EXPERT',
             neighborhood_address='Sariyer, Istanbul',
+            category_id=category.pk,
         )
         response = self.client.post(self.url, payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -516,12 +518,12 @@ class ExpertiseCategoryTests(TestCase):
         self.assertEqual(inactive, 0)
 
     def test_inactive_category_excluded_from_serializer_queryset(self):
-        """An inactive category must not be selectable via the API."""
+        """An inactive category must not be selectable via the registration API."""
         cat = ExpertiseCategory.objects.get(name='First Aid')
         cat.is_active = False
         cat.save()
-        from .serializers import ExpertiseFieldSerializer
-        field = ExpertiseFieldSerializer().fields['category_id']
+        from .serializers import RegisterSerializer
+        field = RegisterSerializer().fields['category_id']
         active_ids = list(field.queryset.values_list('id', flat=True))
         self.assertNotIn(cat.pk, active_ids)
 
@@ -587,7 +589,7 @@ class ExpertiseFieldTests(TestCase):
 
     def _create_payload(self, **overrides):
         payload = {
-            'category_id': self.medical_cat.pk,
+            'category': self.medical_cat.pk,
             'certification_level': 'ADVANCED',
         }
         payload.update(overrides)
@@ -599,15 +601,14 @@ class ExpertiseFieldTests(TestCase):
         """Expert user can add an expertise field linked to a category."""
         response = self.expert_client.post('/expertise', self._create_payload(), format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['category']['id'], self.medical_cat.pk)
-        self.assertEqual(response.data['category']['name'], self.medical_cat.name)
+        self.assertEqual(response.data['category'], self.medical_cat.pk)
         self.assertEqual(response.data['certification_level'], 'ADVANCED')
 
     def test_expertise_field_is_approved_defaults_to_true(self):
         """Newly created expertise fields are approved by default."""
         response = self.expert_client.post('/expertise', self._create_payload(), format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.data['is_approved'])
+        self.assertTrue(ExpertiseField.objects.get(pk=response.data['id']).is_approved)
 
     def test_expert_can_list_own_expertise_fields(self):
         """Expert user can list their own expertise fields."""
@@ -616,8 +617,8 @@ class ExpertiseFieldTests(TestCase):
         )
         response = self.expert_client.get('/expertise')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        category_names = [e['category']['name'] for e in response.data]
-        self.assertIn(self.shelter_cat.name, category_names)
+        category_ids = [e['category'] for e in response.data]
+        self.assertIn(self.shelter_cat.pk, category_ids)
 
     def test_expert_can_delete_expertise_field(self):
         """Expert user can delete their own expertise field."""
@@ -630,7 +631,7 @@ class ExpertiseFieldTests(TestCase):
 
     def test_expertise_defaults_certification_level_to_beginner(self):
         """Omitting certification_level defaults to BEGINNER."""
-        payload = {'category_id': self.medical_cat.pk}
+        payload = {'category': self.medical_cat.pk}
         response = self.expert_client.post('/expertise', payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['certification_level'], 'BEGINNER')

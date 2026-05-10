@@ -99,6 +99,7 @@ describe('ProfilePage', () => {
     api.getResources.mockResolvedValue({ ok: true, data: [] });
     api.getExpertiseFields.mockResolvedValue({ ok: true, data: [] });
     api.getExpertiseCategories.mockResolvedValue({ ok: true, data: [] });
+    api.getMyBadges.mockResolvedValue({ ok: true, data: [] });
   });
 
   // ── Identity ─────────────────────────────────────────────────────────────────
