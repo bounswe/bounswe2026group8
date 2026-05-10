@@ -38,6 +38,17 @@ abstract class BaseInstrumentedTest {
                 .close()
         }
 
+        // Revoke location permissions so DashboardActivity.preCacheOfflineData()
+        // takes the no-permission branch and returns immediately. Without this,
+        // getCurrentLocation() on an emulator without mock GPS configured registers
+        // a callback that never fires, causing Espresso to wait indefinitely.
+        instrumentation.uiAutomation
+            .executeShellCommand("pm revoke ${ctx.packageName} android.permission.ACCESS_FINE_LOCATION")
+            .close()
+        instrumentation.uiAutomation
+            .executeShellCommand("pm revoke ${ctx.packageName} android.permission.ACCESS_COARSE_LOCATION")
+            .close()
+
         mockWebServer = MockWebServer()
         mockWebServer.start()
         RetrofitClient.testBaseUrl = mockWebServer.url("/").toString()
