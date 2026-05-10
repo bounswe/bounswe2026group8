@@ -74,6 +74,11 @@
       "most_liked": "最多点赞",
       "hot": "热门"
     },
+    "filter": {
+      "all": "全部",
+      "experts": "专家",
+      "standard_users": "标准用户"
+    },
     "empty_states": {
       "loading": "正在加载帖子...",
       "select_hub": "选择一个中心以查看 {{tab}} 帖子。",

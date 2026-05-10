@@ -220,6 +220,53 @@
 
         </LinearLayout>
 
+        <!-- Role filter bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/filterAll"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@string/filter_all"
+                android:textSize="13sp"
+                android:textColor="@color/accent"
+                android:background="@drawable/sort_pill_active_bg"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/filterExperts"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@string/filter_experts"
+                android:textSize="13sp"
+                android:textColor="@color/text_muted"
+                android:background="@drawable/sort_pill_bg"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/filterStandardUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="@string/filter_standard_users"
+                android:textSize="13sp"
+                android:textColor="@color/text_muted"
+                android:background="@drawable/sort_pill_bg" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <!-- ── Scrollable posts ────────────────────────────────────────── -->

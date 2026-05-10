@@ -92,6 +92,11 @@
       "most_liked": "Most Liked",
       "hot": "Hot"
     },
+    "filter": {
+      "all": "All",
+      "experts": "Experts",
+      "standard_users": "Standard Users"
+    },
     "empty_states": {
       "loading": "Loading posts...",
       "select_hub": "Select a hub to see {{tab}} posts.",

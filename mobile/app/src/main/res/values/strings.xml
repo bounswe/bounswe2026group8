@@ -281,6 +281,9 @@
     <string name="sort_newest">Newest</string>
     <string name="sort_most_liked">Most Liked</string>
     <string name="sort_hot">Hot</string>
+    <string name="filter_all_forum">All</string>
+    <string name="filter_experts">Experts</string>
+    <string name="filter_standard_users">Standard Users</string>
     <string name="forum_loading">Loading posts…</string>
     <string name="forum_empty_global">No global posts yet.</string>
     <string name="forum_empty_hub">No %1$s posts yet.</string>
