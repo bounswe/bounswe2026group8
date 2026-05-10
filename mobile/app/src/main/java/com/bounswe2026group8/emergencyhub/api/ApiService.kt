@@ -129,7 +129,8 @@ interface ApiService {
     @GET("forum/posts/")
     suspend fun getPosts(
         @Query("forum_type") forumType: String,
-        @Query("hub") hub: Int? = null
+        @Query("hub") hub: Int? = null,
+        @Query("author_role") authorRole: String? = null
     ): Response<List<Post>>
 
     @POST("forum/posts/")

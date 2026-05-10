@@ -74,6 +74,11 @@
       "most_liked": "En Çok Beğenilen",
       "hot": "Popüler"
     },
+    "filter": {
+      "all": "Tümü",
+      "experts": "Uzmanlar",
+      "standard_users": "Standart Kullanıcılar"
+    },
     "empty_states": {
       "loading": "Gönderiler yükleniyor...",
       "select_hub": "{{tab}} gönderilerini görmek için bir merkez seçin.",
@@ -752,17 +757,17 @@
     "sections": {
       "appearance": "G\u00f6r\u00fcn\u00fcm",
       "notifications": "Bildirimler",
-      "privacy": "Herkese A\u00e7\u0131k Profil Gizlili\u011fi"
+      "privacy": "Gizlilik"
     },
-    "privacy_note": "Oturum a\u00e7m\u0131\u015f di\u011fer kullan\u0131c\u0131lar\u0131n herkese a\u00e7\u0131k profilinizde neleri g\u00f6rebilece\u011fini se\u00e7in.",
+    "privacy_note": "Diğer oturum açmış kullanıcıların herkese açık profilinizde neleri görebileceğini seçin.",
     "states": {
-      "loading": "Ayarlar y\u00fckleniyor...",
-      "unavailable": "Ayarlar \u015fu anda kullan\u0131lam\u0131yor."
+      "loading": "Ayarlar yükleniyor...",
+      "unavailable": "Ayarlar şu anda kullanılamıyor."
     },
     "toasts": {
       "saved": "Kaydedildi",
-      "load_failed": "Ayarlar y\u00fcklenemedi.",
-      "save_failed": "Ayar kaydedilemedi."
+      "load_failed": "Ayarlar yüklenemedi.",
+      "save_failed": "Ayarlar kaydedilemedi."
     },
     "fields": {
       "dark_mode": {
@@ -770,48 +775,48 @@
         "desc": "Koyu mavi temay\u0131 kullan\u0131n. A\u00e7\u0131k arka plan i\u00e7in bunu kapat\u0131n."
       },
       "notify_help_requests": {
-        "label": "Yard\u0131m talebi bildirimleri",
-        "desc": "\u0130lgili yard\u0131m talepleri olu\u015fturuldu\u011funda an\u0131nda bildirim al\u0131n."
+        "label": "Yardım talebi bildirimleri",
+        "desc": "İlgili yardım talepleri oluşturulduğunda anlık bildirim alın."
       },
       "notify_urgent_posts": {
         "label": "Acil forum bildirimleri",
-        "desc": "Acil forum g\u00f6nderileri i\u00e7in an\u0131nda bildirim al\u0131n."
+        "desc": "Acil forum gönderileri için anlık bildirim alın."
       },
       "notify_expertise_matches_only": {
-        "label": "Yaln\u0131zca uzmanl\u0131\u011f\u0131m i\u00e7in bildir",
-        "desc": "Uzmanlar, uzmanl\u0131k alan\u0131 d\u0131\u015f\u0131ndaki yard\u0131m talebi bildirimlerini atlar."
+        "label": "Yalnızca uzmanlığımla ilgili bildir",
+        "desc": "Uzmanlar, kendi uzmanlık alanı dışındaki yedek yardım talebi bildirimlerini atlar."
       },
       "show_phone_number": {
-        "label": "Telefon numaras\u0131n\u0131 g\u00f6ster",
-        "desc": "Di\u011fer kullan\u0131c\u0131lar\u0131n telefon numaran\u0131z\u0131 g\u00f6rmesine izin verin."
+        "label": "Telefon numarasını göster",
+        "desc": "Diğer kullanıcıların telefon numaranızı görmesine izin verin."
       },
       "show_emergency_contact": {
-        "label": "Acil durum ki\u015fisini g\u00f6ster",
-        "desc": "Di\u011fer kullan\u0131c\u0131lar\u0131n acil durum ileti\u015fim bilgilerinizi g\u00f6rmesine izin verin."
+        "label": "Acil durum kişisini göster",
+        "desc": "Diğer kullanıcıların acil durum kişi bilgilerinizi görmesine izin verin."
       },
       "show_medical_info": {
-        "label": "T\u0131bbi ve eri\u015filebilirlik bilgisini g\u00f6ster",
-        "desc": "Kan grubu, engellilik durumu ve \u00f6zel ihtiya\u00e7lar\u0131n herkese a\u00e7\u0131k g\u00f6r\u00fcnmesine izin verin."
+        "label": "Tıbbi ve erişilebilirlik bilgilerini göster",
+        "desc": "Kan grubu, engellilik durumu ve özel ihtiyaçların herkese açık görünmesine izin verin."
       },
       "show_availability_status": {
-        "label": "M\u00fcsaitlik durumunu g\u00f6ster",
-        "desc": "G\u00fcvende, yard\u0131ma ihtiyac\u0131 var veya yard\u0131m edebilir durumunuzu g\u00f6sterin."
+        "label": "Uygunluk durumunu göster",
+        "desc": "Güvende, yardıma ihtiyaç duyuyor veya yardım etmeye uygun olduğunuzu gösterin."
       },
       "show_bio": {
-        "label": "Biyografiyi g\u00f6ster",
-        "desc": "Biyografinizi herkese a\u00e7\u0131k profilinizde g\u00f6sterin."
+        "label": "Biyografiyi göster",
+        "desc": "Biyografinizi herkese açık profilinizde gösterin."
       },
       "show_location": {
-        "label": "Mahalle/adresi g\u00f6ster",
-        "desc": "Mahallenizi veya adresinizi herkese a\u00e7\u0131k profilinizde g\u00f6sterin."
+        "label": "Mahalle/adres göster",
+        "desc": "Mahallenizi veya adresinizi herkese açık profilinizde gösterin."
       },
       "show_resources": {
-        "label": "Kaynaklar\u0131 g\u00f6ster",
-        "desc": "Listeledi\u011finiz acil durum kaynaklar\u0131n\u0131 g\u00f6sterin."
+        "label": "Kaynakları göster",
+        "desc": "Listelediğiniz acil durum kaynaklarını gösterin."
       },
       "show_expertise": {
-        "label": "Uzmanl\u0131\u011f\u0131 g\u00f6ster",
-        "desc": "Uzmanl\u0131k alanlar\u0131n\u0131z\u0131 ve sertifika ba\u011flant\u0131lar\u0131n\u0131z\u0131 g\u00f6sterin."
+        "label": "Uzmanlığı göster",
+        "desc": "Uzmanlık alanlarınızı ve sertifika bağlantılarınızı gösterin."
       }
     }
   },

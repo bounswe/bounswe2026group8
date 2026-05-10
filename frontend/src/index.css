@@ -857,6 +857,36 @@
      border-color: var(--accent);
      color: var(--accent);
    }
+
+   .forum-role-filter {
+     display: flex;
+     gap: 0.4rem;
+     padding: 0.75rem 0;
+   }
+
+   .forum-role-btn {
+     font-family: var(--font);
+     font-size: 0.82rem;
+     font-weight: 600;
+     padding: 0.35rem 0.85rem;
+     border-radius: 999px;
+     border: 1px solid var(--border);
+     background: transparent;
+     color: var(--text-secondary);
+     cursor: pointer;
+     transition: all 0.15s ease;
+   }
+
+   .forum-role-btn:hover {
+     border-color: var(--accent);
+     color: var(--accent);
+   }
+
+   .forum-role-btn--active {
+     background: rgba(56, 189, 248, 0.12);
+     border-color: var(--accent);
+     color: var(--accent);
+   }
    
    .forum-empty {
      text-align: center;

@@ -42,6 +42,8 @@
     <string name="feature_profile_desc">Gestiona tu cuenta</string>
     <string name="feature_offline">Info Sin Conexión</string>
     <string name="feature_offline_desc">Acceso a datos críticos</string>
+    <string name="feature_settings">Configuración</string>
+    <string name="feature_settings_desc">Privacidad y alertas</string>
 
     <!-- Help Center -->
     <string name="help_center_title">Centro de Ayuda</string>
@@ -207,6 +209,34 @@
     <!-- Language -->
     <string name="language">Idioma</string>
     <string name="select_language">Seleccionar Idioma</string>
+    <string name="settings_title">Configuración</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_privacy">Privacidad</string>
+    <string name="settings_privacy_note">Elige qué pueden ver otros usuarios en tu perfil público.</string>
+    <string name="settings_load_failed">No se pudo cargar la configuración</string>
+    <string name="settings_save_failed">No se pudo guardar la configuración</string>
+    <string name="settings_notify_help_requests">Alertas de solicitudes de ayuda</string>
+    <string name="settings_notify_help_requests_desc">Recibe notificaciones cuando las solicitudes de ayuda cercanas requieran atención.</string>
+    <string name="settings_notify_urgent_posts">Alertas urgentes del foro</string>
+    <string name="settings_notify_urgent_posts_desc">Recibe notificaciones de publicaciones urgentes de la comunidad.</string>
+    <string name="settings_notify_expertise_matches_only">Solo mi experiencia</string>
+    <string name="settings_notify_expertise_matches_only_desc">Limita las alertas de ayuda a categorías que coincidan con tu experiencia.</string>
+    <string name="settings_show_phone_number">Mostrar número de teléfono</string>
+    <string name="settings_show_phone_number_desc">Permite que otros vean tu número de teléfono.</string>
+    <string name="settings_show_emergency_contact">Mostrar contacto de emergencia</string>
+    <string name="settings_show_emergency_contact_desc">Permite que otros vean tus datos de contacto de emergencia.</string>
+    <string name="settings_show_medical_info">Mostrar información médica</string>
+    <string name="settings_show_medical_info_desc">Permite que otros vean grupo sanguíneo, discapacidad y necesidades especiales.</string>
+    <string name="settings_show_availability_status">Mostrar estado de disponibilidad</string>
+    <string name="settings_show_availability_status_desc">Permite que otros vean si estás a salvo, necesitas ayuda o puedes ayudar.</string>
+    <string name="settings_show_bio">Mostrar biografía</string>
+    <string name="settings_show_bio_desc">Permite que otros vean la biografía de tu perfil.</string>
+    <string name="settings_show_location">Mostrar ubicación</string>
+    <string name="settings_show_location_desc">Permite que otros vean tu barrio o dirección.</string>
+    <string name="settings_show_resources">Mostrar recursos</string>
+    <string name="settings_show_resources_desc">Permite que otros vean los recursos que has listado.</string>
+    <string name="settings_show_expertise">Mostrar experiencia</string>
+    <string name="settings_show_expertise_desc">Permite que otros vean tus áreas de experiencia.</string>
     <string name="dashboard_welcome_format">¡Bienvenido, %1$s!</string>
     <string name="dashboard_role_expert">Experto</string>
     <string name="dashboard_role_standard">Estándar</string>

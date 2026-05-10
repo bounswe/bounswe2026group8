@@ -306,11 +306,12 @@ export function deleteHelpComment(commentId) {
 
 // ── Forum ─────────────────────────────────────────────────────────────────────
 
-export function getPosts({ hub, forumType, author } = {}) {
+export function getPosts({ hub, forumType, author, authorRole } = {}) {
   const params = new URLSearchParams();
   if (hub) params.set('hub', hub);
   if (forumType) params.set('forum_type', forumType);
   if (author) params.set('author', author);
+  if (authorRole) params.set('author_role', authorRole);
   const qs = params.toString();
   return request(`/forum/posts/${qs ? `?${qs}` : ''}`, { method: 'GET' });
 }
