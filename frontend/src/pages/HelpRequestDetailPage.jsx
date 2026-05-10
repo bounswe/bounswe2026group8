@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus, deleteHelpRequest, deleteHelpComment, resolveImageUrl } from '../services/api';
+import { getHelpRequest, getHelpComments, createHelpComment, updateHelpRequestStatus, deleteHelpRequest, deleteHelpComment, resolveImageUrl, takeOnHelpRequest, releaseHelpRequest } from '../services/api';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -91,6 +91,9 @@ export default function HelpRequestDetailPage() {
   const [resolving, setResolving] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  const [takingOn, setTakingOn] = useState(false);
+  const [releasing, setReleasing] = useState(false);
+
   useEffect(() => {
     setLoading(true);
     setError('');
@@ -145,6 +148,32 @@ export default function HelpRequestDetailPage() {
       if (refreshed.ok) setHelpRequest(refreshed.data);
     }
     setResolving(false);
+  };
+
+  const handleTakeOn = async () => {
+    setTakingOn(true);
+    setError('');
+    const { ok, data } = await takeOnHelpRequest(id);
+    if (ok) {
+      const refreshed = await getHelpRequest(id);
+      if (refreshed.ok) setHelpRequest(refreshed.data);
+    } else {
+      setError(data?.detail || 'Failed to take on request. You might not have the required expertise.');
+    }
+    setTakingOn(false);
+  };
+
+  const handleRelease = async () => {
+    setReleasing(true);
+    setError('');
+    const { ok, data } = await releaseHelpRequest(id);
+    if (ok) {
+      const refreshed = await getHelpRequest(id);
+      if (refreshed.ok) setHelpRequest(refreshed.data);
+    } else {
+      setError(data?.detail || 'Failed to release request.');
+    }
+    setReleasing(false);
   };
 
   if (!user) return null;
@@ -219,6 +248,14 @@ export default function HelpRequestDetailPage() {
             <span>{formatDate(helpRequest.created_at, t)}</span>
           </div>
 
+          {helpRequest.is_expert_responding && helpRequest.assigned_expert_username && (
+              <div className="help-detail-assigned">
+                <span className="badge badge-expert-responding">
+                  Assigned to: {helpRequest.assigned_expert_username}
+                </span>
+              </div>
+          )}
+
           {helpRequest.author.id === user.id && (
               <div className="post-owner-actions">
                 {helpRequest.status !== 'RESOLVED' && (
@@ -236,6 +273,29 @@ export default function HelpRequestDetailPage() {
                 >
                   {t('help_request_detail.actions.delete')}
                 </button>
+              </div>
+          )}
+
+          {user.role === 'EXPERT' && user.id !== helpRequest.author.id && (
+              <div className="post-owner-actions" style={{ marginTop: '10px' }}>
+                {!helpRequest.is_expert_responding && helpRequest.status !== 'RESOLVED' && (
+                    <button
+                        className="btn btn-primary btn-sm"
+                        onClick={handleTakeOn}
+                        disabled={takingOn}
+                    >
+                      {takingOn ? 'Taking On...' : 'Take On Request'}
+                    </button>
+                )}
+                {helpRequest.is_expert_responding && helpRequest.assigned_expert?.id === user.id && helpRequest.status !== 'RESOLVED' && (
+                    <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={handleRelease}
+                        disabled={releasing}
+                    >
+                      {releasing ? 'Releasing...' : 'Release Request'}
+                    </button>
+                )}
               </div>
           )}
         </div>

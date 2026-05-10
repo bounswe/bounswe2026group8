@@ -256,7 +256,7 @@ class ExpertiseFieldDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     # Editable fields that re-trigger verification when changed.
-    _VERIFICATION_RESET_FIELDS = ('field', 'certification_level', 'certification_document_url')
+    _VERIFICATION_RESET_FIELDS = ('category_id', 'certification_level', 'certification_document_url')
 
     def _get_expertise(self, request, pk):
         if request.user.role != User.Role.EXPERT:

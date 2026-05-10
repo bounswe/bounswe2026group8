@@ -50,6 +50,10 @@ class LandingActivity : AppCompatActivity() {
             startActivity(Intent(this, SignInActivity::class.java))
         }
 
+        findViewById<MaterialButton>(R.id.btnGuidedTour).setOnClickListener {
+            startActivity(Intent(this, TutorialActivity::class.java))
+        }
+
         findViewById<MaterialButton>(R.id.btnOfflineInfo).setOnClickListener {
             startActivity(Intent(this, OfflineFeaturesActivity::class.java))
         }

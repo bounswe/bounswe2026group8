@@ -72,6 +72,16 @@ interface ApiService {
         @Body body: UpdateHelpRequestStatusRequest
     ): Response<HelpRequestDetail>
 
+    @POST("help-requests/{id}/take-on/")
+    suspend fun takeOnHelpRequest(
+        @Path("id") id: Int
+    ): Response<HelpRequestDetail>
+
+    @POST("help-requests/{id}/release/")
+    suspend fun releaseHelpRequest(
+        @Path("id") id: Int
+    ): Response<HelpRequestDetail>
+
     // ── Help Request Comments ────────────────────────────────────────────
 
     @GET("help-requests/{id}/comments/")
@@ -217,6 +227,16 @@ interface ApiService {
 
     @DELETE("expertise/{id}")
     suspend fun deleteExpertiseField(@Path("id") id: Int): Response<Unit>
+
+    // ── Badges ──────────────────────────────────────────────────────────────────
+
+    /** GET /api/badges/my-badges/ — current user's badge progress. */
+    @GET("api/badges/my-badges/")
+    suspend fun getMyBadges(): Response<List<UserBadgeItem>>
+
+    /** GET /api/badges/users/{id}/ — badge progress for a specific user. */
+    @GET("api/badges/users/{userId}/")
+    suspend fun getUserBadges(@Path("userId") userId: Int): Response<List<UserBadgeItem>>
 
     // ── Mesh (offline messages archive) ─────────────────────────────────────────
 

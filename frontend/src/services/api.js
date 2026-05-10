@@ -245,6 +245,16 @@ export function getHelpRequest(id) {
   return request(`/help-requests/${id}/`, { method: 'GET' });
 }
 
+/** POST /help-requests/{id}/take-on/ — expert takes responsibility. */
+export function takeOnHelpRequest(id) {
+  return request(`/help-requests/${id}/take-on/`, { method: 'POST' });
+}
+
+/** POST /help-requests/{id}/release/ — assigned expert releases responsibility. */
+export function releaseHelpRequest(id) {
+  return request(`/help-requests/${id}/release/`, { method: 'POST' });
+}
+
 /** GET /help-requests/{id}/comments/ — list comments on a help request. */
 export function getHelpComments(requestId) {
   return request(`/help-requests/${requestId}/comments/`, { method: 'GET' });
@@ -526,5 +536,29 @@ export function decideExpertiseVerification(expertiseId, decision, note = '') {
   return request(`/staff/expertise-verifications/${expertiseId}/decision/`, {
     method: 'PATCH',
     body: JSON.stringify({ status: decision, note }),
+  });
+}
+
+// ── Badges ───────────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/badges/my-badges/
+ * Fetches the current user's badge progress.
+ * Requires Authorization header.
+ * * Success → array of badge objects
+ */
+export function getMyBadges() {
+  return request('/api/badges/my-badges/', { 
+    method: 'GET' 
+  });
+}
+
+/**
+ * GET /api/badges/users/{id}/
+ * Fetches the badge progress for a specific user.
+ */
+export function getUserBadges(userId) {
+  return request(`/api/badges/users/${userId}/`, { 
+    method: 'GET' 
   });
 }

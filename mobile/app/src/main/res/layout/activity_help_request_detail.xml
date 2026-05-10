@@ -181,6 +181,21 @@
 
                     </LinearLayout>
 
+                    <!-- Assigned Expert -->
+                    <TextView
+                        android:id="@+id/txtAssignedExpert"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/accent_secondary"
+                        android:background="@drawable/badge_accent_bg"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone" />
+
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
@@ -195,6 +210,28 @@
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
                 style="@style/Widget.EmergencyHub.Button.Primary" />
+
+            <!-- Take On Request button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTakeOnRequest"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Take On Request"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                style="@style/Widget.EmergencyHub.Button.Primary" />
+
+            <!-- Release Request button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReleaseRequest"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Release Request"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                style="@style/Widget.EmergencyHub.Button.Secondary" />
 
             <!-- ── Map card (hidden when no coords) ────────────────────── -->
             <com.google.android.material.card.MaterialCardView

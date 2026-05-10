@@ -8,6 +8,7 @@ import {
   getExpertiseFields, createExpertiseField, updateExpertiseField, deleteExpertiseField,
   getExpertiseCategories,
   uploadImages, resolveImageUrl,
+  getMyBadges
 } from '../services/api';
 
 function Chevron({ open }) {
@@ -163,7 +164,7 @@ function BloodTypeSelect({ value, name, onSave, t }) {
 }
 
 const EMPTY_RESOURCE = { name: '', category: '', quantity: 1, condition: true };
-const EMPTY_EXPERTISE = { category_id: '', certification_level: 'BEGINNER', certification_document_url: '' };
+const EMPTY_EXPERTISE = { category: '', certification_level: 'BEGINNER', certification_document_url: '' };
 
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
@@ -197,6 +198,8 @@ export default function ProfilePage() {
   const [toast, setToast] = useState(null);
   const isExpert = user?.role === 'EXPERT';
 
+  const [topBadges, setTopBadges] = useState([]);
+
   useEffect(() => {
     if (!user) return;
     getProfile().then(({ ok, data }) => {
@@ -207,6 +210,14 @@ export default function ProfilePage() {
       getExpertiseFields().then(({ ok, data }) => { if (ok) setExpertiseFields(data); });
       getExpertiseCategories().then(({ ok, data }) => { if (ok) setExpertiseCategories(data); });
     }
+    getMyBadges().then(({ ok, data }) => {
+      if (ok) {
+        // Filter out level 0, sort by highest level, and grab the first 3
+        const earnedBadges = data.filter(b => b.current_level > 0);
+        const sortedBadges = earnedBadges.sort((a, b) => b.current_level - a.current_level);
+        setTopBadges(sortedBadges.slice(0, 3));
+      }
+    });
   }, [user, isExpert]);
 
   const notify = (msg, type = 'success') => {
@@ -288,16 +299,58 @@ export default function ProfilePage() {
 
         {toast && <div className={`profile-toast ${toast.type === 'error' ? 'profile-toast-error' : ''}`}>{toast.msg}</div>}
 
-        <header className="dashboard-header">
+        <header className="dashboard-header page-main-header">
+          <button className="btn btn-secondary btn-sm" onClick={() => navigate('/dashboard')}>&larr; {t('profile.header.back')}</button>
           <h2>{t('profile.header.title')}</h2>
-          <button className="btn btn-secondary btn-sm" onClick={() => navigate('/dashboard')}>← {t('profile.header.back')}</button>
         </header>
 
         <div className="profile-identity-card">
           <div className="profile-avatar">{user?.full_name?.[0]?.toUpperCase() ?? '?'}</div>
           <div className="profile-identity-info">
-            <h3 className="profile-name">{user?.full_name}</h3>
-            <p className="profile-email">{user?.email}</p>
+            
+            {/* Flex container for Name + Badges (added flexWrap so it doesn't break on small screens) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px', flexWrap: 'wrap' }}>
+              <h3 className="profile-name" style={{ margin: 0 }}>{user?.full_name}</h3>
+              
+              {/* Render Top 3 Badges */}
+              {topBadges.length > 0 && (
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {topBadges.map(badge => {
+                    // Get translation key
+                    const badgeKey = badge.badge_name.toLowerCase().replace(/\s+/g, '_');
+                    const baseTitle = t(`badges.${badgeKey}.title`, badge.badge_name);
+                    
+                    // Combine Title and Level (e.g., "Conversationalist 1")
+                    const displayTitle = badge.current_level > 0 
+                      ? `${baseTitle} ${badge.current_level}` 
+                      : baseTitle;
+                    
+                    return (
+                      <span 
+                        key={badge.id}
+                        style={{ 
+                          fontSize: '0.9rem',
+                          fontWeight: '500',
+                          color: '#f8fafc',
+                          background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(37, 99, 235, 0.15) 100%)',
+                          border: '1px solid rgba(56, 189, 248, 0.25)',
+                          borderRadius: '20px', 
+                          padding: '4px 12px',  
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px', 
+                        }}
+                      >
+                        <span style={{ fontSize: '1.2rem' }}>{badge.badge_icon}</span>
+                        {displayTitle}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <p className="profile-email" style={{ marginTop: 0 }}>{user?.email}</p>
             <div className="profile-badges">
               <span className="badge badge-accent">{roleLabel}</span>
               <span className="badge" style={{ color: statusMeta.color, borderColor: statusMeta.color + '44', background: statusMeta.color + '11' }}>
@@ -314,6 +367,16 @@ export default function ProfilePage() {
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.25rem' }}>{t('profile.my_posts.desc')}</p>
         </div>
+
+        {/* ADDED: My Badges Section */}
+        <div className="profile-section-card profile-my-badges-card" onClick={() => navigate('/my-badges')} role="link" style={{ cursor: 'pointer' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h4 className="profile-section-title" style={{ margin: 0 }}>{t('profile.my_badges.title')}</h4>
+            <span style={{ color: 'var(--accent)', fontSize: '1.2rem' }}>&rarr;</span>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.25rem' }}>{t('profile.my_badges.desc')}</p>
+        </div>
+        {/* END ADDED SECTION */}
 
         <div className="profile-section-card">
           <h4 className="profile-section-title">{t('profile.sections.personal_info')}</h4>
@@ -430,8 +493,8 @@ export default function ProfilePage() {
                       <div className="form-group">
                         <label>{t('profile.labels.field')}</label>
                         <select
-                          value={newExpertise.category_id}
-                          onChange={(e) => setNewExpertise((p) => ({ ...p, category_id: e.target.value }))}
+                          value={newExpertise.category}
+                          onChange={(e) => setNewExpertise((p) => ({ ...p, category: e.target.value }))}
                           required
                         >
                           <option value="">— {t('profile.placeholders.expertise_field')} —</option>

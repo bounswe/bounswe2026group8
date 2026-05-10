@@ -38,12 +38,30 @@
       "available_to_help": "Available to Help"
     },
     "features": {
-      "forum": {"title": "Forum", "desc": "Community discussions"},
-      "help_requests": {"title": "Help Requests", "desc": "Ask for or offer help"},
-      "profile": {"title": "Profile", "desc": "Manage your account"},
-      "settings": {"title": "Settings", "desc": "Notifications and privacy"},
-      "emergency_info": {"title": "Emergency Info", "desc": "Critical data access"},
-      "offline_messages": {"title": "Offline Messages", "desc": "Server-synced offline forum"}
+      "forum": {
+        "title": "Forum",
+        "desc": "Community discussions"
+      },
+      "help_requests": {
+        "title": "Help Requests",
+        "desc": "Ask for or offer help"
+      },
+      "profile": {
+        "title": "Profile",
+        "desc": "Manage your account"
+      },
+      "settings": {
+        "title": "Settings",
+        "desc": "Notifications and privacy"
+      },
+      "emergency_info": {
+        "title": "Emergency Info",
+        "desc": "Critical data access"
+      },
+      "offline_messages": {
+        "title": "Offline Messages",
+        "desc": "Server-synced offline forum"
+      }
     }
   },
   "forum": {
@@ -103,7 +121,7 @@
     },
     "actions": {
       "back_to_top": "Back to Top",
-      "back_to_dashboard": "Back to Dashboard"
+      "back_to_dashboard": "Back"
     }
   },
   "help_request_create": {
@@ -221,7 +239,7 @@
   },
   "help_requests": {
     "header": {
-      "back": "Dashboard",
+      "back": "Back",
       "title": "Help Center",
       "new_request": "+ New Request",
       "new_offer": "+ New Offer",
@@ -368,6 +386,33 @@
       "availability": "Availability",
       "posted": "Posted"
     }
+  },
+  "badges": {
+    "commenter": {
+      "title": "Commenter",
+      "description": "Awarded for being an active participant in community discussions."
+    },
+    "voter": {
+      "title": "Voter",
+      "description": "Awarded for voting on community posts."
+    },
+    "forum_active": {
+      "title": "Forum Active",
+      "description": "Awarded for creating new posts in the community forum."
+    },
+    "responder": {
+      "title": "Responder",
+      "description": "Awarded for taking responsibility for community help requests."
+    }
+  },
+  "my_badges": {
+    "header": {
+      "title": "My Badges",
+      "back": "Back"
+    },
+    "loading": "Loading your achievements...",
+    "empty": "You haven't earned any badges yet. Start participating in the community!",
+    "max_level": "MAX LEVEL REACHED"
   },
   "post_create": {
     "types": {
@@ -639,6 +684,10 @@
       "title": "My Posts",
       "desc": "View your forum posts, help requests, and help offers"
     },
+    "my_badges": {
+      "title": "My Badges",
+      "desc": "View your earned badges and achievements"
+    },
     "sections": {
       "personal_info": "Personal Information",
       "resources": "Resources",
@@ -883,7 +932,7 @@
   "offline_messages": {
     "list": {
       "title": "Offline Messages",
-      "back": "← Dashboard",
+      "back": "Back",
       "subtitle": "Posts that users created in the offline mesh and uploaded once they came back online.",
       "loading": "Loading…",
       "error": "Couldn't load: {{error}}",
@@ -918,6 +967,229 @@
       "fix_minutes": "fix {{count}}m old",
       "fix_hours": "fix {{count}}h old",
       "fix_days": "fix {{count}}d old"
+    }
+  },
+  "tutorial": {
+    "guide": {
+      "show": "Show guide",
+      "step": "Step {{current}} of {{total}}",
+      "skip": "Skip guide",
+      "previous": "Previous",
+      "next": "Next",
+      "finish": "Finish guide"
+    },
+    "common": {
+      "dashboard": "Dashboard",
+      "backDashboard": "<- Dashboard",
+      "backForum": "<- Forum",
+      "backForumTutorial": "<- Forum tutorial",
+      "backHelpRequests": "<- Help Requests",
+      "backSignIn": "Back to sign in",
+      "currentSituation": "Current situation",
+      "nextAction": "Next action",
+      "nextStep": "Next step",
+      "ready": "{{percent}}% ready",
+      "comments": "Comments",
+      "commentsCount": "{{count}} comments",
+      "writeComment": "Write a comment",
+      "postComment": "Post comment",
+      "yourPost": "Your post",
+      "yourComment": "Your comment",
+      "yourRequest": "Your request",
+      "expert": "Expert",
+      "recentUpdate": "recent update",
+      "viewProfileAfterSignIn": "View profile after sign in",
+      "openPost": "Open post",
+      "newHere": "New here?",
+      "tryScenario": "Try the tutorial scenario",
+      "notFoundPost": "Post not found.",
+      "notFoundRequest": "Request not found."
+    },
+    "dashboard": {
+      "steps": {
+        "startTitle": "Start here",
+        "startText": "Your main areas are grouped here so you can move quickly during an emergency.",
+        "situationTitle": "Current situation",
+        "situationText": "A neighborhood power outage is affecting nearby buildings. You can ask for water, offer help, and share updates.",
+        "forumTitle": "Read community updates",
+        "forumText": "Use the forum when you want to share or follow public neighborhood information.",
+        "helpTitle": "Ask for help",
+        "helpText": "Use help requests when someone needs supplies, shelter, transport, or medical help.",
+        "infoTitle": "Keep guidance close",
+        "infoText": "Emergency Info gives you quick steps to check when things feel urgent. Map tools are available after signing in."
+      },
+      "featureDesc": {
+        "forum": "Browse community updates, comment on posts, and write a new post.",
+        "help": "Review nearby needs, create a request, and see it in the list.",
+        "profile": "Profiles are saved for signed-in community members.",
+        "info": "Review emergency guidance you can keep handy offline.",
+        "messages": "Offline messages are available once you sign in on your own account."
+      },
+      "signInProfile": "Sign in to use Profile",
+      "signInMessages": "Sign in to use Offline Messages",
+      "welcome": "Welcome, Neighbor",
+      "standardMember": "Standard Member",
+      "safe": "Safe",
+      "neighborhood": "Besiktas Neighborhood",
+      "whatCanDo": "What you can do",
+      "actionText": "Share an update, request help, or check emergency guidance."
+    },
+    "forum": {
+      "steps": {
+        "feedTitle": "Choose the feed",
+        "feedText": "Forum tabs separate broad public updates from hub-specific and urgent conversations.",
+        "sortTitle": "Sort the updates",
+        "sortText": "Use Newest, Most liked, and Hot to scan recent updates, popular posts, and active conversations.",
+        "openTitle": "Open a post",
+        "openText": "Click a post to inspect the full update and join the conversation.",
+        "createTitle": "Create a post",
+        "createText": "Use the new post button to write a community update.",
+        "requestTitle": "Know when to request help",
+        "requestText": "Forum posts are public updates. If someone needs water, shelter, transport, or medical support, use a help request."
+      },
+      "title": "Community Forum",
+      "subtitle": "Community updates from neighbors in your area.",
+      "newPost": "New post",
+      "standardHub": "Standard hub",
+      "urgentHub": "Urgent hub",
+      "mostLiked": "Most liked",
+      "nextBody": "In a real emergency, you can use forum posts for public updates. When you personally need supplies, transport, shelter, or medical help, create a help request instead.",
+      "createHelpRequest": "Create a help request"
+    },
+    "postCreate": {
+      "steps": {
+        "typeTitle": "Choose where the post belongs",
+        "typeText": "Global posts are broad updates. Hub posts are local. Urgent posts should be reserved for time-sensitive warnings.",
+        "titleTitle": "Use a scan-friendly title",
+        "titleText": "A clear title helps neighbors understand the update before opening the full post.",
+        "contentTitle": "Write the useful details",
+        "contentText": "Share what happened, where it happened, and what neighbors should do next.",
+        "previewTitle": "Review the preview",
+        "previewText": "Check how the post will look before adding it to the forum.",
+        "submitTitle": "Save it safely",
+        "submitText": "Save the post when the title and details are clear."
+      },
+      "title": "New Forum Post",
+      "subtitle": "Compose a public update for neighbors.",
+      "forumType": "Forum type",
+      "typeHints": {
+        "global": "Public neighborhood-wide update",
+        "standard": "Local update for your hub",
+        "urgent": "Immediate safety warning"
+      },
+      "shortTitle": "Short update title",
+      "content": "Content",
+      "contentPlaceholder": "What happened? Where? What should neighbors do?",
+      "imageLinks": "Image links",
+      "optional": "optional",
+      "imagePlaceholder": "One image link per line",
+      "previewTitleFallback": "Your post title",
+      "previewBodyFallback": "Your post details will appear here.",
+      "save": "Save post",
+      "saved": "Saved. It will appear in the forum.",
+      "titleError": "Add a short title before saving.",
+      "contentError": "Add details neighbors can act on.",
+      "situationText": "Neighbors need to know where they can charge phones during the outage.",
+      "readyText": "Clear posts reduce confusion and repeated questions."
+    },
+    "helpList": {
+      "steps": {
+        "filterTitle": "Filter by need",
+        "filterText": "Categories help neighbors find requests they can answer quickly.",
+        "reviewTitle": "Review requests",
+        "reviewText": "Open a request to see what is needed and how you might respond.",
+        "createTitle": "Create a request",
+        "createText": "Create a request when someone needs supplies, transport, shelter, or medical help."
+      },
+      "newRequest": "New request",
+      "neighborhoodNeeds": "Neighborhood needs",
+      "situationText": "Neighbors are sharing practical needs after a power outage.",
+      "needsText": "Requests stay organized so helpers can quickly find where they are needed.",
+      "categories": {
+        "all": "All",
+        "medical": "Medical",
+        "food": "Food / water",
+        "shelter": "Shelter",
+        "transport": "Transport",
+        "other": "Other"
+      },
+      "urgency": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
+    },
+    "helpDetail": {
+      "steps": {
+        "reviewTitle": "Review the request",
+        "reviewText": "Start with the category, urgency, description, and who posted it.",
+        "locationTitle": "Check the location",
+        "locationText": "The location note helps helpers understand where support is needed.",
+        "commentsTitle": "Coordinate in comments",
+        "commentsText": "Comments are useful for asking follow-up questions or offering help.",
+        "manageTitle": "Manage your request",
+        "manageText": "You can only manage requests you created. When the need is handled, mark it as resolved or remove it if it is no longer needed."
+      },
+      "title": "Help Request",
+      "by": "By",
+      "markResolved": "Mark as resolved",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "deleteTitle": "Delete request?",
+      "deleteBody": "This removes the request from the list.",
+      "location": "Location",
+      "noComments": "No comments yet."
+    },
+    "helpCreate": {
+      "steps": {
+        "scenarioTitle": "Start with the situation",
+        "scenarioText": "Start with the situation so neighbors understand who needs help and why.",
+        "titleTitle": "Write a clear title",
+        "titleText": "A short title helps neighbors understand the need quickly while scanning a list.",
+        "detailsTitle": "Add useful details",
+        "detailsText": "Describe who needs help, what is needed, and any safety details helpers should know.",
+        "categoryTitle": "Pick category and urgency",
+        "categoryText": "These choices help neighbors find urgent needs and understand what they can do.",
+        "submitTitle": "Check before sending",
+        "submitText": "Review the details before adding the request to the list."
+      },
+      "title": "New Help Request",
+      "situationText": "A neighbor needs drinking water after a power outage.",
+      "readyText": "Clear details help nearby neighbors understand what kind of help is needed.",
+      "info": "Add enough detail so nearby neighbors can understand what kind of help is needed.",
+      "previewed": "Looks good. A request like this gives helpers the main details they need to respond.",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Short summary of the need",
+      "descLabel": "Description",
+      "descPlaceholder": "Explain who needs help and what would be useful.",
+      "category": "Category",
+      "urgency": "Urgency",
+      "locationNote": "Location note",
+      "recommended": "recommended",
+      "locationPlaceholder": "Example: apartment entrance, street corner, shelter desk",
+      "imagesGps": "Images and precise GPS",
+      "afterSignIn": "available after sign in",
+      "addPhoto": "Add photo",
+      "useLocation": "Use my location",
+      "save": "Save request",
+      "titleError": "A clear title helps neighbors understand the need quickly.",
+      "descError": "Describe who needs help, what is needed, and any safety details.",
+      "noLocation": "No location note added"
+    },
+    "emergencyInfo": {
+      "steps": {
+        "overviewTitle": "Use emergency info as a quick reference",
+        "overviewText": "This page is for practical guidance you may need during an incident.",
+        "checklistTitle": "Open the checklist",
+        "checklistText": "Tap the checklist card to find step-by-step emergency guidance.",
+        "mapTitle": "Maps are available after sign in",
+        "mapText": "The real app also has map tools for nearby gathering points once you are signed in."
+      },
+      "situationText": "You need fast emergency instructions during the same neighborhood outage.",
+      "actionText": "Open the checklist and review the guidance you may need first.",
+      "mapLabel": "Map",
+      "mapPreview": "Map preview",
+      "mapDesc": "Sign in to use live map tools and saved gathering points."
     }
   }
 }

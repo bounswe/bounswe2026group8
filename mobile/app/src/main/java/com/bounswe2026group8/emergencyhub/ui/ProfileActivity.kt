@@ -1,5 +1,7 @@
 package com.bounswe2026group8.emergencyhub.ui
 
+import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -57,6 +59,13 @@ class ProfileActivity : AppCompatActivity() {
             loadExpertise()
             loadExpertiseCategories { setupExpertiseForm() }
         }
+
+        // My Badges card → MyBadgesActivity
+        findViewById<View>(R.id.cardMyBadges).setOnClickListener {
+            startActivity(Intent(this, MyBadgesActivity::class.java))
+        }
+
+        loadBadges()
     }
 
     private fun loadIdentity() {
@@ -455,6 +464,68 @@ class ProfileActivity : AppCompatActivity() {
                 }
             } catch (_: Exception) {
             }
+        }
+    }
+
+    // ── Badges ──────────────────────────────────────────────────────────────
+
+    private fun loadBadges() {
+        lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.getService(this@ProfileActivity).getMyBadges()
+                if (res.isSuccessful) {
+                    val badges = res.body() ?: emptyList()
+                    // Filter to earned badges (level > 0), sort desc, take top 3 — same as web
+                    val topBadges = badges
+                        .filter { it.currentLevel > 0 }
+                        .sortedByDescending { it.currentLevel }
+                        .take(3)
+                    displayTopBadges(topBadges)
+                }
+            } catch (_: Exception) {
+                // Silently fail — badges are supplementary
+            }
+        }
+    }
+
+    private fun displayTopBadges(badges: List<com.bounswe2026group8.emergencyhub.api.UserBadgeItem>) {
+        val row = findViewById<LinearLayout>(R.id.badgesRow)
+        row.removeAllViews()
+        if (badges.isEmpty()) {
+            row.visibility = View.GONE
+            return
+        }
+        row.visibility = View.VISIBLE
+
+        val density = resources.displayMetrics.density
+
+        for (badge in badges) {
+            val localizedName = BadgeLocalizer.getLocalizedBadgeName(this, badge.badgeName)
+            val displayTitle = if (badge.currentLevel > 0) {
+                getString(R.string.badges_name_with_level, localizedName, badge.currentLevel)
+            } else {
+                localizedName
+            }
+
+            val pillText = getString(R.string.badges_pill_format, badge.badgeIcon, displayTitle)
+
+            val pill = TextView(this).apply {
+                text = pillText
+                textSize = 12f
+                setTypeface(typeface, Typeface.BOLD)
+                setTextColor(ContextCompat.getColor(context, R.color.accent))
+                setBackgroundColor(ContextCompat.getColor(context, R.color.badge_accent_bg))
+                setPadding(
+                    (10 * density).toInt(), (4 * density).toInt(),
+                    (10 * density).toInt(), (4 * density).toInt()
+                )
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { marginEnd = (8 * density).toInt() }
+            }
+
+            row.addView(pill)
         }
     }
 

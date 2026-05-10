@@ -23,6 +23,9 @@ class HelpRequestListSerializer(serializers.ModelSerializer):
     but omits heavy fields like description and location coordinates.
     """
     author = UserSerializer(read_only=True)
+    assigned_expert = UserSerializer(read_only=True)
+    assigned_expert_username = serializers.SerializerMethodField()
+    is_expert_responding = serializers.SerializerMethodField()
     hub_name = serializers.SerializerMethodField()
 
     class Meta:
@@ -30,12 +33,20 @@ class HelpRequestListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'hub', 'hub_name', 'category', 'urgency',
             'author', 'title', 'status', 'comment_count',
+            'assigned_expert', 'assigned_expert_username',
+            'assigned_at', 'is_expert_responding',
             'created_at',
         ]
         read_only_fields = fields
 
     def get_hub_name(self, obj):
         return obj.hub.name if obj.hub_id else None
+
+    def get_assigned_expert_username(self, obj):
+        return obj.assigned_expert.full_name if obj.assigned_expert_id else None
+
+    def get_is_expert_responding(self, obj):
+        return obj.assigned_expert_id is not None
 
 
 class HelpRequestDetailSerializer(serializers.ModelSerializer):
@@ -44,6 +55,9 @@ class HelpRequestDetailSerializer(serializers.ModelSerializer):
     Adds description, location fields, and updated_at on top of the list fields.
     """
     author = UserSerializer(read_only=True)
+    assigned_expert = UserSerializer(read_only=True)
+    assigned_expert_username = serializers.SerializerMethodField()
+    is_expert_responding = serializers.SerializerMethodField()
     hub_name = serializers.SerializerMethodField()
 
     class Meta:
@@ -53,12 +67,20 @@ class HelpRequestDetailSerializer(serializers.ModelSerializer):
             'author', 'title', 'description', 'image_urls',
             'latitude', 'longitude', 'location_text',
             'status', 'comment_count',
+            'assigned_expert', 'assigned_expert_username',
+            'assigned_at', 'resolved_at', 'is_expert_responding',
             'created_at', 'updated_at',
         ]
         read_only_fields = fields
 
     def get_hub_name(self, obj):
         return obj.hub.name if obj.hub_id else None
+
+    def get_assigned_expert_username(self, obj):
+        return obj.assigned_expert.full_name if obj.assigned_expert_id else None
+
+    def get_is_expert_responding(self, obj):
+        return obj.assigned_expert_id is not None
 
 
 class HelpRequestCreateSerializer(serializers.ModelSerializer):
