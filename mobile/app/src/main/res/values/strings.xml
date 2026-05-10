@@ -367,6 +367,16 @@
     <string name="nearest_label">Nearest gathering point</string>
     <string name="nearest_format">Nearest: %1$s</string>
     <string name="back">Back</string>
+    <string name="voice_input_start">Start voice input</string>
+    <string name="voice_input_stop">Stop voice input</string>
+    <string name="voice_input_unavailable">Speech recognition is not available on this device.</string>
+    <string name="voice_input_permission_denied">Microphone permission is required for voice input.</string>
+    <string name="voice_input_no_match">Could not understand speech. Please try again.</string>
+    <string name="voice_input_busy">Voice recognition is busy. Please try again.</string>
+    <string name="voice_input_network_error">Voice recognition needs a stable connection right now.</string>
+    <string name="voice_input_failed">Voice input failed. Please try again.</string>
+    <string name="voice_input_start_failed">Could not start voice input.</string>
+    <string name="voice_input_fallback_hint">On-device voice input is unavailable right now. Try again with the system recognizer.</string>
 
     <!-- Language -->
     <string name="language">Language</string>
