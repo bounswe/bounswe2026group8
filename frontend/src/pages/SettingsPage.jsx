@@ -100,7 +100,7 @@ export default function SettingsPage() {
       <div className="page settings-page">
         <div className="alert alert-error">{t('settings.states.unavailable')}</div>
         <button className="btn btn-secondary btn-sm" onClick={() => navigate('/dashboard')}>
-          {t('settings.header.back')}
+          &larr; {t('settings.header.back')}
         </button>
       </div>
     );
@@ -110,11 +110,11 @@ export default function SettingsPage() {
     <div className="page settings-page">
       {toast && <div className={`profile-toast ${toast.type === 'error' ? 'profile-toast-error' : ''}`}>{toast.msg}</div>}
 
-      <header className="dashboard-header">
-        <h2>{t('settings.header.title')}</h2>
+      <header className="dashboard-header page-main-header">
         <button className="btn btn-secondary btn-sm" onClick={() => navigate('/dashboard')}>
-          {t('settings.header.back')}
+          &larr; {t('settings.header.back')}
         </button>
+        <h2>{t('settings.header.title')}</h2>
       </header>
 
       <div className="profile-section-card">
