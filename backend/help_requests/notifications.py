@@ -39,6 +39,7 @@ def send_help_request_notification(help_request):
             is_active=True,
             role='EXPERT',
             hub_id=help_request.hub_id,
+            settings__notify_help_requests=True,
             expertise_fields__category__help_request_category=help_request.category,
             expertise_fields__is_approved=True,
         )
@@ -59,6 +60,8 @@ def send_help_request_notification(help_request):
             is_active=True,
             role='EXPERT',
             hub_id=help_request.hub_id,
+            settings__notify_help_requests=True,
+            settings__notify_expertise_matches_only=False,
         )
         .exclude(fcm_token__isnull=True)
         .exclude(fcm_token='')
@@ -70,7 +73,11 @@ def send_help_request_notification(help_request):
         _send_expert_multicast(fallback_tokens, help_request)
 
     # Notify the requester that no specialist was available.
-    requester_token = help_request.author.fcm_token
+    requester_settings = getattr(help_request.author, 'settings', None)
+    requester_allows_help_notifications = (
+        requester_settings.notify_help_requests if requester_settings else True
+    )
+    requester_token = help_request.author.fcm_token if requester_allows_help_notifications else None
     if requester_token:
         _notify_requester_no_match(requester_token, help_request)
 

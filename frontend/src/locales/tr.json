@@ -41,6 +41,7 @@
       "forum": {"title": "Forum", "desc": "Topluluk tartışmaları"},
       "help_requests": {"title": "Yardım Talepleri", "desc": "Yardım edin / talep edin"},
       "profile": {"title": "Profil", "desc": "Profilinizi düzenleyin"},
+      "settings": {"title": "Ayarlar", "desc": "Bildirimler ve gizlilik"},
       "emergency_info": {"title": "Acil Durum Bilgileri", "desc": "Kritik bilgi erişimi"},
       "offline_messages": {"title": "Çevrimdışı Mesajlar", "desc": "Sunucuya senkronlanan çevrimdışı forum"}
     }
@@ -97,7 +98,7 @@
     },
     "actions": {
       "back_to_top": "Başa Dön",
-      "back_to_dashboard": "Menüye Dön"
+      "back_to_dashboard": "Geri"
     }
   },
   "help_request_create": {
@@ -215,7 +216,7 @@
   },
   "help_requests": {
     "header": {
-      "back": "Menü",
+      "back": "Geri",
       "title": "Yardım Merkezi",
       "new_request": "+ Yeni Talep",
       "new_offer": "+ Yeni Teklif",
@@ -812,7 +813,7 @@
   "offline_messages": {
     "list": {
       "title": "Çevrimdışı Mesajlar",
-      "back": "← Panel",
+      "back": "Geri",
       "subtitle": "Kullanıcıların çevrimdışı mesh ağında oluşturup tekrar çevrimiçi olduklarında yükledikleri gönderiler.",
       "loading": "Yükleniyor…",
       "error": "Yüklenemedi: {{error}}",
@@ -847,6 +848,229 @@
       "fix_minutes": "konum {{count}}d önce alındı",
       "fix_hours": "konum {{count}}s önce alındı",
       "fix_days": "konum {{count}}g önce alındı"
+    }
+  },
+  "tutorial": {
+    "guide": {
+      "show": "Rehberi göster",
+      "step": "Adım {{current}} / {{total}}",
+      "skip": "Rehberi atla",
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "finish": "Rehberi bitir"
+    },
+    "common": {
+      "dashboard": "Kontrol Paneli",
+      "backDashboard": "<- Kontrol Paneli",
+      "backForum": "<- Forum",
+      "backForumTutorial": "<- Forum rehberi",
+      "backHelpRequests": "<- Yardım Talepleri",
+      "backSignIn": "Girişe dön",
+      "currentSituation": "Mevcut durum",
+      "nextAction": "Sonraki adım",
+      "nextStep": "Sonraki adım",
+      "ready": "%{{percent}} hazır",
+      "comments": "Yorumlar",
+      "commentsCount": "{{count}} yorum",
+      "writeComment": "Yorum yaz",
+      "postComment": "Yorum gönder",
+      "yourPost": "Senin gönderin",
+      "yourComment": "Senin yorumun",
+      "yourRequest": "Senin talebin",
+      "expert": "Uzman",
+      "recentUpdate": "son güncelleme",
+      "viewProfileAfterSignIn": "Girişten sonra profili görüntüle",
+      "openPost": "Gönderiyi aç",
+      "newHere": "Yeni misin?",
+      "tryScenario": "Rehberli turu dene",
+      "notFoundPost": "Gönderi bulunamadı.",
+      "notFoundRequest": "Talep bulunamadı."
+    },
+    "dashboard": {
+      "steps": {
+        "startTitle": "Buradan başla",
+        "startText": "Acil durumda hızlı hareket edebilmen için ana alanlar burada toplanır.",
+        "situationTitle": "Mevcut durum",
+        "situationText": "Yakındaki binaları etkileyen bir elektrik kesintisi var. Su isteyebilir, yardım sunabilir ve güncelleme paylaşabilirsin.",
+        "forumTitle": "Topluluk güncellemelerini oku",
+        "forumText": "Mahalle bilgilerini paylaşmak veya takip etmek istediğinde forumu kullan.",
+        "helpTitle": "Yardım iste",
+        "helpText": "Birinin malzeme, barınak, ulaşım veya tıbbi desteğe ihtiyacı olduğunda yardım taleplerini kullan.",
+        "infoTitle": "Rehberi yakında tut",
+        "infoText": "Acil Bilgi, işler acil hissettirdiğinde kontrol edebileceğin hızlı adımlar sunar. Harita araçları giriş yaptıktan sonra kullanılabilir."
+      },
+      "featureDesc": {
+        "forum": "Topluluk güncellemelerini gez, yorum yap ve yeni gönderi yaz.",
+        "help": "Yakındaki ihtiyaçları incele, talep oluştur ve listede gör.",
+        "profile": "Profil bilgileri giriş yaptıktan sonra yönetilir.",
+        "info": "Çevrimdışı da kullanabileceğin acil durum rehberini incele.",
+        "messages": "Çevrimdışı mesajlar hesabına giriş yaptıktan sonra kullanılabilir."
+      },
+      "signInProfile": "Profili kullanmak için giriş yap",
+      "signInMessages": "Çevrimdışı Mesajları kullanmak için giriş yap",
+      "welcome": "Hoş geldin, Komşu",
+      "standardMember": "Standart üye",
+      "safe": "Güvende",
+      "neighborhood": "Beşiktaş Mahallesi",
+      "whatCanDo": "Ne yapabilirsin",
+      "actionText": "Güncelleme paylaş, yardım iste veya acil durum rehberini kontrol et."
+    },
+    "forum": {
+      "steps": {
+        "feedTitle": "Akışı seç",
+        "feedText": "Forum sekmeleri genel güncellemeleri, hub içi paylaşımları ve acil konuşmaları ayırır.",
+        "sortTitle": "Güncellemeleri sırala",
+        "sortText": "En yeni, En beğenilen ve Popüler seçenekleri son güncellemeleri ve aktif konuşmaları bulmana yardım eder.",
+        "openTitle": "Bir gönderi aç",
+        "openText": "Tam güncellemeyi incelemek ve konuşmaya katılmak için gönderiye tıkla.",
+        "createTitle": "Gönderi oluştur",
+        "createText": "Topluluk güncellemesi yazmak için yeni gönderi düğmesini kullan.",
+        "requestTitle": "Ne zaman yardım isteyeceğini bil",
+        "requestText": "Forum gönderileri herkese açık güncellemelerdir. Birinin su, barınak, ulaşım veya tıbbi desteğe ihtiyacı varsa yardım talebi kullan."
+      },
+      "title": "Topluluk Forumu",
+      "subtitle": "Bölgenizdeki komşulardan topluluk güncellemeleri.",
+      "newPost": "Yeni gönderi",
+      "standardHub": "Standart hub",
+      "urgentHub": "Acil hub",
+      "mostLiked": "En beğenilen",
+      "nextBody": "Gerçek bir acil durumda forum gönderilerini genel güncellemeler için kullanabilirsin. Kişisel olarak malzeme, ulaşım, barınak veya tıbbi yardıma ihtiyacın varsa yardım talebi oluştur.",
+      "createHelpRequest": "Yardım talebi oluştur"
+    },
+    "postCreate": {
+      "steps": {
+        "typeTitle": "Gönderinin yerini seç",
+        "typeText": "Global gönderiler geniş güncellemelerdir. Hub gönderileri yereldir. Acil gönderiler zamana duyarlı uyarılar için ayrılmalıdır.",
+        "titleTitle": "Taraması kolay başlık kullan",
+        "titleText": "Net bir başlık, komşuların gönderiyi açmadan güncellemeyi anlamasına yardım eder.",
+        "contentTitle": "Faydalı ayrıntılar yaz",
+        "contentText": "Ne olduğunu, nerede olduğunu ve komşuların sonra ne yapması gerektiğini paylaş.",
+        "previewTitle": "Önizlemeyi kontrol et",
+        "previewText": "Foruma eklemeden önce gönderinin nasıl görüneceğini kontrol et.",
+        "submitTitle": "Güvenle kaydet",
+        "submitText": "Başlık ve ayrıntılar net olduğunda gönderiyi kaydet."
+      },
+      "title": "Yeni Forum Gönderisi",
+      "subtitle": "Komşular için herkese açık bir güncelleme yaz.",
+      "forumType": "Forum türü",
+      "typeHints": {
+        "global": "Mahalle geneli herkese açık güncelleme",
+        "standard": "Hubın için yerel güncelleme",
+        "urgent": "Anlık güvenlik uyarısı"
+      },
+      "shortTitle": "Kısa güncelleme başlığı",
+      "content": "İçerik",
+      "contentPlaceholder": "Ne oldu? Nerede? Komşular ne yapmalı?",
+      "imageLinks": "Görsel bağlantıları",
+      "optional": "opsiyonel",
+      "imagePlaceholder": "Her satıra bir görsel bağlantısı",
+      "previewTitleFallback": "Gönderi başlığın",
+      "previewBodyFallback": "Gönderi ayrıntıların burada görünecek.",
+      "save": "Gönderiyi kaydet",
+      "saved": "Kaydedildi. Forumda görünecek.",
+      "titleError": "Kaydetmeden önce kısa bir başlık ekle.",
+      "contentError": "Komşuların kullanabileceği ayrıntılar ekle.",
+      "situationText": "Komşuların kesinti sırasında telefonları nerede şarj edebileceğini bilmesi gerekiyor.",
+      "readyText": "Net gönderiler karışıklığı ve tekrar soruları azaltır."
+    },
+    "helpList": {
+      "steps": {
+        "filterTitle": "İhtiyaca göre filtrele",
+        "filterText": "Kategoriler komşuların hızlı yanıtlayabilecekleri talepleri bulmasına yardım eder.",
+        "reviewTitle": "Talepleri incele",
+        "reviewText": "Neye ihtiyaç olduğunu ve nasıl yanıt verebileceğini görmek için talebi aç.",
+        "createTitle": "Talep oluştur",
+        "createText": "Birinin malzeme, ulaşım, barınak veya tıbbi yardıma ihtiyacı olduğunda talep oluştur."
+      },
+      "newRequest": "Yeni talep",
+      "neighborhoodNeeds": "Mahalle ihtiyaçları",
+      "situationText": "Komşular elektrik kesintisi sonrası pratik ihtiyaçlar paylaşıyor.",
+      "needsText": "Talepler düzenli kalır, böylece yardımcılar nerede ihtiyaç olduğunu hızla bulur.",
+      "categories": {
+        "all": "Tüm",
+        "medical": "Tıbbi",
+        "food": "Gıda / su",
+        "shelter": "Barınak",
+        "transport": "Ulaşım",
+        "other": "Diğer"
+      },
+      "urgency": {
+        "low": "Düşük",
+        "medium": "Orta",
+        "high": "Yüksek"
+      }
+    },
+    "helpDetail": {
+      "steps": {
+        "reviewTitle": "Talebi incele",
+        "reviewText": "Kategori, aciliyet, açıklama ve kimin paylaştığıyla başla.",
+        "locationTitle": "Konumu kontrol et",
+        "locationText": "Konum notu yardımcıların desteğin nerede gerektiğini anlamasına yardım eder.",
+        "commentsTitle": "Yorumlarda koordine ol",
+        "commentsText": "Yorumlar takip sorusu sormak veya yardım teklif etmek için kullanılır.",
+        "manageTitle": "Talebini yönet",
+        "manageText": "Sadece kendi oluşturduğun talepleri yönetebilirsin. İhtiyaç karşılandığında çözüldü olarak işaretle veya gerekmiyorsa kaldır."
+      },
+      "title": "Yardım Talebi",
+      "by": "Paylaşan",
+      "markResolved": "Çözüldü olarak işaretle",
+      "delete": "Sil",
+      "cancel": "İptal",
+      "deleteTitle": "Talep silinsin mi?",
+      "deleteBody": "Bu işlem talebi listeden kaldırır.",
+      "location": "Konum",
+      "noComments": "Henüz yorum yok."
+    },
+    "helpCreate": {
+      "steps": {
+        "scenarioTitle": "Durumla başla",
+        "scenarioText": "Komşuların kimin neden yardıma ihtiyaç duyduğunu anlaması için durumla başla.",
+        "titleTitle": "Net bir başlık yaz",
+        "titleText": "Kısa başlık, liste taranırken komşuların ihtiyacı hızlı anlamasına yardım eder.",
+        "detailsTitle": "Faydalı ayrıntılar ekle",
+        "detailsText": "Kimin yardıma ihtiyacı olduğunu, ne gerektiğini ve yardımcıların bilmesi gereken güvenlik ayrıntılarını açıkla.",
+        "categoryTitle": "Kategori ve aciliyet seç",
+        "categoryText": "Bu seçimler komşuların acil ihtiyaçları bulmasına ve ne yapabileceklerini anlamasına yardım eder.",
+        "submitTitle": "Göndermeden önce kontrol et",
+        "submitText": "Talebi listeye eklemeden önce ayrıntıları gözden geçir."
+      },
+      "title": "Yeni Yardım Talebi",
+      "situationText": "Bir komşunun elektrik kesintisi sonrası içme suyuna ihtiyacı var.",
+      "readyText": "Net ayrıntılar yakındaki komşuların ne tür yardıma ihtiyaç olduğunu anlamasına yardım eder.",
+      "info": "Yakındaki komşuların ne tür yardım gerektiğini anlaması için yeterli ayrıntı ekle.",
+      "previewed": "İyi görünüyor. Böyle bir talep yardımcıların yanıt vermesi için ana ayrıntıları verir.",
+      "titleLabel": "Başlık",
+      "titlePlaceholder": "İhtiyacın kısa özeti",
+      "descLabel": "Açıklama",
+      "descPlaceholder": "Kimin yardıma ihtiyacı olduğunu ve neyin faydalı olacağını açıkla.",
+      "category": "Kategori",
+      "urgency": "Aciliyet",
+      "locationNote": "Konum notu",
+      "recommended": "önerilir",
+      "locationPlaceholder": "Örnek: apartman girişi, sokak köşesi, barınak masası",
+      "imagesGps": "Görseller ve hassas GPS",
+      "afterSignIn": "girişten sonra kullanılabilir",
+      "addPhoto": "Fotoğraf ekle",
+      "useLocation": "Konumumu kullan",
+      "save": "Talebi kaydet",
+      "titleError": "Net bir başlık komşuların ihtiyacı hızlı anlamasına yardım eder.",
+      "descError": "Kimin yardıma ihtiyacı olduğunu, ne gerektiğini ve güvenlik ayrıntılarını açıkla.",
+      "noLocation": "Konum notu eklenmedi"
+    },
+    "emergencyInfo": {
+      "steps": {
+        "overviewTitle": "Acil bilgiyi hızlı başvuru olarak kullan",
+        "overviewText": "Bu sayfa olay sırasında ihtiyaç duyabileceğin pratik rehberlik içindir.",
+        "checklistTitle": "Kontrol listesini aç",
+        "checklistText": "Adım adım acil durum rehberini bulmak için kontrol listesi kartına dokun.",
+        "mapTitle": "Haritalar girişten sonra kullanılabilir",
+        "mapText": "Gerçek uygulamada giriş yaptıktan sonra yakındaki toplanma noktaları için harita araçları da bulunur."
+      },
+      "situationText": "Aynı mahalle kesintisi sırasında hızlı acil durum talimatlarına ihtiyacın var.",
+      "actionText": "Kontrol listesini aç ve önce ihtiyaç duyabileceğin rehberi incele.",
+      "mapLabel": "Harita",
+      "mapPreview": "Harita önizlemesi",
+      "mapDesc": "Canlı harita araçlarını ve kayıtlı toplanma noktalarını kullanmak için giriş yap."
     }
   }
 }

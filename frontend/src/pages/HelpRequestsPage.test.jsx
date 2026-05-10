@@ -14,6 +14,24 @@ import { MemoryRouter } from 'react-router-dom';
 import HelpRequestsPage from './HelpRequestsPage';
 import { AuthProvider } from '../context/AuthContext';
 
+jest.mock('react-i18next', () => {
+  const en = require('../locales/en.json');
+  function t(key, opts) {
+    const parts = key.split('.');
+    let val = en;
+    for (const p of parts) {
+      if (val == null || typeof val !== 'object') return key;
+      val = val[p];
+    }
+    if (typeof val !== 'string') return key;
+    if (!opts) return val;
+    return val.replace(/\{\{(\w+)\}\}/g, (_, k) =>
+      opts[k] !== undefined ? String(opts[k]) : `{{${k}}}`
+    );
+  }
+  return { useTranslation: () => ({ t, i18n: { changeLanguage: jest.fn(), language: 'en' } }) };
+});
+
 jest.mock('../services/api');
 import * as api from '../services/api';
 

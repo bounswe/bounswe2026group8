@@ -3,7 +3,17 @@ from .views import (
     RegisterView, LoginView, LogoutView, MeView, HubListView, ProfileView,
     ResourceListView, ResourceDetailView,
     ExpertiseFieldListView, ExpertiseFieldDetailView, FCMTokenView,
-    UserPublicProfileView, ExpertiseCategoryListView,
+    UserPublicProfileView, ExpertiseCategoryListView, UserSettingsView,
+)
+from .staff_views import (
+    StaffUserListView,
+    StaffUserStaffRoleView,
+    StaffUserStatusView,
+    StaffHubListCreateView,
+    StaffHubDetailView,
+    StaffAuditLogListView,
+    ExpertiseVerificationListView,
+    ExpertiseVerificationDecisionView,
 )
 
 urlpatterns = [
@@ -12,6 +22,7 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name='logout'),
     path('me', MeView.as_view(), name='me'),
     path('profile', ProfileView.as_view(), name='profile'),
+    path('settings', UserSettingsView.as_view(), name='settings'),
     path('resources', ResourceListView.as_view(), name='resource-list'),
     path('resources/<int:pk>', ResourceDetailView.as_view(), name='resource-detail'),
     path('expertise', ExpertiseFieldListView.as_view(), name='expertise-list'),
@@ -20,4 +31,22 @@ urlpatterns = [
     path('hubs/', HubListView.as_view(), name='hub-list'),
     path('expertise-categories/', ExpertiseCategoryListView.as_view(), name='expertise-category-list'),
     path('accounts/fcm-token/', FCMTokenView.as_view(), name='fcm-token'),
+
+    # ── Staff (admin / verification coordinator) ─────────────────────────────
+    path('staff/users/', StaffUserListView.as_view(), name='staff-user-list'),
+    path('staff/users/<int:pk>/staff-role/', StaffUserStaffRoleView.as_view(), name='staff-user-staff-role'),
+    path('staff/users/<int:pk>/status/', StaffUserStatusView.as_view(), name='staff-user-status'),
+    path('staff/hubs/', StaffHubListCreateView.as_view(), name='staff-hub-list-create'),
+    path('staff/hubs/<int:pk>/', StaffHubDetailView.as_view(), name='staff-hub-detail'),
+    path('staff/audit-logs/', StaffAuditLogListView.as_view(), name='staff-audit-logs'),
+    path(
+        'staff/expertise-verifications/',
+        ExpertiseVerificationListView.as_view(),
+        name='staff-expertise-verification-list',
+    ),
+    path(
+        'staff/expertise-verifications/<int:pk>/decision/',
+        ExpertiseVerificationDecisionView.as_view(),
+        name='staff-expertise-verification-decision',
+    ),
 ]

@@ -4,12 +4,12 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User, Profile, Resource, ExpertiseField, ExpertiseCategory
+from .models import User, Profile, Resource, ExpertiseField, ExpertiseCategory, UserSettings
 from .models import Hub
 from .serializers import (
     RegisterSerializer, LoginSerializer, UserSerializer,
     ProfileSerializer, ResourceSerializer, ExpertiseFieldSerializer, HubSerializer,
-    ExpertiseCategorySerializer,
+    ExpertiseCategorySerializer, UserSettingsSerializer,
 )
 
 
@@ -138,6 +138,26 @@ class ProfileView(APIView):
         return Response({'message': 'Profile update failed', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserSettingsView(APIView):
+    """GET and PATCH /settings for notification and privacy preferences."""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        settings_obj, _ = UserSettings.objects.get_or_create(user=request.user)
+        return Response(UserSettingsSerializer(settings_obj).data, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        settings_obj, _ = UserSettings.objects.get_or_create(user=request.user)
+        serializer = UserSettingsSerializer(settings_obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            {'message': 'Settings update failed', 'errors': serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
 class ResourceListView(APIView):
     """
     GET  /resources  — list all resources for the current user
@@ -191,7 +211,8 @@ class ResourceDetailView(APIView):
 class ExpertiseFieldListView(APIView):
     """
     GET  /expertise  — list expertise fields for the current EXPERT user
-    POST /expertise  — add an expertise field (EXPERT only)
+    POST /expertise  — add an expertise field (EXPERT only); always created
+                       in PENDING verification state.
     """
     permission_classes = [IsAuthenticated]
 
@@ -213,17 +234,29 @@ class ExpertiseFieldListView(APIView):
             return error
         serializer = ExpertiseFieldSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            # New submissions always start as PENDING regardless of input.
+            serializer.save(
+                user=request.user,
+                verification_status=ExpertiseField.VerificationStatus.PENDING,
+                reviewed_by=None,
+                reviewed_at=None,
+                verification_note='',
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({'message': 'Invalid expertise data', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ExpertiseFieldDetailView(APIView):
     """
-    PATCH  /expertise/<id>  — update expertise field
-    DELETE /expertise/<id>  — delete expertise field
+    PATCH  /expertise/<id>  — update expertise field; any change to the
+                              certification content resets verification to
+                              PENDING so stale approvals don't survive edits.
+    DELETE /expertise/<id>  — delete expertise field.
     """
     permission_classes = [IsAuthenticated]
+
+    # Editable fields that re-trigger verification when changed.
+    _VERIFICATION_RESET_FIELDS = ('field', 'certification_level', 'certification_document_url')
 
     def _get_expertise(self, request, pk):
         if request.user.role != User.Role.EXPERT:
@@ -237,10 +270,26 @@ class ExpertiseFieldDetailView(APIView):
         obj, error = self._get_expertise(request, pk)
         if error:
             return error
+        previous_snapshot = {f: getattr(obj, f) for f in self._VERIFICATION_RESET_FIELDS}
         serializer = ExpertiseFieldSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            updated = serializer.save()
+            content_changed = any(
+                getattr(updated, f) != previous_snapshot[f]
+                for f in self._VERIFICATION_RESET_FIELDS
+            )
+            if content_changed and updated.verification_status != ExpertiseField.VerificationStatus.PENDING:
+                updated.verification_status = ExpertiseField.VerificationStatus.PENDING
+                updated.reviewed_by = None
+                updated.reviewed_at = None
+                updated.verification_note = ''
+                updated.save(update_fields=[
+                    'verification_status',
+                    'reviewed_by',
+                    'reviewed_at',
+                    'verification_note',
+                ])
+            return Response(ExpertiseFieldSerializer(updated).data, status=status.HTTP_200_OK)
         return Response({'message': 'Invalid expertise data', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
@@ -264,7 +313,36 @@ class UserPublicProfileView(APIView):
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
             return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+        settings_obj, _ = UserSettings.objects.get_or_create(user=user)
+        data = UserSerializer(user).data
+
+        # Settings are private. They control this public shape, but are not exposed.
+        data.pop('settings', None)
+
+        if not settings_obj.show_location:
+            data['neighborhood_address'] = None
+        if not settings_obj.show_resources:
+            data['resources'] = []
+        if not settings_obj.show_expertise:
+            data['expertise_fields'] = []
+
+        profile = data.get('profile') or {}
+        if not settings_obj.show_phone_number:
+            profile['phone_number'] = None
+        if not settings_obj.show_emergency_contact:
+            profile['emergency_contact'] = None
+            profile['emergency_contact_phone'] = None
+        if not settings_obj.show_medical_info:
+            profile['blood_type'] = None
+            profile['has_disability'] = False
+            profile['special_needs'] = None
+        if not settings_obj.show_availability_status:
+            profile['availability_status'] = None
+        if not settings_obj.show_bio:
+            profile['bio'] = None
+        data['profile'] = profile
+
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class HubListView(APIView):

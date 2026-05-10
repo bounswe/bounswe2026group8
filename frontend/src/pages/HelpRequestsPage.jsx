@@ -227,7 +227,7 @@ export default function HelpRequestsPage() {
 
   return (
       <div className="page help-requests-page">
-        <header className="help-requests-header">
+        <header className="help-requests-header page-main-header">
           <button
               className="btn btn-secondary btn-sm"
               onClick={() => navigate('/dashboard')}

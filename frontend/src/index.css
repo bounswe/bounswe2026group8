@@ -60,10 +60,36 @@
    
    /* ── Page wrapper ───────────────────────────────────────────────────────────── */
    .page {
-     min-height: 100vh;
+     min-height: calc(100vh - 3.5rem);
      padding: 2rem 1.25rem;
      max-width: 1100px;
      margin: 0 auto;
+   }
+
+   .app-controls {
+     position: sticky;
+     top: 0;
+     z-index: 2000;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 1rem;
+     min-height: 3.5rem;
+     padding: 0.65rem 1rem;
+     background: rgba(11, 17, 32, 0.94);
+     border-bottom: 1px solid var(--border);
+     backdrop-filter: blur(14px);
+   }
+
+   .app-controls-left,
+   .app-controls-right {
+     display: flex;
+     align-items: center;
+     min-width: 0;
+   }
+
+   .app-controls-right {
+     margin-left: auto;
    }
    
    /* ═══════════════════════════════════════════════════════════════════════════════
@@ -175,10 +201,7 @@
       Language Selector
       ═══════════════════════════════════════════════════════════════════════════════ */
     .language-selector-bar {
-        position: fixed;
-        top: 1rem;
-        left: 1.25rem;
-        z-index: 2000;
+        position: static;
     }
 
     .language-selector-select {
@@ -218,9 +241,15 @@
     }
 
     @media (max-width: 600px) {
-        .language-selector-bar {
-            top: 0.5rem;
-            left: 0.5rem;
+        .app-controls {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .app-controls-right {
+            width: 100%;
+            margin-left: 0;
         }
     }
    
@@ -260,6 +289,28 @@
      margin-top: 1.5rem;
      font-size: 0.9rem;
      color: var(--text-secondary);
+   }
+
+   .auth-tutorial-divider {
+     display: flex;
+     align-items: center;
+     gap: 0.75rem;
+     margin: 1.35rem 0 0.85rem;
+     color: var(--text-muted);
+     font-size: 0.8rem;
+     font-weight: 600;
+   }
+
+   .auth-tutorial-divider::before,
+   .auth-tutorial-divider::after {
+     content: "";
+     flex: 1;
+     height: 1px;
+     background: var(--border);
+   }
+
+   .auth-tutorial-btn {
+     margin-top: 0;
    }
    
    /* ── Form elements ──────────────────────────────────────────────────────────── */
@@ -458,6 +509,32 @@
      font-size: 1.35rem;
      font-weight: 700;
    }
+
+   .page-main-header {
+     justify-content: flex-start;
+     align-items: center;
+     gap: 1rem;
+   }
+
+   .page-main-header > .btn-primary {
+     margin-left: auto;
+   }
+
+   .page-title-block {
+     min-width: 0;
+   }
+
+   .page-title-block h2 {
+     font-size: 1.35rem;
+     font-weight: 700;
+     line-height: 1.2;
+   }
+
+   .page-title-block p {
+     color: var(--text-secondary);
+     font-size: 0.875rem;
+     margin-top: 0.2rem;
+   }
    
    .welcome-card {
      background: var(--bg-card);
@@ -547,10 +624,7 @@
       Hub Selector Bar (persistent top-right)
       ═══════════════════════════════════════════════════════════════════════════════ */
    .hub-selector-bar {
-     position: fixed;
-     top: 0.75rem;
-     right: 1rem;
-     z-index: 1000;
+     position: static;
    }
    
    .hub-selector {
@@ -590,7 +664,7 @@
    .forum-layout {
      display: flex;
      flex-direction: column;
-     height: 100vh;
+     height: calc(100vh - 3.5rem);
      max-width: 1100px;
      margin: 0 auto;
      padding: 0 1.25rem;
@@ -598,13 +672,24 @@
    
    .forum-top {
      flex-shrink: 0;
-     padding-top: 1.5rem;
+     padding-top: 0;
    }
    
    .forum-scroll {
      flex: 1;
      overflow-y: auto;
      padding: 0.5rem 0;
+     min-height: 0;
+   }
+
+   .forum-layout.tutorial-page {
+     height: auto;
+     min-height: calc(100vh - 3.5rem);
+   }
+
+   .forum-layout.tutorial-page .forum-scroll {
+     flex: none;
+     overflow: visible;
    }
    
    .forum-bottom {
@@ -656,6 +741,10 @@
    .forum-header h1 {
      font-size: 1.65rem;
      font-weight: 700;
+   }
+
+   .forum-header-title {
+     min-width: 0;
    }
    
    .forum-hub-label {
@@ -1936,11 +2025,12 @@
      .auth-card { padding: 2rem 1.5rem; }
      .welcome-card { padding: 1.5rem; }
      .landing-title { font-size: 2rem; }
-     .hub-selector-bar { top: 0.5rem; right: 0.5rem; }
      .post-article { padding: 1.5rem; }
      .post-card { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
      .post-card-stats { margin-left: 0; }
      .forum-header { flex-direction: column; gap: 0.75rem; }
+     .forum-header.page-main-header { flex-direction: row; flex-wrap: wrap; align-items: center; }
+     .page-main-header > .btn-primary { margin-left: 0; }
      .forum-sort-bar { flex-wrap: wrap; }
      .help-request-card { padding: 1rem; }
      .help-request-card-top { flex-direction: column; gap: 0.5rem; }
@@ -2368,6 +2458,55 @@
    .profile-my-posts-card:hover {
      border-color: var(--accent);
    }
+
+   /* Settings Page */
+   .settings-page {
+     padding-top: 1.5rem;
+   }
+   .settings-section-desc {
+     color: var(--text-secondary);
+     font-size: 0.88rem;
+     margin: -0.3rem 0 1rem;
+   }
+   .settings-list {
+     display: flex;
+     flex-direction: column;
+     gap: 0.75rem;
+   }
+   .settings-toggle-row {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 1rem;
+     background: var(--bg-surface);
+     border: 1px solid var(--border);
+     border-radius: var(--radius-sm);
+     padding: 0.95rem 1rem;
+     cursor: pointer;
+   }
+   .settings-toggle-row:hover {
+     border-color: rgba(56, 189, 248, 0.35);
+   }
+   .settings-toggle-row-disabled {
+     opacity: 0.65;
+     cursor: wait;
+   }
+   .settings-toggle-copy {
+     display: flex;
+     flex-direction: column;
+     gap: 0.2rem;
+     min-width: 0;
+   }
+   .settings-toggle-title {
+     color: var(--text-primary);
+     font-size: 0.95rem;
+     font-weight: 650;
+   }
+   .settings-toggle-desc {
+     color: var(--text-secondary);
+     font-size: 0.82rem;
+     line-height: 1.45;
+   }
    
    /* ── Author links ── */
    .author-link {
@@ -2652,6 +2791,288 @@
   font-size: 0.95rem;
   line-height: 1.7;
   margin-bottom: 2px;
+}
+
+/* Tutorial Mode */
+.tutorial-page .btn:disabled,
+.tutorial-page button:disabled {
+  cursor: not-allowed;
+}
+
+.tutorial-welcome-card p {
+  max-width: 760px;
+  color: var(--text-secondary);
+  margin: 0.65rem 0 1rem;
+}
+
+.tutorial-kicker {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+
+.tutorial-scenario-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.tutorial-scenario-strip > div {
+  background: rgba(17, 24, 39, 0.72);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+}
+
+.tutorial-scenario-strip strong,
+.tutorial-scenario-strip span {
+  display: block;
+}
+
+.tutorial-scenario-strip strong {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.tutorial-scenario-strip span {
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+}
+
+.tutorial-card-icon {
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tutorial-card-lock {
+  display: inline-block;
+  margin-top: 0.85rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.tutorial-post-card .post-card-body {
+  cursor: pointer;
+}
+
+.tutorial-post-card--selected {
+  border-color: rgba(56, 189, 248, 0.7);
+}
+
+.tutorial-post-card {
+  cursor: pointer;
+}
+
+.tutorial-help-request-card {
+  cursor: pointer;
+}
+
+.tutorial-help-request-card:hover {
+  border-color: var(--accent);
+}
+
+.tutorial-post-body {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.65rem;
+}
+
+.tutorial-next-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin: 1rem 0 2rem;
+}
+
+.tutorial-next-panel h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.tutorial-next-panel p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.tutorial-practice-panel h3 {
+  font-size: 0.98rem;
+  margin-bottom: 0.45rem;
+}
+
+.tutorial-create-post-card {
+  max-width: 680px;
+}
+
+.tutorial-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tutorial-field-hint {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+}
+
+.tutorial-post-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.tutorial-post-preview h3 {
+  font-size: 1.05rem;
+  margin: 0.65rem 0 0.4rem;
+}
+
+.tutorial-post-preview p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.tutorial-preview-images {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.tutorial-preview-images span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.tutorial-comment-form {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.9rem 0;
+}
+
+.tutorial-comment-form input {
+  min-width: 0;
+}
+
+.tutorial-comment-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tutorial-comment-list p {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.75rem;
+  margin: 0;
+}
+
+.tutorial-alert {
+  color: var(--text-primary);
+}
+
+.tutorial-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.tutorial-page {
+  position: relative;
+}
+
+.tutorial-tour-highlight {
+  position: relative;
+  outline: 2px solid rgba(245, 158, 11, 0.95);
+  box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.2), 0 18px 40px rgba(2, 6, 23, 0.45);
+}
+
+button.tutorial-tour-highlight,
+.btn.tutorial-tour-highlight,
+.forum-sort-btn.tutorial-tour-highlight,
+.forum-tab.tutorial-tour-highlight,
+.help-tab.tutorial-tour-highlight {
+  border-color: #f59e0b;
+  outline: 3px solid rgba(251, 191, 36, 0.98);
+  box-shadow: 0 0 0 7px rgba(245, 158, 11, 0.34), 0 10px 28px rgba(245, 158, 11, 0.28);
+  filter: brightness(1.08);
+}
+
+.tutorial-guide-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.38);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.1rem;
+  margin: 1rem 0;
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.28);
+}
+
+.tutorial-tour-count {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+}
+
+.tutorial-guide-panel h3 {
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  margin-bottom: 0.45rem;
+}
+
+.tutorial-guide-panel p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.tutorial-tour-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .tutorial-scenario-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .tutorial-guide-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .tutorial-tour-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .tutorial-comment-form {
+    flex-direction: column;
+  }
 }
 
 

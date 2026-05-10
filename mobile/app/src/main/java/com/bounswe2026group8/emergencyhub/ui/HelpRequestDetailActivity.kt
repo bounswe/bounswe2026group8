@@ -33,6 +33,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import com.bounswe2026group8.emergencyhub.util.VoiceInputManager
 
 class HelpRequestDetailActivity : AppCompatActivity() {
 
@@ -64,6 +65,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
     private lateinit var btnSendComment: MaterialButton
 
     private var requestId: Int = -1
+    private lateinit var voiceInputManager: VoiceInputManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_help_request_detail)
 
         tokenManager = TokenManager(this)
+        voiceInputManager = VoiceInputManager(this)
         if (!tokenManager.isLoggedIn()) {
             navigateToLanding()
             return
@@ -87,6 +90,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         }
 
         bindViews()
+        voiceInputManager.bind(inputComment)
         setupRecyclerView()
 
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }

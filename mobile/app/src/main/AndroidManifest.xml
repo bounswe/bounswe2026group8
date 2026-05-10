@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
@@ -54,6 +55,8 @@
 
         <activity android:name=".ui.SignUpActivity" android:exported="false" />
         <activity android:name=".ui.SignInActivity" android:exported="false" />
+        <activity android:name=".ui.TutorialActivity" android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.DashboardActivity" android:exported="false" />
         <activity android:name=".ui.HelpRequestListActivity" android:exported="false" />
         <activity android:name=".ui.CreateHelpRequestActivity" android:exported="false" />
@@ -62,6 +65,7 @@
         <activity android:name=".ui.HelpOfferListActivity" android:exported="false" />
         <activity android:name=".ui.CreateHelpOfferActivity" android:exported="false" />
         <activity android:name=".ui.ProfileActivity" android:exported="false" />
+        <activity android:name=".ui.SettingsActivity" android:exported="false" />
         <activity android:name=".ui.ForumActivity" android:exported="false" />
         <activity android:name=".ui.CreatePostActivity" android:exported="false" />
         <activity android:name=".ui.PostDetailActivity" android:exported="false" />
@@ -87,6 +91,16 @@
             android:name=".mesh.MeshForegroundService"
             android:exported="false"
             android:foregroundServiceType="connectedDevice" />
+
+        <!-- Staff / admin -->
+        <activity android:name=".ui.StaffDashboardActivity" android:exported="false" />
+        <activity android:name=".ui.AdminToolsActivity" android:exported="false" />
+        <activity android:name=".ui.AdminUsersActivity" android:exported="false" />
+        <activity android:name=".ui.HubManagementActivity" android:exported="false" />
+        <activity android:name=".ui.AuditLogActivity" android:exported="false" />
+        <activity android:name=".ui.ForumModerationActivity" android:exported="false" />
+        <activity android:name=".ui.HelpModerationActivity" android:exported="false" />
+        <activity android:name=".ui.ExpertiseVerificationActivity" android:exported="false" />
 
         <service
             android:name=".fcm.MyFirebaseMessagingService"
