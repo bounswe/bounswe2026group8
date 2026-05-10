@@ -164,7 +164,7 @@ function BloodTypeSelect({ value, name, onSave, t }) {
 }
 
 const EMPTY_RESOURCE = { name: '', category: '', quantity: 1, condition: true };
-const EMPTY_EXPERTISE = { category_id: '', certification_level: 'BEGINNER', certification_document_url: '' };
+const EMPTY_EXPERTISE = { category: '', certification_level: 'BEGINNER', certification_document_url: '' };
 
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
@@ -493,8 +493,8 @@ export default function ProfilePage() {
                       <div className="form-group">
                         <label>{t('profile.labels.field')}</label>
                         <select
-                          value={newExpertise.category_id}
-                          onChange={(e) => setNewExpertise((p) => ({ ...p, category_id: e.target.value }))}
+                          value={newExpertise.category}
+                          onChange={(e) => setNewExpertise((p) => ({ ...p, category: e.target.value }))}
                           required
                         >
                           <option value="">— {t('profile.placeholders.expertise_field')} —</option>
