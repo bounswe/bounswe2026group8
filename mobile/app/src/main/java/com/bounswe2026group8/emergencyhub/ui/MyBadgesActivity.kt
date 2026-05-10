@@ -126,10 +126,11 @@ class MyBadgesActivity : AppCompatActivity() {
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
 
+            val localizedName = BadgeLocalizer.getLocalizedBadgeName(this, badge.badgeName)
             val displayTitle = if (badge.currentLevel > 0) {
-                "${badge.badgeName} ${badge.currentLevel}"
+                getString(R.string.badges_name_with_level, localizedName, badge.currentLevel)
             } else {
-                badge.badgeName
+                localizedName
             }
 
             val nameView = TextView(this).apply {
@@ -140,7 +141,7 @@ class MyBadgesActivity : AppCompatActivity() {
             }
 
             val descView = TextView(this).apply {
-                text = badge.badgeDescription
+                text = BadgeLocalizer.getLocalizedBadgeDescription(context, badge.badgeName, badge.badgeDescription)
                 setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
                 textSize = 13f
                 setPadding(0, (2 * density).toInt(), 0, 0)
@@ -217,7 +218,7 @@ class MyBadgesActivity : AppCompatActivity() {
                 text = if (badge.isMaxLevel) {
                     getString(R.string.badges_max_level)
                 } else {
-                    "${badge.currentProgress} / ${badge.nextLevelGoal}"
+                    getString(R.string.badges_progress_format, badge.currentProgress, badge.nextLevelGoal)
                 }
                 setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
                 textSize = 12f

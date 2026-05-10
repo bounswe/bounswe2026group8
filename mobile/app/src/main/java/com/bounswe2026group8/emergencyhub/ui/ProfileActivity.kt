@@ -500,13 +500,14 @@ class ProfileActivity : AppCompatActivity() {
         val density = resources.displayMetrics.density
 
         for (badge in badges) {
+            val localizedName = BadgeLocalizer.getLocalizedBadgeName(this, badge.badgeName)
             val displayTitle = if (badge.currentLevel > 0) {
-                "${badge.badgeName} ${badge.currentLevel}"
+                getString(R.string.badges_name_with_level, localizedName, badge.currentLevel)
             } else {
-                badge.badgeName
+                localizedName
             }
 
-            val pillText = "${badge.badgeIcon} $displayTitle"
+            val pillText = getString(R.string.badges_pill_format, badge.badgeIcon, displayTitle)
 
             val pill = TextView(this).apply {
                 text = pillText

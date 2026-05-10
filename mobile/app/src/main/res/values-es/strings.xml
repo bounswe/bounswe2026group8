@@ -505,5 +505,47 @@
     <string name="badges_empty">Aún no has ganado ninguna insignia. ¡Empieza a participar en la comunidad!</string>
     <string name="badges_load_failed">No se pudieron cargar las insignias</string>
     <string name="badges_max_level">NIVEL MÁXIMO ALCANZADO</string>
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_privacy">Privacidad</string>
+    <string name="settings_privacy_note">Elige lo que otros usuarios pueden ver en tu perfil público.</string>
+    <string name="settings_load_failed">Error al cargar ajustes</string>
+    <string name="settings_save_failed">Error al guardar ajuste</string>
+    <string name="settings_notify_help_requests">Alertas de solicitudes de ayuda</string>
+    <string name="settings_notify_help_requests_desc">Recibe notificaciones sobre solicitudes de ayuda cercanas.</string>
+    <string name="settings_notify_urgent_posts">Alertas urgentes del foro</string>
+    <string name="settings_notify_urgent_posts_desc">Recibe notificaciones de publicaciones urgentes.</string>
+    <string name="settings_notify_expertise_matches_only">Solo mi experiencia</string>
+    <string name="settings_notify_expertise_matches_only_desc">Limitar alertas de solicitudes a categorías de tu experiencia.</string>
+    <string name="settings_show_phone_number">Mostrar teléfono</string>
+    <string name="settings_show_phone_number_desc">Permitir que otros vean tu número de teléfono.</string>
+    <string name="settings_show_emergency_contact">Mostrar contacto de emergencia</string>
+    <string name="settings_show_emergency_contact_desc">Permitir que otros vean tu contacto de emergencia.</string>
+    <string name="settings_show_medical_info">Mostrar información médica</string>
+    <string name="settings_show_medical_info_desc">Permitir que otros vean tu tipo de sangre, discapacidades y necesidades especiales.</string>
+    <string name="settings_show_availability_status">Mostrar estado de disponibilidad</string>
+    <string name="settings_show_availability_status_desc">Permitir que otros vean si estás a salvo, necesitas ayuda o puedes ayudar.</string>
+    <string name="settings_show_bio">Mostrar biografía</string>
+    <string name="settings_show_bio_desc">Permitir que otros vean la biografía de tu perfil.</string>
+    <string name="settings_show_location">Mostrar ubicación</string>
+    <string name="settings_show_location_desc">Permitir que otros vean tu vecindario o dirección.</string>
+    <string name="settings_show_resources">Mostrar recursos</string>
+    <string name="settings_show_resources_desc">Permitir que otros vean los recursos que has listado.</string>
+    <string name="settings_show_expertise">Mostrar experiencia</string>
+    <string name="settings_show_expertise_desc">Permitir que otros vean tus áreas de experiencia.</string>
+
+    <string name="feature_settings">Ajustes</string>
+    <string name="feature_settings_desc">Privacidad y alertas</string>
+
+    <string name="badge_name_commenter">Comentarista</string>
+    <string name="badge_desc_commenter">Otorgado por comentar.</string>
+    <string name="badge_name_voter">Votante</string>
+    <string name="badge_desc_voter">Otorgado por votar en publicaciones.</string>
+    <string name="badge_name_forum_active">Foro Activo</string>
+    <string name="badge_desc_forum_active">Obtenido por crear publicaciones en el foro.</string>
+    <string name="badge_name_responder">Respondedor</string>
+    <string name="badge_desc_responder">Otorgado por responder a solicitudes de ayuda.</string>
 </resources>
+
 
