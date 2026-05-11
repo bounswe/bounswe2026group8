@@ -48,6 +48,7 @@ interface ApiService {
     suspend fun getHelpRequests(
         @Query("hub_id") hubId: Int? = null,
         @Query("category") category: String? = null,
+        @Query("author") author: Int? = null,
         @Query("expertise_match") expertiseMatch: Boolean? = null,
     ): Response<List<HelpRequestItem>>
 
@@ -105,7 +106,8 @@ interface ApiService {
     @GET("help-offers/")
     suspend fun getHelpOffers(
         @Query("hub_id") hubId: Int? = null,
-        @Query("category") category: String? = null
+        @Query("category") category: String? = null,
+        @Query("author") author: Int? = null
     ): Response<List<HelpOfferItem>>
 
     @POST("help-offers/")
@@ -128,8 +130,9 @@ interface ApiService {
 
     @GET("forum/posts/")
     suspend fun getPosts(
-        @Query("forum_type") forumType: String,
+        @Query("forum_type") forumType: String? = null,
         @Query("hub") hub: Int? = null,
+        @Query("author") author: Int? = null,
         @Query("author_role") authorRole: String? = null
     ): Response<List<Post>>
 

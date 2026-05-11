@@ -66,6 +66,7 @@
         <activity android:name=".ui.CreateHelpOfferActivity" android:exported="false" />
         <activity android:name=".ui.ProfileActivity" android:exported="false" />
         <activity android:name=".ui.MyBadgesActivity" android:exported="false" />
+        <activity android:name=".ui.MyPostsActivity" android:exported="false" />
         <activity android:name=".ui.SettingsActivity" android:exported="false" />
         <activity android:name=".ui.ForumActivity" android:exported="false" />
         <activity android:name=".ui.CreatePostActivity" android:exported="false" />

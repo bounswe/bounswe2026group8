@@ -277,6 +277,22 @@
     <string name="profile_expertise_field">Field (e.g. First Aid)</string>
     <string name="profile_cert_url">Certificate URL (optional)</string>
     <string name="profile_no_expertise">No expertise fields added yet.</string>
+    <string name="my_posts_title">My Posts</string>
+    <string name="my_posts_card_desc">View the forum posts you shared</string>
+    <string name="my_posts_loading">Loading your posts...</string>
+    <string name="my_posts_empty">You have not shared any forum posts yet.</string>
+    <string name="my_posts_load_failed">Failed to load your posts</string>
+    <string name="my_posts_sign_in_required">Sign in to view your posts.</string>
+    <string name="back_to_profile">← Back to Profile</string>
+    <string name="my_posts_tab_forum_posts">Forum Posts</string>
+    <string name="my_posts_tab_help_requests">Help Requests</string>
+    <string name="my_posts_tab_help_offers">Help Offers</string>
+    <string name="my_posts_empty_forum_posts">You have not shared any forum posts yet.</string>
+    <string name="my_posts_empty_help_requests">You have not created any help requests yet.</string>
+    <string name="my_posts_empty_help_offers">You have not made any help offers yet.</string>
+    <string name="my_posts_load_failed_forum_posts">Failed to load your forum posts</string>
+    <string name="my_posts_load_failed_help_requests">Failed to load your help requests</string>
+    <string name="my_posts_load_failed_help_offers">Failed to load your help offers</string>
 
     <!-- Forum -->
     <string name="forum_title">Forum</string>
