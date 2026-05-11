@@ -84,6 +84,7 @@ class ExpertiseFieldSerializer(serializers.ModelSerializer):
     `IsVerificationCoordinatorOrAdmin` endpoints.
     """
 
+    category = ExpertiseCategorySerializer(read_only=True)
     reviewed_by_id = serializers.PrimaryKeyRelatedField(source='reviewed_by', read_only=True)
     reviewed_by_name = serializers.SerializerMethodField()
 
