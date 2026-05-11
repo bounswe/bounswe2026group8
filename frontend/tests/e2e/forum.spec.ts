@@ -69,13 +69,13 @@ test.describe.serial('Forum flows', () => {
 
     // Upvote — count +1, button becomes active
     await upvoteBtn.click();
-    await expect(upvoteBtn).toHaveClass(/vote-active/);
     await expect(upvoteBtn).toContainText(String(initialUp + 1));
+    await expect(upvoteBtn).toHaveClass(/vote-active/);
 
-    // Toggle off — count returns to original
+    // Toggle off — wait for active state to confirm API round-trip, then click
     await upvoteBtn.click();
-    await expect(upvoteBtn).not.toHaveClass(/vote-active/);
     await expect(upvoteBtn).toContainText(String(initialUp));
+    await expect(upvoteBtn).not.toHaveClass(/vote-active/);
 
     // Downvote — downvote count +1
     await downvoteBtn.click();
