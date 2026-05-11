@@ -171,6 +171,15 @@
     <string name="my_posts_load_failed">Gönderilerin yüklenemedi</string>
     <string name="my_posts_sign_in_required">Gönderilerini görmek için giriş yap.</string>
     <string name="back_to_profile">← Profile Geri</string>
+    <string name="my_posts_tab_forum_posts">Forum</string>
+    <string name="my_posts_tab_help_requests">Yardım İstekleri</string>
+    <string name="my_posts_tab_help_offers">Yardım Teklifleri</string>
+    <string name="my_posts_empty_forum_posts">Henüz forum gönderisi paylaşmadın.</string>
+    <string name="my_posts_empty_help_requests">Henüz yardım isteği oluşturmadın.</string>
+    <string name="my_posts_empty_help_offers">Henüz yardım teklifi yapmadın.</string>
+    <string name="my_posts_load_failed_forum_posts">Forum gönderilerin yüklenemedi</string>
+    <string name="my_posts_load_failed_help_requests">Yardım isteklerin yüklenemedi</string>
+    <string name="my_posts_load_failed_help_offers">Yardım tekliflerin yüklenemedi</string>
 
     <!-- Forum -->
     <string name="forum_title">Forum</string>

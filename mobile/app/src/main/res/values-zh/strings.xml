@@ -171,6 +171,15 @@
     <string name="my_posts_load_failed">无法加载你的帖子</string>
     <string name="my_posts_sign_in_required">请登录后查看你的帖子。</string>
     <string name="back_to_profile">← 返回个人资料</string>
+    <string name="my_posts_tab_forum_posts">论坛帖子</string>
+    <string name="my_posts_tab_help_requests">求助请求</string>
+    <string name="my_posts_tab_help_offers">帮助提议</string>
+    <string name="my_posts_empty_forum_posts">你还没有发布任何论坛帖子。</string>
+    <string name="my_posts_empty_help_requests">你还没有创建任何求助请求。</string>
+    <string name="my_posts_empty_help_offers">你还没有发布任何帮助提议。</string>
+    <string name="my_posts_load_failed_forum_posts">无法加载你的论坛帖子</string>
+    <string name="my_posts_load_failed_help_requests">无法加载你的求助请求</string>
+    <string name="my_posts_load_failed_help_offers">无法加载你的帮助提议</string>
 
     <!-- Forum -->
     <string name="forum_title">论坛</string>

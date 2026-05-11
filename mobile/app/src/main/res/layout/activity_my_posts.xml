@@ -34,6 +34,53 @@
             style="@style/Widget.EmergencyHub.Button.Secondary" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:id="@+id/tabForumPosts"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="@string/my_posts_tab_forum_posts"
+            android:textColor="@color/accent"
+            android:textSize="12sp"
+            android:background="@drawable/sort_pill_active_bg"
+            android:layout_marginEnd="6dp" />
+
+        <TextView
+            android:id="@+id/tabHelpRequests"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="@string/my_posts_tab_help_requests"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp"
+            android:background="@drawable/sort_pill_bg"
+            android:layout_marginEnd="6dp" />
+
+        <TextView
+            android:id="@+id/tabHelpOffers"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="@string/my_posts_tab_help_offers"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp"
+            android:background="@drawable/sort_pill_bg" />
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
