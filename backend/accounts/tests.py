@@ -589,7 +589,7 @@ class ExpertiseFieldTests(TestCase):
 
     def _create_payload(self, **overrides):
         payload = {
-            'category': self.medical_cat.pk,
+            'category_id': self.medical_cat.pk,
             'certification_level': 'ADVANCED',
         }
         payload.update(overrides)
@@ -601,7 +601,7 @@ class ExpertiseFieldTests(TestCase):
         """Expert user can add an expertise field linked to a category."""
         response = self.expert_client.post('/expertise', self._create_payload(), format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['category'], self.medical_cat.pk)
+        self.assertEqual(response.data['category']['id'], self.medical_cat.pk)
         self.assertEqual(response.data['certification_level'], 'ADVANCED')
 
     def test_expertise_field_is_approved_defaults_to_true(self):
@@ -617,7 +617,7 @@ class ExpertiseFieldTests(TestCase):
         )
         response = self.expert_client.get('/expertise')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        category_ids = [e['category'] for e in response.data]
+        category_ids = [e['category']['id'] for e in response.data]
         self.assertIn(self.shelter_cat.pk, category_ids)
 
     def test_expert_can_delete_expertise_field(self):
@@ -631,7 +631,7 @@ class ExpertiseFieldTests(TestCase):
 
     def test_expertise_defaults_certification_level_to_beginner(self):
         """Omitting certification_level defaults to BEGINNER."""
-        payload = {'category': self.medical_cat.pk}
+        payload = {'category_id': self.medical_cat.pk}
         response = self.expert_client.post('/expertise', payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['certification_level'], 'BEGINNER')
