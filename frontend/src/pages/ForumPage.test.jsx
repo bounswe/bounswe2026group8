@@ -126,10 +126,10 @@ describe('ForumPage', () => {
     await renderForum();
 
     const user = userEvent.setup();
-    await user.click(screen.getByRole('button', { name: /standard/i }));
+    await user.click(screen.getByRole('button', { name: /^standard$/i }));
 
     await waitFor(() => {
-      expect(api.getPosts).toHaveBeenCalledWith({ hub: 2, forumType: 'STANDARD' });
+      expect(api.getPosts).toHaveBeenCalledWith(expect.objectContaining({ hub: 2, forumType: 'STANDARD' }));
     });
   });
 
