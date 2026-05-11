@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getMe, getHubs, updateMe } from '../services/api';
+import { getMe, getHubs, updateMe, updateHubLocation } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -54,6 +54,12 @@ export function AuthProvider({ children }) {
     if (ok) setUser(data);
   };
 
+  const updateHubByLocation = async ({ country, city, district = '' }) => {
+    const { ok, data } = await updateHubLocation({ country, city, district });
+    if (ok) setUser(data);
+    return { ok, data };
+  };
+
   const refreshUser = async () => {
     const { ok, data } = await getMe();
     if (ok) setUser(data);
@@ -68,6 +74,7 @@ export function AuthProvider({ children }) {
     loginUser,
     logoutUser,
     updateHub,
+    updateHubByLocation,
     refreshUser,
   };
 

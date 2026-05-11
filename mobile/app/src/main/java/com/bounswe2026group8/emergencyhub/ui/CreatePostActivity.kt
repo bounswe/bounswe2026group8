@@ -112,7 +112,7 @@ class CreatePostActivity : AppCompatActivity() {
         btnCreate.setOnClickListener { submitPost() }
         btnUploadImages.setOnClickListener { openImagePicker() }
 
-        HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector)).load()
+        HubSelectorHelper(this, findViewById<TextView>(R.id.textHubDisplay)).load()
 
         findViewById<TextView>(R.id.linkBackToForum).setOnClickListener { finish() }
 

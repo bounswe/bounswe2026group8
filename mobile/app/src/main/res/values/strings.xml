@@ -133,6 +133,15 @@
     <string name="offline_info_tips">• Emergency contact numbers\n• First aid basics\n• Evacuation procedures\n• Safety checklists\n• Community resources</string>
     <string name="hub_city">Hub (City)</string>
     <string name="select_hub">Select a hub</string>
+    <string name="location_picker_choose_country">Choose country</string>
+    <string name="location_picker_choose_city">Choose city in %1$s</string>
+    <string name="location_picker_choose_district">Choose district in %1$s</string>
+    <string name="location_picker_search">Search</string>
+    <string name="hub_current_label">Current hub</string>
+    <string name="hub_none">No hub selected</string>
+    <string name="hub_change">Change</string>
+    <string name="hub_saving">Saving…</string>
+    <string name="hub_section_title">Hub</string>
 
     <!-- Notification Preferences -->
     <string name="notification_preferences">Notification Preferences</string>

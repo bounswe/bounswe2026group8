@@ -773,6 +773,7 @@
     },
     "sections": {
       "appearance": "Appearance",
+      "hub": "Hub",
       "notifications": "Notifications",
       "privacy": "Public Profile Privacy"
     },
@@ -785,6 +786,12 @@
       "saved": "Saved",
       "load_failed": "Could not load settings.",
       "save_failed": "Could not save settings."
+    },
+    "hub": {
+      "current": "Current hub",
+      "none": "No hub selected",
+      "saving": "Saving...",
+      "change": "Change"
     },
     "fields": {
       "dark_mode": {
@@ -1196,5 +1203,12 @@
       "mapPreview": "Map preview",
       "mapDesc": "Sign in to use live map tools and saved gathering points."
     }
+  },
+  "location_picker": {
+    "choose_country": "Choose country",
+    "choose_city": "Choose city in {{country}}",
+    "choose_district": "Choose district in {{city}}",
+    "search": "Search...",
+    "no_results": "No results"
   }
 }

@@ -273,6 +273,15 @@
     <string name="profile_cert_level_advanced">高级</string>
     <string name="new_item">+ 新建</string>
     <string name="hub_label">中心：</string>
+    <string name="hub_section_title">中心</string>
+    <string name="hub_current_label">当前中心</string>
+    <string name="hub_none">未选择中心</string>
+    <string name="hub_change">更改</string>
+    <string name="hub_saving">正在保存…</string>
+    <string name="location_picker_choose_country">选择国家</string>
+    <string name="location_picker_choose_city">在 %1$s 选择城市</string>
+    <string name="location_picker_choose_district">在 %1$s 选择区域</string>
+    <string name="location_picker_search">搜索</string>
     <string name="share">分享</string>
     <string name="repost">转发</string>
     <string name="reposted">已转发</string>
@@ -536,40 +545,9 @@
     <string name="badges_load_failed">加载徽章失败</string>
     <string name="badges_max_level">已达到最高等级</string>
     <!-- Settings -->
-    <string name="settings_title">设置</string>
     <string name="settings_appearance">&#x5916;&#x89C2;</string>
     <string name="settings_dark_mode">&#x6DF1;&#x8272;&#x6A21;&#x5F0F;</string>
     <string name="settings_dark_mode_desc">&#x4F7F;&#x7528;&#x6DF1;&#x84DD;&#x8272;&#x4E3B;&#x9898;&#x3002;&#x5173;&#x95ED;&#x6B64;&#x9009;&#x9879;&#x53EF;&#x4F7F;&#x7528;&#x6D45;&#x8272;&#x80CC;&#x666F;&#x3002;</string>
-    <string name="settings_notifications">通知</string>
-    <string name="settings_privacy">隐私</string>
-    <string name="settings_privacy_note">选择其他用户可以在您的公开个人资料中看到的内容。</string>
-    <string name="settings_load_failed">加载设置失败</string>
-    <string name="settings_save_failed">保存设置失败</string>
-    <string name="settings_notify_help_requests">帮助请求提醒</string>
-    <string name="settings_notify_help_requests_desc">接收有关附近需要关注的帮助请求的通知。</string>
-    <string name="settings_notify_urgent_posts">紧急论坛提醒</string>
-    <string name="settings_notify_urgent_posts_desc">接收紧急社区帖子的通知。</string>
-    <string name="settings_notify_expertise_matches_only">仅限我的专长</string>
-    <string name="settings_notify_expertise_matches_only_desc">将帮助请求警报限制在与您的专长相匹配的类别中。</string>
-    <string name="settings_show_phone_number">显示电话号码</string>
-    <string name="settings_show_phone_number_desc">允许他人查看您的电话号码。</string>
-    <string name="settings_show_emergency_contact">显示紧急联系人</string>
-    <string name="settings_show_emergency_contact_desc">允许他人查看您的紧急联系人详情。</string>
-    <string name="settings_show_medical_info">显示医疗信息</string>
-    <string name="settings_show_medical_info_desc">允许他人查看血型、残疾和特殊需求字段。</string>
-    <string name="settings_show_availability_status">显示可用状态</string>
-    <string name="settings_show_availability_status_desc">允许他人查看您是否安全、需要帮助或可以提供帮助。</string>
-    <string name="settings_show_bio">显示简介</string>
-    <string name="settings_show_bio_desc">允许他人查看您的个人资料简介。</string>
-    <string name="settings_show_location">显示位置</string>
-    <string name="settings_show_location_desc">允许他人查看您的街区或地址。</string>
-    <string name="settings_show_resources">显示资源</string>
-    <string name="settings_show_resources_desc">允许他人查看您列出的资源。</string>
-    <string name="settings_show_expertise">显示专长</string>
-    <string name="settings_show_expertise_desc">允许他人查看您的专业领域。</string>
-
-    <string name="feature_settings">设置</string>
-    <string name="feature_settings_desc">隐私和警报</string>
 
     <string name="badge_name_commenter">社交達人</string>
     <string name="badge_desc_commenter">獎勵給積極參與社區討論的用戶。</string>
@@ -581,5 +559,4 @@
     <string name="badge_desc_responder">獎勵給承擔社區求助請求責任的用戶。</string>
     <string name="assigned_expert_format">已分配给: %1$s</string>
 </resources>
-
 
