@@ -71,7 +71,7 @@ class PostDetailActivity : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.linkBackToForum).setOnClickListener { finish() }
-        HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector)).load()
+        HubSelectorHelper(this, findViewById<TextView>(R.id.textHubDisplay)).load()
 
         setupVoteButtons()
         loadPostAndComments()

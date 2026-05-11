@@ -12,13 +12,19 @@ data class RegisterRequest(
     val role: String,
     @SerializedName("neighborhood_address") val neighborhoodAddress: String? = null,
     @SerializedName("category_id") val categoryId: Int? = null,
-    @SerializedName("hub_id") val hubId: Int? = null
+    @SerializedName("hub_id") val hubId: Int? = null,
+    @SerializedName("hub_country") val hubCountry: String? = null,
+    @SerializedName("hub_city") val hubCity: String? = null,
+    @SerializedName("hub_district") val hubDistrict: String? = null,
 )
 
 data class Hub(
     val id: Int,
     val name: String,
-    val slug: String
+    val slug: String,
+    val country: String? = null,
+    val city: String? = null,
+    val district: String? = null,
 )
 
 data class LoginRequest(
@@ -62,7 +68,10 @@ data class LogoutResponse(
 )
 
 data class UpdateMeRequest(
-    @SerializedName("hub_id") val hubId: Int
+    @SerializedName("hub_id") val hubId: Int? = null,
+    @SerializedName("country") val country: String? = null,
+    @SerializedName("city") val city: String? = null,
+    @SerializedName("district") val district: String? = null,
 )
 
 /** /me returns user data directly (no wrapper) */

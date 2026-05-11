@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.ExpertiseCategoryData
-import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.RegisterRequest
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.util.LocaleManager
@@ -32,10 +31,12 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var expertiseLayout: TextInputLayout
     private lateinit var toggleGroup: MaterialButtonToggleGroup
     private lateinit var btnSubmit: MaterialButton
-    private lateinit var spinnerHub: Spinner
+    private lateinit var btnPickHub: MaterialButton
 
     private var selectedRole = "STANDARD"
-    private var hubs: List<Hub> = emptyList()
+    private var hubCountry: String = ""
+    private var hubCity: String = ""
+    private var hubDistrict: String = ""
     private var expertiseCategories: List<ExpertiseCategoryData> = emptyList()
     private var selectedCategoryId: Int? = null
 
@@ -52,7 +53,8 @@ class SignUpActivity : AppCompatActivity() {
         expertiseLayout = findViewById(R.id.expertiseLayout)
         toggleGroup = findViewById(R.id.roleToggleGroup)
         btnSubmit = findViewById(R.id.btnSignUp)
-        spinnerHub = findViewById(R.id.spinnerHub)
+        btnPickHub = findViewById(R.id.btnPickHub)
+        btnPickHub.setOnClickListener { openHubPicker() }
 
         toggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
@@ -68,8 +70,25 @@ class SignUpActivity : AppCompatActivity() {
             finish()
         }
 
-        loadHubs()
         loadCategories()
+    }
+
+    private fun openHubPicker() {
+        LocationPickerDialog(
+            context = this,
+            initialCountry = hubCountry.ifBlank { null },
+            initialCity = hubCity.ifBlank { null },
+            initialDistrict = hubDistrict.ifBlank { null },
+        ) { country, city, district ->
+            hubCountry = country
+            hubCity = city
+            hubDistrict = district
+            btnPickHub.text = listOfNotNull(
+                district.takeIf { it.isNotBlank() },
+                city.takeIf { it.isNotBlank() },
+                country.takeIf { it.isNotBlank() },
+            ).joinToString(", ")
+        }.show()
     }
 
     private fun loadCategories() {
@@ -91,39 +110,12 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadHubs() {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.getService(this@SignUpActivity).getHubs()
-                if (response.isSuccessful) {
-                    hubs = response.body() ?: emptyList()
-                    val hubNames = listOf(getString(R.string.select_hub)) + hubs.map { it.name }
-                    val adapter = ArrayAdapter(
-                        this@SignUpActivity,
-                        android.R.layout.simple_spinner_item,
-                        hubNames
-                    )
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerHub.adapter = adapter
-                }
-            } catch (_: Exception) {
-                // Hub list failed to load — user can still sign up without hub
-            }
-        }
-    }
-
-    private fun getSelectedHubId(): Int? {
-        val pos = spinnerHub.selectedItemPosition
-        return if (pos > 0 && pos <= hubs.size) hubs[pos - 1].id else null
-    }
-
     private fun attemptRegister() {
         val fullName = inputFullName.text.toString().trim()
         val email = inputEmail.text.toString().trim()
         val password = inputPassword.text.toString()
         val confirmPassword = inputConfirmPassword.text.toString()
         val neighborhood = inputNeighborhood.text.toString().trim().ifEmpty { null }
-        val hubId = getSelectedHubId()
 
         if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show()
@@ -149,7 +141,9 @@ class SignUpActivity : AppCompatActivity() {
             role = selectedRole,
             neighborhoodAddress = neighborhood,
             categoryId = if (selectedRole == "EXPERT") selectedCategoryId else null,
-            hubId = hubId
+            hubCountry = hubCountry.ifBlank { null },
+            hubCity = hubCity.ifBlank { null },
+            hubDistrict = hubDistrict.ifBlank { null },
         )
 
         lifecycleScope.launch {

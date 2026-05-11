@@ -83,7 +83,7 @@ class ForumActivity : AppCompatActivity() {
 
         hubSelectorHelper = HubSelectorHelper(
             this,
-            findViewById<Spinner>(R.id.spinnerHubSelector),
+            findViewById<TextView>(R.id.textHubDisplay),
             onHubSelected = { hub ->
                 selectedHub = hub
                 updateHubLabel()

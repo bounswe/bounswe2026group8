@@ -3,13 +3,22 @@ from django.db import models
 
 
 class Hub(models.Model):
-    """A city / neighbourhood hub that users and posts belong to."""
-    name = models.CharField(max_length=120, unique=True)
-    slug = models.SlugField(max_length=120, unique=True)
+    """A geographic hub: country + city, optionally with a district."""
+    name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    country = models.CharField(max_length=100, blank=True, default='')
+    city = models.CharField(max_length=120, blank=True, default='')
+    district = models.CharField(max_length=120, blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ['country', 'city', 'district']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['country', 'city', 'district'],
+                name='unique_hub_location',
+            ),
+        ]
 
     def __str__(self):
         return self.name

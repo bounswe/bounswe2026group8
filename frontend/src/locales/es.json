@@ -756,6 +756,7 @@
     },
     "sections": {
       "appearance": "Apariencia",
+      "hub": "Centro",
       "notifications": "Notificaciones",
       "privacy": "Privacidad"
     },
@@ -768,6 +769,12 @@
       "saved": "Guardado",
       "load_failed": "No se pudo cargar la configuración.",
       "save_failed": "No se pudo guardar la configuración."
+    },
+    "hub": {
+      "current": "Centro actual",
+      "none": "Ningún centro seleccionado",
+      "saving": "Guardando...",
+      "change": "Cambiar"
     },
     "fields": {
       "dark_mode": {
@@ -1179,5 +1186,12 @@
       "mapPreview": "Vista previa del mapa",
       "mapDesc": "Inicia sesin para usar mapas en vivo y puntos de reunin guardados."
     }
+  },
+  "location_picker": {
+    "choose_country": "Elegir país",
+    "choose_city": "Elegir ciudad en {{country}}",
+    "choose_district": "Elegir distrito en {{city}}",
+    "search": "Buscar...",
+    "no_results": "Sin resultados"
   }
 }
