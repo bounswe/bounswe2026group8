@@ -164,6 +164,14 @@
     <string name="profile_cert_url">URL del Certificado (opcional)</string>
     <string name="profile_no_expertise">No hay campos de experiencia añadidos aún.</string>
 
+    <string name="my_posts_title">Mis publicaciones</string>
+    <string name="my_posts_card_desc">Ver las publicaciones del foro que compartiste</string>
+    <string name="my_posts_loading">Cargando tus publicaciones...</string>
+    <string name="my_posts_empty">Aún no has compartido publicaciones en el foro.</string>
+    <string name="my_posts_load_failed">No se pudieron cargar tus publicaciones</string>
+    <string name="my_posts_sign_in_required">Inicia sesión para ver tus publicaciones.</string>
+    <string name="back_to_profile">← Volver al perfil</string>
+
     <!-- Forum -->
     <string name="forum_title">Foro</string>
     <string name="forum_hub_all">Todos los hubs — todos</string>

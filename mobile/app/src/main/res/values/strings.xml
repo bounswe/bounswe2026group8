@@ -277,6 +277,13 @@
     <string name="profile_expertise_field">Field (e.g. First Aid)</string>
     <string name="profile_cert_url">Certificate URL (optional)</string>
     <string name="profile_no_expertise">No expertise fields added yet.</string>
+    <string name="my_posts_title">My Posts</string>
+    <string name="my_posts_card_desc">View the forum posts you shared</string>
+    <string name="my_posts_loading">Loading your posts...</string>
+    <string name="my_posts_empty">You have not shared any forum posts yet.</string>
+    <string name="my_posts_load_failed">Failed to load your posts</string>
+    <string name="my_posts_sign_in_required">Sign in to view your posts.</string>
+    <string name="back_to_profile">← Back to Profile</string>
 
     <!-- Forum -->
     <string name="forum_title">Forum</string>

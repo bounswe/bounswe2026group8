@@ -164,6 +164,14 @@
     <string name="profile_cert_url">Sertifika URL\'si (isteğe bağlı)</string>
     <string name="profile_no_expertise">Henüz uzmanlık alanı eklenmedi.</string>
 
+    <string name="my_posts_title">Gönderilerim</string>
+    <string name="my_posts_card_desc">Paylaştığın forum gönderilerini görüntüle</string>
+    <string name="my_posts_loading">Gönderilerin yükleniyor...</string>
+    <string name="my_posts_empty">Henüz forum gönderisi paylaşmadın.</string>
+    <string name="my_posts_load_failed">Gönderilerin yüklenemedi</string>
+    <string name="my_posts_sign_in_required">Gönderilerini görmek için giriş yap.</string>
+    <string name="back_to_profile">← Profile Geri</string>
+
     <!-- Forum -->
     <string name="forum_title">Forum</string>
     <string name="forum_hub_all">Tüm hub\'lar — herkes</string>

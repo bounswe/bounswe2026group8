@@ -65,6 +65,10 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, MyBadgesActivity::class.java))
         }
 
+        findViewById<View>(R.id.cardMyPosts).setOnClickListener {
+            startActivity(Intent(this, MyPostsActivity::class.java))
+        }
+
         loadBadges()
     }
 

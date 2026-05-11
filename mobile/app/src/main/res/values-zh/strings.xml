@@ -164,6 +164,14 @@
     <string name="profile_cert_url">证书URL（可选）</string>
     <string name="profile_no_expertise">尚未添加专业领域。</string>
 
+    <string name="my_posts_title">我的帖子</string>
+    <string name="my_posts_card_desc">查看你发布的论坛帖子</string>
+    <string name="my_posts_loading">正在加载你的帖子...</string>
+    <string name="my_posts_empty">你还没有发布任何论坛帖子。</string>
+    <string name="my_posts_load_failed">无法加载你的帖子</string>
+    <string name="my_posts_sign_in_required">请登录后查看你的帖子。</string>
+    <string name="back_to_profile">← 返回个人资料</string>
+
     <!-- Forum -->
     <string name="forum_title">论坛</string>
     <string name="forum_hub_all">所有中心 — 所有人</string>
