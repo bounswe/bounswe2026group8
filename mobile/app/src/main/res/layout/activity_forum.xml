@@ -61,14 +61,20 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
-            <Spinner
-                android:id="@+id/spinnerHubSelector"
+            <TextView
+                android:id="@+id/textHubDisplay"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:minWidth="140dp"
+                android:maxWidth="220dp"
+                android:gravity="center_vertical"
                 android:background="@drawable/sort_pill_active_bg"
                 android:paddingStart="12dp"
-                android:paddingEnd="8dp" />
+                android:paddingEnd="12dp"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:ellipsize="end" />
 
         </LinearLayout>
 

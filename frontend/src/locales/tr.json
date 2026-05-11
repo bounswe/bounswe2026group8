@@ -756,6 +756,7 @@
     },
     "sections": {
       "appearance": "G\u00f6r\u00fcn\u00fcm",
+      "hub": "Merkez",
       "notifications": "Bildirimler",
       "privacy": "Gizlilik"
     },
@@ -768,6 +769,12 @@
       "saved": "Kaydedildi",
       "load_failed": "Ayarlar yüklenemedi.",
       "save_failed": "Ayarlar kaydedilemedi."
+    },
+    "hub": {
+      "current": "Mevcut merkez",
+      "none": "Merkez seçilmedi",
+      "saving": "Kaydediliyor...",
+      "change": "Değiştir"
     },
     "fields": {
       "dark_mode": {
@@ -1179,5 +1186,12 @@
       "mapPreview": "Harita önizlemesi",
       "mapDesc": "Canlı harita araçlarını ve kayıtlı toplanma noktalarını kullanmak için giriş yap."
     }
+  },
+  "location_picker": {
+    "choose_country": "Ülke seçin",
+    "choose_city": "{{country}} içinden şehir seçin",
+    "choose_district": "{{city}} içinden ilçe seçin",
+    "search": "Ara...",
+    "no_results": "Sonuç bulunamadı"
   }
 }

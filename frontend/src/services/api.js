@@ -191,6 +191,14 @@ export function updateMe(data) {
 }
 
 /**
+ * PATCH /me with a country/city/district payload.
+ * The backend resolves (or creates) the matching Hub and assigns it.
+ */
+export function updateHubLocation({ country, city, district = '' }) {
+  return updateMe({ country, city, district });
+}
+
+/**
  * GET /hubs/
  * Public — returns list of all hubs.
  */

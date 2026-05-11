@@ -123,7 +123,7 @@ class HelpRequestListActivity : AppCompatActivity() {
 
         hubSelectorHelper = HubSelectorHelper(
             this,
-            findViewById<Spinner>(R.id.spinnerHubSelector),
+            findViewById<TextView>(R.id.textHubDisplay),
             onHubSelected = { hub ->
                 selectedHub = hub
                 if (activeTab == "requests") fetchHelpRequests() else fetchHelpOffers()

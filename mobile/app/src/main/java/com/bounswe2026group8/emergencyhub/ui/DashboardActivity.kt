@@ -55,7 +55,7 @@ class DashboardActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { performLogout() }
 
-        hubSelectorHelper = HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector))
+        hubSelectorHelper = HubSelectorHelper(this, findViewById<TextView>(R.id.textHubDisplay))
         setupLanguageSelector()
         setupFeatureCards()
     }

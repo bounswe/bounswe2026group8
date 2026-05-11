@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import StaffRoute from './components/StaffRoute';
-import HubSelector from './components/HubSelector';
+import HubDisplay from './components/HubDisplay';
 import LanguageSelector from './components/LanguageSelector';
 
 import LandingPage from './pages/LandingPage';
@@ -49,7 +49,7 @@ return (
             <LanguageSelector />
           </div>
           <div className="app-controls-right">
-            <HubSelector />
+            <HubDisplay />
           </div>
         </div>
         <Routes>

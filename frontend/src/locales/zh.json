@@ -756,6 +756,7 @@
     },
     "sections": {
       "appearance": "\u5916\u89c2",
+      "hub": "中心",
       "notifications": "通知",
       "privacy": "隐私"
     },
@@ -768,6 +769,12 @@
       "saved": "已保存",
       "load_failed": "无法加载设置。",
       "save_failed": "无法保存设置。"
+    },
+    "hub": {
+      "current": "当前中心",
+      "none": "未选择中心",
+      "saving": "正在保存...",
+      "change": "更改"
     },
     "fields": {
       "dark_mode": {
@@ -1179,5 +1186,12 @@
       "mapPreview": "地图预览",
       "mapDesc": "Sign in to use live map tools and saved gathering points."
     }
+  },
+  "location_picker": {
+    "choose_country": "选择国家",
+    "choose_city": "在 {{country}} 选择城市",
+    "choose_district": "在 {{city}} 选择区域",
+    "search": "搜索...",
+    "no_results": "无结果"
   }
 }
