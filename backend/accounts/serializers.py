@@ -85,6 +85,11 @@ class ExpertiseFieldSerializer(serializers.ModelSerializer):
     """
 
     category = ExpertiseCategorySerializer(read_only=True)
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=ExpertiseCategory.objects.filter(is_active=True),
+        source='category',
+        write_only=True,
+    )
     reviewed_by_id = serializers.PrimaryKeyRelatedField(source='reviewed_by', read_only=True)
     reviewed_by_name = serializers.SerializerMethodField()
 
@@ -93,6 +98,7 @@ class ExpertiseFieldSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'category',
+            'category_id',
             'certification_level',
             'certification_document_url',
             'verification_status',
