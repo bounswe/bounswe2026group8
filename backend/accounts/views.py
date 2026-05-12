@@ -15,8 +15,22 @@ from .serializers import (
 
 class RegisterView(APIView):
     """
+    Register a new user account.
+    
     POST /register
-    Open to unauthenticated requests.
+    
+    Create a new user account for either Standard or Expert role.
+    
+    Request body:
+    - full_name (string, required): User's full name
+    - email (string, required): Unique email address
+    - password (string, required): Strong password
+    - confirm_password (string, required): Must match password
+    - role (string, required): "STANDARD" or "EXPERT"
+    - expertise_field (string, optional): Required if role is "EXPERT"
+    - neighborhood_address (string, optional): Required if role is "EXPERT"
+    
+    Returns: 201 Created with user object and success message
     """
     permission_classes = [AllowAny]
 
@@ -39,8 +53,19 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     """
+    Authenticate user and retrieve JWT tokens.
+    
     POST /login
-    Returns JWT tokens on success.
+    
+    Authenticate with email and password to receive access and refresh tokens.
+    Use the returned access token in the Authorization header for subsequent requests.
+    
+    Request body:
+    - email (string, required): User's email address
+    - password (string, required): User's password
+    
+    Returns: 200 OK with access token, refresh token, and user object
+    Error: 400 Bad Request if credentials are invalid
     """
     permission_classes = [AllowAny]
 
@@ -67,9 +92,16 @@ class LoginView(APIView):
 
 class LogoutView(APIView):
     """
+    Logout the current user.
+    
     POST /logout
-    For JWT, logout is handled client-side by discarding the token.
-    This endpoint exists for API compatibility.
+    
+    Invalidate the current session. For JWT-based auth, the client should also
+    discard the stored access and refresh tokens.
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with confirmation message
     """
     permission_classes = [IsAuthenticated]
 
@@ -79,8 +111,22 @@ class LogoutView(APIView):
 
 class MeView(APIView):
     """
-    GET  /me  — Returns the currently authenticated user's profile.
-    PATCH /me — Updates the user's hub.
+    Get or update the currently authenticated user's profile.
+    
+    GET /me
+    Returns the authenticated user's full profile information.
+    
+    PATCH /me
+    Update the user's hub location. Provide either hub_id or country+city.
+    Request body:
+    - hub_id (integer, optional): ID of an existing hub
+    - country (string, optional): Country name
+    - city (string, optional): City name
+    - district (string, optional): District/suburb name
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with updated user profile
     """
     permission_classes = [IsAuthenticated]
 
@@ -111,8 +157,19 @@ class MeView(APIView):
 
 class FCMTokenView(APIView):
     """
+    Register device FCM token for push notifications.
+    
     POST /accounts/fcm-token/
-    Saves the device's FCM token for push notifications.
+    
+    Submit the device's Firebase Cloud Messaging (FCM) token to enable
+    receiving push notifications for help requests, forum posts, etc.
+    
+    Request body:
+    - fcm_token (string, required): Firebase device token
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with confirmation
     """
     permission_classes = [IsAuthenticated]
 
@@ -129,7 +186,28 @@ class FCMTokenView(APIView):
 
 
 class ProfileView(APIView):
-    """GET and PATCH /profile for viewing/updating the authenticated user's profile object."""
+    """
+    Get or update the authenticated user's detailed profile.
+    
+    GET /profile
+    Retrieve detailed profile information (bio, phone, availability, etc.).
+    
+    PATCH /profile
+    Update profile fields. Supports partial updates.
+    Request body: Any combination of:
+    - bio (string): User's bio/description
+    - phone_number (string): Contact phone number
+    - availability_status (string): AVAILABLE_TO_HELP, BUSY, etc.
+    - emergency_contact (string): Emergency contact name
+    - emergency_contact_phone (string): Emergency contact phone
+    - blood_type (string): Blood type for medical info
+    - has_disability (boolean): Whether user has disabilities
+    - special_needs (text): Description of special needs
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with profile object
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -146,7 +224,30 @@ class ProfileView(APIView):
 
 
 class UserSettingsView(APIView):
-    """GET and PATCH /settings for notification and privacy preferences."""
+    """
+    Get or update user notification and privacy settings.
+    
+    GET /settings
+    Retrieve notification preferences and profile visibility settings.
+    
+    PATCH /settings
+    Update notification and privacy settings. Supports partial updates.
+    Request body: Any combination of:
+    - email_notifications_enabled (boolean): Enable email notifications
+    - push_notifications_enabled (boolean): Enable push notifications  
+    - show_location (boolean): Show location on public profile
+    - show_resources (boolean): Show resources on public profile
+    - show_expertise (boolean): Show expertise on public profile
+    - show_phone_number (boolean): Show phone number on public profile
+    - show_emergency_contact (boolean): Show emergency contact on public profile
+    - show_medical_info (boolean): Show medical info on public profile
+    - show_availability_status (boolean): Show availability status on public profile
+    - show_bio (boolean): Show bio on public profile
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with settings object
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -167,8 +268,22 @@ class UserSettingsView(APIView):
 
 class ResourceListView(APIView):
     """
-    GET  /resources  — list all resources for the current user
-    POST /resources  — add a resource for the current user
+    Manage user resources (items available to share/lend).
+    
+    GET /resources
+    List all resources owned by the authenticated user.
+    
+    POST /resources
+    Add a new resource. Request body:
+    - name (string, required): Resource name (e.g., "First Aid Kit")
+    - description (string, optional): Detailed description
+    - quantity (integer, optional): Number of items available
+    - category (string, optional): Category (e.g., "Medical", "Tools")
+    - availability (string, optional): AVAILABLE, NOT_AVAILABLE, etc.
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK (GET) or 201 Created (POST) with resource list or created resource
     """
     permission_classes = [IsAuthenticated]
 
@@ -186,8 +301,18 @@ class ResourceListView(APIView):
 
 class ResourceDetailView(APIView):
     """
-    PATCH  /resources/<id>  — update a resource
-    DELETE /resources/<id>  — delete a resource
+    Update or delete a specific resource.
+    
+    PATCH /resources/{id}
+    Update a resource (owner only). Supports partial updates.
+    
+    DELETE /resources/{id}
+    Delete a resource (owner only).
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK (PATCH), 204 No Content (DELETE), or 404 if not found
+    Error: 403 Forbidden if not the resource owner
     """
     permission_classes = [IsAuthenticated]
 
@@ -217,9 +342,24 @@ class ResourceDetailView(APIView):
 
 class ExpertiseFieldListView(APIView):
     """
-    GET  /expertise  — list expertise fields for the current EXPERT user
-    POST /expertise  — add an expertise field (EXPERT only); always created
-                       in PENDING verification state.
+    Manage expert user's expertise fields.
+    
+    GET /expertise
+    List all expertise fields for the authenticated expert user.
+    EXPERT role required.
+    
+    POST /expertise
+    Add a new expertise field. Always created in PENDING verification state.
+    Request body:
+    - category_id (integer, required): Expertise category ID
+    - certification_level (string, required): BEGINNER or ADVANCED
+    - certification_document_url (string, optional): URL to certification document
+    - notes (string, optional): Additional notes
+    
+    Authorization: Required (Bearer token, EXPERT role)
+    
+    Returns: 200 OK (GET) or 201 Created (POST)
+    Error: 403 Forbidden if user is not EXPERT role
     """
     permission_classes = [IsAuthenticated]
 
@@ -255,10 +395,19 @@ class ExpertiseFieldListView(APIView):
 
 class ExpertiseFieldDetailView(APIView):
     """
-    PATCH  /expertise/<id>  — update expertise field; any change to the
-                              certification content resets verification to
-                              PENDING so stale approvals don't survive edits.
-    DELETE /expertise/<id>  — delete expertise field.
+    Update or delete an expertise field.
+    
+    PATCH /expertise/{id}
+    Update an expertise field (owner only). Changes to certification content
+    will reset verification status to PENDING.
+    
+    DELETE /expertise/{id}
+    Delete an expertise field (owner only).
+    
+    Authorization: Required (Bearer token, EXPERT role)
+    
+    Returns: 200 OK (PATCH), 204 No Content (DELETE), or 404 if not found
+    Error: 403 Forbidden if not the owner or not EXPERT role
     """
     permission_classes = [IsAuthenticated]
 
@@ -310,8 +459,20 @@ class ExpertiseFieldDetailView(APIView):
 
 class UserPublicProfileView(APIView):
     """
-    GET /users/{id}/
-    Returns a user's public profile. Authenticated users only.
+    Get a user's public profile.
+    
+    GET /users/{id}
+    
+    Retrieve public profile for a specific user. Respects the user's privacy
+    settings - certain fields may be hidden based on their preferences.
+    
+    Authorization: Required (Bearer token)
+    
+    Parameters:
+    - id (integer, path): User ID
+    
+    Returns: 200 OK with public profile
+    Error: 404 Not Found if user doesn't exist
     """
     permission_classes = [IsAuthenticated]
 
@@ -354,8 +515,14 @@ class UserPublicProfileView(APIView):
 
 class HubListView(APIView):
     """
-    GET /hubs/
-    Public list of all hubs.
+    List all emergency hubs.
+    
+    GET /hubs
+    
+    Retrieve list of all registered emergency hubs/neighborhoods.
+    Public endpoint - no authentication required.
+    
+    Returns: 200 OK with list of hubs
     """
     permission_classes = [AllowAny]
 
@@ -366,8 +533,14 @@ class HubListView(APIView):
 
 class ExpertiseCategoryListView(APIView):
     """
-    GET /expertise-categories/
-    Public list of active expertise categories. No authentication required.
+    List available expertise categories.
+    
+    GET /expertise-categories
+    
+    Retrieve list of all active expertise categories that experts can register.
+    Public endpoint - no authentication required.
+    
+    Returns: 200 OK with list of expertise categories
     """
     permission_classes = [AllowAny]
 

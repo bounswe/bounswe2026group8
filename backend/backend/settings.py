@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     # Third-party
     'rest_framework',
     'corsheaders',
+    'drf_spectacular',
     # Local
     'accounts',
     'forum',
@@ -113,6 +114,46 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# ── drf-spectacular (Swagger/OpenAPI) ──────────────────────────────────────────
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'EmergencyHub API',
+    'DESCRIPTION': 'Comprehensive REST API for the Neighborhood Emergency Preparedness Hub. '
+                   'Authentication: Use JWT tokens obtained from the /login endpoint. '
+                   'Include the token in the Authorization header as: Authorization: Bearer <token>',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX': '/',
+    'SERVERS': [
+        {'url': 'http://localhost:8000', 'description': 'Local Development'},
+        {'url': 'https://api.emergencyhub.org', 'description': 'Production'},
+    ],
+    'CONTACT': {
+        'name': 'EmergencyHub Support',
+        'email': 'support@emergencyhub.org',
+    },
+    'LICENSE': {
+        'name': 'MIT License',
+    },
+    'SECURITY': [
+        {
+            'bearerAuth': []
+        }
+    ],
+    'COMPONENT_SECURITY_SCHEMES': {
+        'bearerAuth': {
+            'type': 'http',
+            'scheme': 'bearer',
+            'bearerFormat': 'JWT',
+            'description': 'JWT token obtained from /login endpoint',
+        }
+    },
+    'ENUM_ADD_EXPLICIT_BLANK_NULL_CHOICE': False,
+    'POSTPROCESSING_HOOKS': [
+        'drf_spectacular.hooks.postprocess_schema_enums' 
     ],
 }
 
