@@ -130,10 +130,18 @@ source .venv/bin/activate      # macOS/Linux
 cd backend
 pip install -r requirements.txt
 python manage.py migrate
+python manage.py populate_sample_data   # Optional: load sample users and content
 python manage.py runserver
 ```
 
 API is now live at **http://localhost:8000**.
+
+Sample credentials (if `populate_sample_data` was run):
+
+| Email | Password | Role |
+|-------|----------|------|
+| `standard1@example.com` | `password123` | Standard |
+| `expert1@example.com` | `password123` | Expert |
 
 ### 3. Frontend (React + Vite — port 5173)
 
@@ -154,6 +162,14 @@ No `.env` file needed — the frontend automatically falls back to `http://local
 Open the `mobile/` folder in Android Studio and run on an **emulator**.
 
 No configuration needed — debug builds automatically point to `http://10.0.2.2:8000` (the emulator's address for `localhost:8000` on your machine).
+
+**Physical device on the same network:**
+
+Find your machine's local IP (`ipconfig` on Windows, `ifconfig` on macOS/Linux), then add it to `mobile/local.properties`:
+```
+BASE_URL=http://x.x.x.x:8000/
+```
+Rebuild and install the APK. Both your machine and the device must be on the same network.
 
 > The backend must be running locally for the mobile app to work.
 
@@ -203,47 +219,56 @@ DJANGO_DEBUG=False
 
 ## Running Tests
 
-### Backend (Django — 136 tests)
+### Backend (Django)
 
 ```bash
-docker-compose run --rm backend python manage.py test accounts forum help_requests
+cd backend
+python manage.py test accounts forum help_requests badges
 ```
 
-### Frontend (Jest + React Testing Library — 52 tests)
+### Frontend — Unit tests (Jest)
 
 ```bash
 cd frontend
 npm test
 ```
 
-### Android (JUnit 4 — 51 tests)
+### Frontend — End-to-end tests (Playwright)
 
-Requires Android Studio installed (sets up JDK and `ANDROID_HOME` automatically).
+```bash
+# Terminal 1
+cd backend && python manage.py runserver localhost:8000
 
-**macOS / Linux / WSL:**
+# Terminal 2
+cd frontend && npm run dev -- --host 127.0.0.1 --port 5173
+
+# Terminal 3 (after both servers are up)
+cd frontend && npm run e2e
+```
+
+### Android — Unit tests
+
 ```bash
 cd mobile
-echo "sdk.dir=$ANDROID_HOME" > local.properties
-./gradlew testDebugUnitTest --no-daemon
+./gradlew testDebugUnitTest --no-daemon   # macOS/Linux
+bash gradlew testDebugUnitTest --no-daemon  # Windows (Git Bash)
 ```
 
-**Windows — without Android Studio (Docker required):**
-```powershell
-docker run --rm `
-  -v "C:/path/to/repo/mobile:/app" `
-  -w /app `
-  mingc/android-build-box:latest `
-  bash -c "echo 'sdk.dir=`$ANDROID_HOME' > local.properties && ./gradlew testDebugUnitTest --no-daemon"
+### Android — Instrumented tests (requires a connected emulator or device)
+
+```bash
+cd mobile
+./gradlew connectedDebugAndroidTest --no-daemon # macOS/Linux
+bash gradlew connectedDebugAndroidTest --no-daemon  # Windows (Git Bash)
 ```
-Replace `C:/path/to/repo` with the actual path to your clone.
 
 ---
 
 ## Tech Stack
 
 - **Backend:** Django 4.2, Django REST Framework, PostgreSQL
-- **Frontend:** React 19, Vite, React Router
-- **Mobile:** Android (Kotlin), Retrofit, OkHttp
+- **Frontend:** React 19, Vite, React Router, Leaflet
+- **Mobile:** Android (Kotlin), Retrofit, OkHttp, OSMDroid
 - **Auth:** JWT (SimpleJWT)
 - **Infrastructure:** EC2, Docker Compose, Nginx, Let's Encrypt
 
