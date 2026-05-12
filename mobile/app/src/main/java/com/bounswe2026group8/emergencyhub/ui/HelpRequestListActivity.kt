@@ -88,7 +88,7 @@ class HelpRequestListActivity : AppCompatActivity() {
         }
 
         recyclerRequests.layoutManager = LinearLayoutManager(this)
-        requestAdapter = HelpRequestAdapter(emptyList()) { item ->
+        requestAdapter = HelpRequestAdapter(emptyList(), currentUserId) { item ->
             val intent = Intent(this, HelpRequestDetailActivity::class.java)
             intent.putExtra(HelpRequestDetailActivity.EXTRA_REQUEST_ID, item.id)
             startActivity(intent)

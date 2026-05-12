@@ -19,7 +19,7 @@ export default function UserProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
-  const { t } = useTranslation(); 
+  const { t, i18n } = useTranslation(); 
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -230,7 +230,7 @@ export default function UserProfilePage() {
                     <li key={ef.id} className="item-card">
                       <div className="item-card-icon">🎓</div>
                       <div className="item-card-body">
-                        <span className="item-card-name">{ef.field}</span>
+                        <span className="item-card-name">{ef.category?.translations?.[i18n.language] || ef.category?.name || 'Expertise Area'}</span>
                         <span className="item-card-meta">
                     {ef.certification_level === 'ADVANCED'
                         ? `★ ${t('user_profile.expertise_item.advanced')}`

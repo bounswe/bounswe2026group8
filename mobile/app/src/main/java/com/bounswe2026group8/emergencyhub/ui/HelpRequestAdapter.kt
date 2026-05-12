@@ -13,7 +13,8 @@ import com.bounswe2026group8.emergencyhub.util.TimeUtils
 
 class HelpRequestAdapter(
     private var items: List<HelpRequestItem>,
-    private val onItemClick: (HelpRequestItem) -> Unit
+    private val currentUserId: Int? = null,
+    private val onItemClick: (HelpRequestItem) -> Unit,
 ) : RecyclerView.Adapter<HelpRequestAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -51,6 +52,9 @@ class HelpRequestAdapter(
 
         holder.txtStatus.text = BadgeUtils.formatStatusLabel(ctx, item.status)
         holder.txtAuthor.text = item.author.fullName
+        holder.txtAuthor.setOnClickListener {
+            PublicProfileActivity.navigate(ctx, item.author.id, currentUserId)
+        }
         holder.txtCommentCount.text = "\uD83D\uDCAC ${item.commentCount}"
         holder.txtTimeAgo.text = TimeUtils.timeAgo(item.createdAt)
 

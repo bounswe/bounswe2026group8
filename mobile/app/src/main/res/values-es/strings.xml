@@ -575,5 +575,15 @@
     <string name="badge_name_responder">Respondedor</string>
     <string name="badge_desc_responder">Otorgada por asumir la responsabilidad de las solicitudes de ayuda de la comunidad.</string>
     <string name="assigned_expert_format">Asignado a: %1$s</string>
+
+    <!-- Public profile: Activity section -->
+    <string name="profile_activity">Actividad</string>
+    <string name="profile_activity_loading">Cargando…</string>
+    <string name="profile_activity_empty_posts">Sin publicaciones en el foro todavía.</string>
+    <string name="profile_activity_empty_requests">Sin solicitudes de ayuda todavía.</string>
+    <string name="profile_activity_empty_offers">Sin ofertas de ayuda todavía.</string>
+    <string name="profile_activity_post_meta">▲ %1$d  ▼ %2$d  💬 %3$d</string>
+    <string name="profile_activity_request_meta">%1$s · %2$s</string>
+    <string name="profile_activity_offer_meta">%1$s · %2$s</string>
 </resources>
 
