@@ -16,6 +16,7 @@ from accounts.models import (
 )
 from forum.models import Comment, Post, Vote
 from help_requests.models import HelpComment, HelpOffer, HelpRequest
+from mesh.models import MeshOfflineMessage
 
 
 PASSWORD = 'password123'
@@ -302,6 +303,7 @@ class Command(BaseCommand):
             posts = self.ensure_posts(hubs, users)
             help_requests = self.ensure_help_requests(hubs, users)
             self.ensure_help_offers(hubs, users)
+            self.ensure_mesh_messages(users)
             self.ensure_forum_comments(posts, users)
             self.ensure_help_comments(help_requests, users)
             self.ensure_votes(posts, users)
@@ -702,6 +704,144 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(f'Ensured {len(offer_data)} help offers.')
+
+    def ensure_mesh_messages(self, users):
+        now_ms = int(timezone.now().timestamp() * 1000)
+        base_ms = now_ms - 2 * 60 * 60 * 1000
+
+        messages = [
+            {
+                'id': 'sample-mesh-sariyer-need-001',
+                'author': 'standard1@example.com',
+                'author_device_id': 'mesh-device-sariyer-001',
+                'author_display_name': 'John Standard',
+                'title': 'Need battery pack near Sariyer',
+                'body': 'Phone battery is low and mobile data is unstable. Looking for a shared power bank near the Sariyer square.',
+                'post_type': 'NEED_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms,
+                'latitude': 41.1664,
+                'longitude': 29.0500,
+            },
+            {
+                'id': 'sample-mesh-sariyer-offer-001',
+                'author': 'expert1@example.com',
+                'author_device_id': 'mesh-device-sariyer-002',
+                'author_display_name': 'Dr. Sarah Expert',
+                'title': 'First aid station by the community center',
+                'body': 'I have basic first aid supplies and can help with minor injuries while connectivity is down.',
+                'post_type': 'OFFER_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 8 * 60 * 1000,
+                'latitude': 41.1682,
+                'longitude': 29.0550,
+            },
+            {
+                'id': 'sample-mesh-konak-need-001',
+                'author': 'standard5@example.com',
+                'author_device_id': 'mesh-device-konak-001',
+                'author_display_name': 'Ece Konak',
+                'title': 'Need drinking water update in Konak',
+                'body': 'Does anyone know which public fountains or markets still have drinking water?',
+                'post_type': 'NEED_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 18 * 60 * 1000,
+                'latitude': 38.4189,
+                'longitude': 27.1287,
+            },
+            {
+                'id': 'sample-mesh-konak-offer-001',
+                'author': 'expert5@example.com',
+                'author_device_id': 'mesh-device-konak-002',
+                'author_display_name': 'Ayse Food Safety',
+                'title': 'Food safety checklist available offline',
+                'body': 'I can share a short checklist for checking refrigerated food after a power outage.',
+                'post_type': 'OFFER_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 27 * 60 * 1000,
+                'latitude': 38.4210,
+                'longitude': 27.1300,
+            },
+            {
+                'id': 'sample-mesh-cankaya-need-001',
+                'author': 'standard7@example.com',
+                'author_device_id': 'mesh-device-cankaya-001',
+                'author_display_name': 'Selin Cankaya',
+                'title': 'Elevator outage check in Cankaya',
+                'body': 'Several elevators stopped during the outage. Please share buildings with elderly residents needing stair assistance.',
+                'post_type': 'NEED_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 36 * 60 * 1000,
+                'latitude': 39.9179,
+                'longitude': 32.8627,
+            },
+            {
+                'id': 'sample-mesh-cankaya-offer-001',
+                'author': 'expert6@example.com',
+                'author_device_id': 'mesh-device-cankaya-002',
+                'author_display_name': 'Emre Paramedic',
+                'title': 'Paramedic guidance near Cankaya',
+                'body': 'I can help triage minor injuries and advise when emergency transport is needed.',
+                'post_type': 'OFFER_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 45 * 60 * 1000,
+                'latitude': 39.9208,
+                'longitude': 32.8541,
+            },
+            {
+                'id': 'sample-mesh-sariyer-need-001-comment-001',
+                'author': 'expert1@example.com',
+                'author_device_id': 'mesh-device-sariyer-002',
+                'author_display_name': 'Dr. Sarah Expert',
+                'body': 'I can lend one power bank for two hours. I am by the community center entrance.',
+                'parent_post_id': 'sample-mesh-sariyer-need-001',
+                'created_at': base_ms + 5 * 60 * 1000,
+            },
+            {
+                'id': 'sample-mesh-konak-need-001-comment-001',
+                'author': 'standard6@example.com',
+                'author_device_id': 'mesh-device-konak-003',
+                'author_display_name': 'Mert Konak',
+                'body': 'Market on the corner still had sealed water at noon. I can check again.',
+                'parent_post_id': 'sample-mesh-konak-need-001',
+                'created_at': base_ms + 23 * 60 * 1000,
+            },
+            {
+                'id': 'sample-mesh-cankaya-need-001-comment-001',
+                'author': 'expert3@example.com',
+                'author_device_id': 'mesh-device-cankaya-003',
+                'author_display_name': 'Lisa Logistics',
+                'body': 'I can coordinate two volunteers for stair assistance if you share the building entrance.',
+                'parent_post_id': 'sample-mesh-cankaya-need-001',
+                'created_at': base_ms + 42 * 60 * 1000,
+            },
+        ]
+
+        for data in messages:
+            author = users[data['author']]
+            created_at = data['created_at']
+            MeshOfflineMessage.objects.update_or_create(
+                id=data['id'],
+                defaults={
+                    'author_device_id': data['author_device_id'],
+                    'author_display_name': data['author_display_name'],
+                    'body': data['body'],
+                    'created_at': created_at,
+                    'received_at': created_at + 2 * 60 * 1000,
+                    'ttl_hours': 72,
+                    'hop_count': 0 if data.get('parent_post_id') is None else 1,
+                    'latitude': data.get('latitude'),
+                    'longitude': data.get('longitude'),
+                    'loc_accuracy_meters': 25.0 if data.get('latitude') is not None else None,
+                    'loc_captured_at': created_at if data.get('latitude') is not None else None,
+                    'title': data.get('title'),
+                    'post_type': data.get('post_type'),
+                    'parent_post_id': data.get('parent_post_id'),
+                    'uploaded_by': author,
+                },
+            )
+
+        self.stdout.write(f'Ensured {len(messages)} offline mesh messages.')
 
     def ensure_forum_comments(self, posts, users):
         commenters = list(users.values())
