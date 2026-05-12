@@ -50,7 +50,7 @@ To stop:
 docker-compose -f docker-compose.yml -f docker-compose.local.yml down
 ```
 
-> On first run, sample users, posts, help requests, and offers are automatically populated. Login with `standard1@example.com` / `expert1@example.com` and password `password123`.
+> On first run, sample hubs, users, forum posts, help requests/offers, and offline mesh messages are automatically populated. Login with `admin@example.com`, `standard1@example.com`, or `expert1@example.com` and password `password123`.
 
 > If you have a `backend/firebase-credentials.json` file it will be used for push notifications. Without it the app runs normally — only push notifications to mobile are disabled.
 
@@ -130,7 +130,7 @@ source .venv/bin/activate      # macOS/Linux
 cd backend
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py populate_sample_data   # Optional: load sample users and content
+python manage.py populate_sample_data   # Optional: load sample hubs, users, content, and mesh messages
 python manage.py runserver
 ```
 
@@ -138,10 +138,13 @@ API is now live at **http://localhost:8000**.
 
 Sample credentials (if `populate_sample_data` was run):
 
-| Email | Password | Role |
-|-------|----------|------|
-| `standard1@example.com` | `password123` | Standard |
-| `expert1@example.com` | `password123` | Expert |
+| Email | Password | Role | Hub |
+|-------|----------|------|-----|
+| `admin@example.com` | `password123` | App Admin / Django Admin | Istanbul / Sariyer |
+| `standard1@example.com` | `password123` | Standard | Istanbul / Sariyer |
+| `expert1@example.com` | `password123` | Expert | Istanbul / Sariyer |
+
+`populate_sample_data` is intended for local development. It seeds exactly three district hubs (`Istanbul / Sariyer`, `Izmir / Konak`, `Ankara / Cankaya`), 15 users total with 5 users in each hub, forum posts, help requests/offers, and offline mesh messages for testing offline messaging.
 
 ### 3. Frontend (React + Vite — port 5173)
 
