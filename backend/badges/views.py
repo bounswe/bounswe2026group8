@@ -10,7 +10,16 @@ from .serializers import UserBadgeSerializer
 
 class MyBadgesView(generics.ListAPIView):
     """
-    Returns a list of all badge progress for the currently authenticated user.
+    Get badges earned by the current user.
+    
+    GET /api/badges/my-badges
+    
+    Retrieve list of all badges and achievement progress for the authenticated user.
+    Shows progress toward earning badges and criteria completion status.
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with list of user badge progress objects
     """
     serializer_class = UserBadgeSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -23,8 +32,19 @@ class MyBadgesView(generics.ListAPIView):
 
 class UserBadgeListView(APIView):
     """
-    GET /api/badges/users/<user_id>/
-    Returns the badge progress for a specific user.
+    Get badges earned by a specific user.
+    
+    GET /api/badges/users/{user_id}
+    
+    Retrieve list of all badges and achievement progress for a specific user.
+    
+    Authorization: Required (Bearer token)
+    
+    Parameters:
+    - user_id (integer, path): ID of the user to retrieve badges for
+    
+    Returns: 200 OK with list of user badge progress objects
+    Error: 404 Not Found if user doesn't exist
     """
     permission_classes = [IsAuthenticated] 
 

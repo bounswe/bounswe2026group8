@@ -44,7 +44,23 @@ def _active_admin_count(exclude_user_id=None) -> int:
 
 
 class StaffUserListView(APIView):
-    """GET /staff/users/ — admin-only user listing with search and filters."""
+    """
+    List all users with admin filtering and search.
+    
+    GET /staff/users
+    
+    Admin-only endpoint for user management. Supports search and filtering.
+    Query parameters:
+    - search (string): Search by email or full name
+    - role (string): Filter by user role (STANDARD, EXPERT)
+    - staff_role (string): Filter by staff role (ADMIN, MODERATOR, VERIFICATION_COORDINATOR)
+    - is_active (boolean): Filter by active status
+    - hub (integer): Filter by hub ID
+    
+    Authorization: Required (Bearer token, ADMIN role)
+    
+    Returns: 200 OK with list of users and their details
+    """
 
     permission_classes = [IsAdminStaffRole]
 
@@ -75,7 +91,21 @@ class StaffUserListView(APIView):
 
 
 class StaffUserStaffRoleView(APIView):
-    """PATCH /staff/users/<id>/staff-role/ — admin assigns or revokes staff roles."""
+    """
+    Assign or revoke staff roles for a user.
+    
+    PATCH /staff/users/{id}/staff-role
+    
+    Admin-only endpoint to manage staff roles. Cannot be used on your own account.
+    Request body:
+    - staff_role (string, required): ADMIN, MODERATOR, VERIFICATION_COORDINATOR, or null (to remove)
+    - reason (string, optional): Reason for the change (audit logging)
+    
+    Authorization: Required (Bearer token, ADMIN role)
+    
+    Returns: 200 OK with updated user
+    Error: 400 Bad Request if modifying own role or removing last admin
+    """
 
     permission_classes = [IsAdminStaffRole]
 
@@ -126,7 +156,22 @@ class StaffUserStaffRoleView(APIView):
 
 
 class StaffUserStatusView(APIView):
-    """PATCH /staff/users/<id>/status/ — admin suspends or reactivates an account."""
+    """
+    Suspend or reactivate a user account.
+    
+    PATCH /staff/users/{id}/status
+    
+    Admin-only endpoint to suspend or reactivate user accounts.
+    Cannot be used on your own account. Cannot suspend the last active admin.
+    Request body:
+    - is_active (boolean, required): true to reactivate, false to suspend
+    - reason (string, optional): Reason for the change (audit logging)
+    
+    Authorization: Required (Bearer token, ADMIN role)
+    
+    Returns: 200 OK with updated user
+    Error: 400 Bad Request if modifying own status or suspending last admin
+    """
 
     permission_classes = [IsAdminStaffRole]
 
@@ -184,9 +229,23 @@ class StaffUserStatusView(APIView):
 
 class StaffHubListCreateView(APIView):
     """
-    GET  /staff/hubs/ — list all hubs (admin-only is fine: same data is public
-                        via /hubs/, but we keep the staff route for symmetry).
-    POST /staff/hubs/ — create a new hub.
+    List hubs and create new hubs.
+    
+    GET /staff/hubs
+    Admin-only endpoint to list all emergency hubs.
+    
+    POST /staff/hubs
+    Create a new emergency hub.
+    Request body:
+    - name (string, required): Hub name
+    - slug (string, required): URL-friendly identifier
+    - country (string, required): Country name
+    - city (string, required): City name
+    - district (string, optional): District/suburb name
+    
+    Authorization: Required (Bearer token, ADMIN role)
+    
+    Returns: 200 OK with list (GET) or 201 Created (POST)
     """
 
     permission_classes = [IsAdminStaffRole]
@@ -211,10 +270,20 @@ class StaffHubListCreateView(APIView):
 
 class StaffHubDetailView(APIView):
     """
-    PATCH  /staff/hubs/<id>/ — update a hub.
-    DELETE /staff/hubs/<id>/ — delete a hub. Cascades to posts/help content per
-                               existing FK behaviour; require an explicit
-                               `confirm: true` flag to avoid accidental deletes.
+    Update or delete a hub.
+    
+    PATCH /staff/hubs/{id}
+    Update hub details.
+    
+    DELETE /staff/hubs/{id}
+    Delete a hub (requires confirmation). Cascades to related posts and help requests.
+    Request body:
+    - confirm (boolean, required): Must be true to proceed
+    
+    Authorization: Required (Bearer token, ADMIN role)
+    
+    Returns: 200 OK (PATCH) or 204 No Content (DELETE)
+    Error: 400 Bad Request if confirm not provided
     """
 
     permission_classes = [IsAdminStaffRole]
@@ -264,7 +333,24 @@ class StaffHubDetailView(APIView):
 # ── Admin: audit log read endpoint ───────────────────────────────────────────
 
 class StaffAuditLogListView(APIView):
-    """GET /staff/audit-logs/ — admin-only chronological audit feed."""
+    """
+    List staff audit log entries.
+    
+    GET /staff/audit-logs
+    
+    Admin-only endpoint to retrieve audit log of staff actions.
+    Ordered chronologically, supports filtering.
+    Query parameters:
+    - action (string): Filter by action type (USER_SUSPENDED, USER_REACTIVATED, etc.)
+    - target_type (string): Filter by target type (USER, HUB, FORUM_POST, etc.)
+    - actor (integer): Filter by actor user ID
+    - target_user (integer): Filter by target user ID
+    - limit (integer): Results limit (1-500, default 100)
+    
+    Authorization: Required (Bearer token, ADMIN role)
+    
+    Returns: 200 OK with list of audit log entries
+    """
 
     permission_classes = [IsAdminStaffRole]
 
@@ -297,9 +383,21 @@ class StaffAuditLogListView(APIView):
 
 class ExpertiseVerificationListView(APIView):
     """
-    GET /staff/expertise-verifications/ — list expertise records for review.
-    Defaults to PENDING records; supports filters for status, certification
-    level, and target user.
+    List expertise fields pending verification.
+    
+    GET /staff/expertise-verifications
+    
+    Verification coordinator endpoint to list expertise records for review.
+    Defaults to PENDING status, supports filtering.
+    Query parameters:
+    - status (string): Filter by verification status (PENDING, APPROVED, REJECTED, or ALL)
+    - certification_level (string): Filter by level (BEGINNER, ADVANCED)
+    - user (integer): Filter by user ID
+    - limit (integer): Results limit (1-500, default 100)
+    
+    Authorization: Required (Bearer token, VERIFICATION_COORDINATOR or ADMIN role)
+    
+    Returns: 200 OK with list of expertise records
     """
 
     permission_classes = [IsVerificationCoordinatorOrAdmin]

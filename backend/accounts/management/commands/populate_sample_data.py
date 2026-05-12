@@ -1,470 +1,920 @@
+from decimal import Decimal
+
 from django.core.management.base import BaseCommand
+from django.db import transaction
+from django.db.models import Count
 from django.utils import timezone
-from accounts.models import User, Hub, Profile, Resource, ExpertiseField
-from forum.models import Post, Comment, Vote
-from help_requests.models import HelpRequest, HelpComment, HelpOffer
-import random
+from django.utils.text import slugify
+
+from accounts.models import (
+    ExpertiseCategory,
+    ExpertiseField,
+    Hub,
+    Profile,
+    Resource,
+    User,
+)
+from forum.models import Comment, Post, Vote
+from help_requests.models import HelpComment, HelpOffer, HelpRequest
+from mesh.models import MeshOfflineMessage
+
+
+PASSWORD = 'password123'
+
+COUNTRY_TURKEY = 'Turkey'
+CITY_ISTANBUL = '\u0130stanbul'
+CITY_IZMIR = '\u0130zmir'
+CITY_ANKARA = 'Ankara'
+
+HUB_DEFINITIONS = [
+    (CITY_ISTANBUL, 'istanbul', [('sariyer', 'Sar\u0131yer')]),
+    (CITY_IZMIR, 'izmir', [('konak', 'Konak')]),
+    (CITY_ANKARA, 'ankara', [('cankaya', '\u00c7ankaya')]),
+]
+
+HUBS = [
+    {
+        'key': f'{city_key}-{district_key}',
+        'country': COUNTRY_TURKEY,
+        'city': city,
+        'district': district,
+        'name': f'{city} / {district}, {COUNTRY_TURKEY}',
+    }
+    for city, city_key, districts in HUB_DEFINITIONS
+    for district_key, district in districts
+]
+
+EXPERTISE_CATEGORIES = [
+    ('First Aid', 'MEDICAL'),
+    ('Doctor/Nurse', 'MEDICAL'),
+    ('Paramedic', 'MEDICAL'),
+    ('Psychologist', 'MEDICAL'),
+    ('Pharmacist', 'MEDICAL'),
+    ('Search & Rescue', 'SHELTER'),
+    ('Civil Engineer', 'SHELTER'),
+    ('Firefighter', 'SHELTER'),
+    ('Driver', 'TRANSPORT'),
+    ('Logistics', 'TRANSPORT'),
+    ('Food Safety', 'FOOD'),
+    ('Nutrition', 'FOOD'),
+    ('General Volunteer', 'OTHER'),
+]
+
+USERS = [
+    {
+        'email': 'admin@example.com',
+        'full_name': 'Local App Admin',
+        'role': User.Role.STANDARD,
+        'staff_role': User.StaffRole.ADMIN,
+        'is_staff': True,
+        'is_superuser': True,
+        'hub': 'istanbul-sariyer',
+        'neighborhood_address': 'Platform operations',
+        'profile': {
+            'phone_number': '+905551000000',
+            'bio': 'Seeded local administrator for moderation and staff workflows.',
+            'availability_status': Profile.AvailabilityStatus.SAFE,
+            'preferred_language': 'English',
+        },
+    },
+    {
+        'email': 'standard1@example.com',
+        'full_name': 'John Standard',
+        'role': User.Role.STANDARD,
+        'hub': 'istanbul-sariyer',
+        'neighborhood_address': 'Sar\u0131yer, \u0130stanbul',
+        'profile': {
+            'phone_number': '+905551000001',
+            'bio': 'Community member interested in earthquake preparedness.',
+            'availability_status': Profile.AvailabilityStatus.SAFE,
+            'preferred_language': 'English',
+        },
+    },
+    {
+        'email': 'standard2@example.com',
+        'full_name': 'Jane Citizen',
+        'role': User.Role.STANDARD,
+        'hub': 'izmir-konak',
+        'neighborhood_address': 'Konak, \u0130zmir',
+        'profile': {
+            'phone_number': '+905551000002',
+            'bio': 'Organizes neighborhood check-ins and supply lists.',
+            'availability_status': Profile.AvailabilityStatus.NEEDS_HELP,
+            'preferred_language': 'English',
+        },
+    },
+    {
+        'email': 'standard3@example.com',
+        'full_name': 'Ali Neighbor',
+        'role': User.Role.STANDARD,
+        'hub': 'ankara-cankaya',
+        'neighborhood_address': '\u00c7ankaya, Ankara',
+        'profile': {
+            'phone_number': '+905551000003',
+            'bio': 'Keeps a shared list of local shelters and pharmacies.',
+            'availability_status': Profile.AvailabilityStatus.SAFE,
+            'preferred_language': 'Turkish',
+        },
+    },
+    {
+        'email': 'expert1@example.com',
+        'full_name': 'Dr. Sarah Expert',
+        'role': User.Role.EXPERT,
+        'hub': 'istanbul-sariyer',
+        'neighborhood_address': 'Sar\u0131yer, \u0130stanbul',
+        'profile': {
+            'phone_number': '+905551000004',
+            'bio': 'Emergency medicine doctor with field response experience.',
+            'availability_status': Profile.AvailabilityStatus.AVAILABLE_TO_HELP,
+            'preferred_language': 'English',
+        },
+        'expertise': ['First Aid', 'Doctor/Nurse'],
+        'resources': [
+            {'name': 'First Aid Kit', 'category': 'Medical', 'quantity': 2, 'condition': True},
+            {'name': 'Portable AED', 'category': 'Medical', 'quantity': 1, 'condition': True},
+        ],
+    },
+    {
+        'email': 'expert2@example.com',
+        'full_name': 'Mike Rescue',
+        'role': User.Role.EXPERT,
+        'hub': 'izmir-konak',
+        'neighborhood_address': 'Konak, \u0130zmir',
+        'profile': {
+            'phone_number': '+905551000005',
+            'bio': 'Former firefighter trained in search and rescue.',
+            'availability_status': Profile.AvailabilityStatus.AVAILABLE_TO_HELP,
+            'preferred_language': 'English',
+        },
+        'expertise': ['Search & Rescue', 'Firefighter'],
+        'resources': [
+            {'name': 'Rope Rescue Kit', 'category': 'Shelter', 'quantity': 1, 'condition': True},
+            {'name': 'Thermal Blanket Set', 'category': 'Shelter', 'quantity': 10, 'condition': True},
+        ],
+    },
+    {
+        'email': 'expert3@example.com',
+        'full_name': 'Lisa Logistics',
+        'role': User.Role.EXPERT,
+        'hub': 'ankara-cankaya',
+        'neighborhood_address': '\u00c7ankaya, Ankara',
+        'profile': {
+            'phone_number': '+905551000006',
+            'bio': 'Supply chain coordinator for emergency resource distribution.',
+            'availability_status': Profile.AvailabilityStatus.AVAILABLE_TO_HELP,
+            'preferred_language': 'English',
+        },
+        'expertise': ['Driver', 'Logistics', 'General Volunteer'],
+        'resources': [
+            {'name': 'Minivan', 'category': 'Transport', 'quantity': 1, 'condition': True},
+            {'name': 'Handheld Radios', 'category': 'Communication', 'quantity': 4, 'condition': True},
+        ],
+    },
+    {
+        'email': 'expert4@example.com',
+        'full_name': 'Nora Nutrition',
+        'role': User.Role.EXPERT,
+        'hub': 'istanbul-sariyer',
+        'neighborhood_address': 'Sar\u0131yer, \u0130stanbul',
+        'profile': {
+            'phone_number': '+905551000007',
+            'bio': 'Dietitian helping families plan shelf-stable emergency food.',
+            'availability_status': Profile.AvailabilityStatus.AVAILABLE_TO_HELP,
+            'preferred_language': 'English',
+        },
+        'expertise': ['Food Safety', 'Nutrition'],
+        'resources': [
+            {'name': 'Food Safety Thermometers', 'category': 'Food', 'quantity': 5, 'condition': True},
+        ],
+    },
+    {
+        'email': 'standard4@example.com',
+        'full_name': 'Derya Sariyer',
+        'role': User.Role.STANDARD,
+        'hub': 'istanbul-sariyer',
+        'neighborhood_address': 'Sar\u0131yer, \u0130stanbul',
+        'profile': {
+            'phone_number': '+905551000008',
+            'bio': 'Coordinates apartment emergency contact trees.',
+            'availability_status': Profile.AvailabilityStatus.SAFE,
+            'preferred_language': 'Turkish',
+        },
+    },
+    {
+        'email': 'standard5@example.com',
+        'full_name': 'Ece Konak',
+        'role': User.Role.STANDARD,
+        'hub': 'izmir-konak',
+        'neighborhood_address': 'Konak, \u0130zmir',
+        'profile': {
+            'phone_number': '+905551000009',
+            'bio': 'Tracks open pharmacies and accessible routes.',
+            'availability_status': Profile.AvailabilityStatus.SAFE,
+            'preferred_language': 'Turkish',
+        },
+    },
+    {
+        'email': 'standard6@example.com',
+        'full_name': 'Mert Konak',
+        'role': User.Role.STANDARD,
+        'hub': 'izmir-konak',
+        'neighborhood_address': 'Konak, \u0130zmir',
+        'profile': {
+            'phone_number': '+905551000010',
+            'bio': 'Volunteer for supply pickup and neighborhood checks.',
+            'availability_status': Profile.AvailabilityStatus.AVAILABLE_TO_HELP,
+            'preferred_language': 'Turkish',
+        },
+    },
+    {
+        'email': 'expert5@example.com',
+        'full_name': 'Ayse Food Safety',
+        'role': User.Role.EXPERT,
+        'hub': 'izmir-konak',
+        'neighborhood_address': 'Konak, \u0130zmir',
+        'profile': {
+            'phone_number': '+905551000011',
+            'bio': 'Food safety specialist for emergency kitchens.',
+            'availability_status': Profile.AvailabilityStatus.AVAILABLE_TO_HELP,
+            'preferred_language': 'Turkish',
+        },
+        'expertise': ['Food Safety', 'Nutrition'],
+        'resources': [
+            {'name': 'Emergency Food Checklist', 'category': 'Food', 'quantity': 20, 'condition': True},
+        ],
+    },
+    {
+        'email': 'standard7@example.com',
+        'full_name': 'Selin Cankaya',
+        'role': User.Role.STANDARD,
+        'hub': 'ankara-cankaya',
+        'neighborhood_address': '\u00c7ankaya, Ankara',
+        'profile': {
+            'phone_number': '+905551000012',
+            'bio': 'Maintains a list of elderly neighbors who may need check-ins.',
+            'availability_status': Profile.AvailabilityStatus.SAFE,
+            'preferred_language': 'Turkish',
+        },
+    },
+    {
+        'email': 'standard8@example.com',
+        'full_name': 'Burak Cankaya',
+        'role': User.Role.STANDARD,
+        'hub': 'ankara-cankaya',
+        'neighborhood_address': '\u00c7ankaya, Ankara',
+        'profile': {
+            'phone_number': '+905551000013',
+            'bio': 'Can help with transport and charging stations.',
+            'availability_status': Profile.AvailabilityStatus.AVAILABLE_TO_HELP,
+            'preferred_language': 'Turkish',
+        },
+    },
+    {
+        'email': 'expert6@example.com',
+        'full_name': 'Emre Paramedic',
+        'role': User.Role.EXPERT,
+        'hub': 'ankara-cankaya',
+        'neighborhood_address': '\u00c7ankaya, Ankara',
+        'profile': {
+            'phone_number': '+905551000014',
+            'bio': 'Paramedic available for triage and first aid guidance.',
+            'availability_status': Profile.AvailabilityStatus.AVAILABLE_TO_HELP,
+            'preferred_language': 'Turkish',
+        },
+        'expertise': ['First Aid', 'Paramedic'],
+        'resources': [
+            {'name': 'Triage Kit', 'category': 'Medical', 'quantity': 1, 'condition': True},
+        ],
+    },
+]
 
 
 class Command(BaseCommand):
-    help = 'Populate the database with sample data for local development'
+    help = 'Populate the database with idempotent sample data for local development.'
 
     def handle(self, *args, **options):
         self.stdout.write('Populating sample data...')
 
-        # Get specific hubs: Istanbul, Izmir, and Ankara
-        target_hubs = ['Istanbul', 'Izmir', 'Ankara']
-        hubs = list(Hub.objects.filter(name__in=target_hubs))
-        if len(hubs) < 3:
-            self.stdout.write(self.style.ERROR(f'Expected 3 hubs ({target_hubs}), found {len(hubs)}. Run migrations first.'))
-            return
+        with transaction.atomic():
+            self.remove_other_hubs()
+            hubs = self.ensure_hubs()
+            categories = self.ensure_expertise_categories()
+            users = self.ensure_users(hubs, categories)
+            posts = self.ensure_posts(hubs, users)
+            help_requests = self.ensure_help_requests(hubs, users)
+            self.ensure_help_offers(hubs, users)
+            self.ensure_mesh_messages(users)
+            self.ensure_forum_comments(posts, users)
+            self.ensure_help_comments(help_requests, users)
+            self.ensure_votes(posts, users)
+            self.sync_counts()
 
-        self.stdout.write(f'Using hubs: {[h.name for h in hubs]}')
+        self.stdout.write(self.style.SUCCESS('Sample data populated successfully.'))
+        self.stdout.write('Sample login: admin@example.com / password123')
+        self.stdout.write('Sample login: standard1@example.com / password123')
+        self.stdout.write('Sample login: expert1@example.com / password123')
 
-        # Create sample users if they don't exist
-        if not User.objects.filter(email__in=['standard1@example.com', 'expert1@example.com']).exists():
-            self.create_users(hubs)
-        else:
-            self.stdout.write('Users already exist, skipping user creation.')
+    def remove_other_hubs(self):
+        allowed = {(data['country'], data['city'], data['district']) for data in HUBS}
+        removed = 0
+        for hub in Hub.objects.all():
+            if (hub.country, hub.city, hub.district) in allowed:
+                continue
+            hub.delete()
+            removed += 1
+        if removed:
+            self.stdout.write(f'Removed {removed} hubs outside the sample set.')
 
-        # Create sample posts if they don't exist
-        # Check if we have posts for our target hubs
-        target_hub_posts = Post.objects.filter(hub__name__in=target_hubs)
-        if target_hub_posts.count() < 10:  # We expect at least 10 posts for target hubs
-            # Clear existing posts to recreate with new structure
-            Post.objects.all().delete()
-            Vote.objects.all().delete()  # Clear votes too
-            Comment.objects.all().delete()  # Clear comments too
-            self.create_posts(hubs)
-        else:
-            self.stdout.write('Target hub posts already exist, skipping post creation.')
+    def ensure_hubs(self):
+        hubs = {}
+        for data in HUBS:
+            hub = self.find_or_create_hub(data)
+            hubs[data['key']] = hub
+        self.stdout.write(f'Ensured {len(hubs)} hubs.')
+        return hubs
 
-        # Create sample help requests if they don't exist
-        target_hub_requests = HelpRequest.objects.filter(hub__name__in=target_hubs)
-        if target_hub_requests.count() < 10:  # We expect at least 10 requests for target hubs
-            HelpRequest.objects.all().delete()
-            HelpComment.objects.all().delete()
-            self.create_help_requests(hubs)
-        else:
-            self.stdout.write('Target hub help requests already exist, skipping help request creation.')
+    def find_or_create_hub(self, data):
+        hub = Hub.objects.filter(country=data['country'], city=data['city'], district=data['district']).first()
+        if hub:
+            changed = False
+            if hub.name != data['name']:
+                hub.name = data['name']
+                changed = True
+            if not hub.slug:
+                hub.slug = self.unique_slug(data['name'])
+                changed = True
+            if changed:
+                hub.save(update_fields=['name', 'slug'])
+            return hub
 
-        # Create sample help offers if they don't exist
-        target_hub_offers = HelpOffer.objects.filter(hub__name__in=target_hubs)
-        if target_hub_offers.count() < 10:  # We expect at least 10 offers for target hubs
-            HelpOffer.objects.all().delete()
-            self.create_help_offers(hubs)
-        else:
-            self.stdout.write('Target hub help offers already exist, skipping help offer creation.')
+        legacy = Hub.objects.filter(name=data['name']).first()
+        if legacy:
+            legacy.country = data['country']
+            legacy.city = data['city']
+            legacy.district = data['district']
+            if not legacy.slug:
+                legacy.slug = self.unique_slug(data['name'], exclude_pk=legacy.pk)
+            legacy.save(update_fields=['country', 'city', 'district', 'slug'])
+            return legacy
 
-        self.stdout.write(self.style.SUCCESS('Sample data populated successfully!'))
+        return Hub.objects.create(
+            name=data['name'],
+            slug=self.unique_slug(data['name']),
+            country=data['country'],
+            city=data['city'],
+            district=data['district'],
+        )
 
-    def create_users(self, hubs):
-        users_data = [
-            {
-                'email': 'standard1@example.com',
-                'full_name': 'John Standard',
-                'role': 'STANDARD',
-                'hub': random.choice(hubs),
-                'neighborhood_address': '123 Main St',
-                'profile': {
-                    'phone_number': '+1234567890',
-                    'bio': 'Regular community member interested in emergency preparedness.',
-                    'availability_status': 'SAFE',
-                }
-            },
-            {
-                'email': 'standard2@example.com',
-                'full_name': 'Jane Citizen',
-                'role': 'STANDARD',
-                'hub': random.choice(hubs),
-                'neighborhood_address': '456 Oak Ave',
-                'profile': {
-                    'phone_number': '+1234567891',
-                    'bio': 'Mother of two, concerned about neighborhood safety.',
-                    'availability_status': 'SAFE',
-                }
-            },
-            {
-                'email': 'expert1@example.com',
-                'full_name': 'Dr. Sarah Expert',
-                'role': 'EXPERT',
-                'hub': random.choice(hubs),
-                'neighborhood_address': '789 Pine Rd',
-                'expertise_field': 'First Aid',
-                'profile': {
-                    'phone_number': '+1234567892',
-                    'bio': 'Medical professional with 10 years experience in emergency response.',
-                    'availability_status': 'AVAILABLE_TO_HELP',
-                },
-                'expertise': {
-                    'field': 'Emergency Medicine',
-                    'certification_level': 'ADVANCED',
-                    'certification_document_url': 'https://example.com/cert1.pdf'
-                }
-            },
-            {
-                'email': 'expert2@example.com',
-                'full_name': 'Mike Rescue',
-                'role': 'EXPERT',
-                'hub': random.choice(hubs),
-                'neighborhood_address': '321 Elm St',
-                'expertise_field': 'Search and Rescue',
-                'profile': {
-                    'phone_number': '+1234567893',
-                    'bio': 'Former firefighter, certified in urban search and rescue operations.',
-                    'availability_status': 'AVAILABLE_TO_HELP',
-                },
-                'expertise': {
-                    'field': 'Search and Rescue',
-                    'certification_level': 'ADVANCED',
-                    'certification_document_url': 'https://example.com/cert2.pdf'
-                }
-            },
-            {
-                'email': 'expert3@example.com',
-                'full_name': 'Lisa Logistics',
-                'role': 'EXPERT',
-                'hub': random.choice(hubs),
-                'neighborhood_address': '654 Maple Dr',
-                'expertise_field': 'Logistics',
-                'profile': {
-                    'phone_number': '+1234567894',
-                    'bio': 'Supply chain manager experienced in emergency resource distribution.',
-                    'availability_status': 'SAFE',
-                },
-                'expertise': {
-                    'field': 'Emergency Logistics',
-                    'certification_level': 'BEGINNER',
-                }
-            }
-        ]
+    def unique_slug(self, value, exclude_pk=None):
+        base = slugify(value) or 'hub'
+        slug = base
+        suffix = 2
+        qs = Hub.objects.all()
+        if exclude_pk is not None:
+            qs = qs.exclude(pk=exclude_pk)
+        while qs.filter(slug=slug).exists():
+            slug = f'{base}-{suffix}'
+            suffix += 1
+        return slug
 
-        for user_data in users_data:
-            user, created = User.objects.get_or_create(
-                email=user_data['email'],
+    def ensure_expertise_categories(self):
+        categories = {}
+        for name, help_request_category in EXPERTISE_CATEGORIES:
+            category, _ = ExpertiseCategory.objects.update_or_create(
+                name=name,
                 defaults={
-                    'full_name': user_data['full_name'],
-                    'role': user_data['role'],
-                    'hub': user_data['hub'],
-                    'neighborhood_address': user_data['neighborhood_address'],
-                }
+                    'help_request_category': help_request_category,
+                    'is_active': True,
+                },
             )
+            categories[name] = category
+        self.stdout.write(f'Ensured {len(categories)} expertise categories.')
+        return categories
+
+    def ensure_users(self, hubs, categories):
+        users = {}
+        for data in USERS:
+            user, created = User.objects.update_or_create(
+                email=data['email'],
+                defaults={
+                    'full_name': data['full_name'],
+                    'role': data['role'],
+                    'staff_role': data.get('staff_role', User.StaffRole.NONE),
+                    'hub': hubs[data['hub']],
+                    'neighborhood_address': data['neighborhood_address'],
+                    'is_active': True,
+                    'is_staff': data.get('is_staff', False),
+                    'is_superuser': data.get('is_superuser', False),
+                },
+            )
+            user.set_password(PASSWORD)
+            user.save(update_fields=['password'])
+
+            profile = self.ensure_profile(user)
+            self.update_profile(profile, data['profile'])
+
+            if user.role == User.Role.EXPERT:
+                self.ensure_expertise(user, data.get('expertise', []), categories)
+                self.ensure_resources(user, data.get('resources', []))
+
+            users[data['email']] = user
             if created:
-                user.set_password('password123')
-                user.save()
+                self.stdout.write(f'Created user {user.email}.')
 
-                # Update profile (it should already exist due to signal)
-                profile_data = user_data['profile']
-                profile = user.profile
-                profile.phone_number = profile_data.get('phone_number')
-                profile.bio = profile_data.get('bio')
-                profile.availability_status = profile_data.get('availability_status')
-                profile.save()
+        self.stdout.write(f'Ensured {len(users)} users.')
+        return users
 
-                # Skip expertise seeding — model schema changed (now FK to
-                # ExpertiseCategory), the dict shape no longer matches.
-                # Doesn't affect offline-mesh testing.
+    def ensure_profile(self, user):
+        profile, _ = Profile.objects.get_or_create(user=user)
+        return profile
 
-                # Create some resources for experts
-                if user.role == 'EXPERT':
-                    Resource.objects.create(
-                        user=user,
-                        name='First Aid Kit',
-                        category='Medical',
-                        quantity=1,
-                        condition=True,
-                    )
+    def update_profile(self, profile, data):
+        for field, value in data.items():
+            setattr(profile, field, value)
+        profile.save(update_fields=list(data.keys()))
 
-        self.stdout.write(f'Created {len(users_data)} sample users')
+    def ensure_expertise(self, user, expertise_names, categories):
+        for name in expertise_names:
+            category = categories[name]
+            ExpertiseField.objects.update_or_create(
+                user=user,
+                category=category,
+                defaults={
+                    'is_approved': True,
+                    'certification_level': ExpertiseField.CertificationLevel.ADVANCED,
+                    'certification_document_url': f'https://example.com/certificates/{slugify(name)}.pdf',
+                    'verification_status': ExpertiseField.VerificationStatus.APPROVED,
+                    'reviewed_at': timezone.now(),
+                    'verification_note': 'Seeded sample expertise.',
+                },
+            )
 
-    def create_posts(self, hubs):
-        users = list(User.objects.all())
-        if not users:
-            return
+    def ensure_resources(self, user, resources):
+        for data in resources:
+            Resource.objects.update_or_create(
+                user=user,
+                name=data['name'],
+                defaults={
+                    'category': data['category'],
+                    'quantity': data['quantity'],
+                    'condition': data['condition'],
+                },
+            )
 
-        # Global posts (at least 10)
-        global_posts_data = [
+    def ensure_posts(self, hubs, users):
+        post_data = [
             {
                 'title': 'Earthquake Safety Tips',
-                'content': 'During an earthquake: DROP, COVER, HOLD ON. Drop to the ground, take cover under a sturdy table or desk, and hold on until the shaking stops. Remember to stay away from windows and heavy objects.',
-                'forum_type': 'GLOBAL',
+                'content': 'During an earthquake: drop, cover, and hold on. Stay away from windows and heavy objects until the shaking stops.',
+                'forum_type': Post.ForumType.GLOBAL,
                 'hub': None,
-            },
-            {
-                'title': 'Flood Preparedness Guide',
-                'content': 'Prepare for floods by knowing your flood risk, having an emergency kit, and creating an evacuation plan. Move to higher ground immediately if flooding occurs.',
-                'forum_type': 'GLOBAL',
-                'hub': None,
-            },
-            {
-                'title': 'Fire Safety in the Home',
-                'content': 'Install smoke detectors on every level of your home. Create and practice a fire escape plan. Never leave cooking unattended.',
-                'forum_type': 'GLOBAL',
-                'hub': None,
-            },
-            {
-                'title': 'Emergency Communication Plan',
-                'content': 'Establish a family communication plan. Designate an out-of-area contact. Know how to text emergency services if you can\'t speak.',
-                'forum_type': 'GLOBAL',
-                'hub': None,
-            },
-            {
-                'title': 'Basic First Aid Knowledge',
-                'content': 'Learn CPR and the Heimlich maneuver. Know how to treat burns, cuts, and sprains. Keep a well-stocked first aid kit.',
-                'forum_type': 'GLOBAL',
-                'hub': None,
-            },
-            {
-                'title': 'Power Outage Survival Tips',
-                'content': 'Keep flashlights and batteries ready. Use generators safely outdoors only. Conserve phone battery for emergencies.',
-                'forum_type': 'GLOBAL',
-                'hub': None,
-            },
-            {
-                'title': 'Winter Storm Preparation',
-                'content': 'Stock up on food, water, and warm clothing. Have alternative heat sources. Stay informed about weather conditions.',
-                'forum_type': 'GLOBAL',
-                'hub': None,
-            },
-            {
-                'title': 'Hurricane Preparedness',
-                'content': 'Board up windows, secure outdoor items, and have plenty of supplies. Know your evacuation routes and have a safe room.',
-                'forum_type': 'GLOBAL',
-                'hub': None,
+                'author': 'expert1@example.com',
             },
             {
                 'title': 'Emergency Kit Essentials',
-                'content': 'Water (1 gallon per person per day), non-perishable food, medications, first aid supplies, flashlight, radio, and important documents.',
-                'forum_type': 'GLOBAL',
+                'content': 'Keep water, non-perishable food, medications, first aid supplies, a flashlight, radio, batteries, and copies of important documents.',
+                'forum_type': Post.ForumType.GLOBAL,
                 'hub': None,
+                'author': 'expert3@example.com',
             },
             {
-                'title': 'Neighborhood Watch Programs',
-                'content': 'Organize community watch programs. Know your neighbors and their emergency contact information. Report suspicious activities.',
-                'forum_type': 'GLOBAL',
+                'title': 'Basic First Aid Knowledge',
+                'content': 'Learn CPR, bleeding control, burn care, and how to recognize shock. Keep your kit somewhere easy to reach.',
+                'forum_type': Post.ForumType.GLOBAL,
                 'hub': None,
+                'author': 'expert1@example.com',
+            },
+            {
+                'title': 'URGENT: Power Outage in Sar\u0131yer, \u0130stanbul',
+                'content': 'Power has been out for several hours around Sariyer. Please check on neighbors who rely on medical equipment.',
+                'forum_type': Post.ForumType.URGENT,
+                'hub': hubs['istanbul-sariyer'],
+                'author': 'standard1@example.com',
+            },
+            {
+                'title': 'URGENT: Flash Flood Warning in Konak, \u0130zmir',
+                'content': 'Several low roads around Konak are flooded. Avoid driving through standing water and share safe routes here.',
+                'forum_type': Post.ForumType.URGENT,
+                'hub': hubs['izmir-konak'],
+                'author': 'standard2@example.com',
+            },
+            {
+                'title': 'URGENT: Gas Leak Reported in \u00c7ankaya, Ankara',
+                'content': 'A residential block near Cankaya is evacuating due to a reported gas leak. Temporary transport and shelter may be needed.',
+                'forum_type': Post.ForumType.URGENT,
+                'hub': hubs['ankara-cankaya'],
+                'author': 'standard3@example.com',
             },
         ]
 
-        # Urgent posts (3)
-        urgent_posts_data = [
-            {
-                'title': 'URGENT: Major Power Outage in Downtown Istanbul',
-                'content': 'Power has been out for 3 hours in the downtown Istanbul area. Multiple blocks affected. If anyone needs assistance with generators, medical equipment, or checking on elderly neighbors, please respond immediately.',
-                'forum_type': 'URGENT',
-                'hub': Hub.objects.filter(name='Istanbul').first(),
-            },
-            {
-                'title': 'URGENT: Flash Flood Warning in Izmir Coastal Areas',
-                'content': 'Heavy rainfall has caused flash flooding in coastal districts of Izmir. Several roads are impassable. People may need immediate evacuation assistance. Emergency services are overwhelmed.',
-                'forum_type': 'URGENT',
-                'hub': Hub.objects.filter(name='Izmir').first(),
-            },
-            {
-                'title': 'URGENT: Gas Leak Reported in Ankara Residential Area',
-                'content': 'Gas leak detected in a residential neighborhood in Ankara. Evacuation in progress. Multiple families displaced. Need temporary shelter and transportation assistance urgently.',
-                'forum_type': 'URGENT',
-                'hub': Hub.objects.filter(name='Ankara').first(),
-            },
-        ]
-
-        # Standard posts for each hub
-        standard_posts_data = []
-        for hub in hubs:
-            hub_posts = [
-                {
-                    'title': f'Emergency Preparedness Meeting in {hub.name}',
-                    'content': f'Hi everyone in {hub.name}! We\'re organizing a community meeting to discuss emergency preparedness. Topics include creating emergency kits, family communication plans, and neighborhood watch programs. All are welcome!',
-                    'forum_type': 'STANDARD',
-                    'hub': hub,
-                },
-                {
-                    'title': f'Community Garden Initiative in {hub.name}',
-                    'content': f'Let\'s start a community garden in {hub.name} for sustainable food sources during emergencies. We can grow vegetables and herbs that store well. Who\'s interested in participating?',
-                    'forum_type': 'STANDARD',
-                    'hub': hub,
-                },
-                {
-                    'title': f'First Aid Training Session in {hub.name}',
-                    'content': f'I\'m organizing a free first aid training session next Saturday at the {hub.name} community center. Learn CPR, wound care, and basic emergency response. Limited spots available!',
-                    'forum_type': 'STANDARD',
-                    'hub': hub,
-                },
-                {
-                    'title': f'Volunteer Recruitment in {hub.name}',
-                    'content': f'{hub.name} Emergency Response Team is looking for volunteers. Training provided. Help your community be prepared for emergencies.',
-                    'forum_type': 'STANDARD',
-                    'hub': hub,
-                },
-            ]
-            standard_posts_data.extend(hub_posts)
-
-        # Combine all posts
-        all_posts_data = global_posts_data + urgent_posts_data + standard_posts_data
-
-        for post_data in all_posts_data:
-            author = random.choice(users)
-            post = Post.objects.create(
-                title=post_data['title'],
-                content=post_data['content'],
-                forum_type=post_data['forum_type'],
-                hub=post_data['hub'],
-                author=author,
+        for hub in hubs.values():
+            post_data.extend(
+                [
+                    {
+                        'title': f'Emergency Preparedness Meeting in {hub.name}',
+                        'content': f'We are planning a community preparedness meeting in {hub.name} to review kits, family plans, and neighbor check-ins.',
+                        'forum_type': Post.ForumType.STANDARD,
+                        'hub': hub,
+                        'author': 'expert3@example.com',
+                    },
+                    {
+                        'title': f'First Aid Training Session in {hub.name}',
+                        'content': f'A free first aid and CPR practice session is planned for this weekend in {hub.name}.',
+                        'forum_type': Post.ForumType.STANDARD,
+                        'hub': hub,
+                        'author': 'expert1@example.com',
+                    },
+                    {
+                        'title': f'Community Supply Map for {hub.name}',
+                        'content': f'Use this thread to share open pharmacies, water points, public shelters, and charging locations around {hub.name}.',
+                        'forum_type': Post.ForumType.STANDARD,
+                        'hub': hub,
+                        'author': 'standard1@example.com',
+                    },
+                ]
             )
 
-            # Add some comments (more for urgent posts)
-            num_comments = random.randint(2, 5) if post_data['forum_type'] == 'URGENT' else random.randint(0, 3)
-            for i in range(num_comments):
-                Comment.objects.create(
-                    post=post,
-                    author=random.choice(users),
-                    content=f'This is comment {i+1} on the post. {"Very urgent - please help!" if post_data["forum_type"] == "URGENT" else "Very helpful information!"}',
+        posts = []
+        for data in post_data:
+            posts.append(
+                self.upsert_post(
+                    title=data['title'],
+                    defaults={
+                        'content': data['content'],
+                        'forum_type': data['forum_type'],
+                        'hub': data['hub'],
+                        'author': users[data['author']],
+                        'status': Post.Status.ACTIVE,
+                        'image_urls': [],
+                    },
                 )
-                post.comment_count += 1
-            post.save()
-
-            # Add some votes (more engagement for urgent posts)
-            num_votes = random.randint(5, 15) if post_data['forum_type'] == 'URGENT' else random.randint(0, 5)
-            for i in range(num_votes):
-                voter = random.choice(users)
-                if not Vote.objects.filter(user=voter, post=post).exists():
-                    Vote.objects.create(
-                        post=post,
-                        user=voter,
-                        vote_type=random.choice(['UP', 'DOWN']),
-                    )
-                    if random.choice([True, False]):
-                        post.upvote_count += 1
-                    else:
-                        post.downvote_count += 1
-            post.save()
-
-        self.stdout.write(f'Created {len(all_posts_data)} sample posts: {len(global_posts_data)} global, {len(urgent_posts_data)} urgent, {len(standard_posts_data)} standard')
-
-    def create_help_requests(self, hubs):
-        users = list(User.objects.filter(role='STANDARD'))
-        if not users:
-            users = list(User.objects.all())
-
-        # Create multiple help requests for each hub
-        requests_data = []
-        for hub in hubs:
-            hub_requests = [
-                {
-                    'title': f'Need Medical Assistance for Elderly Neighbor in {hub.name}',
-                    'description': f'My 85-year-old neighbor in {hub.name} fell and hurt her ankle. She needs help getting to the doctor. Does anyone have a car available?',
-                    'category': 'MEDICAL',
-                    'urgency': 'HIGH',
-                    'hub': hub,
-                },
-                {
-                    'title': f'Looking for Non-Perishable Food Donations in {hub.name}',
-                    'description': f'Our family of 4 in {hub.name} is going through a difficult time and could use some canned goods, pasta, and other non-perishable food items.',
-                    'category': 'FOOD',
-                    'urgency': 'MEDIUM',
-                    'hub': hub,
-                },
-                {
-                    'title': f'Temporary Shelter Needed in {hub.name}',
-                    'description': f'Due to a house fire, my family in {hub.name} needs temporary accommodation for 2-3 nights while repairs are made. We have pets.',
-                    'category': 'SHELTER',
-                    'urgency': 'HIGH',
-                    'hub': hub,
-                },
-                {
-                    'title': f'Transportation to Hospital in {hub.name}',
-                    'description': f'I need to get to the hospital in {hub.name} for a medical appointment but don\'t have transportation. Appointment is tomorrow morning.',
-                    'category': 'TRANSPORT',
-                    'urgency': 'MEDIUM',
-                    'hub': hub,
-                },
-                {
-                    'title': f'Water Damage Cleanup Help in {hub.name}',
-                    'description': f'Our basement flooded in {hub.name} and we need help with cleanup and drying. We have elderly family members who can\'t do heavy lifting.',
-                    'category': 'SHELTER',
-                    'urgency': 'MEDIUM',
-                    'hub': hub,
-                },
-            ]
-            requests_data.extend(hub_requests)
-
-        for request_data in requests_data:
-            author = random.choice(users)
-            request = HelpRequest.objects.create(
-                title=request_data['title'],
-                description=request_data['description'],
-                category=request_data['category'],
-                urgency=request_data['urgency'],
-                hub=request_data['hub'],
-                author=author,
             )
 
-            # Add some comments (responses from experts/helpers)
-            experts = list(User.objects.filter(role='EXPERT'))
-            if experts:
-                num_responses = random.randint(1, 3)
-                for i in range(num_responses):
-                    expert = random.choice(experts)
-                    HelpComment.objects.create(
-                        request=request,
-                        author=expert,
-                        content=f'I can help with this in {request_data["hub"].name}. Please contact me at {expert.profile.phone_number} to coordinate.',
-                    )
-                    request.comment_count += 1
-                request.status = 'EXPERT_RESPONDING'
-                request.save()
+        self.stdout.write(f'Ensured {len(posts)} forum posts.')
+        return posts
 
-        self.stdout.write(f'Created {len(requests_data)} sample help requests across {len(hubs)} hubs')
+    def upsert_post(self, title, defaults):
+        post = Post.objects.filter(title=title, reposted_from__isnull=True).first()
+        if post is None:
+            return Post.objects.create(title=title, **defaults)
 
-    def create_help_offers(self, hubs):
-        experts = list(User.objects.filter(role='EXPERT'))
-        if not experts:
-            return
+        for field, value in defaults.items():
+            setattr(post, field, value)
+        post.save(update_fields=list(defaults.keys()))
+        return post
 
-        # Create help offers for each hub
-        offers_data = []
-        for hub in hubs:
-            hub_offers = [
-                {
-                    'skill_or_resource': f'First Aid Training in {hub.name}',
-                    'description': f'Certified first aid instructor available in {hub.name} to teach CPR and basic emergency response to community members.',
-                    'category': 'MEDICAL',
-                    'availability': 'Weekends, 9 AM - 5 PM',
-                    'hub': hub,
-                },
-                {
-                    'skill_or_resource': f'Vehicle for Transport in {hub.name}',
-                    'description': f'Have access to a minivan in {hub.name} that can transport up to 6 people. Available for medical appointments and emergency evacuations.',
-                    'category': 'TRANSPORT',
-                    'availability': 'Weekdays after 5 PM, Weekends anytime',
-                    'hub': hub,
-                },
-                {
-                    'skill_or_resource': f'Emergency Food Supplies in {hub.name}',
-                    'description': f'Stockpiled non-perishable food items in {hub.name} for 4 people for 2 weeks. Can share with families in need during emergencies.',
-                    'category': 'FOOD',
-                    'availability': 'Available immediately in case of emergency',
-                    'hub': hub,
-                },
-                {
-                    'skill_or_resource': f'Guest Room in {hub.name}',
-                    'description': f'Spare bedroom available in {hub.name} for temporary shelter during emergencies. Includes basic amenities.',
-                    'category': 'SHELTER',
-                    'availability': 'Available on short notice, up to 1 week stays',
-                    'hub': hub,
-                },
-            ]
-            offers_data.extend(hub_offers)
+    def ensure_help_requests(self, hubs, users):
+        request_data = [
+            {
+                'title': 'Need Medical Assistance for Elderly Neighbor in Sariyer',
+                'description': 'My elderly neighbor hurt her ankle and needs help getting checked by a doctor.',
+                'category': 'MEDICAL',
+                'urgency': HelpRequest.Urgency.HIGH,
+                'hub': hubs['istanbul-sariyer'],
+                'author': 'standard1@example.com',
+                'assigned_expert': 'expert1@example.com',
+                'location_text': 'Sar\u0131yer, \u0130stanbul',
+                'latitude': Decimal('41.043800'),
+                'longitude': Decimal('29.009400'),
+            },
+            {
+                'title': 'Looking for Non-Perishable Food Donations in Sariyer',
+                'description': 'A family nearby needs canned goods, pasta, and baby food for the next few days.',
+                'category': 'FOOD',
+                'urgency': HelpRequest.Urgency.MEDIUM,
+                'hub': hubs['istanbul-sariyer'],
+                'author': 'standard1@example.com',
+                'assigned_expert': 'expert4@example.com',
+                'location_text': 'Sar\u0131yer, \u0130stanbul',
+                'latitude': Decimal('40.991900'),
+                'longitude': Decimal('29.025300'),
+            },
+            {
+                'title': 'Temporary Shelter Needed in Konak',
+                'description': 'A small family needs short-term accommodation after water damage at home.',
+                'category': 'SHELTER',
+                'urgency': HelpRequest.Urgency.HIGH,
+                'hub': hubs['izmir-konak'],
+                'author': 'standard2@example.com',
+                'assigned_expert': 'expert2@example.com',
+                'location_text': 'Konak, \u0130zmir',
+                'latitude': Decimal('38.418900'),
+                'longitude': Decimal('27.128700'),
+            },
+            {
+                'title': 'Transportation to Hospital in Ankara',
+                'description': 'Need a ride to a hospital appointment tomorrow morning.',
+                'category': 'TRANSPORT',
+                'urgency': HelpRequest.Urgency.MEDIUM,
+                'hub': hubs['ankara-cankaya'],
+                'author': 'standard3@example.com',
+                'assigned_expert': 'expert3@example.com',
+                'location_text': '\u00c7ankaya, Ankara',
+                'latitude': Decimal('39.917900'),
+                'longitude': Decimal('32.862700'),
+            },
+            {
+                'title': 'Water Damage Cleanup Help in Konak',
+                'description': 'Basement cleanup after flooding. Heavy lifting help would be appreciated.',
+                'category': 'SHELTER',
+                'urgency': HelpRequest.Urgency.MEDIUM,
+                'hub': hubs['izmir-konak'],
+                'author': 'standard2@example.com',
+                'assigned_expert': None,
+                'location_text': 'Konak, \u0130zmir',
+                'latitude': Decimal('38.462200'),
+                'longitude': Decimal('27.221400'),
+            },
+            {
+                'title': 'Medication Pickup Needed in Ankara',
+                'description': 'Could someone pick up prescription medicine from an open pharmacy?',
+                'category': 'MEDICAL',
+                'urgency': HelpRequest.Urgency.HIGH,
+                'hub': hubs['ankara-cankaya'],
+                'author': 'standard3@example.com',
+                'assigned_expert': None,
+                'location_text': 'Kizilay, Ankara',
+                'latitude': Decimal('39.920800'),
+                'longitude': Decimal('32.854100'),
+            },
+        ]
 
-        for offer_data in offers_data:
-            author = random.choice(experts)
-            HelpOffer.objects.create(
-                skill_or_resource=offer_data['skill_or_resource'],
-                description=offer_data['description'],
-                category=offer_data['category'],
-                availability=offer_data['availability'],
-                hub=offer_data['hub'],
-                author=author,
+        requests = []
+        for data in request_data:
+            assigned_expert = users[data['assigned_expert']] if data['assigned_expert'] else None
+            status = (
+                HelpRequest.Status.EXPERT_RESPONDING
+                if assigned_expert
+                else HelpRequest.Status.OPEN
+            )
+            defaults = {
+                'description': data['description'],
+                'category': data['category'],
+                'urgency': data['urgency'],
+                'hub': data['hub'],
+                'author': users[data['author']],
+                'assigned_expert': assigned_expert,
+                'assigned_at': timezone.now() if assigned_expert else None,
+                'status': status,
+                'location_text': data['location_text'],
+                'latitude': data['latitude'],
+                'longitude': data['longitude'],
+                'image_urls': [],
+            }
+            request = self.upsert_help_request(data['title'], defaults)
+            requests.append(request)
+
+        self.stdout.write(f'Ensured {len(requests)} help requests.')
+        return requests
+
+    def upsert_help_request(self, title, defaults):
+        help_request = HelpRequest.objects.filter(title=title).first()
+        if help_request is None:
+            return HelpRequest.objects.create(title=title, **defaults)
+
+        if help_request.status == HelpRequest.Status.RESOLVED:
+            defaults.pop('status', None)
+            defaults.pop('assigned_expert', None)
+            defaults.pop('assigned_at', None)
+        for field, value in defaults.items():
+            setattr(help_request, field, value)
+        help_request.save(update_fields=list(defaults.keys()))
+        return help_request
+
+    def ensure_help_offers(self, hubs, users):
+        offer_data = [
+            ('Sariyer First Aid Support', 'MEDICAL', 'expert1@example.com', hubs['istanbul-sariyer'], 'Weekends and evenings'),
+            ('Sariyer Emergency Food Planning', 'FOOD', 'expert4@example.com', hubs['istanbul-sariyer'], 'Weekdays 10:00-18:00'),
+            ('Konak Search and Rescue Help', 'SHELTER', 'expert2@example.com', hubs['izmir-konak'], 'Available on short notice'),
+            ('Konak Temporary Shelter Check', 'SHELTER', 'expert2@example.com', hubs['izmir-konak'], 'Evenings and weekends'),
+            ('Cankaya Transport Coordination', 'TRANSPORT', 'expert3@example.com', hubs['ankara-cankaya'], 'Weekdays after 17:00'),
+            ('Cankaya Logistics Planning', 'OTHER', 'expert3@example.com', hubs['ankara-cankaya'], 'Anytime for urgent coordination'),
+        ]
+
+        for skill, category, author_email, hub, availability in offer_data:
+            HelpOffer.objects.update_or_create(
+                skill_or_resource=skill,
+                author=users[author_email],
+                defaults={
+                    'category': category,
+                    'hub': hub,
+                    'description': f'{skill} available for neighbors in {hub.name}.',
+                    'availability': availability,
+                },
             )
 
-        self.stdout.write(f'Created {len(offers_data)} sample help offers across {len(hubs)} hubs')
+        self.stdout.write(f'Ensured {len(offer_data)} help offers.')
+
+    def ensure_mesh_messages(self, users):
+        now_ms = int(timezone.now().timestamp() * 1000)
+        base_ms = now_ms - 2 * 60 * 60 * 1000
+
+        messages = [
+            {
+                'id': 'sample-mesh-sariyer-need-001',
+                'author': 'standard1@example.com',
+                'author_device_id': 'mesh-device-sariyer-001',
+                'author_display_name': 'John Standard',
+                'title': 'Need battery pack near Sariyer',
+                'body': 'Phone battery is low and mobile data is unstable. Looking for a shared power bank near the Sariyer square.',
+                'post_type': 'NEED_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms,
+                'latitude': 41.1664,
+                'longitude': 29.0500,
+            },
+            {
+                'id': 'sample-mesh-sariyer-offer-001',
+                'author': 'expert1@example.com',
+                'author_device_id': 'mesh-device-sariyer-002',
+                'author_display_name': 'Dr. Sarah Expert',
+                'title': 'First aid station by the community center',
+                'body': 'I have basic first aid supplies and can help with minor injuries while connectivity is down.',
+                'post_type': 'OFFER_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 8 * 60 * 1000,
+                'latitude': 41.1682,
+                'longitude': 29.0550,
+            },
+            {
+                'id': 'sample-mesh-konak-need-001',
+                'author': 'standard5@example.com',
+                'author_device_id': 'mesh-device-konak-001',
+                'author_display_name': 'Ece Konak',
+                'title': 'Need drinking water update in Konak',
+                'body': 'Does anyone know which public fountains or markets still have drinking water?',
+                'post_type': 'NEED_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 18 * 60 * 1000,
+                'latitude': 38.4189,
+                'longitude': 27.1287,
+            },
+            {
+                'id': 'sample-mesh-konak-offer-001',
+                'author': 'expert5@example.com',
+                'author_device_id': 'mesh-device-konak-002',
+                'author_display_name': 'Ayse Food Safety',
+                'title': 'Food safety checklist available offline',
+                'body': 'I can share a short checklist for checking refrigerated food after a power outage.',
+                'post_type': 'OFFER_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 27 * 60 * 1000,
+                'latitude': 38.4210,
+                'longitude': 27.1300,
+            },
+            {
+                'id': 'sample-mesh-cankaya-need-001',
+                'author': 'standard7@example.com',
+                'author_device_id': 'mesh-device-cankaya-001',
+                'author_display_name': 'Selin Cankaya',
+                'title': 'Elevator outage check in Cankaya',
+                'body': 'Several elevators stopped during the outage. Please share buildings with elderly residents needing stair assistance.',
+                'post_type': 'NEED_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 36 * 60 * 1000,
+                'latitude': 39.9179,
+                'longitude': 32.8627,
+            },
+            {
+                'id': 'sample-mesh-cankaya-offer-001',
+                'author': 'expert6@example.com',
+                'author_device_id': 'mesh-device-cankaya-002',
+                'author_display_name': 'Emre Paramedic',
+                'title': 'Paramedic guidance near Cankaya',
+                'body': 'I can help triage minor injuries and advise when emergency transport is needed.',
+                'post_type': 'OFFER_HELP',
+                'parent_post_id': None,
+                'created_at': base_ms + 45 * 60 * 1000,
+                'latitude': 39.9208,
+                'longitude': 32.8541,
+            },
+            {
+                'id': 'sample-mesh-sariyer-need-001-comment-001',
+                'author': 'expert1@example.com',
+                'author_device_id': 'mesh-device-sariyer-002',
+                'author_display_name': 'Dr. Sarah Expert',
+                'body': 'I can lend one power bank for two hours. I am by the community center entrance.',
+                'parent_post_id': 'sample-mesh-sariyer-need-001',
+                'created_at': base_ms + 5 * 60 * 1000,
+            },
+            {
+                'id': 'sample-mesh-konak-need-001-comment-001',
+                'author': 'standard6@example.com',
+                'author_device_id': 'mesh-device-konak-003',
+                'author_display_name': 'Mert Konak',
+                'body': 'Market on the corner still had sealed water at noon. I can check again.',
+                'parent_post_id': 'sample-mesh-konak-need-001',
+                'created_at': base_ms + 23 * 60 * 1000,
+            },
+            {
+                'id': 'sample-mesh-cankaya-need-001-comment-001',
+                'author': 'expert3@example.com',
+                'author_device_id': 'mesh-device-cankaya-003',
+                'author_display_name': 'Lisa Logistics',
+                'body': 'I can coordinate two volunteers for stair assistance if you share the building entrance.',
+                'parent_post_id': 'sample-mesh-cankaya-need-001',
+                'created_at': base_ms + 42 * 60 * 1000,
+            },
+        ]
+
+        for data in messages:
+            author = users[data['author']]
+            created_at = data['created_at']
+            MeshOfflineMessage.objects.update_or_create(
+                id=data['id'],
+                defaults={
+                    'author_device_id': data['author_device_id'],
+                    'author_display_name': data['author_display_name'],
+                    'body': data['body'],
+                    'created_at': created_at,
+                    'received_at': created_at + 2 * 60 * 1000,
+                    'ttl_hours': 72,
+                    'hop_count': 0 if data.get('parent_post_id') is None else 1,
+                    'latitude': data.get('latitude'),
+                    'longitude': data.get('longitude'),
+                    'loc_accuracy_meters': 25.0 if data.get('latitude') is not None else None,
+                    'loc_captured_at': created_at if data.get('latitude') is not None else None,
+                    'title': data.get('title'),
+                    'post_type': data.get('post_type'),
+                    'parent_post_id': data.get('parent_post_id'),
+                    'uploaded_by': author,
+                },
+            )
+
+        self.stdout.write(f'Ensured {len(messages)} offline mesh messages.')
+
+    def ensure_forum_comments(self, posts, users):
+        commenters = list(users.values())
+        for index, post in enumerate(posts):
+            for offset in range(2 if post.forum_type == Post.ForumType.URGENT else 1):
+                author = commenters[(index + offset + 1) % len(commenters)]
+                content = self.comment_text(post, offset)
+                Comment.objects.get_or_create(post=post, author=author, content=content)
+
+    def comment_text(self, post, offset):
+        if post.forum_type == Post.ForumType.URGENT:
+            messages = [
+                'I can help coordinate nearby support. Please share any confirmed updates.',
+                'I am checking with neighbors now and will report safe routes here.',
+            ]
+            return messages[offset]
+        return 'Thanks for sharing this. I added it to my preparedness checklist.'
+
+    def ensure_help_comments(self, help_requests, users):
+        experts = [user for user in users.values() if user.role == User.Role.EXPERT]
+        for index, help_request in enumerate(help_requests):
+            if help_request.assigned_expert_id:
+                author = help_request.assigned_expert
+                content = f'I can take responsibility for this request near {help_request.location_text}.'
+            else:
+                author = experts[index % len(experts)]
+                content = 'I may be able to help. Please add any timing or access details.'
+            HelpComment.objects.get_or_create(
+                request=help_request,
+                author=author,
+                content=content,
+            )
+
+    def ensure_votes(self, posts, users):
+        voters = list(users.values())
+        for post_index, post in enumerate(posts):
+            for voter in voters[:4]:
+                if voter.id == post.author_id:
+                    continue
+                vote_type = Vote.VoteType.DOWN if (post_index + voter.id) % 9 == 0 else Vote.VoteType.UP
+                Vote.objects.update_or_create(
+                    post=post,
+                    user=voter,
+                    defaults={'vote_type': vote_type},
+                )
+
+    def sync_counts(self):
+        post_comment_counts = dict(
+            Comment.objects.values('post_id').annotate(total=Count('id')).values_list('post_id', 'total')
+        )
+        post_upvote_counts = dict(
+            Vote.objects.filter(vote_type=Vote.VoteType.UP)
+            .values('post_id')
+            .annotate(total=Count('id'))
+            .values_list('post_id', 'total')
+        )
+        post_downvote_counts = dict(
+            Vote.objects.filter(vote_type=Vote.VoteType.DOWN)
+            .values('post_id')
+            .annotate(total=Count('id'))
+            .values_list('post_id', 'total')
+        )
+        for post in Post.objects.all():
+            post.comment_count = post_comment_counts.get(post.id, 0)
+            post.upvote_count = post_upvote_counts.get(post.id, 0)
+            post.downvote_count = post_downvote_counts.get(post.id, 0)
+            post.save(update_fields=['comment_count', 'upvote_count', 'downvote_count'])
+
+        help_comment_counts = dict(
+            HelpComment.objects.values('request_id')
+            .annotate(total=Count('id'))
+            .values_list('request_id', 'total')
+        )
+        for help_request in HelpRequest.objects.all():
+            help_request.comment_count = help_comment_counts.get(help_request.id, 0)
+            help_request.save(update_fields=['comment_count'])

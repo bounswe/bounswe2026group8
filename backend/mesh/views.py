@@ -12,15 +12,22 @@ logger = logging.getLogger(__name__)
 
 class MeshSyncView(APIView):
     """
-    POST /mesh-messages/sync/
-
-    Batch-upload a list of mesh messages (posts and/or comments).
-    Idempotent: messages whose id already exists are skipped silently. The
-    response reports which ids were newly accepted so the mobile client can
-    mark them syncedToServer locally.
-
-    Request body:  { "messages": [ {...}, ... ] }
-    Response:      { "accepted": ["id1", "id2", ...] }
+    Sync offline mesh messages to the server.
+    
+    POST /mesh-messages/sync
+    
+    Batch-upload messages that were created offline on mobile devices.
+    Messages include both posts and comments. Idempotent: messages with
+    duplicate IDs are skipped silently.
+    
+    Request body:
+    - messages (array, required): List of offline message objects
+      Each message should have: id, type, content, timestamp, etc.
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with list of accepted message IDs
+    Error: 400 Bad Request if messages is not a list
     """
 
     permission_classes = [IsAuthenticated]
@@ -53,9 +60,16 @@ class MeshSyncView(APIView):
 
 class MeshPostListView(APIView):
     """
-    GET /mesh-messages/
-
-    List top-level posts (parent_post_id is null). Newest first.
+    List offline mesh posts.
+    
+    GET /mesh-messages
+    
+    Retrieve list of top-level posts from the mesh (posts without parent).
+    Ordered newest first. These are messages synced from offline mobile clients.
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with list of mesh posts
     """
 
     permission_classes = [IsAuthenticated]
@@ -68,9 +82,19 @@ class MeshPostListView(APIView):
 
 class MeshCommentListView(APIView):
     """
-    GET /mesh-messages/<post_id>/comments/
-
-    Comments on a given post, oldest first (chat-thread order).
+    List comments on a mesh post.
+    
+    GET /mesh-messages/{post_id}/comments
+    
+    Retrieve comments/replies to a specific mesh post.
+    Ordered by creation time (oldest first).
+    
+    Authorization: Required (Bearer token)
+    
+    Parameters:
+    - post_id (integer, path): ID of the parent mesh post
+    
+    Returns: 200 OK with list of mesh comments
     """
 
     permission_classes = [IsAuthenticated]
