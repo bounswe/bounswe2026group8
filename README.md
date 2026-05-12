@@ -38,7 +38,7 @@ docker-compose -f docker-compose.yml -f docker-compose.local.yml up --build
 ```
 
 - Frontend: **http://localhost**
-- API: **http://localhost/api/**
+- API: **http://localhost:8000/api/docs/**
 
 Subsequent runs (no code changes):
 ```bash
