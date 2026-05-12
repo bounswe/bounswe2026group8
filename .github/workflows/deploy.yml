@@ -11,6 +11,7 @@ on:
 
 jobs:
   test:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -81,6 +82,7 @@ jobs:
           path: test-reports/backend/
 
   frontend-test:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -128,6 +130,7 @@ jobs:
           path: test-reports/frontend/
 
   android-test:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -169,6 +172,7 @@ jobs:
             mobile/app/build/test-results/testDebugUnitTest/
 
   android-emulator-test:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -240,6 +244,7 @@ jobs:
           path: mobile/app/build/reports/androidTests/connected/
 
   e2e:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
