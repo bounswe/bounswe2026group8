@@ -40,7 +40,7 @@ test.describe.serial('Forum flows', () => {
     await page.click('button:has-text("Create Post")');
 
     // PostCreatePage navigates to /forum?tab=GLOBAL on success, not the post detail
-    await page.waitForURL(/\/forum/);
+    await page.waitForURL(/\/forum\?tab=/);
     await expect(page.getByText(postTitle)).toBeVisible();
 
     // Open the post detail to capture the URL for TC-FORUM-002
@@ -72,10 +72,10 @@ test.describe.serial('Forum flows', () => {
     await expect(upvoteBtn).toContainText(String(initialUp + 1));
     await expect(upvoteBtn).toHaveClass(/vote-active/);
 
-    // Toggle off — wait for active state to confirm API round-trip, then click
+    // Toggle off — wait for active class to clear (confirms API round-trip), then check count
     await upvoteBtn.click();
-    await expect(upvoteBtn).toContainText(String(initialUp));
     await expect(upvoteBtn).not.toHaveClass(/vote-active/);
+    await expect(upvoteBtn).toContainText(String(initialUp));
 
     // Downvote — downvote count +1
     await downvoteBtn.click();
