@@ -705,5 +705,15 @@
     <string name="badge_name_responder">Responder</string>
     <string name="badge_desc_responder">Awarded for taking responsibility for community help requests.</string>
     <string name="assigned_expert_format">Assigned to: %1$s</string>
+
+    <!-- Public profile: Activity section -->
+    <string name="profile_activity">Activity</string>
+    <string name="profile_activity_loading">Loading…</string>
+    <string name="profile_activity_empty_posts">No forum posts yet.</string>
+    <string name="profile_activity_empty_requests">No help requests yet.</string>
+    <string name="profile_activity_empty_offers">No help offers yet.</string>
+    <string name="profile_activity_post_meta">▲ %1$d  ▼ %2$d  💬 %3$d</string>
+    <string name="profile_activity_request_meta">%1$s · %2$s</string>
+    <string name="profile_activity_offer_meta">%1$s · %2$s</string>
 </resources>
 

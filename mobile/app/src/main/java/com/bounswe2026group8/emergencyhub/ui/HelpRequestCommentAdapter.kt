@@ -42,10 +42,7 @@ class HelpRequestCommentAdapter(
 
         holder.txtCommentAuthor.text = comment.author.fullName
         holder.txtCommentAuthor.setOnClickListener {
-            val intent = android.content.Intent(holder.itemView.context, PublicProfileActivity::class.java).apply {
-                putExtra(PublicProfileActivity.EXTRA_USER_ID, comment.author.id)
-            }
-            holder.itemView.context.startActivity(intent)
+            PublicProfileActivity.navigate(holder.itemView.context, comment.author.id, currentUserId)
         }
         holder.txtCommentContent.text = comment.content
         holder.txtCommentTime.text = TimeUtils.timeAgo(comment.createdAt)

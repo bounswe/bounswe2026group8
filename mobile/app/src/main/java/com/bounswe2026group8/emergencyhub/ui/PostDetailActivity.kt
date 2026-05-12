@@ -141,10 +141,7 @@ class PostDetailActivity : AppCompatActivity() {
             text = if (p.repostedFrom != null) p.repostedFrom.author.fullName else p.author.fullName
             setOnClickListener {
                 val authorId = if (p.repostedFrom != null) p.repostedFrom.author.id else p.author.id
-                val intent = Intent(this@PostDetailActivity, PublicProfileActivity::class.java).apply {
-                    putExtra(PublicProfileActivity.EXTRA_USER_ID, authorId)
-                }
-                startActivity(intent)
+                PublicProfileActivity.navigate(this@PostDetailActivity, authorId, tokenManager.getUser()?.id)
             }
         }
         findViewById<TextView>(R.id.txtPostTime).text = TimeUtils.timeAgo(p.createdAt)

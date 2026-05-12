@@ -1,5 +1,7 @@
 package com.bounswe2026group8.emergencyhub.ui
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
@@ -14,6 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldData
+import com.bounswe2026group8.emergencyhub.api.HelpOfferItem
+import com.bounswe2026group8.emergencyhub.api.HelpRequestItem
+import com.bounswe2026group8.emergencyhub.api.Post
 import com.bounswe2026group8.emergencyhub.api.ResourceData
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.api.UserBadgeItem
@@ -26,6 +31,18 @@ class PublicProfileActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_USER_ID = "user_id"
+
+        /** Navigates to the correct profile screen: own profile if targetUserId == currentUserId, otherwise public profile. */
+        fun navigate(context: Context, targetUserId: Int, currentUserId: Int?) {
+            if (targetUserId == currentUserId) {
+                context.startActivity(Intent(context, ProfileActivity::class.java))
+            } else {
+                context.startActivity(
+                    Intent(context, PublicProfileActivity::class.java)
+                        .putExtra(EXTRA_USER_ID, targetUserId)
+                )
+            }
+        }
     }
 
     private var userId: Int = -1
@@ -46,6 +63,20 @@ class PublicProfileActivity : AppCompatActivity() {
     private lateinit var resourceList: LinearLayout
     private lateinit var cardExpertise: View
     private lateinit var expertiseList: LinearLayout
+
+    // Activity section
+    private enum class ActivityTab { POSTS, REQUESTS, OFFERS }
+    private var activityTab = ActivityTab.POSTS
+    private var userPosts: List<Post>? = null
+    private var userRequests: List<HelpRequestItem>? = null
+    private var userOffers: List<HelpOfferItem>? = null
+
+    private lateinit var cardActivity: View
+    private lateinit var activityTabPosts: TextView
+    private lateinit var activityTabRequests: TextView
+    private lateinit var activityTabOffers: TextView
+    private lateinit var txtActivityState: TextView
+    private lateinit var activityList: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +108,20 @@ class PublicProfileActivity : AppCompatActivity() {
         cardExpertise = findViewById(R.id.cardExpertise)
         expertiseList = findViewById(R.id.expertiseList)
 
+        cardActivity = findViewById(R.id.cardActivity)
+        activityTabPosts = findViewById(R.id.activityTabPosts)
+        activityTabRequests = findViewById(R.id.activityTabRequests)
+        activityTabOffers = findViewById(R.id.activityTabOffers)
+        txtActivityState = findViewById(R.id.txtActivityState)
+        activityList = findViewById(R.id.activityList)
+
+        activityTabPosts.setOnClickListener { selectActivityTab(ActivityTab.POSTS) }
+        activityTabRequests.setOnClickListener { selectActivityTab(ActivityTab.REQUESTS) }
+        activityTabOffers.setOnClickListener { selectActivityTab(ActivityTab.OFFERS) }
+
         loadPublicProfile()
         loadUserBadges()
+        initActivitySection()
     }
 
     private fun loadPublicProfile() {
@@ -190,11 +233,9 @@ class PublicProfileActivity : AppCompatActivity() {
         view.findViewById<TextView>(R.id.fieldLabel).text = label
         view.findViewById<TextView>(R.id.fieldValue).text = value
         
-        // Remove click listeners and edit icons (they are read-only)
-        val icon = view.findViewById<View>(R.id.editIcon)
-        if (icon != null) {
-            icon.visibility = View.GONE
-        }
+        // include_profile_field.xml has no editIcon — layout is read-only by design
+        // val icon = view.findViewById<View>(R.id.editIcon)
+        // if (icon != null) { icon.visibility = View.GONE }
         view.isClickable = false
         
         personalInfoContainer.addView(view)
@@ -261,6 +302,206 @@ class PublicProfileActivity : AppCompatActivity() {
             row.addView(label)
             expertiseList.addView(row)
         }
+    }
+
+    // ── Activity section ────────────────────────────────────────────────────
+
+    private fun initActivitySection() {
+        cardActivity.visibility = View.VISIBLE
+        selectActivityTab(ActivityTab.POSTS)
+    }
+
+    private fun selectActivityTab(tab: ActivityTab) {
+        activityTab = tab
+        updateActivityTabStyles()
+        when (tab) {
+            ActivityTab.POSTS -> if (userPosts != null) displayActivityPosts() else loadActivityPosts()
+            ActivityTab.REQUESTS -> if (userRequests != null) displayActivityRequests() else loadActivityRequests()
+            ActivityTab.OFFERS -> if (userOffers != null) displayActivityOffers() else loadActivityOffers()
+        }
+    }
+
+    private fun updateActivityTabStyles() {
+        val allTabs = listOf(
+            ActivityTab.POSTS to activityTabPosts,
+            ActivityTab.REQUESTS to activityTabRequests,
+            ActivityTab.OFFERS to activityTabOffers,
+        )
+        for ((t, view) in allTabs) {
+            if (t == activityTab) {
+                view.setTextColor(ContextCompat.getColor(this, R.color.accent))
+                view.setBackgroundResource(R.drawable.sort_pill_active_bg)
+            } else {
+                view.setTextColor(ContextCompat.getColor(this, R.color.text_muted))
+                view.setBackgroundResource(R.drawable.sort_pill_bg)
+            }
+        }
+    }
+
+    private fun loadActivityPosts() {
+        showActivityLoading()
+        lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.getService(this@PublicProfileActivity).getPosts(author = userId)
+                if (res.isSuccessful) {
+                    userPosts = (res.body() ?: emptyList()).sortedByDescending { it.createdAt }
+                    if (activityTab == ActivityTab.POSTS) displayActivityPosts()
+                } else {
+                    if (activityTab == ActivityTab.POSTS) showActivityError()
+                }
+            } catch (_: Exception) {
+                if (activityTab == ActivityTab.POSTS) showActivityError()
+            }
+        }
+    }
+
+    private fun loadActivityRequests() {
+        showActivityLoading()
+        lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.getService(this@PublicProfileActivity).getHelpRequests(author = userId)
+                if (res.isSuccessful) {
+                    userRequests = (res.body() ?: emptyList()).sortedByDescending { it.createdAt }
+                    if (activityTab == ActivityTab.REQUESTS) displayActivityRequests()
+                } else {
+                    if (activityTab == ActivityTab.REQUESTS) showActivityError()
+                }
+            } catch (_: Exception) {
+                if (activityTab == ActivityTab.REQUESTS) showActivityError()
+            }
+        }
+    }
+
+    private fun loadActivityOffers() {
+        showActivityLoading()
+        lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.getService(this@PublicProfileActivity).getHelpOffers(author = userId)
+                if (res.isSuccessful) {
+                    userOffers = (res.body() ?: emptyList()).sortedByDescending { it.createdAt }
+                    if (activityTab == ActivityTab.OFFERS) displayActivityOffers()
+                } else {
+                    if (activityTab == ActivityTab.OFFERS) showActivityError()
+                }
+            } catch (_: Exception) {
+                if (activityTab == ActivityTab.OFFERS) showActivityError()
+            }
+        }
+    }
+
+    private fun displayActivityPosts() {
+        val posts = userPosts ?: return
+        activityList.removeAllViews()
+        if (posts.isEmpty()) {
+            showActivityEmpty(getString(R.string.profile_activity_empty_posts))
+            return
+        }
+        txtActivityState.visibility = View.GONE
+        for (post in posts) {
+            val row = buildActivityRow(
+                title = post.title,
+                meta = getString(R.string.profile_activity_post_meta, post.upvoteCount, post.downvoteCount, post.commentCount)
+            ) {
+                val intent = Intent(this, PostDetailActivity::class.java)
+                intent.putExtra("post_id", post.id)
+                startActivity(intent)
+            }
+            activityList.addView(row)
+        }
+    }
+
+    private fun displayActivityRequests() {
+        val requests = userRequests ?: return
+        activityList.removeAllViews()
+        if (requests.isEmpty()) {
+            showActivityEmpty(getString(R.string.profile_activity_empty_requests))
+            return
+        }
+        txtActivityState.visibility = View.GONE
+        for (item in requests) {
+            val statusLabel = item.status.replace('_', ' ')
+            val row = buildActivityRow(
+                title = item.title,
+                meta = getString(R.string.profile_activity_request_meta, item.category, statusLabel)
+            ) {
+                val intent = Intent(this, HelpRequestDetailActivity::class.java)
+                intent.putExtra(HelpRequestDetailActivity.EXTRA_REQUEST_ID, item.id)
+                startActivity(intent)
+            }
+            activityList.addView(row)
+        }
+    }
+
+    private fun displayActivityOffers() {
+        val offers = userOffers ?: return
+        activityList.removeAllViews()
+        if (offers.isEmpty()) {
+            showActivityEmpty(getString(R.string.profile_activity_empty_offers))
+            return
+        }
+        txtActivityState.visibility = View.GONE
+        for (item in offers) {
+            val row = buildActivityRow(
+                title = item.skillOrResource,
+                meta = getString(R.string.profile_activity_offer_meta, item.category, item.availability)
+            ) { /* offers are read-only; tap does nothing */ }
+            activityList.addView(row)
+        }
+    }
+
+    private fun buildActivityRow(title: String, meta: String, onClick: () -> Unit): View {
+        val density = resources.displayMetrics.density
+
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, (10 * density).toInt(), 0, (10 * density).toInt())
+            setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+            isClickable = true
+            isFocusable = true
+            setOnClickListener { onClick() }
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { bottomMargin = 2 }
+        }
+
+        val titleView = TextView(this).apply {
+            text = title
+            textSize = 14f
+            setTextColor(ContextCompat.getColor(context, R.color.text_primary))
+        }
+
+        val metaView = TextView(this).apply {
+            text = meta
+            textSize = 12f
+            setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = (2 * density).toInt() }
+        }
+
+        row.addView(titleView)
+        row.addView(metaView)
+        return row
+    }
+
+    private fun showActivityLoading() {
+        activityList.removeAllViews()
+        txtActivityState.text = getString(R.string.profile_activity_loading)
+        txtActivityState.visibility = View.VISIBLE
+    }
+
+    private fun showActivityEmpty(message: String) {
+        activityList.removeAllViews()
+        txtActivityState.text = message
+        txtActivityState.visibility = View.VISIBLE
+    }
+
+    private fun showActivityError() {
+        activityList.removeAllViews()
+        txtActivityState.text = getString(R.string.network_error)
+        txtActivityState.visibility = View.VISIBLE
     }
 
     private fun displayTopBadges(badges: List<UserBadgeItem>) {

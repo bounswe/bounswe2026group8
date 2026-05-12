@@ -256,6 +256,105 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- ── Activity Section (Posts / Requests / Offers) ─────────────── -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/bg_surface"
+                app:cardCornerRadius="14dp"
+                app:strokeColor="@color/border"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile_activity"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Tab row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:id="@+id/activityTabPosts"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/my_posts_tab_forum_posts"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="@drawable/sort_pill_active_bg"
+                            android:textColor="@color/accent" />
+
+                        <TextView
+                            android:id="@+id/activityTabRequests"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/my_posts_tab_help_requests"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="@drawable/sort_pill_bg"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/activityTabOffers"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/my_posts_tab_help_offers"
+                            android:gravity="center"
+                            android:textSize="11sp"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:background="@drawable/sort_pill_bg"
+                            android:textColor="@color/text_muted" />
+
+                    </LinearLayout>
+
+                    <!-- State (loading / empty / error) -->
+                    <TextView
+                        android:id="@+id/txtActivityState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
+                        android:visibility="gone" />
+
+                    <!-- Dynamically populated item rows -->
+                    <LinearLayout
+                        android:id="@+id/activityList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

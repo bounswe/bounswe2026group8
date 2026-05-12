@@ -191,10 +191,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         txtDetailDescription.text = detail.description
         txtDetailAuthor.text = getString(R.string.help_request_author_format, detail.author.fullName)
         txtDetailAuthor.setOnClickListener {
-            val intent = Intent(this, PublicProfileActivity::class.java).apply {
-                putExtra(PublicProfileActivity.EXTRA_USER_ID, detail.author.id)
-            }
-            startActivity(intent)
+            PublicProfileActivity.navigate(this, detail.author.id, tokenManager.getUser()?.id)
         }
         txtDetailTimeAgo.text = TimeUtils.timeAgo(detail.createdAt)
 
@@ -287,10 +284,7 @@ class HelpRequestDetailActivity : AppCompatActivity() {
             txtAssignedExpert.visibility = View.VISIBLE
             detail.assignedExpert?.id?.let { expertId ->
                 txtAssignedExpert.setOnClickListener {
-                    val intent = Intent(this, PublicProfileActivity::class.java).apply {
-                        putExtra(PublicProfileActivity.EXTRA_USER_ID, expertId)
-                    }
-                    startActivity(intent)
+                    PublicProfileActivity.navigate(this, expertId, tokenManager.getUser()?.id)
                 }
             }
         } else {
