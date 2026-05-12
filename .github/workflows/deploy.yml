@@ -11,7 +11,6 @@ on:
 
 jobs:
   test:
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -82,7 +81,6 @@ jobs:
           path: test-reports/backend/
 
   frontend-test:
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -130,7 +128,6 @@ jobs:
           path: test-reports/frontend/
 
   android-test:
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -172,7 +169,6 @@ jobs:
             mobile/app/build/test-results/testDebugUnitTest/
 
   android-emulator-test:
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -203,14 +199,14 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-30-default-x86_64
+          key: avd-34-google_apis-x86_64
 
       - name: Create AVD snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
-          target: default
+          api-level: 34
+          target: google_apis
           arch: x86_64
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
@@ -220,8 +216,8 @@ jobs:
       - name: Run instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
-          target: default
+          api-level: 34
+          target: google_apis
           arch: x86_64
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
@@ -244,7 +240,6 @@ jobs:
           path: mobile/app/build/reports/androidTests/connected/
 
   e2e:
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -370,3 +365,4 @@ jobs:
             cd bounswe2026group8
             git pull
             docker-compose up --build -d
+            docker-compose restart nginx
