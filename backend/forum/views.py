@@ -35,12 +35,30 @@ from .serializers import (
 logger = logging.getLogger(__name__)
 
 
-# ── Post CRUD ──────────────────────────────────────────────────────────────────
+# -- Post CRUD -------------------------------------------------------------------
 
 class PostListCreateView(APIView):
     """
-    GET  /forum/posts/         — list posts (filtered by hub, forum_type)
-    POST /forum/posts/         — create a post (authenticated)
+    List forum posts and create new posts.
+    
+    GET /forum/posts
+    List all active forum posts with optional filtering.
+    Query parameters:
+    - author (integer): Filter by post author ID
+    - author_role (string): Filter by author role (EXPERT or STANDARD)
+    - forum_type (string): Filter by forum type (GLOBAL, HUB_SPECIFIC, URGENT)
+    - hub (integer): Filter by hub ID (when forum_type is not GLOBAL)
+    
+    POST /forum/posts
+    Create a new forum post (authenticated users only).
+    Request body:
+    - title (string, required): Post title
+    - content (string, required): Post content/body
+    - forum_type (string, required): GLOBAL, HUB_SPECIFIC, or URGENT
+    - hub_id (integer, optional): Required if forum_type is HUB_SPECIFIC
+    - image_urls (array, optional): URLs to attached images
+    
+    Returns: 200 OK with list (GET) or 201 Created (POST)
     """
 
     def get_permissions(self):
@@ -90,9 +108,21 @@ class PostListCreateView(APIView):
 
 class PostDetailView(APIView):
     """
-    GET    /forum/posts/{id}/  — detail
-    PUT    /forum/posts/{id}/  — update (author only)
-    DELETE /forum/posts/{id}/  — delete (author only)
+    Get, update, or delete a forum post.
+    
+    GET /forum/posts/{id}
+    Retrieve full details of a specific forum post.
+    
+    PUT /forum/posts/{id}
+    Update a forum post (author only). Supports partial updates.
+    
+    DELETE /forum/posts/{id}
+    Delete a forum post (author or staff only).
+    
+    Authorization: Required for PUT/DELETE (Bearer token)
+    
+    Returns: 200 OK (GET/PUT) or 204 No Content (DELETE)
+    Error: 403 Forbidden if not author/staff, 404 if not found
     """
 
     def get_permissions(self):
@@ -145,12 +175,23 @@ class PostDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ── Comments ───────────────────────────────────────────────────────────────────
+# -- Comments -------------------------------------------------------------------
 
 class CommentListCreateView(APIView):
     """
-    GET  /forum/posts/{id}/comments/  — list comments for a post
-    POST /forum/posts/{id}/comments/  — add a comment (authenticated)
+    List and create comments on a forum post.
+    
+    GET /forum/posts/{post_id}/comments
+    List all comments on a specific forum post.
+    
+    POST /forum/posts/{post_id}/comments
+    Add a comment to a forum post (authenticated users only).
+    Request body:
+    - content (string, required): Comment text
+    - image_urls (array, optional): URLs to attached images
+    
+    Returns: 200 OK with list (GET) or 201 Created (POST)
+    Error: 400 Bad Request if post is not active
     """
 
     def get_permissions(self):
@@ -185,10 +226,17 @@ class CommentListCreateView(APIView):
 
 class CommentDeleteView(APIView):
     """
-    DELETE /forum/comments/{id}/  — delete a comment.
-
-    Authors may delete their own comments. Moderators and admins may delete
-    any comment; their deletes are recorded in the staff audit log.
+    Delete a forum comment.
+    
+    DELETE /forum/comments/{id}
+    
+    Delete a forum comment (author or staff only).
+    Staff may delete any comment (with audit logging).
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 204 No Content
+    Error: 403 Forbidden if not author/staff, 404 if not found
     """
     permission_classes = [IsAuthenticated]
 
@@ -224,7 +272,7 @@ class CommentDeleteView(APIView):
         return Response({'detail': 'Comment deleted.'}, status=status.HTTP_204_NO_CONTENT)
 
 
-# ── Voting ─────────────────────────────────────────────────────────────────────
+# -- Voting -------------------------------------------------------------------
 
 class VoteView(APIView):
     """
@@ -276,7 +324,7 @@ class VoteView(APIView):
                 return Response({'detail': 'Vote recorded.', 'vote': new_type}, status=status.HTTP_201_CREATED)
 
 
-# ── Reporting ──────────────────────────────────────────────────────────────────
+# -- Reporting -------------------------------------------------------------------
 
 class ReportView(APIView):
     """
@@ -309,7 +357,7 @@ class ReportView(APIView):
         return Response({'detail': 'Report submitted.'}, status=status.HTTP_201_CREATED)
 
 
-# ── Repost ─────────────────────────────────────────────────────────────────────
+# -- Repost -------------------------------------------------------------------
 
 class RepostView(APIView):
     """
@@ -359,7 +407,7 @@ class RepostView(APIView):
         )
 
 
-# ── FCM Notifications ─────────────────────────────────────────────────────────
+# -- FCM Notifications -----------------------------------------------------------
 
 def _send_urgent_post_notification(post):
     """Send a push notification to hub members (or all users for GLOBAL) when an urgent post is created."""
@@ -401,7 +449,7 @@ def _send_urgent_post_notification(post):
             logger.exception('FCM: failed to send multicast')
 
 
-# ── Image Upload ──────────────────────────────────────────────────────────────
+# -- Image Upload -----------------------------------------------------------
 
 ALLOWED_IMAGE_TYPES = {'image/jpeg', 'image/png', 'image/gif', 'image/webp'}
 MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB

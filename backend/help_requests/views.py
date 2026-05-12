@@ -42,8 +42,29 @@ from .services import update_status_on_expert_comment
 
 class HelpRequestListCreateView(APIView):
     """
-    GET  /help-requests/  — list active help requests, filterable by hub and category.
-    POST /help-requests/  — create a new help request (authenticated users only).
+    List help requests and create new ones.
+    
+    GET /help-requests
+    List all active help requests with optional filtering.
+    Query parameters:
+    - author (integer): Filter by request author ID
+    - hub_id (integer): Filter by hub ID
+    - category (string): Filter by category (MEDICAL, SHELTER, FOOD, etc.)
+    - expertise_match (boolean): For experts only - show only requests matching their expertise
+    
+    POST /help-requests
+    Create a new help request. Request body:
+    - title (string, required): Request title
+    - description (string, required): Detailed description
+    - category (string, required): Category (MEDICAL, SHELTER, FOOD, etc.)
+    - urgency (string, required): CRITICAL, HIGH, MEDIUM, LOW
+    - latitude (float, optional): Geographic latitude
+    - longitude (float, optional): Geographic longitude
+    - hub_id (integer, optional): Hub ID (auto-assigned if not provided)
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with list (GET) or 201 Created (POST)
     """
     permission_classes = [IsAuthenticated]
 
@@ -100,9 +121,22 @@ class HelpRequestListCreateView(APIView):
 
 class HelpRequestDetailView(APIView):
     """
-    GET    /help-requests/{id}/  — full detail of a single help request.
-    PUT    /help-requests/{id}/  — update a help request (author only).
-    DELETE /help-requests/{id}/  — delete a help request (author only).
+    Get, update, or delete a help request.
+    
+    GET /help-requests/{id}
+    Retrieve full details of a specific help request.
+    
+    PUT /help-requests/{id}
+    Update a help request (author or staff only). Supports partial updates.
+    Request body: Any of title, description, category, urgency, latitude, longitude
+    
+    DELETE /help-requests/{id}
+    Delete a help request (author or staff only).
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK (GET/PUT) or 204 No Content (DELETE)
+    Error: 403 Forbidden if not author/staff, 404 if not found
     """
     permission_classes = [IsAuthenticated]
 
@@ -167,10 +201,18 @@ class HelpRequestDetailView(APIView):
 
 class HelpRequestStatusView(APIView):
     """
-    PATCH /help-requests/{id}/status/  — update the status of a help request.
-
-    Only the request's author can change the status.  The only status transition
-    accepted from this endpoint is setting status to RESOLVED.
+    Update the status of a help request.
+    
+    PATCH /help-requests/{id}/status
+    
+    Mark a help request as resolved (author only).
+    Request body:
+    - status (string, required): Must be "RESOLVED"
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with updated request
+    Error: 403 Forbidden if not author, 400 if invalid status
     """
     permission_classes = [IsAuthenticated]
 
@@ -202,11 +244,19 @@ class HelpRequestStatusView(APIView):
 
 class HelpRequestTakeOnView(APIView):
     """
-    POST /help-requests/{id}/take-on/  — an expert takes responsibility for a request.
-
-    Eligibility rules are centralised in HelpRequest.can_be_taken_by().
-    On success the request status becomes EXPERT_RESPONDING and the expert
-    is recorded in assigned_expert.
+    Expert takes responsibility for a help request.
+    
+    POST /help-requests/{id}/take-on
+    
+    An expert user claims responsibility for helping with this request.
+    Request status changes to EXPERT_RESPONDING and expert is recorded.
+    
+    Eligibility: Expert must have matching expertise category approval.
+    
+    Authorization: Required (Bearer token, EXPERT role)
+    
+    Returns: 200 OK with updated request
+    Error: 403 Forbidden if not eligible, 409 if already assigned
     """
     permission_classes = [IsAuthenticated]
 
@@ -236,10 +286,17 @@ class HelpRequestTakeOnView(APIView):
 
 class HelpRequestReleaseView(APIView):
     """
-    POST /help-requests/{id}/release/  — the assigned expert releases responsibility.
-
-    Only the currently assigned expert can release.  Resolved requests cannot
-    be released.
+    Release responsibility for a help request.
+    
+    POST /help-requests/{id}/release
+    
+    An assigned expert releases responsibility for a help request.
+    Request status returns to OPEN and assigned_expert is cleared.
+    
+    Authorization: Required (Bearer token, must be assigned expert)
+    
+    Returns: 200 OK with updated request
+    Error: 403 Forbidden if not assigned expert, 400 if already resolved
     """
     permission_classes = [IsAuthenticated]
 
@@ -272,13 +329,22 @@ class HelpRequestReleaseView(APIView):
 
 class HelpCommentListCreateView(APIView):
     """
-    GET  /help-requests/{id}/comments/  — list comments on a help request.
-    POST /help-requests/{id}/comments/  — add a comment to a help request.
-
-    When the commenter has role=EXPERT and the request is still OPEN,
-    the request status is automatically promoted to EXPERT_RESPONDING.
-    The comment_count on the parent request is kept in sync within the
-    same database transaction.
+    List and create comments on a help request.
+    
+    GET /help-requests/{id}/comments
+    List all comments on a help request, ordered by creation time.
+    
+    POST /help-requests/{id}/comments
+    Add a comment to a help request.
+    Request body:
+    - content (string, required): Comment text
+    - image_url (string, optional): URL to attached image
+    
+    Note: When an expert comments, the request may be marked as EXPERT_RESPONDING.
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK (GET) or 201 Created (POST)
     """
     permission_classes = [IsAuthenticated]
 
@@ -315,10 +381,16 @@ class HelpCommentListCreateView(APIView):
 
 class HelpCommentDeleteView(APIView):
     """
-    DELETE /help-requests/comments/{pk}/ — delete a comment (author only).
-
-    Decrements comment_count on the parent HelpRequest atomically so the
-    denormalised counter stays in sync, matching the increment in HelpCommentListCreateView.
+    Delete a comment from a help request.
+    
+    DELETE /help-requests/comments/{id}
+    
+    Delete a comment (author or staff only).
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 204 No Content
+    Error: 403 Forbidden if not author/staff, 404 if not found
     """
     permission_classes = [IsAuthenticated]
 
@@ -359,12 +431,26 @@ class HelpCommentDeleteView(APIView):
 
 class HelpOfferListCreateView(APIView):
     """
-    GET  /help-offers/  — list help offers, filterable by hub and category.
-    POST /help-offers/  — create a new help offer (authenticated users only).
-
-    Offers are standalone — they are not tied to any specific help request.
-    A user posts an offer to advertise a skill or resource they can provide
-    to the community (e.g. "I have a vehicle for transport").
+    List and create help offers.
+    
+    GET /help-offers
+    List all help offers with optional filtering.
+    Query parameters:
+    - author (integer): Filter by offer author ID
+    - hub_id (integer): Filter by hub ID
+    - category (string): Filter by category (MEDICAL, TRANSPORT, SHELTER, etc.)
+    
+    POST /help-offers
+    Create a new help offer to advertise skills or resources.
+    Request body:
+    - skill_or_resource (string, required): Description of what you're offering
+    - category (string, required): Category (MEDICAL, TRANSPORT, SHELTER, etc.)
+    - description (string, optional): Additional details
+    - hub_id (integer, optional): Hub ID (auto-assigned if not provided)
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with list (GET) or 201 Created (POST)
     """
     permission_classes = [IsAuthenticated]
 
@@ -405,10 +491,16 @@ class HelpOfferListCreateView(APIView):
 
 class HelpOfferDeleteView(APIView):
     """
-    DELETE /help-offers/{id}/  — delete a help offer (author only).
-
-    Only the user who created the offer can delete it. Returns 403 if
-    the requester is not the author.
+    Delete a help offer.
+    
+    DELETE /help-offers/{id}
+    
+    Delete a help offer (author or staff only).
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 204 No Content
+    Error: 403 Forbidden if not author/staff, 404 if not found
     """
     permission_classes = [IsAuthenticated]
 
@@ -453,8 +545,20 @@ MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB
 
 class ImageUploadView(APIView):
     """
-    POST /help-requests/upload/
-    Accepts multipart image files, saves to media/uploads/, returns URLs.
+    Upload images for help requests.
+    
+    POST /help-requests/upload
+    
+    Upload one or more images for use in help requests or comments.
+    Accepts JPEG, PNG, GIF, WebP up to 5MB each.
+    
+    Request body: multipart/form-data
+    - images (file, required, multiple): Image files to upload
+    
+    Authorization: Required (Bearer token)
+    
+    Returns: 200 OK with list of image URLs
+    Error: 400 Bad Request if invalid file type or exceeds size limit
     """
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser]
