@@ -24,12 +24,13 @@ import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.api.VoteRequest
 import com.bounswe2026group8.emergencyhub.auth.HubManager
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.util.TimeUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
-import com.bounswe2026group8.emergencyhub.util.TimeUtils
+import com.bounswe2026group8.emergencyhub.util.VoiceInputManager
 
 class PostDetailActivity : AppCompatActivity() {
 
@@ -39,33 +40,38 @@ class PostDetailActivity : AppCompatActivity() {
     private var postId = -1
     private var post: Post? = null
     private var commentCount = 0
+    private lateinit var voiceInputManager: VoiceInputManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_detail)
 
         tokenManager = TokenManager(this)
+        voiceInputManager = VoiceInputManager(this)
         postId = intent.getIntExtra("post_id", -1)
-        if (postId == -1) { finish(); return }
+        if (postId == -1) {
+            finish()
+            return
+        }
 
-        val currentUserId = tokenManager.getUser()?.id
         commentAdapter = CommentAdapter(
-            currentUserId = currentUserId,
+            currentUserId = tokenManager.getUser()?.id,
             onDeleteClick = { comment -> deleteComment(comment.id) }
         )
 
-        val recyclerComments = findViewById<RecyclerView>(R.id.recyclerComments)
-        recyclerComments.layoutManager = LinearLayoutManager(this)
-        recyclerComments.adapter = commentAdapter
+        findViewById<RecyclerView>(R.id.recyclerComments).apply {
+            layoutManager = LinearLayoutManager(this@PostDetailActivity)
+            adapter = commentAdapter
+        }
 
         if (tokenManager.isLoggedIn()) {
             findViewById<MaterialCardView>(R.id.commentInputCard).visibility = View.VISIBLE
+            voiceInputManager.bind(findViewById<TextInputEditText>(R.id.inputComment))
             findViewById<MaterialButton>(R.id.btnPostComment).setOnClickListener { submitComment() }
         }
 
         findViewById<TextView>(R.id.linkBackToForum).setOnClickListener { finish() }
-
-        HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector)).load()
+        HubSelectorHelper(this, findViewById<TextView>(R.id.textHubDisplay)).load()
 
         setupVoteButtons()
         loadPostAndComments()
@@ -82,18 +88,17 @@ class PostDetailActivity : AppCompatActivity() {
                     post = postResponse.body()
                     post?.let { displayPost(it) }
                 } else {
-                    Toast.makeText(this@PostDetailActivity, "Post not found", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PostDetailActivity, getString(R.string.forum_post_not_found), Toast.LENGTH_SHORT).show()
                     finish()
                     return@launch
                 }
 
                 if (commentsResponse.isSuccessful) {
-                    val comments = commentsResponse.body() ?: emptyList()
-                    commentAdapter.submitList(comments)
+                    commentAdapter.submitList(commentsResponse.body() ?: emptyList())
                     updateCommentsUI()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PostDetailActivity, getString(R.string.network_error_with_message, e.message ?: ""), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -101,57 +106,60 @@ class PostDetailActivity : AppCompatActivity() {
     private fun displayPost(p: Post) {
         commentCount = p.commentCount
 
-        val txtRepostLabel = findViewById<TextView>(R.id.txtRepostLabel)
-        if (p.repostedFrom != null) {
-            txtRepostLabel.text = "🔁 ${p.author.fullName} reposted"
-            txtRepostLabel.visibility = View.VISIBLE
-        } else {
-            txtRepostLabel.visibility = View.GONE
-        }
-
-        val txtForumType = findViewById<TextView>(R.id.txtForumTypeBadge)
-        when (p.forumType) {
-            "GLOBAL" -> {
-                txtForumType.text = "Global"
-                txtForumType.setTextColor(getColor(R.color.forum_global))
-                txtForumType.setBackgroundResource(R.drawable.forum_type_badge_global)
-            }
-            "STANDARD" -> {
-                txtForumType.text = "Standard"
-                txtForumType.setTextColor(getColor(R.color.forum_standard))
-                txtForumType.setBackgroundResource(R.drawable.forum_type_badge_standard)
-            }
-            "URGENT" -> {
-                txtForumType.text = "Urgent"
-                txtForumType.setTextColor(getColor(R.color.forum_urgent))
-                txtForumType.setBackgroundResource(R.drawable.forum_type_badge_urgent)
+        findViewById<TextView>(R.id.txtRepostLabel).apply {
+            if (p.repostedFrom != null) {
+                text = getString(R.string.forum_reposted_by_format, p.author.fullName)
+                visibility = View.VISIBLE
+            } else {
+                visibility = View.GONE
             }
         }
 
-        findViewById<TextView>(R.id.txtHubBadge).text = p.hubName ?: "Global"
+        findViewById<TextView>(R.id.txtForumTypeBadge).apply {
+            when (p.forumType) {
+                "GLOBAL" -> {
+                    text = getString(R.string.forum_type_global)
+                    setTextColor(getColor(R.color.forum_global))
+                    setBackgroundResource(R.drawable.forum_type_badge_global)
+                }
+                "STANDARD" -> {
+                    text = getString(R.string.forum_type_standard)
+                    setTextColor(getColor(R.color.forum_standard))
+                    setBackgroundResource(R.drawable.forum_type_badge_standard)
+                }
+                else -> {
+                    text = getString(R.string.forum_type_urgent)
+                    setTextColor(getColor(R.color.forum_urgent))
+                    setBackgroundResource(R.drawable.forum_type_badge_urgent)
+                }
+            }
+        }
+
+        findViewById<TextView>(R.id.txtHubBadge).text = p.hubName ?: getString(R.string.forum_type_global)
         findViewById<TextView>(R.id.txtPostTitle).text = p.title
-        val displayAuthor = if (p.repostedFrom != null) p.repostedFrom.author.fullName else p.author.fullName
-        findViewById<TextView>(R.id.txtPostAuthor).text = displayAuthor
+        findViewById<TextView>(R.id.txtPostAuthor).apply {
+            text = if (p.repostedFrom != null) p.repostedFrom.author.fullName else p.author.fullName
+            setOnClickListener {
+                val authorId = if (p.repostedFrom != null) p.repostedFrom.author.id else p.author.id
+                PublicProfileActivity.navigate(this@PostDetailActivity, authorId, tokenManager.getUser()?.id)
+            }
+        }
         findViewById<TextView>(R.id.txtPostTime).text = TimeUtils.timeAgo(p.createdAt)
         findViewById<TextView>(R.id.txtPostContent).text = p.content ?: ""
 
-        // Image gallery
         val imageGallery = findViewById<LinearLayout>(R.id.imageGallery)
-        val images = p.imageUrls
-        if (!images.isNullOrEmpty()) {
+        if (!p.imageUrls.isNullOrEmpty()) {
             imageGallery.removeAllViews()
             imageGallery.visibility = View.VISIBLE
-            val imageList = ArrayList(images)
-            for ((index, url) in images.withIndex()) {
+            val imageList = ArrayList(p.imageUrls)
+            for ((index, url) in p.imageUrls.withIndex()) {
                 val imgView = ImageView(this).apply {
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         resources.getDimensionPixelSize(R.dimen.post_detail_image_height)
-                    ).apply {
-                        if (index > 0) topMargin = 8
-                    }
+                    ).apply { if (index > 0) topMargin = 8 }
                     scaleType = ImageView.ScaleType.CENTER_CROP
-                    contentDescription = "Attachment ${index + 1}"
+                    contentDescription = getString(R.string.attachment_content_description, index + 1)
                     setOnClickListener {
                         val intent = Intent(this@PostDetailActivity, ImageLightboxActivity::class.java)
                         intent.putStringArrayListExtra("image_urls", imageList)
@@ -166,13 +174,14 @@ class PostDetailActivity : AppCompatActivity() {
             imageGallery.visibility = View.GONE
         }
 
-        val txtRepost = findViewById<TextView>(R.id.txtRepostCount)
-        if (p.repostedFrom == null && p.repostCount > 0) {
-            val word = if (p.repostCount == 1) "repost" else "reposts"
-            txtRepost.text = "${p.repostCount} $word"
-            txtRepost.visibility = View.VISIBLE
-        } else {
-            txtRepost.visibility = View.GONE
+        findViewById<TextView>(R.id.txtRepostCount).apply {
+            if (p.repostedFrom == null && p.repostCount > 0) {
+                val word = if (p.repostCount == 1) getString(R.string.repost_singular) else getString(R.string.repost_plural)
+                text = getString(R.string.forum_repost_count_format, p.repostCount, word)
+                visibility = View.VISIBLE
+            } else {
+                visibility = View.GONE
+            }
         }
 
         updateVoteDisplay()
@@ -184,16 +193,15 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun updateDeleteButton(p: Post) {
         val btnDelete = findViewById<TextView>(R.id.btnDeletePost)
-        val currentUserId = tokenManager.getUser()?.id
-        val isAuthor = currentUserId != null && currentUserId == p.author.id
+        val isAuthor = tokenManager.getUser()?.id == p.author.id
         if (tokenManager.isLoggedIn() && isAuthor) {
             btnDelete.visibility = View.VISIBLE
             btnDelete.setOnClickListener {
                 AlertDialog.Builder(this)
-                    .setTitle("Delete Post")
-                    .setMessage("Are you sure you want to delete this post? This action cannot be undone.")
-                    .setPositiveButton("Delete") { _, _ -> deletePost() }
-                    .setNegativeButton("Cancel", null)
+                    .setTitle(getString(R.string.forum_delete_post_title))
+                    .setMessage(getString(R.string.forum_delete_post_confirm))
+                    .setPositiveButton(getString(R.string.delete)) { _, _ -> deletePost() }
+                    .setNegativeButton(getString(R.string.cancel), null)
                     .show()
             }
         } else {
@@ -206,25 +214,21 @@ class PostDetailActivity : AppCompatActivity() {
             try {
                 val response = RetrofitClient.getService(this@PostDetailActivity).deletePost(postId)
                 if (response.isSuccessful || response.code() == 204) {
-                    Toast.makeText(this@PostDetailActivity, "Post deleted", Toast.LENGTH_SHORT).show()
-                    val resultIntent = Intent().putExtra("deleted_post_id", postId)
-                    setResult(RESULT_OK, resultIntent)
+                    Toast.makeText(this@PostDetailActivity, getString(R.string.forum_post_deleted), Toast.LENGTH_SHORT).show()
+                    setResult(RESULT_OK, Intent().putExtra("deleted_post_id", postId))
                     finish()
                 } else {
-                    Toast.makeText(this@PostDetailActivity, "Failed to delete post", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PostDetailActivity, getString(R.string.forum_delete_failed), Toast.LENGTH_SHORT).show()
                 }
             } catch (_: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PostDetailActivity, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // ── Report ──────────────────────────────────────────────────────────────
-
     private fun updateReportButton(p: Post) {
         val btnReport = findViewById<TextView>(R.id.btnReportPost)
-        val currentUserId = tokenManager.getUser()?.id
-        val isAuthor = currentUserId != null && currentUserId == p.author.id
+        val isAuthor = tokenManager.getUser()?.id == p.author.id
         if (tokenManager.isLoggedIn() && !isAuthor) {
             btnReport.visibility = View.VISIBLE
             btnReport.setOnClickListener { showReportDialog() }
@@ -234,14 +238,19 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun showReportDialog() {
-        val reasons = arrayOf("Spam", "Misinformation", "Abuse", "Irrelevant")
+        val reasons = arrayOf(
+            getString(R.string.report_reason_spam),
+            getString(R.string.report_reason_misinformation),
+            getString(R.string.report_reason_abuse),
+            getString(R.string.report_reason_irrelevant)
+        )
         val reasonValues = arrayOf("SPAM", "MISINFORMATION", "ABUSE", "IRRELEVANT")
         var selectedIndex = 0
         AlertDialog.Builder(this)
-            .setTitle("Report this post")
+            .setTitle(getString(R.string.forum_report_title))
             .setSingleChoiceItems(reasons, 0) { _, which -> selectedIndex = which }
-            .setPositiveButton("Submit") { _, _ -> reportPost(reasonValues[selectedIndex]) }
-            .setNegativeButton("Cancel", null)
+            .setPositiveButton(getString(R.string.submit)) { _, _ -> reportPost(reasonValues[selectedIndex]) }
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -251,41 +260,35 @@ class PostDetailActivity : AppCompatActivity() {
                 val response = RetrofitClient.getService(this@PostDetailActivity)
                     .reportPost(postId, ReportRequest(reason))
                 if (response.isSuccessful) {
-                    Toast.makeText(this@PostDetailActivity, "Report submitted. Thank you.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PostDetailActivity, getString(R.string.forum_report_success), Toast.LENGTH_SHORT).show()
                 } else {
                     val errorBody = response.errorBody()?.string()
-                    val message = if (errorBody?.contains("already reported") == true)
-                        "You have already reported this post."
-                    else
-                        "Could not submit report."
+                    val message = if (errorBody?.contains("already reported") == true) {
+                        getString(R.string.forum_report_already_exists)
+                    } else {
+                        getString(R.string.forum_report_failed)
+                    }
                     Toast.makeText(this@PostDetailActivity, message, Toast.LENGTH_SHORT).show()
                 }
             } catch (_: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PostDetailActivity, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
             }
         }
     }
-
-    // ── Share & Repost ──────────────────────────────────────────────────────
 
     private fun updateShareRepostButtons(p: Post) {
         val btnShare = findViewById<TextView>(R.id.btnShare)
         val btnRepost = findViewById<TextView>(R.id.btnRepost)
         val txtRepostedLabel = findViewById<TextView>(R.id.txtRepostedLabel)
 
-        // Share: always visible, copies link to clipboard
         btnShare.setOnClickListener {
             val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("Post Link", "https://emergencyhub.app/forum/posts/${p.id}")
+            val clip = ClipData.newPlainText(getString(R.string.forum_post_link_label), "https://emergencyhub.app/forum/posts/${p.id}")
             clipboard.setPrimaryClip(clip)
-            btnShare.text = "Copied!"
-            btnShare.postDelayed({ btnShare.text = "Share" }, 1500)
+            btnShare.text = getString(R.string.copied)
+            btnShare.postDelayed({ btnShare.text = getString(R.string.share) }, 1500)
         }
 
-        // Repost rules:
-        // 1. Must be logged in
-        // 2. Cannot repost own post
-        // 3. Cannot repost if already reposted
         val currentUserId = tokenManager.getUser()?.id
         val isAuthor = currentUserId != null && currentUserId == p.author.id
         val alreadyReposted = p.userHasReposted == true
@@ -311,36 +314,24 @@ class PostDetailActivity : AppCompatActivity() {
                     .repost(postId, RepostRequest(hub = hubId))
 
                 if (response.isSuccessful) {
-                    post = post?.copy(
-                        userHasReposted = true,
-                        repostCount = (post?.repostCount ?: 0) + 1
-                    )
-                    post?.let {
-                        // Update repost count display
-                        val txtRepost = findViewById<TextView>(R.id.txtRepostCount)
-                        if (it.repostedFrom == null && it.repostCount > 0) {
-                            val word = if (it.repostCount == 1) "repost" else "reposts"
-                            txtRepost.text = "${it.repostCount} $word"
-                            txtRepost.visibility = View.VISIBLE
-                        }
-                        updateShareRepostButtons(it)
-                    }
-                    Toast.makeText(this@PostDetailActivity, "Reposted!", Toast.LENGTH_SHORT).show()
+                    post = post?.copy(userHasReposted = true, repostCount = (post?.repostCount ?: 0) + 1)
+                    post?.let { displayPost(it) }
+                    Toast.makeText(this@PostDetailActivity, getString(R.string.forum_reposted), Toast.LENGTH_SHORT).show()
                 } else {
                     val errorBody = response.errorBody()?.string() ?: ""
                     val msg = try {
                         com.google.gson.JsonParser().parse(errorBody).asJsonObject
-                            .get("detail")?.asString ?: "Could not repost."
-                    } catch (_: Exception) { "Could not repost." }
+                            .get("detail")?.asString ?: getString(R.string.forum_repost_failed)
+                    } catch (_: Exception) {
+                        getString(R.string.forum_repost_failed)
+                    }
                     Toast.makeText(this@PostDetailActivity, msg, Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
+            } catch (_: Exception) {
+                Toast.makeText(this@PostDetailActivity, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
             }
         }
     }
-
-    // ── Voting ──────────────────────────────────────────────────────────────
 
     private fun setupVoteButtons() {
         findViewById<TextView>(R.id.btnUpvote).setOnClickListener { handleVote("UP") }
@@ -349,13 +340,12 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun handleVote(type: String) {
         if (!tokenManager.isLoggedIn()) {
-            Toast.makeText(this, "Sign in to vote", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.sign_in_to_vote), Toast.LENGTH_SHORT).show()
             return
         }
 
         val p = post ?: return
         val prevPost = p
-
         var newUp = p.upvoteCount
         var newDown = p.downvoteCount
         var newUserVote: String? = type
@@ -364,8 +354,13 @@ class PostDetailActivity : AppCompatActivity() {
             if (type == "UP") newUp-- else newDown--
             newUserVote = null
         } else if (p.userVote != null) {
-            if (p.userVote == "UP") { newUp--; newDown++ }
-            else { newDown--; newUp++ }
+            if (p.userVote == "UP") {
+                newUp--
+                newDown++
+            } else {
+                newDown--
+                newUp++
+            }
         } else {
             if (type == "UP") newUp++ else newDown++
         }
@@ -390,39 +385,23 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun updateVoteDisplay() {
         val p = post ?: return
-        val btnUp = findViewById<TextView>(R.id.btnUpvote)
-        val btnDown = findViewById<TextView>(R.id.btnDownvote)
-
-        btnUp.text = "▲ ${p.upvoteCount}"
-        btnDown.text = "▼ ${p.downvoteCount}"
-
-        btnUp.setTextColor(
-            if (p.userVote == "UP") getColor(R.color.vote_up_active)
-            else getColor(R.color.text_muted)
-        )
-        btnUp.setBackgroundResource(
-            if (p.userVote == "UP") R.drawable.sort_pill_active_bg
-            else R.drawable.sort_pill_bg
-        )
-
-        btnDown.setTextColor(
-            if (p.userVote == "DOWN") getColor(R.color.vote_down_active)
-            else getColor(R.color.text_muted)
-        )
-        btnDown.setBackgroundResource(
-            if (p.userVote == "DOWN") R.drawable.forum_type_badge_urgent
-            else R.drawable.sort_pill_bg
-        )
+        findViewById<TextView>(R.id.btnUpvote).apply {
+            text = "\u25B2 ${p.upvoteCount}"
+            setTextColor(if (p.userVote == "UP") getColor(R.color.vote_up_active) else getColor(R.color.text_muted))
+            setBackgroundResource(if (p.userVote == "UP") R.drawable.sort_pill_active_bg else R.drawable.sort_pill_bg)
+        }
+        findViewById<TextView>(R.id.btnDownvote).apply {
+            text = "\u25BC ${p.downvoteCount}"
+            setTextColor(if (p.userVote == "DOWN") getColor(R.color.vote_down_active) else getColor(R.color.text_muted))
+            setBackgroundResource(if (p.userVote == "DOWN") R.drawable.forum_type_badge_urgent else R.drawable.sort_pill_bg)
+        }
     }
 
-    // ── Comments ────────────────────────────────────────────────────────────
-
     private fun updateCommentsUI() {
-        val heading = findViewById<TextView>(R.id.txtCommentsHeading)
-        heading.text = "Comments ($commentCount)"
-
-        val txtNoComments = findViewById<TextView>(R.id.txtNoComments)
-        txtNoComments.visibility = if (commentAdapter.itemCount == 0) View.VISIBLE else View.GONE
+        findViewById<TextView>(R.id.txtCommentsHeading).text =
+            getString(R.string.comments_count_label, commentCount)
+        findViewById<TextView>(R.id.txtNoComments).visibility =
+            if (commentAdapter.itemCount == 0) View.VISIBLE else View.GONE
     }
 
     private fun submitComment() {
@@ -432,7 +411,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         val btn = findViewById<MaterialButton>(R.id.btnPostComment)
         btn.isEnabled = false
-        btn.text = "Posting…"
+        btn.text = getString(R.string.posting)
 
         lifecycleScope.launch {
             try {
@@ -446,38 +425,32 @@ class PostDetailActivity : AppCompatActivity() {
                     input.text?.clear()
                     updateCommentsUI()
                 } else {
-                    Toast.makeText(this@PostDetailActivity, "Failed to post comment", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PostDetailActivity, getString(R.string.comment_post_failed), Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: Exception) {
-                Toast.makeText(this@PostDetailActivity, "Network error", Toast.LENGTH_SHORT).show()
+            } catch (_: Exception) {
+                Toast.makeText(this@PostDetailActivity, getString(R.string.network_error), Toast.LENGTH_SHORT).show()
             } finally {
                 btn.isEnabled = true
-                btn.text = "Post Comment"
+                btn.text = getString(R.string.post_comment)
             }
         }
     }
 
     private fun deleteComment(commentId: Int) {
-        // Optimistic UI update: remove immediately
         commentAdapter.removeComment(commentId)
         commentCount = maxOf(0, commentCount - 1)
         updateCommentsUI()
 
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.getService(this@PostDetailActivity)
-                    .deleteComment(commentId)
-
+                val response = RetrofitClient.getService(this@PostDetailActivity).deleteComment(commentId)
                 if (!response.isSuccessful && response.code() != 204) {
-                    // Deletion failed on server — reload to restore
                     loadPostAndComments()
-                    Toast.makeText(this@PostDetailActivity, "Failed to delete comment", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PostDetailActivity, getString(R.string.comment_delete_failed), Toast.LENGTH_SHORT).show()
                 }
             } catch (_: Exception) {
-                // Deletion may have succeeded; reload to get the true state
                 loadPostAndComments()
             }
         }
     }
-
 }

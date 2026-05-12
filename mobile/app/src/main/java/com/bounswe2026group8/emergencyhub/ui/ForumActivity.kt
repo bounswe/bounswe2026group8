@@ -36,6 +36,7 @@ class ForumActivity : AppCompatActivity() {
 
     private var currentTab = "GLOBAL"
     private var currentSort = "newest"
+    private var currentRoleFilter = "ALL"
     private var posts: List<Post> = emptyList()
     private var selectedHub: Hub? = null
 
@@ -82,7 +83,7 @@ class ForumActivity : AppCompatActivity() {
 
         hubSelectorHelper = HubSelectorHelper(
             this,
-            findViewById<Spinner>(R.id.spinnerHubSelector),
+            findViewById<TextView>(R.id.textHubDisplay),
             onHubSelected = { hub ->
                 selectedHub = hub
                 updateHubLabel()
@@ -93,6 +94,7 @@ class ForumActivity : AppCompatActivity() {
 
         setupTabs()
         setupSortBar()
+        setupRoleFilter()
         setupNewPostButton()
 
         findViewById<TextView>(R.id.linkDashboard).setOnClickListener { finish() }
@@ -186,6 +188,39 @@ class ForumActivity : AppCompatActivity() {
         sortHot.setOnClickListener { selectSort(sortHot) }
     }
 
+    private fun setupRoleFilter() {
+        val filterAll = findViewById<TextView>(R.id.filterAll)
+        val filterExperts = findViewById<TextView>(R.id.filterExperts)
+        val filterStandardUsers = findViewById<TextView>(R.id.filterStandardUsers)
+
+        val filterButtons = mapOf(
+            filterAll to "ALL",
+            filterExperts to "EXPERT",
+            filterStandardUsers to "STANDARD"
+        )
+
+        fun selectFilter(selected: TextView) {
+            for ((view, role) in filterButtons) {
+                if (view == selected) {
+                    view.setTextColor(getColor(R.color.accent))
+                    view.setBackgroundResource(R.drawable.sort_pill_active_bg)
+                    currentRoleFilter = role
+                } else {
+                    view.setTextColor(getColor(R.color.text_muted))
+                    view.setBackgroundResource(R.drawable.sort_pill_bg)
+                }
+            }
+            loadPosts()
+        }
+
+        filterAll.setOnClickListener { selectFilter(filterAll) }
+        filterExperts.setOnClickListener { selectFilter(filterExperts) }
+        filterStandardUsers.setOnClickListener { selectFilter(filterStandardUsers) }
+        
+        // Set initial state
+        selectFilter(filterAll)
+    }
+
     private fun setupNewPostButton() {
         val btnNewPost = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnNewPost)
 
@@ -219,11 +254,12 @@ class ForumActivity : AppCompatActivity() {
         txtEmptyState.visibility = View.GONE
 
         val hubId = if (currentTab == "GLOBAL") null else selectedHub?.id
+        val authorRole = if (currentRoleFilter == "ALL") null else currentRoleFilter
 
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.getService(this@ForumActivity)
-                    .getPosts(forumType = currentTab, hub = hubId)
+                    .getPosts(forumType = currentTab, hub = hubId, authorRole = authorRole)
 
                 swipeRefresh.isRefreshing = false
 

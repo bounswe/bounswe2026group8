@@ -111,6 +111,19 @@ export function updateProfile(payload) {
   });
 }
 
+export function getSettings() {
+  return request('/settings', {
+    method: 'GET',
+  });
+}
+
+export function updateSettings(payload) {
+  return request('/settings', {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
 // --------------- Resources ---------------
 
 export function getResources() {
@@ -133,6 +146,13 @@ export function updateResource(id, payload) {
 
 export function deleteResource(id) {
   return request(`/resources/${id}`, { method: 'DELETE' });
+}
+
+// --------------- Expertise Categories (public) ---------------
+
+/** GET /expertise-categories/ — no auth needed. */
+export function getExpertiseCategories() {
+  return request('/expertise-categories/', { method: 'GET' });
 }
 
 // --------------- Expertise Fields (EXPERT only) ---------------
@@ -171,6 +191,14 @@ export function updateMe(data) {
 }
 
 /**
+ * PATCH /me with a country/city/district payload.
+ * The backend resolves (or creates) the matching Hub and assigns it.
+ */
+export function updateHubLocation({ country, city, district = '' }) {
+  return updateMe({ country, city, district });
+}
+
+/**
  * GET /hubs/
  * Public — returns list of all hubs.
  */
@@ -197,6 +225,7 @@ export function getHelpRequests(params = {}) {
   if (params.hub_id) query.append('hub_id', params.hub_id);
   if (params.category) query.append('category', params.category);
   if (params.author) query.append('author', params.author);
+  if (params.expertise_match) query.append('expertise_match', 'true');
   const qs = query.toString();
   return request(`/help-requests/${qs ? `?${qs}` : ''}`, {
     method: 'GET',
@@ -222,6 +251,16 @@ export function updateHelpRequestStatus(id, newStatus) {
 /** GET /help-requests/{id}/ — full detail of a single help request. */
 export function getHelpRequest(id) {
   return request(`/help-requests/${id}/`, { method: 'GET' });
+}
+
+/** POST /help-requests/{id}/take-on/ — expert takes responsibility. */
+export function takeOnHelpRequest(id) {
+  return request(`/help-requests/${id}/take-on/`, { method: 'POST' });
+}
+
+/** POST /help-requests/{id}/release/ — assigned expert releases responsibility. */
+export function releaseHelpRequest(id) {
+  return request(`/help-requests/${id}/release/`, { method: 'POST' });
 }
 
 /** GET /help-requests/{id}/comments/ — list comments on a help request. */
@@ -275,11 +314,12 @@ export function deleteHelpComment(commentId) {
 
 // ── Forum ─────────────────────────────────────────────────────────────────────
 
-export function getPosts({ hub, forumType, author } = {}) {
+export function getPosts({ hub, forumType, author, authorRole } = {}) {
   const params = new URLSearchParams();
   if (hub) params.set('hub', hub);
   if (forumType) params.set('forum_type', forumType);
   if (author) params.set('author', author);
+  if (authorRole) params.set('author_role', authorRole);
   const qs = params.toString();
   return request(`/forum/posts/${qs ? `?${qs}` : ''}`, { method: 'GET' });
 }
@@ -370,4 +410,163 @@ export async function uploadHelpRequestImages(files) {
 
   const data = await response.json();
   return { ok: response.ok, status: response.status, data };
+}
+
+// --------------- Mesh (offline messages archive) ---------------
+
+/** GET /mesh-messages/ — list top-level posts uploaded from the offline mesh. */
+export function getMeshPosts() {
+  return request('/mesh-messages/', { method: 'GET' });
+}
+
+/** GET /mesh-messages/{id}/comments/ — list comments on an offline post. */
+export function getMeshComments(postId) {
+  return request(`/mesh-messages/${postId}/comments/`, { method: 'GET' });
+}
+
+// ── Staff: Admin (user / hub / audit) ─────────────────────────────────────────
+
+function buildQuery(params = {}) {
+  const usp = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === null || value === undefined || value === '') return;
+    usp.append(key, value);
+  });
+  const qs = usp.toString();
+  return qs ? `?${qs}` : '';
+}
+
+export function listStaffUsers(params = {}) {
+  return request(`/staff/users/${buildQuery(params)}`, { method: 'GET' });
+}
+
+export function updateStaffRole(userId, staffRole, reason = '') {
+  return request(`/staff/users/${userId}/staff-role/`, {
+    method: 'PATCH',
+    body: JSON.stringify({ staff_role: staffRole, reason }),
+  });
+}
+
+export function updateAccountStatus(userId, isActive, reason) {
+  return request(`/staff/users/${userId}/status/`, {
+    method: 'PATCH',
+    body: JSON.stringify({ is_active: isActive, reason }),
+  });
+}
+
+export function listStaffHubs() {
+  return request('/staff/hubs/', { method: 'GET' });
+}
+
+export function createStaffHub(payload) {
+  return request('/staff/hubs/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function updateStaffHub(hubId, payload) {
+  return request(`/staff/hubs/${hubId}/`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteStaffHub(hubId, { confirm = false } = {}) {
+  return request(`/staff/hubs/${hubId}/`, {
+    method: 'DELETE',
+    body: JSON.stringify({ confirm }),
+  });
+}
+
+export function listAuditLogs(params = {}) {
+  return request(`/staff/audit-logs/${buildQuery(params)}`, { method: 'GET' });
+}
+
+// ── Staff: Forum moderation (moderator / admin) ───────────────────────────────
+
+export function listForumModerationPosts(params = {}) {
+  return request(`/forum/moderation/posts/${buildQuery(params)}`, { method: 'GET' });
+}
+
+export function moderateForumPost(postId, action, reason = '') {
+  return request(`/forum/posts/${postId}/moderation/`, {
+    method: 'PATCH',
+    body: JSON.stringify({ action, reason }),
+  });
+}
+
+export function moderationDeleteForumComment(commentId, reason = '') {
+  return request(`/forum/moderation/comments/${commentId}/`, {
+    method: 'DELETE',
+    body: JSON.stringify({ reason }),
+  });
+}
+
+// ── Staff: Help moderation (moderator / admin) ────────────────────────────────
+
+export function listHelpRequestModeration(params = {}) {
+  return request(`/help-requests/moderation/${buildQuery(params)}`, { method: 'GET' });
+}
+
+export function listHelpOfferModeration(params = {}) {
+  return request(`/help-offers/moderation/${buildQuery(params)}`, { method: 'GET' });
+}
+
+export function moderationDeleteHelpRequest(id, reason = '') {
+  return request(`/help-requests/${id}/`, {
+    method: 'DELETE',
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export function moderationDeleteHelpOffer(id, reason = '') {
+  return request(`/help-offers/${id}/`, {
+    method: 'DELETE',
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export function moderationDeleteHelpComment(id, reason = '') {
+  return request(`/help-requests/comments/${id}/`, {
+    method: 'DELETE',
+    body: JSON.stringify({ reason }),
+  });
+}
+
+// ── Staff: Expertise verification (verification coordinator / admin) ──────────
+
+export function listExpertiseVerifications(params = {}) {
+  return request(`/staff/expertise-verifications/${buildQuery(params)}`, { method: 'GET' });
+}
+
+export function decideExpertiseVerification(expertiseId, decision, note = '') {
+  return request(`/staff/expertise-verifications/${expertiseId}/decision/`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: decision, note }),
+  });
+}
+
+// ── Badges ───────────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/badges/my-badges/
+ * Fetches the current user's badge progress.
+ * Requires Authorization header.
+ * * Success → array of badge objects
+ */
+export function getMyBadges() {
+  return request('/api/badges/my-badges/', { 
+    method: 'GET' 
+  });
+}
+
+/**
+ * GET /api/badges/users/{id}/
+ * Fetches the badge progress for a specific user.
+ */
+export function getUserBadges(userId) {
+  return request(`/api/badges/users/${userId}/`, { 
+    method: 'GET' 
+  });
 }

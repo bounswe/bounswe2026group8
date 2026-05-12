@@ -15,6 +15,7 @@ from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
@@ -22,7 +23,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from accounts.models import User
+from accounts.audit import record_staff_action
+from accounts.models import StaffAuditLog, User
+from accounts.permissions import IsModeratorOrAdmin, user_is_moderator_or_admin
 from .models import HelpRequest, HelpComment, HelpOffer
 from .serializers import (
     HelpRequestListSerializer,
@@ -60,6 +63,21 @@ class HelpRequestListCreateView(APIView):
         category = request.query_params.get('category')
         if category:
             qs = qs.filter(category=category.upper())
+
+        # expertise_match=true: authenticated EXPERT sees only requests matching
+        # their approved expertise categories. Standard users are unaffected.
+        if (
+            request.query_params.get('expertise_match', '').lower() == 'true'
+            and request.user.is_authenticated
+            and request.user.role == User.Role.EXPERT
+        ):
+            matched_categories = (
+                request.user.expertise_fields
+                .filter(is_approved=True)
+                .values_list('category__help_request_category', flat=True)
+                .distinct()
+            )
+            qs = qs.filter(category__in=matched_categories)
 
         serializer = HelpRequestListSerializer(qs, many=True, context={'request': request})
         return Response(serializer.data)
@@ -114,12 +132,33 @@ class HelpRequestDetailView(APIView):
 
     def delete(self, request, pk):
         help_request = self.get_object(pk)
-        if help_request.author != request.user:
+        is_author = help_request.author_id == request.user.id
+        is_staff = user_is_moderator_or_admin(request.user)
+        if not is_author and not is_staff:
             return Response(
                 {'detail': 'You can only delete your own help requests.'},
                 status=status.HTTP_403_FORBIDDEN,
             )
-        help_request.delete()
+        snapshot = {
+            'id': help_request.pk,
+            'author_id': help_request.author_id,
+            'title': help_request.title,
+            'category': help_request.category,
+            'urgency': help_request.urgency,
+            'status': help_request.status,
+        }
+        reason = (request.data.get('reason') if hasattr(request, 'data') else '') or ''
+        with transaction.atomic():
+            help_request.delete()
+            if is_staff and not is_author:
+                record_staff_action(
+                    actor=request.user,
+                    action=StaffAuditLog.Action.HELP_REQUEST_DELETED,
+                    target_type=StaffAuditLog.TargetType.HELP_REQUEST,
+                    target_id=snapshot['id'],
+                    previous_state=snapshot,
+                    reason=reason,
+                )
         return Response(
             {'detail': 'Help request deleted.'},
             status=status.HTTP_204_NO_CONTENT,
@@ -153,7 +192,76 @@ class HelpRequestStatusView(APIView):
             )
 
         help_request.status = HelpRequest.Status.RESOLVED
-        help_request.save(update_fields=['status'])
+        help_request.resolved_at = timezone.now()
+        help_request.save(update_fields=['status', 'resolved_at'])
+
+        return Response(
+            HelpRequestDetailSerializer(help_request, context={'request': request}).data,
+        )
+
+
+class HelpRequestTakeOnView(APIView):
+    """
+    POST /help-requests/{id}/take-on/  — an expert takes responsibility for a request.
+
+    Eligibility rules are centralised in HelpRequest.can_be_taken_by().
+    On success the request status becomes EXPERT_RESPONDING and the expert
+    is recorded in assigned_expert.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        help_request = get_object_or_404(HelpRequest, pk=pk)
+
+        ok, error = help_request.can_be_taken_by(request.user)
+        if not ok:
+            # Use 409 for "already assigned" to distinguish from auth errors.
+            if 'already has an assigned expert' in error:
+                http_status = status.HTTP_409_CONFLICT
+            elif 'Resolved' in error:
+                http_status = status.HTTP_400_BAD_REQUEST
+            else:
+                http_status = status.HTTP_403_FORBIDDEN
+            return Response({'detail': error}, status=http_status)
+
+        help_request.assigned_expert = request.user
+        help_request.assigned_at = timezone.now()
+        help_request.status = HelpRequest.Status.EXPERT_RESPONDING
+        help_request.save(update_fields=['assigned_expert', 'assigned_at', 'status'])
+
+        return Response(
+            HelpRequestDetailSerializer(help_request, context={'request': request}).data,
+        )
+
+
+class HelpRequestReleaseView(APIView):
+    """
+    POST /help-requests/{id}/release/  — the assigned expert releases responsibility.
+
+    Only the currently assigned expert can release.  Resolved requests cannot
+    be released.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        help_request = get_object_or_404(HelpRequest, pk=pk)
+
+        if help_request.status == HelpRequest.Status.RESOLVED:
+            return Response(
+                {'detail': 'Resolved requests cannot be released.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if help_request.assigned_expert_id != request.user.id:
+            return Response(
+                {'detail': 'Only the assigned expert can release this request.'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        help_request.assigned_expert = None
+        help_request.assigned_at = None
+        help_request.status = HelpRequest.Status.OPEN
+        help_request.save(update_fields=['assigned_expert', 'assigned_at', 'status'])
 
         return Response(
             HelpRequestDetailSerializer(help_request, context={'request': request}).data,
@@ -198,10 +306,9 @@ class HelpCommentListCreateView(APIView):
                 comment_count=F('comment_count') + 1,
             )
 
-            # If the commenter is an expert, promote the request status.
-            # This call is safe — it won't overwrite RESOLVED status.
-            if request.user.role == User.Role.EXPERT:
-                update_status_on_expert_comment(help_request)
+            # Expert comments no longer trigger status promotion.
+            # The "expert responding" label now depends solely on
+            # assigned_expert being set via the take-on endpoint.
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -217,17 +324,34 @@ class HelpCommentDeleteView(APIView):
 
     def delete(self, request, pk):
         comment = get_object_or_404(HelpComment, pk=pk)
-        if comment.author != request.user:
+        is_author = comment.author_id == request.user.id
+        is_staff = user_is_moderator_or_admin(request.user)
+        if not is_author and not is_staff:
             return Response(
                 {'detail': 'You can only delete your own comments.'},
                 status=status.HTTP_403_FORBIDDEN,
             )
+        snapshot = {
+            'id': comment.pk,
+            'request_id': comment.request_id,
+            'author_id': comment.author_id,
+            'content': comment.content,
+        }
+        reason = (request.data.get('reason') if hasattr(request, 'data') else '') or ''
         with transaction.atomic():
-            # Keep comment_count in sync using F() to avoid race conditions.
             HelpRequest.objects.filter(pk=comment.request_id).update(
                 comment_count=F('comment_count') - 1,
             )
             comment.delete()
+            if is_staff and not is_author:
+                record_staff_action(
+                    actor=request.user,
+                    action=StaffAuditLog.Action.HELP_COMMENT_DELETED,
+                    target_type=StaffAuditLog.TargetType.HELP_COMMENT,
+                    target_id=snapshot['id'],
+                    previous_state=snapshot,
+                    reason=reason,
+                )
         return Response({'detail': 'Comment deleted.'}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -290,12 +414,31 @@ class HelpOfferDeleteView(APIView):
 
     def delete(self, request, pk):
         offer = get_object_or_404(HelpOffer, pk=pk)
-        if offer.author != request.user:
+        is_author = offer.author_id == request.user.id
+        is_staff = user_is_moderator_or_admin(request.user)
+        if not is_author and not is_staff:
             return Response(
                 {'detail': 'You can only delete your own help offers.'},
                 status=status.HTTP_403_FORBIDDEN,
             )
-        offer.delete()
+        snapshot = {
+            'id': offer.pk,
+            'author_id': offer.author_id,
+            'skill_or_resource': offer.skill_or_resource,
+            'category': offer.category,
+        }
+        reason = (request.data.get('reason') if hasattr(request, 'data') else '') or ''
+        with transaction.atomic():
+            offer.delete()
+            if is_staff and not is_author:
+                record_staff_action(
+                    actor=request.user,
+                    action=StaffAuditLog.Action.HELP_OFFER_DELETED,
+                    target_type=StaffAuditLog.TargetType.HELP_OFFER,
+                    target_id=snapshot['id'],
+                    previous_state=snapshot,
+                    reason=reason,
+                )
         return Response(
             {'detail': 'Help offer deleted.'},
             status=status.HTTP_204_NO_CONTENT,
@@ -343,3 +486,44 @@ class ImageUploadView(APIView):
             urls.append(f'{settings.MEDIA_URL}{saved}')
 
         return Response({'urls': urls}, status=status.HTTP_201_CREATED)
+
+
+# ── Moderation ────────────────────────────────────────────────────────────────
+
+class HelpRequestModerationListView(APIView):
+    """GET /help-requests/moderation/ — moderator-only request list with all statuses."""
+
+    permission_classes = [IsModeratorOrAdmin]
+
+    def get(self, request):
+        qs = HelpRequest.objects.all().select_related('author', 'hub')
+
+        for key in ('category', 'urgency', 'status'):
+            value = request.query_params.get(key)
+            if value:
+                qs = qs.filter(**{key: value.upper()})
+
+        hub_id = request.query_params.get('hub_id')
+        if hub_id:
+            qs = qs.filter(hub_id=hub_id)
+
+        return Response(HelpRequestListSerializer(qs, many=True, context={'request': request}).data)
+
+
+class HelpOfferModerationListView(APIView):
+    """GET /help-offers/moderation/ — moderator-only offer list."""
+
+    permission_classes = [IsModeratorOrAdmin]
+
+    def get(self, request):
+        qs = HelpOffer.objects.all().select_related('author', 'hub')
+
+        category = request.query_params.get('category')
+        if category:
+            qs = qs.filter(category=category.upper())
+
+        hub_id = request.query_params.get('hub_id')
+        if hub_id:
+            qs = qs.filter(hub_id=hub_id)
+
+        return Response(HelpOfferSerializer(qs, many=True, context={'request': request}).data)

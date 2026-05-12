@@ -53,6 +53,9 @@ class CommentAdapter(
 
         fun bind(comment: Comment, currentUserId: Int?, onDeleteClick: (Comment) -> Unit) {
             txtAuthor.text = comment.author.fullName
+            txtAuthor.setOnClickListener {
+                PublicProfileActivity.navigate(itemView.context, comment.author.id, currentUserId)
+            }
             txtTime.text = TimeUtils.timeAgo(comment.createdAt)
             txtBody.text = comment.content
 

@@ -8,17 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bounswe2026group8.emergencyhub.R
 import com.bounswe2026group8.emergencyhub.api.HelpOfferItem
-import com.google.android.material.button.MaterialButton
 import com.bounswe2026group8.emergencyhub.util.BadgeUtils
 import com.bounswe2026group8.emergencyhub.util.TimeUtils
+import com.google.android.material.button.MaterialButton
 
-/**
- * RecyclerView adapter for the help-offers list.
- *
- * Each card shows skill/resource title, category + availability badges,
- * description excerpt, author name, and relative timestamp.
- * The delete button is only visible when the logged-in user is the author.
- */
 class HelpOfferAdapter(
     private var items: MutableList<HelpOfferItem>,
     private val currentUserId: Int?,
@@ -47,26 +40,19 @@ class HelpOfferAdapter(
         val ctx = holder.itemView.context
 
         holder.txtSkillOrResource.text = item.skillOrResource
-
-        // Category badge — colored pill
-        holder.txtCategory.text = BadgeUtils.formatLabel(item.category)
+        holder.txtCategory.text = BadgeUtils.formatCategoryLabel(ctx, item.category)
         val (catText, catBg) = BadgeUtils.categoryColors(item.category)
         holder.txtCategory.setTextColor(ContextCompat.getColor(ctx, catText))
         holder.txtCategory.background.mutate().setTint(ContextCompat.getColor(ctx, catBg))
 
-        // Availability badge
-        holder.txtAvailability.text = item.availability
-
-        // Description excerpt
+        holder.txtAvailability.text = BadgeUtils.formatAvailabilityLabel(ctx, item.availability)
         holder.txtDescription.text = item.description
-
-        // Author
-        holder.txtAuthor.text = "Offered by ${item.author.fullName}"
-
-        // Relative timestamp
+        holder.txtAuthor.text = ctx.getString(R.string.help_offer_author_format, item.author.fullName)
+        holder.txtAuthor.setOnClickListener {
+            PublicProfileActivity.navigate(ctx, item.author.id, currentUserId)
+        }
         holder.txtTimeAgo.text = TimeUtils.timeAgo(item.createdAt)
 
-        // Delete button — only visible for the author's own offers
         if (currentUserId != null && item.author.id == currentUserId) {
             holder.btnDelete.visibility = View.VISIBLE
             holder.btnDelete.setOnClickListener { onDeleteClick(item) }
@@ -74,19 +60,16 @@ class HelpOfferAdapter(
             holder.btnDelete.visibility = View.GONE
         }
 
-        // Card click
         holder.itemView.setOnClickListener { onItemClick(item) }
     }
 
     override fun getItemCount(): Int = items.size
 
-    /** Replaces the full dataset and refreshes the list. */
     fun updateItems(newItems: List<HelpOfferItem>) {
         items = newItems.toMutableList()
         notifyDataSetChanged()
     }
 
-    /** Removes a single offer by ID with an animated removal. */
     fun removeItem(offerId: Int) {
         val index = items.indexOfFirst { it.id == offerId }
         if (index != -1) {
@@ -94,5 +77,4 @@ class HelpOfferAdapter(
             notifyItemRemoved(index)
         }
     }
-
 }

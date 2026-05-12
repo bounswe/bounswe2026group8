@@ -6,67 +6,23 @@ Django REST Framework backend for the Neighborhood Emergency Preparedness Hub.
 
 ```bash
 # From the repo root
+python -m venv .venv
+source .venv/bin/activate      # macOS/Linux
+# .venv\Scripts\activate       # Windows
+
 cd backend
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py runserver     # → http://localhost:8000
+python manage.py populate_sample_data   # Optional: load sample users and content
+python manage.py runserver              # → http://localhost:8000
 ```
 
-## API Endpoints
+Sample credentials (after `populate_sample_data`):
 
-Protected endpoints require the header: `Authorization: Bearer <your-token>`
-
-### Authentication
-
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| POST | `/register` | No | Create account (Standard or Expert) |
-| POST | `/login` | No | Returns JWT token + user data |
-| POST | `/logout` | Bearer | Logout (client discards token) |
-| GET | `/me` | Bearer | Returns current user profile |
-
-### Help Requests
-
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| GET | `/help-requests/` | Bearer | List help requests (filterable by `hub_id`, `category`) |
-| POST | `/help-requests/` | Bearer | Create a new help request |
-| GET | `/help-requests/{id}/` | Bearer | Get full detail of a help request |
-| PUT | `/help-requests/{id}/` | Bearer | Update a help request (author only) |
-| DELETE | `/help-requests/{id}/` | Bearer | Delete a help request (author only) |
-| PATCH | `/help-requests/{id}/status/` | Bearer | Mark a help request as resolved (author only) |
-
-### Help Request Comments
-
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| GET | `/help-requests/{id}/comments/` | Bearer | List comments on a help request |
-| POST | `/help-requests/{id}/comments/` | Bearer | Add a comment (auto-promotes status if expert) |
-
-### Help Offers
-
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| GET | `/help-offers/` | Bearer | List help offers (filterable by `hub_id`, `category`) |
-| POST | `/help-offers/` | Bearer | Create a new help offer |
-| DELETE | `/help-offers/{id}/` | Bearer | Delete a help offer (author only) |
-
-
-### Profile
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `GET` | `/profile` | Required | Get the authenticated user's profile |
-| `PATCH` | `/profile` | Required | Update the authenticated user's profile (partial) |
-| `GET` | `/users/<id>/` | Required | Get another user's public profile by ID |
-| `GET` | `/resources` | Required | List the user's resources (shown on profile) |
-| `POST` | `/resources` | Required | Add a resource |
-| `PATCH` | `/resources/<id>` | Required | Update a resource |
-| `DELETE` | `/resources/<id>` | Required | Delete a resource |
-| `GET` | `/expertise` | Required (EXPERT only) | List expertise fields |
-| `POST` | `/expertise` | Required (EXPERT only) | Add an expertise field |
-| `PATCH` | `/expertise/<id>` | Required (EXPERT only) | Update an expertise field |
-| `DELETE` | `/expertise/<id>` | Required (EXPERT only) | Delete an expertise field |
+| Email | Password | Role |
+|-------|----------|------|
+| `standard1@example.com` | `password123` | Standard |
+| `expert1@example.com` | `password123` | Expert |
 
 ## Project Structure
 
@@ -76,31 +32,144 @@ backend/
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
-├── accounts/             Auth app
-│   ├── models.py         Custom User model (STANDARD / EXPERT roles)
-│   ├── serializers.py    Register, Login, User serializers
-│   ├── views.py          API views for auth endpoints
-│   ├── urls.py           Route definitions
-│   ├── admin.py          Django admin registration
-│   └── tests.py          Auth test suite
-├── help_requests/        Help requests & offers app
-│   ├── models.py         HelpRequest, HelpComment, HelpOffer models
-│   ├── serializers.py    List, detail, create, update serializers
-│   ├── views.py          CRUD views for requests, comments, and offers
+├── accounts/             Auth, users, profiles, resources, expertise
+│   ├── models.py         User, Hub, Profile, Resource, ExpertiseField, ExpertiseCategory
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── admin.py
+│   ├── tests.py
+│   └── management/commands/populate_sample_data.py
+├── forum/                Community discussion board
+│   ├── models.py         Post, Comment, Vote
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│   └── tests.py
+├── help_requests/        Help requests, comments, and offers
+│   ├── models.py         HelpRequest, HelpComment, HelpOffer
+│   ├── serializers.py
+│   ├── views.py
 │   ├── services.py       Business logic (expert status promotion)
-│   ├── urls.py           Route definitions
-│   ├── admin.py          Django admin registration
-│   └── tests.py          40 automated API tests
+│   ├── urls.py
+│   └── tests.py
+├── badges/               Badge and achievement system
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   └── tests.py
+├── mesh/                 Offline mesh message relay
 ├── manage.py
-├── requirements.txt
-└── db.sqlite3            Local dev database (git-ignored)
+└── requirements.txt
 ```
+
+## API Endpoints
+
+Protected endpoints require: `Authorization: Bearer <access_token>`
+
+### Authentication
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/register` | No | Create account (Standard or Expert) |
+| POST | `/login` | No | Returns JWT access + refresh tokens |
+| POST | `/logout` | Bearer | Logout (clears server-side token) |
+| GET | `/me` | Bearer | Returns current user profile |
+| PATCH | `/me` | Bearer | Update hub or neighborhood address |
+
+### Profile & Resources
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/profile` | Bearer | Get authenticated user's profile |
+| PATCH | `/profile` | Bearer | Update profile fields (partial) |
+| GET | `/users/<id>/` | Bearer | Get another user's public profile |
+| GET | `/resources` | Bearer | List own resources |
+| POST | `/resources` | Bearer | Add a resource |
+| PATCH | `/resources/<id>` | Bearer | Update a resource |
+| DELETE | `/resources/<id>` | Bearer | Delete a resource |
+
+### Expertise (Expert role only)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/expertise` | Bearer (Expert) | List own expertise fields |
+| POST | `/expertise` | Bearer (Expert) | Add expertise — body: `{"category_id": <int>, "certification_level": "BEGINNER"\|"ADVANCED"}` |
+| DELETE | `/expertise/<id>` | Bearer (Expert) | Delete an expertise field |
+| GET | `/expertise-categories/` | No | List all active expertise categories |
+
+### Forum
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/posts` | No | List posts (filterable by `forum_type`, `hub`) |
+| POST | `/posts` | Bearer | Create a post |
+| GET | `/posts/<id>` | No | Get post detail |
+| PATCH | `/posts/<id>` | Bearer | Edit post (author only) |
+| DELETE | `/posts/<id>` | Bearer | Delete post (author or moderator) |
+| POST | `/posts/<id>/vote` | Bearer | Upvote or downvote a post |
+| POST | `/posts/<id>/repost` | Bearer | Repost a post |
+| GET | `/posts/<id>/comments` | No | List comments on a post |
+| POST | `/posts/<id>/comments` | Bearer | Add a comment |
+| DELETE | `/posts/<id>/comments/<cid>` | Bearer | Delete a comment (author or moderator) |
+
+### Help Requests
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/help-requests/` | Bearer | List requests (filterable by `hub_id`, `category`) |
+| POST | `/help-requests/` | Bearer | Create a help request |
+| GET | `/help-requests/<id>/` | Bearer | Get request detail |
+| PUT | `/help-requests/<id>/` | Bearer | Update a request (author only) |
+| DELETE | `/help-requests/<id>/` | Bearer | Delete a request (author only) |
+| PATCH | `/help-requests/<id>/status/` | Bearer | Mark as resolved (author only) |
+| GET | `/help-requests/<id>/comments/` | Bearer | List comments |
+| POST | `/help-requests/<id>/comments/` | Bearer | Add a comment (auto-promotes status if expert) |
+
+### Help Offers
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/help-offers/` | Bearer | List offers (filterable by `hub_id`, `category`) |
+| POST | `/help-offers/` | Bearer | Create an offer |
+| DELETE | `/help-offers/<id>/` | Bearer | Delete an offer (author only) |
+
+### Hubs
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/hubs/` | No | List all hubs |
+
+### Badges
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/badges/my/` | Bearer | List own earned badges |
+
+### User Settings
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/settings` | Bearer | Get notification and privacy settings |
+| PATCH | `/settings` | Bearer | Update settings (partial) |
+
+### Staff / Moderation (staff role required)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/staff/users/` | Staff | List all users |
+| PATCH | `/staff/users/<id>/role/` | Admin | Change a user's staff role |
+| GET | `/staff/expertise-verifications/` | Staff | List expertise verification requests |
+| PATCH | `/staff/expertise-verifications/<id>/decision/` | Staff | Approve or reject an expertise entry |
 
 ## Running Tests
 
 ```bash
+# All apps
+python manage.py test accounts forum help_requests badges
+
+# Single app
 python manage.py test accounts
-python manage.py test help_requests
 ```
 
 ## Key Design Decisions
@@ -113,3 +182,4 @@ python manage.py test help_requests
 - **Service layer** (`services.py`) separates business logic from views
 - **Status lifecycle** — OPEN → EXPERT_RESPONDING → RESOLVED (auto-promoted on expert comment, never reverts from RESOLVED)
 - **Denormalized `comment_count`** — updated via F() expressions for race safety
+- **Expertise write field** — POST `/expertise` accepts `category_id` (integer); GET returns `category` as a nested object with `id`, `name`, and `translations`

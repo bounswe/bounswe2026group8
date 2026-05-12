@@ -1,10 +1,13 @@
 package com.bounswe2026group8.emergencyhub.ui
 
+import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
@@ -13,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.ExpertiseCategoryData
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ExpertiseFieldData
 import com.bounswe2026group8.emergencyhub.api.ProfileData
@@ -21,6 +25,7 @@ import com.bounswe2026group8.emergencyhub.api.ResourceCreateRequest
 import com.bounswe2026group8.emergencyhub.api.ResourceData
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.util.LocaleManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
@@ -28,18 +33,20 @@ import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity() {
 
-    private val bloodTypeOptions = arrayOf("—", "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
+    private val bloodTypeOptions by lazy {
+        arrayOf(getString(R.string.profile_empty_value), "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-")
+    }
 
     private lateinit var tokenManager: TokenManager
     private var currentProfile: ProfileData? = null
     private var ignoreBloodTypeSelection = false
+    private var expertiseCategories: List<ExpertiseCategoryData> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
         tokenManager = TokenManager(this)
-
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
 
         loadIdentity()
@@ -47,27 +54,32 @@ class ProfileActivity : AppCompatActivity() {
         loadResources()
         setupResourceForm()
 
-        val user = tokenManager.getUser()
-        if (user?.role == "EXPERT") {
+        if (tokenManager.getUser()?.role == "EXPERT") {
             findViewById<View>(R.id.cardExpertise).visibility = View.VISIBLE
             loadExpertise()
-            setupExpertiseForm()
+            loadExpertiseCategories { setupExpertiseForm() }
         }
-    }
 
-    // ── Identity card ───────────────────────────────────────────────────────────
+        // My Badges card → MyBadgesActivity
+        findViewById<View>(R.id.cardMyBadges).setOnClickListener {
+            startActivity(Intent(this, MyBadgesActivity::class.java))
+        }
+
+        findViewById<View>(R.id.cardMyPosts).setOnClickListener {
+            startActivity(Intent(this, MyPostsActivity::class.java))
+        }
+
+        loadBadges()
+    }
 
     private fun loadIdentity() {
         val user = tokenManager.getUser() ?: return
-        findViewById<TextView>(R.id.txtAvatar).text =
-            user.fullName.firstOrNull()?.uppercase() ?: "?"
+        findViewById<TextView>(R.id.txtAvatar).text = user.fullName.firstOrNull()?.uppercase() ?: "?"
         findViewById<TextView>(R.id.txtFullName).text = user.fullName
         findViewById<TextView>(R.id.txtEmail).text = user.email
         findViewById<TextView>(R.id.txtRoleBadge).text =
-            if (user.role == "EXPERT") "Expert" else "Standard"
+            if (user.role == "EXPERT") getString(R.string.role_expert) else getString(R.string.role_standard)
     }
-
-    // ── Profile ─────────────────────────────────────────────────────────────────
 
     private fun loadProfile() {
         lifecycleScope.launch {
@@ -77,7 +89,8 @@ class ProfileActivity : AppCompatActivity() {
                     currentProfile = res.body()!!
                     displayProfile(currentProfile!!)
                 }
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+            }
         }
     }
 
@@ -90,28 +103,25 @@ class ProfileActivity : AppCompatActivity() {
 
         setupBloodTypeSpinner(p.bloodType)
 
-        val switchDisability = findViewById<MaterialSwitch>(R.id.switchDisability)
-        switchDisability.isChecked = p.hasDisability
-        switchDisability.setOnCheckedChangeListener { _, isChecked ->
-            updateProfile(ProfileUpdateRequest(hasDisability = isChecked))
+        findViewById<MaterialSwitch>(R.id.switchDisability).apply {
+            isChecked = p.hasDisability
+            setOnCheckedChangeListener { _, isChecked ->
+                updateProfile(ProfileUpdateRequest(hasDisability = isChecked))
+            }
         }
 
         updateStatusButtons(p.availabilityStatus)
         setupStatusButtons()
-
-        val statusBadge = findViewById<TextView>(R.id.txtStatusBadge)
-        updateStatusBadgeText(statusBadge, p.availabilityStatus)
+        updateStatusBadgeText(findViewById(R.id.txtStatusBadge), p.availabilityStatus)
     }
 
     private fun setupBloodTypeSpinner(currentValue: String?) {
         val spinner = findViewById<Spinner>(R.id.spinnerBloodType)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, bloodTypeOptions)
-        spinner.adapter = adapter
+        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, bloodTypeOptions)
 
         val idx = bloodTypeOptions.indexOf(currentValue ?: "").coerceAtLeast(0)
         ignoreBloodTypeSelection = true
         spinner.setSelection(idx)
-
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 if (ignoreBloodTypeSelection) {
@@ -119,8 +129,7 @@ class ProfileActivity : AppCompatActivity() {
                     return
                 }
                 val selected = bloodTypeOptions[pos]
-                val value = if (selected == "—") null else selected
-                updateProfile(ProfileUpdateRequest(bloodType = value))
+                updateProfile(ProfileUpdateRequest(bloodType = if (selected == getString(R.string.profile_empty_value)) null else selected))
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -129,11 +138,11 @@ class ProfileActivity : AppCompatActivity() {
     private fun setField(includeId: Int, label: String, value: String?) {
         val view = findViewById<View>(includeId)
         view.findViewById<TextView>(R.id.fieldLabel).text = label
-        view.findViewById<TextView>(R.id.fieldValue).text = value ?: "—"
-        view.setOnClickListener { promptEdit(label, value ?: "") { newVal -> onFieldEdited(includeId, label, newVal) } }
+        view.findViewById<TextView>(R.id.fieldValue).text = value ?: getString(R.string.profile_empty_value)
+        view.setOnClickListener { promptEdit(label, value ?: "") { newVal -> onFieldEdited(includeId, newVal) } }
     }
 
-    private fun onFieldEdited(includeId: Int, label: String, newVal: String) {
+    private fun onFieldEdited(includeId: Int, newVal: String) {
         val req = when (includeId) {
             R.id.fieldPhone -> ProfileUpdateRequest(phoneNumber = newVal.ifBlank { null })
             R.id.fieldEmergencyContact -> ProfileUpdateRequest(emergencyContact = newVal.ifBlank { null })
@@ -142,7 +151,8 @@ class ProfileActivity : AppCompatActivity() {
             R.id.fieldSpecialNeeds -> ProfileUpdateRequest(specialNeeds = newVal.ifBlank { null })
             else -> return
         }
-        findViewById<View>(includeId).findViewById<TextView>(R.id.fieldValue).text = newVal.ifBlank { "—" }
+        findViewById<View>(includeId).findViewById<TextView>(R.id.fieldValue).text =
+            newVal.ifBlank { getString(R.string.profile_empty_value) }
         updateProfile(req)
     }
 
@@ -153,23 +163,20 @@ class ProfileActivity : AppCompatActivity() {
         input.setBackgroundColor(ContextCompat.getColor(this, R.color.bg_input))
         input.setPadding(32, 24, 32, 24)
 
-        val dialog = android.app.AlertDialog.Builder(this, R.style.Theme_EmergencyHub)
+        android.app.AlertDialog.Builder(this, R.style.Theme_EmergencyHub)
             .setTitle(label)
             .setView(input)
-            .setPositiveButton("Save") { _, _ -> onSave(input.text?.toString()?.trim() ?: "") }
-            .setNegativeButton("Cancel", null)
-            .create()
-        dialog.show()
+            .setPositiveButton(getString(R.string.profile_save)) { _, _ ->
+                onSave(input.text?.toString()?.trim() ?: "")
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
     }
 
     private fun setupStatusButtons() {
-        val btnSafe = findViewById<MaterialButton>(R.id.btnStatusSafe)
-        val btnNeeds = findViewById<MaterialButton>(R.id.btnStatusNeedsHelp)
-        val btnAvailable = findViewById<MaterialButton>(R.id.btnStatusAvailable)
-
-        btnSafe.setOnClickListener { selectStatus("SAFE") }
-        btnNeeds.setOnClickListener { selectStatus("NEEDS_HELP") }
-        btnAvailable.setOnClickListener { selectStatus("AVAILABLE_TO_HELP") }
+        findViewById<MaterialButton>(R.id.btnStatusSafe).setOnClickListener { selectStatus("SAFE") }
+        findViewById<MaterialButton>(R.id.btnStatusNeedsHelp).setOnClickListener { selectStatus("NEEDS_HELP") }
+        findViewById<MaterialButton>(R.id.btnStatusAvailable).setOnClickListener { selectStatus("AVAILABLE_TO_HELP") }
     }
 
     private fun selectStatus(status: String) {
@@ -197,20 +204,18 @@ class ProfileActivity : AppCompatActivity() {
                 btn.strokeColor = android.content.res.ColorStateList.valueOf(c)
             } else {
                 btn.setTextColor(ContextCompat.getColor(this, R.color.text_muted))
-                btn.strokeColor = android.content.res.ColorStateList.valueOf(
-                    ContextCompat.getColor(this, R.color.border)
-                )
+                btn.strokeColor = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.border))
             }
         }
     }
 
     private fun updateStatusBadgeText(badge: TextView, status: String) {
         val (label, colorRes) = when (status) {
-            "NEEDS_HELP" -> "Needs Help" to R.color.error
-            "AVAILABLE_TO_HELP" -> "Available" to R.color.accent
-            else -> "Safe" to R.color.success
+            "NEEDS_HELP" -> getString(R.string.status_needs_help) to R.color.error
+            "AVAILABLE_TO_HELP" -> getString(R.string.status_available) to R.color.accent
+            else -> getString(R.string.status_safe) to R.color.success
         }
-        badge.text = "● $label"
+        badge.text = getString(R.string.profile_status_badge_format, label)
         badge.setTextColor(ContextCompat.getColor(this, colorRes))
     }
 
@@ -220,31 +225,30 @@ class ProfileActivity : AppCompatActivity() {
                 val res = RetrofitClient.getService(this@ProfileActivity).updateProfile(req)
                 if (res.isSuccessful) {
                     currentProfile = res.body()
-                    toast("Saved")
+                    toast(getString(R.string.saved))
                 } else {
-                    toast("Update failed")
+                    toast(getString(R.string.profile_update_failed))
                 }
             } catch (_: Exception) {
-                toast("Network error")
+                toast(getString(R.string.network_error))
             }
         }
     }
-
-    // ── Resources ───────────────────────────────────────────────────────────────
 
     private fun loadResources() {
         lifecycleScope.launch {
             try {
                 val res = RetrofitClient.getService(this@ProfileActivity).getResources()
                 if (res.isSuccessful) displayResources(res.body() ?: emptyList())
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+            }
         }
     }
 
     private fun displayResources(list: List<ResourceData>) {
         val container = findViewById<LinearLayout>(R.id.resourceList)
-        container.removeAllViews()
         val noItems = findViewById<TextView>(R.id.txtNoResources)
+        container.removeAllViews()
         noItems.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
 
         for (item in list) {
@@ -253,35 +257,28 @@ class ProfileActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_VERTICAL
                 setPadding(24, 16, 24, 16)
                 setBackgroundColor(ContextCompat.getColor(context, R.color.bg_input))
-                val lp = LinearLayout.LayoutParams(
+                layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                lp.bottomMargin = 8
-                layoutParams = lp
+                ).apply { bottomMargin = 8 }
             }
 
             val label = TextView(this).apply {
-                text = "${item.name} · ${item.category} · x${item.quantity}"
+                text = getString(R.string.profile_resource_item_format, item.name, item.category, item.quantity)
                 setTextColor(ContextCompat.getColor(context, R.color.text_primary))
                 textSize = 14f
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
 
             val condBadge = TextView(this).apply {
-                text = if (item.condition) "✓" else "✗"
-                setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        if (item.condition) R.color.success else R.color.error
-                    )
-                )
+                text = if (item.condition) "\u2713" else "\u2717"
+                setTextColor(ContextCompat.getColor(context, if (item.condition) R.color.success else R.color.error))
                 textSize = 16f
                 setPadding(16, 0, 16, 0)
             }
 
             val deleteBtn = TextView(this).apply {
-                text = "✕"
+                text = getString(R.string.delete_icon)
                 setTextColor(ContextCompat.getColor(context, R.color.error))
                 textSize = 16f
                 setOnClickListener { deleteResource(item.id) }
@@ -296,8 +293,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setupResourceForm() {
         val form = findViewById<LinearLayout>(R.id.formAddResource)
-        val btnToggle = findViewById<MaterialButton>(R.id.btnAddResource)
-        btnToggle.setOnClickListener {
+        findViewById<MaterialButton>(R.id.btnAddResource).setOnClickListener {
             form.visibility = if (form.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
 
@@ -306,7 +302,7 @@ class ProfileActivity : AppCompatActivity() {
             val cat = findViewById<TextInputEditText>(R.id.inputResourceCategory).text?.toString()?.trim() ?: ""
             val qty = findViewById<TextInputEditText>(R.id.inputResourceQty).text?.toString()?.toIntOrNull() ?: 1
             if (name.isBlank() || cat.isBlank()) {
-                toast("Name and category are required")
+                toast(getString(R.string.profile_resource_validation))
                 return@setOnClickListener
             }
             createResource(ResourceCreateRequest(name, cat, qty))
@@ -318,17 +314,17 @@ class ProfileActivity : AppCompatActivity() {
             try {
                 val res = RetrofitClient.getService(this@ProfileActivity).createResource(req)
                 if (res.isSuccessful) {
-                    toast("Resource added")
+                    toast(getString(R.string.profile_resource_added))
                     findViewById<TextInputEditText>(R.id.inputResourceName).text?.clear()
                     findViewById<TextInputEditText>(R.id.inputResourceCategory).text?.clear()
                     findViewById<TextInputEditText>(R.id.inputResourceQty).setText("1")
                     findViewById<LinearLayout>(R.id.formAddResource).visibility = View.GONE
                     loadResources()
                 } else {
-                    toast("Failed to add resource")
+                    toast(getString(R.string.profile_resource_add_failed))
                 }
             } catch (_: Exception) {
-                toast("Network error")
+                toast(getString(R.string.network_error))
             }
         }
     }
@@ -338,28 +334,28 @@ class ProfileActivity : AppCompatActivity() {
             try {
                 val res = RetrofitClient.getService(this@ProfileActivity).deleteResource(id)
                 if (res.isSuccessful) {
-                    toast("Removed")
+                    toast(getString(R.string.removed))
                     loadResources()
                 }
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+            }
         }
     }
-
-    // ── Expertise ───────────────────────────────────────────────────────────────
 
     private fun loadExpertise() {
         lifecycleScope.launch {
             try {
                 val res = RetrofitClient.getService(this@ProfileActivity).getExpertiseFields()
                 if (res.isSuccessful) displayExpertise(res.body() ?: emptyList())
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+            }
         }
     }
 
     private fun displayExpertise(list: List<ExpertiseFieldData>) {
         val container = findViewById<LinearLayout>(R.id.expertiseList)
-        container.removeAllViews()
         val noItems = findViewById<TextView>(R.id.txtNoExpertise)
+        container.removeAllViews()
         noItems.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
 
         for (item in list) {
@@ -368,23 +364,26 @@ class ProfileActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_VERTICAL
                 setPadding(24, 16, 24, 16)
                 setBackgroundColor(ContextCompat.getColor(context, R.color.bg_input))
-                val lp = LinearLayout.LayoutParams(
+                layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                lp.bottomMargin = 8
-                layoutParams = lp
+                ).apply { bottomMargin = 8 }
             }
 
+            val level = if (item.certificationLevel == "ADVANCED") {
+                getString(R.string.profile_cert_level_advanced)
+            } else {
+                getString(R.string.profile_cert_level_beginner)
+            }
             val label = TextView(this).apply {
-                text = "${item.field} · ${if (item.certificationLevel == "ADVANCED") "★ Advanced" else "◎ Beginner"}"
+                text = getString(R.string.profile_expertise_item_format, item.category.displayName(LocaleManager.getLanguage(context)), level)
                 setTextColor(ContextCompat.getColor(context, R.color.text_primary))
                 textSize = 14f
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
 
             val deleteBtn = TextView(this).apply {
-                text = "✕"
+                text = getString(R.string.delete_icon)
                 setTextColor(ContextCompat.getColor(context, R.color.error))
                 textSize = 16f
                 setOnClickListener { deleteExpertise(item.id) }
@@ -396,26 +395,47 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadExpertiseCategories(onDone: () -> Unit = {}) {
+        lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.getService(this@ProfileActivity).getExpertiseCategories()
+                if (res.isSuccessful) expertiseCategories = res.body() ?: emptyList()
+            } catch (_: Exception) { }
+            onDone()
+        }
+    }
+
     private fun setupExpertiseForm() {
         val form = findViewById<LinearLayout>(R.id.formAddExpertise)
-        val btnToggle = findViewById<MaterialButton>(R.id.btnAddExpertise)
-        btnToggle.setOnClickListener {
+        findViewById<MaterialButton>(R.id.btnAddExpertise).setOnClickListener {
             form.visibility = if (form.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
 
+        val dropdown = findViewById<AutoCompleteTextView>(R.id.dropdownExpertiseCategory)
+        val langCode = LocaleManager.getLanguage(this)
+        val categoryNames = expertiseCategories.map { it.displayName(langCode) }
+        dropdown.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categoryNames))
+        var selectedCategoryId: Int? = null
+        dropdown.setOnItemClickListener { _, _, pos, _ ->
+            selectedCategoryId = expertiseCategories[pos].id
+        }
+
         val spinner = findViewById<Spinner>(R.id.spinnerCertLevel)
-        val levels = arrayOf("Beginner", "Advanced")
-        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, levels)
+        spinner.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            arrayOf(getString(R.string.profile_cert_level_beginner), getString(R.string.profile_cert_level_advanced))
+        )
 
         findViewById<MaterialButton>(R.id.btnSaveExpertise).setOnClickListener {
-            val field = findViewById<TextInputEditText>(R.id.inputExpertiseField).text?.toString()?.trim() ?: ""
-            val level = if (spinner.selectedItemPosition == 1) "ADVANCED" else "BEGINNER"
-            val url = findViewById<TextInputEditText>(R.id.inputCertUrl).text?.toString()?.trim()
-            if (field.isBlank()) {
-                toast("Field name is required")
+            val catId = selectedCategoryId
+            if (catId == null) {
+                toast(getString(R.string.profile_expertise_validation))
                 return@setOnClickListener
             }
-            createExpertise(ExpertiseFieldCreateRequest(field, level, url?.ifBlank { null }))
+            val level = if (spinner.selectedItemPosition == 1) "ADVANCED" else "BEGINNER"
+            val url = findViewById<TextInputEditText>(R.id.inputCertUrl).text?.toString()?.trim()
+            createExpertise(ExpertiseFieldCreateRequest(catId, level, url?.ifBlank { null }))
         }
     }
 
@@ -424,16 +444,16 @@ class ProfileActivity : AppCompatActivity() {
             try {
                 val res = RetrofitClient.getService(this@ProfileActivity).createExpertiseField(req)
                 if (res.isSuccessful) {
-                    toast("Expertise added")
-                    findViewById<TextInputEditText>(R.id.inputExpertiseField).text?.clear()
+                    toast(getString(R.string.profile_expertise_added))
+                    findViewById<AutoCompleteTextView>(R.id.dropdownExpertiseCategory).text?.clear()
                     findViewById<TextInputEditText>(R.id.inputCertUrl).text?.clear()
                     findViewById<LinearLayout>(R.id.formAddExpertise).visibility = View.GONE
                     loadExpertise()
                 } else {
-                    toast("Failed to add expertise")
+                    toast(getString(R.string.profile_expertise_add_failed))
                 }
             } catch (_: Exception) {
-                toast("Network error")
+                toast(getString(R.string.network_error))
             }
         }
     }
@@ -443,14 +463,75 @@ class ProfileActivity : AppCompatActivity() {
             try {
                 val res = RetrofitClient.getService(this@ProfileActivity).deleteExpertiseField(id)
                 if (res.isSuccessful) {
-                    toast("Removed")
+                    toast(getString(R.string.removed))
                     loadExpertise()
                 }
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+            }
         }
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────────
+    // ── Badges ──────────────────────────────────────────────────────────────
+
+    private fun loadBadges() {
+        lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.getService(this@ProfileActivity).getMyBadges()
+                if (res.isSuccessful) {
+                    val badges = res.body() ?: emptyList()
+                    // Filter to earned badges (level > 0), sort desc, take top 3 — same as web
+                    val topBadges = badges
+                        .filter { it.currentLevel > 0 }
+                        .sortedByDescending { it.currentLevel }
+                        .take(3)
+                    displayTopBadges(topBadges)
+                }
+            } catch (_: Exception) {
+                // Silently fail — badges are supplementary
+            }
+        }
+    }
+
+    private fun displayTopBadges(badges: List<com.bounswe2026group8.emergencyhub.api.UserBadgeItem>) {
+        val row = findViewById<LinearLayout>(R.id.badgesRow)
+        row.removeAllViews()
+        if (badges.isEmpty()) {
+            row.visibility = View.GONE
+            return
+        }
+        row.visibility = View.VISIBLE
+
+        val density = resources.displayMetrics.density
+
+        for (badge in badges) {
+            val localizedName = BadgeLocalizer.getLocalizedBadgeName(this, badge.badgeName)
+            val displayTitle = if (badge.currentLevel > 0) {
+                getString(R.string.badges_name_with_level, localizedName, badge.currentLevel)
+            } else {
+                localizedName
+            }
+
+            val pillText = getString(R.string.badges_pill_format, badge.badgeIcon, displayTitle)
+
+            val pill = TextView(this).apply {
+                text = pillText
+                textSize = 12f
+                setTypeface(typeface, Typeface.BOLD)
+                setTextColor(ContextCompat.getColor(context, R.color.accent))
+                setBackgroundColor(ContextCompat.getColor(context, R.color.badge_accent_bg))
+                setPadding(
+                    (10 * density).toInt(), (4 * density).toInt(),
+                    (10 * density).toInt(), (4 * density).toInt()
+                )
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { marginEnd = (8 * density).toInt() }
+            }
+
+            row.addView(pill)
+        }
+    }
 
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()

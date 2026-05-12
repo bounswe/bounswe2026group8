@@ -34,6 +34,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 import com.bounswe2026group8.emergencyhub.util.ImageUploadHelper
+import com.bounswe2026group8.emergencyhub.util.VoiceInputManager
 
 /**
  * Form screen for creating a new help request.
@@ -61,6 +62,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
     private lateinit var txtUploadStatus: TextView
     private lateinit var imagePreviewScroll: HorizontalScrollView
     private lateinit var imagePreviewContainer: LinearLayout
+    private lateinit var voiceInputManager: VoiceInputManager
 
     /** GPS coordinates captured via "Use My Location". */
     private var capturedLat: Double? = null
@@ -127,6 +129,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_help_request)
 
         tokenManager = TokenManager(this)
+        voiceInputManager = VoiceInputManager(this)
 
         // Auth guard
         if (!tokenManager.isLoggedIn()) {
@@ -148,6 +151,7 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         txtUploadStatus = findViewById(R.id.txtUploadStatus)
         imagePreviewScroll = findViewById(R.id.imagePreviewScroll)
         imagePreviewContainer = findViewById(R.id.imagePreviewContainer)
+        voiceInputManager.bind(inputTitle, inputDescription, inputLocationText)
 
         // Back button
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
@@ -155,14 +159,24 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         // Category dropdown
         val categoryAdapter = ArrayAdapter(
             this, android.R.layout.simple_dropdown_item_1line,
-            arrayOf("Medical", "Food", "Shelter", "Transport")
+            arrayOf(
+                getString(R.string.category_medical),
+                getString(R.string.category_food),
+                getString(R.string.category_shelter),
+                getString(R.string.category_transport),
+                getString(R.string.category_other),
+            )
         )
         dropdownCategory.setAdapter(categoryAdapter)
 
         // Urgency dropdown
         val urgencyAdapter = ArrayAdapter(
             this, android.R.layout.simple_dropdown_item_1line,
-            arrayOf("Low", "Medium", "High")
+            arrayOf(
+                getString(R.string.urgency_low),
+                getString(R.string.urgency_medium),
+                getString(R.string.urgency_high)
+            )
         )
         dropdownUrgency.setAdapter(urgencyAdapter)
 
@@ -367,17 +381,18 @@ class CreateHelpRequestActivity : AppCompatActivity() {
         }
 
         val category = when (dropdownCategory.text.toString()) {
-            "Medical"   -> "MEDICAL"
-            "Food"      -> "FOOD"
-            "Shelter"   -> "SHELTER"
-            "Transport" -> "TRANSPORT"
+            getString(R.string.category_medical)   -> "MEDICAL"
+            getString(R.string.category_food)      -> "FOOD"
+            getString(R.string.category_shelter)   -> "SHELTER"
+            getString(R.string.category_transport) -> "TRANSPORT"
+            getString(R.string.category_other)     -> "OTHER"
             else        -> "MEDICAL"
         }
 
         val urgency = when (dropdownUrgency.text.toString()) {
-            "Low"    -> "LOW"
-            "Medium" -> "MEDIUM"
-            "High"   -> "HIGH"
+            getString(R.string.urgency_low)    -> "LOW"
+            getString(R.string.urgency_medium) -> "MEDIUM"
+            getString(R.string.urgency_high)   -> "HIGH"
             else     -> "LOW"
         }
 

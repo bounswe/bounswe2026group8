@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -46,7 +47,9 @@ interface ApiService {
     @GET("help-requests/")
     suspend fun getHelpRequests(
         @Query("hub_id") hubId: Int? = null,
-        @Query("category") category: String? = null
+        @Query("category") category: String? = null,
+        @Query("author") author: Int? = null,
+        @Query("expertise_match") expertiseMatch: Boolean? = null,
     ): Response<List<HelpRequestItem>>
 
     @POST("help-requests/")
@@ -68,6 +71,16 @@ interface ApiService {
     suspend fun updateHelpRequestStatus(
         @Path("id") id: Int,
         @Body body: UpdateHelpRequestStatusRequest
+    ): Response<HelpRequestDetail>
+
+    @POST("help-requests/{id}/take-on/")
+    suspend fun takeOnHelpRequest(
+        @Path("id") id: Int
+    ): Response<HelpRequestDetail>
+
+    @POST("help-requests/{id}/release/")
+    suspend fun releaseHelpRequest(
+        @Path("id") id: Int
     ): Response<HelpRequestDetail>
 
     // ── Help Request Comments ────────────────────────────────────────────
@@ -93,7 +106,8 @@ interface ApiService {
     @GET("help-offers/")
     suspend fun getHelpOffers(
         @Query("hub_id") hubId: Int? = null,
-        @Query("category") category: String? = null
+        @Query("category") category: String? = null,
+        @Query("author") author: Int? = null
     ): Response<List<HelpOfferItem>>
 
     @POST("help-offers/")
@@ -116,8 +130,10 @@ interface ApiService {
 
     @GET("forum/posts/")
     suspend fun getPosts(
-        @Query("forum_type") forumType: String,
-        @Query("hub") hub: Int? = null
+        @Query("forum_type") forumType: String? = null,
+        @Query("hub") hub: Int? = null,
+        @Query("author") author: Int? = null,
+        @Query("author_role") authorRole: String? = null
     ): Response<List<Post>>
 
     @POST("forum/posts/")
@@ -182,6 +198,15 @@ interface ApiService {
     @PATCH("profile")
     suspend fun updateProfile(@Body body: ProfileUpdateRequest): Response<ProfileData>
 
+    @GET("settings")
+    suspend fun getSettings(): Response<UserSettingsData>
+
+    @PATCH("settings")
+    suspend fun updateSettings(@Body body: UserSettingsUpdateRequest): Response<UserSettingsData>
+
+    @GET("users/{id}/")
+    suspend fun getUserPublicProfile(@Path("id") id: Int): Response<UserPublicProfileData>
+
     // ── Resources ───────────────────────────────────────────────────────────────
 
     @GET("resources")
@@ -193,6 +218,11 @@ interface ApiService {
     @DELETE("resources/{id}")
     suspend fun deleteResource(@Path("id") id: Int): Response<Unit>
 
+    // ── Expertise Categories (public) ────────────────────────────────────────────
+
+    @GET("expertise-categories/")
+    suspend fun getExpertiseCategories(): Response<List<ExpertiseCategoryData>>
+
     // ── Expertise Fields ────────────────────────────────────────────────────────
 
     @GET("expertise")
@@ -203,4 +233,132 @@ interface ApiService {
 
     @DELETE("expertise/{id}")
     suspend fun deleteExpertiseField(@Path("id") id: Int): Response<Unit>
+
+    // ── Badges ──────────────────────────────────────────────────────────────────
+
+    /** GET /api/badges/my-badges/ — current user's badge progress. */
+    @GET("api/badges/my-badges/")
+    suspend fun getMyBadges(): Response<List<UserBadgeItem>>
+
+    /** GET /api/badges/users/{id}/ — badge progress for a specific user. */
+    @GET("api/badges/users/{userId}/")
+    suspend fun getUserBadges(@Path("userId") userId: Int): Response<List<UserBadgeItem>>
+
+    // ── Mesh (offline messages archive) ─────────────────────────────────────────
+
+    /** Upload a batch of mesh messages. Idempotent — server skips ids it already has. */
+    @POST("mesh-messages/sync/")
+    suspend fun syncMeshMessages(
+        @Body body: MeshSyncRequest
+    ): Response<MeshSyncResponse>
+
+    /** List top-level mesh posts (parent_post_id is null). */
+    @GET("mesh-messages/")
+    suspend fun getMeshPosts(): Response<List<MeshMessageDto>>
+
+    /** List comments for a given mesh post, oldest first. */
+    @GET("mesh-messages/{postId}/comments/")
+    suspend fun getMeshComments(
+        @Path("postId") postId: String
+    ): Response<List<MeshMessageDto>>
+
+    // ── Staff: Admin (user management) ─────────────────────────────────────────
+
+    @GET("staff/users/")
+    suspend fun listStaffUsers(
+        @Query("search") search: String? = null,
+        @Query("staff_role") staffRole: String? = null,
+        @Query("is_active") isActive: Boolean? = null,
+    ): Response<List<StaffUserListItem>>
+
+    @PATCH("staff/users/{id}/staff-role/")
+    suspend fun updateStaffRole(
+        @Path("id") userId: Int,
+        @Body body: StaffRoleUpdateRequest,
+    ): Response<StaffUserListItem>
+
+    @PATCH("staff/users/{id}/status/")
+    suspend fun updateAccountStatus(
+        @Path("id") userId: Int,
+        @Body body: AccountStatusUpdateRequest,
+    ): Response<StaffUserListItem>
+
+    // ── Staff: Forum moderation (mod / admin) ──────────────────────────────────
+
+    @GET("forum/moderation/posts/")
+    suspend fun listForumModerationPosts(
+        @Query("status") status: String? = null,
+    ): Response<List<ForumModerationPost>>
+
+    @PATCH("forum/posts/{id}/moderation/")
+    suspend fun moderateForumPost(
+        @Path("id") postId: Int,
+        @Body body: ForumModerationActionRequest,
+    ): Response<ForumModerationPost>
+
+    // ── Staff: Expertise verification (verifier / admin) ───────────────────────
+
+    @GET("staff/expertise-verifications/")
+    suspend fun listExpertiseVerifications(
+        @Query("status") status: String? = null,
+    ): Response<List<ExpertiseVerificationItem>>
+
+    @PATCH("staff/expertise-verifications/{id}/decision/")
+    suspend fun decideExpertiseVerification(
+        @Path("id") expertiseId: Int,
+        @Body body: ExpertiseDecisionRequest,
+    ): Response<ExpertiseVerificationItem>
+
+    // ── Staff: Hubs (admin) ────────────────────────────────────────────────────
+
+    @GET("staff/hubs/")
+    suspend fun listStaffHubs(): Response<List<Hub>>
+
+    @POST("staff/hubs/")
+    suspend fun createStaffHub(@Body body: HubCreateRequest): Response<Hub>
+
+    @PATCH("staff/hubs/{id}/")
+    suspend fun updateStaffHub(
+        @Path("id") hubId: Int,
+        @Body body: HubUpdateRequest,
+    ): Response<Hub>
+
+    /**
+     * Hub deletion requires `confirm: true` per the backend safeguard, so we
+     * route through @HTTP to send a JSON body with DELETE.
+     */
+    @HTTP(method = "DELETE", path = "staff/hubs/{id}/", hasBody = true)
+    suspend fun deleteStaffHub(
+        @Path("id") hubId: Int,
+        @Body body: HubDeleteRequest,
+    ): Response<ResponseBody?>
+
+    // ── Staff: Audit log (admin) ───────────────────────────────────────────────
+
+    @GET("staff/audit-logs/")
+    suspend fun listAuditLogs(
+        @Query("action") action: String? = null,
+        @Query("target_type") targetType: String? = null,
+    ): Response<List<AuditLogItem>>
+
+    // ── Staff: Help moderation (mod / admin) ───────────────────────────────────
+
+    @GET("help-requests/moderation/")
+    suspend fun listHelpRequestModeration(): Response<List<HelpRequestModerationItem>>
+
+    @GET("help-offers/moderation/")
+    suspend fun listHelpOfferModeration(): Response<List<HelpOfferModerationItem>>
+
+    /** DELETE with body so moderators can attach an audit-log reason. */
+    @HTTP(method = "DELETE", path = "help-requests/{id}/", hasBody = true)
+    suspend fun moderationDeleteHelpRequest(
+        @Path("id") id: Int,
+        @Body body: ModerationDeleteRequest,
+    ): Response<ResponseBody?>
+
+    @HTTP(method = "DELETE", path = "help-offers/{id}/", hasBody = true)
+    suspend fun moderationDeleteHelpOffer(
+        @Path("id") id: Int,
+        @Body body: ModerationDeleteRequest,
+    ): Response<ResponseBody?>
 }

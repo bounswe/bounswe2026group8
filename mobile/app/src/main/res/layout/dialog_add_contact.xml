@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Custom Number"
+        android:text="@string/add_custom_number"
         android:textColor="#38BDF8"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -19,22 +19,22 @@
         android:id="@+id/et_alias"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name (e.g., Mom, Poison Control)"
+        android:layout_marginBottom="12dp"
+        android:hint="@string/offline_contact_name_hint"
         android:textColorHint="#9CA3AF"
         android:textColor="#FFFFFF"
         android:backgroundTint="#38BDF8"
-        android:layout_marginBottom="12dp"
         android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/et_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone Number"
+        android:layout_marginBottom="24dp"
+        android:hint="@string/offline_contact_phone_hint"
         android:textColorHint="#9CA3AF"
         android:textColor="#FFFFFF"
         android:backgroundTint="#38BDF8"
-        android:layout_marginBottom="24dp"
         android:inputType="phone"/>
 
 </LinearLayout>

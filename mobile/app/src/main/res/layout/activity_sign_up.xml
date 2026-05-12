@@ -138,22 +138,24 @@
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <!-- Expertise field — visible only when EXPERT selected -->
+        <!-- Expertise category — visible only when EXPERT selected -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/expertiseLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="@string/expertise_field"
             android:visibility="gone"
-            style="@style/Widget.EmergencyHub.TextInput">
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputExpertise"
+            <AutoCompleteTextView
+                android:id="@+id/dropdownExpertiseCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/text_primary" />
+                android:hint="@string/expertise_field"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:focusable="false"
+                android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -166,13 +168,17 @@
             android:textSize="14sp"
             android:layout_marginBottom="8dp" />
 
-        <Spinner
-            android:id="@+id/spinnerHub"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickHub"
+            style="@style/Widget.EmergencyHub.Button.Secondary"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/tab_pill_bg"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:text="@string/select_hub"
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            android:gravity="start|center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:layout_marginBottom="16dp" />
 
         <!-- Neighborhood (optional) -->

@@ -26,6 +26,7 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 import com.bounswe2026group8.emergencyhub.util.ErrorUtils
 import com.bounswe2026group8.emergencyhub.util.ImageUploadHelper
+import com.bounswe2026group8.emergencyhub.util.VoiceInputManager
 
 class CreatePostActivity : AppCompatActivity() {
 
@@ -42,6 +43,7 @@ class CreatePostActivity : AppCompatActivity() {
     private lateinit var imagePreviewScroll: HorizontalScrollView
     private lateinit var imagePreviewContainer: LinearLayout
     private lateinit var inputImageUrls: TextInputEditText
+    private lateinit var voiceInputManager: VoiceInputManager
 
     private var selectedForumType = "GLOBAL"
     private val uploadedImageUrls = mutableListOf<String>()
@@ -71,6 +73,7 @@ class CreatePostActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_post)
 
         tokenManager = TokenManager(this)
+        voiceInputManager = VoiceInputManager(this)
 
         if (!tokenManager.isLoggedIn()) {
             Toast.makeText(this, "Please sign in to create posts", Toast.LENGTH_SHORT).show()
@@ -90,6 +93,7 @@ class CreatePostActivity : AppCompatActivity() {
         imagePreviewScroll = findViewById(R.id.imagePreviewScroll)
         imagePreviewContainer = findViewById(R.id.imagePreviewContainer)
         inputImageUrls = findViewById(R.id.inputImageUrls)
+        voiceInputManager.bind(inputTitle, inputContent)
 
         selectedForumType = intent.getStringExtra("forum_type") ?: "GLOBAL"
         setInitialToggle()
@@ -108,7 +112,7 @@ class CreatePostActivity : AppCompatActivity() {
         btnCreate.setOnClickListener { submitPost() }
         btnUploadImages.setOnClickListener { openImagePicker() }
 
-        HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector)).load()
+        HubSelectorHelper(this, findViewById<TextView>(R.id.textHubDisplay)).load()
 
         findViewById<TextView>(R.id.linkBackToForum).setOnClickListener { finish() }
 
@@ -190,16 +194,16 @@ class CreatePostActivity : AppCompatActivity() {
 
     private fun updateSubtitle() {
         val typeLabel = when (selectedForumType) {
-            "STANDARD" -> "Standard"
-            "URGENT" -> "Urgent"
-            else -> "Global"
+            "STANDARD" -> getString(R.string.forum_type_standard)
+            "URGENT" -> getString(R.string.forum_type_urgent)
+            else -> getString(R.string.forum_type_global)
         }
-        txtPageTitle.text = "New $typeLabel Post"
+        txtPageTitle.text = getString(R.string.new_post_format, typeLabel)
 
         txtPageSubtitle.text = if (selectedForumType == "GLOBAL") {
             getString(R.string.create_post_subtitle_global)
         } else {
-            "Hub-scoped post"
+            getString(R.string.hub_scoped_post)
         }
     }
 

@@ -26,14 +26,20 @@
             android:textColor="@color/accent"
             android:textSize="14sp" />
 
-        <Spinner
-            android:id="@+id/spinnerHubSelector"
+        <TextView
+            android:id="@+id/textHubDisplay"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:minWidth="140dp"
+            android:maxWidth="220dp"
+            android:gravity="center_vertical"
             android:background="@drawable/sort_pill_active_bg"
             android:paddingStart="12dp"
-            android:paddingEnd="8dp" />
+            android:paddingEnd="12dp"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp"
+            android:singleLine="true"
+            android:ellipsize="end" />
 
     </LinearLayout>
 
@@ -230,7 +236,7 @@
                             android:gravity="center"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
-                            android:text="Share"
+                            android:text="@string/share"
                             android:textSize="12sp"
                             android:textColor="@color/text_muted"
                             android:background="@drawable/sort_pill_bg"
@@ -243,7 +249,7 @@
                             android:gravity="center"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
-                            android:text="Repost"
+                            android:text="@string/repost"
                             android:textSize="12sp"
                             android:textColor="@color/text_muted"
                             android:background="@drawable/sort_pill_bg"
@@ -254,7 +260,7 @@
                             android:id="@+id/txtRepostedLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reposted"
+                            android:text="@string/reposted"
                             android:textColor="@color/accent"
                             android:textSize="12sp"
                             android:layout_marginStart="4dp"
@@ -267,7 +273,7 @@
                             android:gravity="center"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
-                            android:text="Delete"
+                            android:text="@string/delete"
                             android:textSize="12sp"
                             android:textColor="@color/vote_down_active"
                             android:background="@drawable/sort_pill_bg"
@@ -281,7 +287,7 @@
                             android:gravity="center"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
-                            android:text="Report"
+                            android:text="@string/report"
                             android:textSize="12sp"
                             android:textColor="@color/accent_secondary"
                             android:background="@drawable/sort_pill_bg"
@@ -327,7 +333,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:hint="Write a comment…"
+                        android:hint="@string/comment_hint"
                         style="@style/Widget.EmergencyHub.TextInput">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -345,7 +351,7 @@
                         android:id="@+id/btnPostComment"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:text="Post Comment"
+                        android:text="@string/post_comment"
                         android:textSize="13sp"
                         android:backgroundTint="@color/accent"
                         android:textColor="@color/white"
@@ -360,7 +366,7 @@
                 android:id="@+id/txtNoComments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No comments yet. Be the first!"
+                android:text="@string/forum_no_comments_yet"
                 android:textColor="@color/text_muted"
                 android:textSize="14sp"
                 android:gravity="center"

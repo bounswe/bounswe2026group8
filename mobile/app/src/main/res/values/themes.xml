@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.EmergencyHub" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.EmergencyHub" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary colors -->
         <item name="colorPrimary">@color/accent</item>
         <item name="colorPrimaryVariant">@color/accent_hover</item>
@@ -15,12 +15,14 @@
         <!-- Status bar -->
         <item name="android:statusBarColor">@color/bg_base</item>
         <item name="android:navigationBarColor">@color/bg_base</item>
+        <item name="android:windowLightStatusBar">@bool/use_light_system_bars</item>
+        <item name="android:windowLightNavigationBar">@bool/use_light_system_bars</item>
 
         <!-- Text input style -->
         <item name="textInputStyle">@style/Widget.EmergencyHub.TextInput</item>
     </style>
 
-    <style name="Theme.EmergencyHub.Lightbox" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.EmergencyHub.Lightbox" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
