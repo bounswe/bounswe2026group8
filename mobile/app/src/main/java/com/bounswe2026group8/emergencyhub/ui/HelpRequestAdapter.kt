@@ -51,6 +51,12 @@ class HelpRequestAdapter(
 
         holder.txtStatus.text = BadgeUtils.formatStatusLabel(ctx, item.status)
         holder.txtAuthor.text = item.author.fullName
+        holder.txtAuthor.setOnClickListener {
+            val intent = android.content.Intent(ctx, PublicProfileActivity::class.java).apply {
+                putExtra(PublicProfileActivity.EXTRA_USER_ID, item.author.id)
+            }
+            ctx.startActivity(intent)
+        }
         holder.txtCommentCount.text = "\uD83D\uDCAC ${item.commentCount}"
         holder.txtTimeAgo.text = TimeUtils.timeAgo(item.createdAt)
 

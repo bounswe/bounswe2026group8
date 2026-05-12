@@ -53,6 +53,12 @@ class CommentAdapter(
 
         fun bind(comment: Comment, currentUserId: Int?, onDeleteClick: (Comment) -> Unit) {
             txtAuthor.text = comment.author.fullName
+            txtAuthor.setOnClickListener {
+                val intent = android.content.Intent(itemView.context, PublicProfileActivity::class.java).apply {
+                    putExtra(PublicProfileActivity.EXTRA_USER_ID, comment.author.id)
+                }
+                itemView.context.startActivity(intent)
+            }
             txtTime.text = TimeUtils.timeAgo(comment.createdAt)
             txtBody.text = comment.content
 

@@ -48,6 +48,12 @@ class HelpOfferAdapter(
         holder.txtAvailability.text = BadgeUtils.formatAvailabilityLabel(ctx, item.availability)
         holder.txtDescription.text = item.description
         holder.txtAuthor.text = ctx.getString(R.string.help_offer_author_format, item.author.fullName)
+        holder.txtAuthor.setOnClickListener {
+            val intent = android.content.Intent(ctx, PublicProfileActivity::class.java).apply {
+                putExtra(PublicProfileActivity.EXTRA_USER_ID, item.author.id)
+            }
+            ctx.startActivity(intent)
+        }
         holder.txtTimeAgo.text = TimeUtils.timeAgo(item.createdAt)
 
         if (currentUserId != null && item.author.id == currentUserId) {

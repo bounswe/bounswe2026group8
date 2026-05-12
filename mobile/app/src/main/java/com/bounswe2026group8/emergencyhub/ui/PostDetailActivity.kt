@@ -137,8 +137,16 @@ class PostDetailActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.txtHubBadge).text = p.hubName ?: getString(R.string.forum_type_global)
         findViewById<TextView>(R.id.txtPostTitle).text = p.title
-        findViewById<TextView>(R.id.txtPostAuthor).text =
-            if (p.repostedFrom != null) p.repostedFrom.author.fullName else p.author.fullName
+        findViewById<TextView>(R.id.txtPostAuthor).apply {
+            text = if (p.repostedFrom != null) p.repostedFrom.author.fullName else p.author.fullName
+            setOnClickListener {
+                val authorId = if (p.repostedFrom != null) p.repostedFrom.author.id else p.author.id
+                val intent = Intent(this@PostDetailActivity, PublicProfileActivity::class.java).apply {
+                    putExtra(PublicProfileActivity.EXTRA_USER_ID, authorId)
+                }
+                startActivity(intent)
+            }
+        }
         findViewById<TextView>(R.id.txtPostTime).text = TimeUtils.timeAgo(p.createdAt)
         findViewById<TextView>(R.id.txtPostContent).text = p.content ?: ""
 

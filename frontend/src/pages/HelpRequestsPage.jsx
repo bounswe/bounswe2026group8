@@ -342,9 +342,9 @@ export default function HelpRequestsPage() {
                             {req.author.role === 'EXPERT' && <span className="badge badge-expert-responding">{t('help_requests.labels.expert')}</span>}
                             <AuthorStatus profile={req.author.profile} t={t} />
                             
-                            {req.is_expert_responding && req.assigned_expert_username && (
+                            {req.is_expert_responding && req.assigned_expert && (
                                 <span className="badge badge-expert-responding">
-                                  Assigned to: {req.assigned_expert_username}
+                                  Assigned to: <Link to={`/users/${req.assigned_expert.id}`} style={{ color: 'inherit', textDecoration: 'underline' }} onClick={(e) => e.stopPropagation()}>{req.assigned_expert_username}</Link>
                                 </span>
                             )}
 

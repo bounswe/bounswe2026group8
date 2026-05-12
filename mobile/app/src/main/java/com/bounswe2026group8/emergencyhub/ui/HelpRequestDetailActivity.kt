@@ -190,6 +190,12 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         txtDetailTitle.text = detail.title
         txtDetailDescription.text = detail.description
         txtDetailAuthor.text = getString(R.string.help_request_author_format, detail.author.fullName)
+        txtDetailAuthor.setOnClickListener {
+            val intent = Intent(this, PublicProfileActivity::class.java).apply {
+                putExtra(PublicProfileActivity.EXTRA_USER_ID, detail.author.id)
+            }
+            startActivity(intent)
+        }
         txtDetailTimeAgo.text = TimeUtils.timeAgo(detail.createdAt)
 
         txtDetailCategory.text = BadgeUtils.formatCategoryLabel(this, detail.category)
@@ -279,8 +285,17 @@ class HelpRequestDetailActivity : AppCompatActivity() {
         if (detail.isExpertResponding == true && detail.assignedExpertUsername != null) {
             txtAssignedExpert.text = getString(R.string.assigned_expert_format, detail.assignedExpertUsername)
             txtAssignedExpert.visibility = View.VISIBLE
+            detail.assignedExpert?.id?.let { expertId ->
+                txtAssignedExpert.setOnClickListener {
+                    val intent = Intent(this, PublicProfileActivity::class.java).apply {
+                        putExtra(PublicProfileActivity.EXTRA_USER_ID, expertId)
+                    }
+                    startActivity(intent)
+                }
+            }
         } else {
             txtAssignedExpert.visibility = View.GONE
+            txtAssignedExpert.setOnClickListener(null)
         }
 
         if (isExpertUser && !isAuthor) {

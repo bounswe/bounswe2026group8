@@ -85,10 +85,29 @@ class PostAdapter(
             if (post.repostedFrom != null) {
                 txtRepostLabel.text = ctx.getString(R.string.forum_reposted_by_format, post.author.fullName)
                 txtRepostLabel.visibility = View.VISIBLE
+                txtRepostLabel.setOnClickListener {
+                    val intent = Intent(ctx, PublicProfileActivity::class.java).apply {
+                        putExtra(PublicProfileActivity.EXTRA_USER_ID, post.author.id)
+                    }
+                    ctx.startActivity(intent)
+                }
                 txtAuthor.text = post.repostedFrom.author.fullName
+                txtAuthor.setOnClickListener {
+                    val intent = Intent(ctx, PublicProfileActivity::class.java).apply {
+                        putExtra(PublicProfileActivity.EXTRA_USER_ID, post.repostedFrom.author.id)
+                    }
+                    ctx.startActivity(intent)
+                }
             } else {
                 txtRepostLabel.visibility = View.GONE
+                txtRepostLabel.setOnClickListener(null)
                 txtAuthor.text = post.author.fullName
+                txtAuthor.setOnClickListener {
+                    val intent = Intent(ctx, PublicProfileActivity::class.java).apply {
+                        putExtra(PublicProfileActivity.EXTRA_USER_ID, post.author.id)
+                    }
+                    ctx.startActivity(intent)
+                }
             }
 
             txtUpvote.text = "\u25B2 ${post.upvoteCount}"
