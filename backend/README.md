@@ -13,16 +13,19 @@ source .venv/bin/activate      # macOS/Linux
 cd backend
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py populate_sample_data   # Optional: load sample users and content
+python manage.py populate_sample_data   # Optional: load sample hubs, users, content, and mesh messages
 python manage.py runserver              # → http://localhost:8000
 ```
 
 Sample credentials (after `populate_sample_data`):
 
-| Email | Password | Role |
-|-------|----------|------|
-| `standard1@example.com` | `password123` | Standard |
-| `expert1@example.com` | `password123` | Expert |
+| Email | Password | Role | Hub |
+|-------|----------|------|-----|
+| `admin@example.com` | `password123` | App Admin / Django Admin | Istanbul / Sariyer |
+| `standard1@example.com` | `password123` | Standard | Istanbul / Sariyer |
+| `expert1@example.com` | `password123` | Expert | Istanbul / Sariyer |
+
+`populate_sample_data` is for local development data. It keeps the sample hub set to three district hubs (`Istanbul / Sariyer`, `Izmir / Konak`, `Ankara / Cankaya`) and creates 15 users total, with 5 users assigned to each hub. It also seeds forum content, help requests/offers, and offline mesh messages so the web, mobile, and offline messaging flows can be tested after setup.
 
 ## Project Structure
 
