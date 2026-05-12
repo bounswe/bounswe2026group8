@@ -85,10 +85,20 @@ class PostAdapter(
             if (post.repostedFrom != null) {
                 txtRepostLabel.text = ctx.getString(R.string.forum_reposted_by_format, post.author.fullName)
                 txtRepostLabel.visibility = View.VISIBLE
+                txtRepostLabel.setOnClickListener {
+                    PublicProfileActivity.navigate(ctx, post.author.id, currentUserId)
+                }
                 txtAuthor.text = post.repostedFrom.author.fullName
+                txtAuthor.setOnClickListener {
+                    PublicProfileActivity.navigate(ctx, post.repostedFrom.author.id, currentUserId)
+                }
             } else {
                 txtRepostLabel.visibility = View.GONE
+                txtRepostLabel.setOnClickListener(null)
                 txtAuthor.text = post.author.fullName
+                txtAuthor.setOnClickListener {
+                    PublicProfileActivity.navigate(ctx, post.author.id, currentUserId)
+                }
             }
 
             txtUpvote.text = "\u25B2 ${post.upvoteCount}"

@@ -599,5 +599,15 @@
     <string name="badge_name_responder">Yardımsever</string>
     <string name="badge_desc_responder">Topluluk yardım taleplerinin sorumluluğunu üstlendiğiniz için verilir.</string>
     <string name="assigned_expert_format">Atanan: %1$s</string>
+
+    <!-- Public profile: Activity section -->
+    <string name="profile_activity">Aktivite</string>
+    <string name="profile_activity_loading">Yükleniyor…</string>
+    <string name="profile_activity_empty_posts">Henüz forum gönderisi yok.</string>
+    <string name="profile_activity_empty_requests">Henüz yardım talebi yok.</string>
+    <string name="profile_activity_empty_offers">Henüz yardım teklifi yok.</string>
+    <string name="profile_activity_post_meta">▲ %1$d  ▼ %2$d  💬 %3$d</string>
+    <string name="profile_activity_request_meta">%1$s · %2$s</string>
+    <string name="profile_activity_offer_meta">%1$s · %2$s</string>
 </resources>
 

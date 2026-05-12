@@ -248,10 +248,10 @@ export default function HelpRequestDetailPage() {
             <span>{formatDate(helpRequest.created_at, t)}</span>
           </div>
 
-          {helpRequest.is_expert_responding && helpRequest.assigned_expert_username && (
+          {helpRequest.is_expert_responding && helpRequest.assigned_expert && (
               <div className="help-detail-assigned">
                 <span className="badge badge-expert-responding">
-                  Assigned to: {helpRequest.assigned_expert_username}
+                  Assigned to: <Link to={`/users/${helpRequest.assigned_expert.id}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{helpRequest.assigned_expert_username}</Link>
                 </span>
               </div>
           )}

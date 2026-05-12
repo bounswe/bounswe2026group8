@@ -204,6 +204,9 @@ interface ApiService {
     @PATCH("settings")
     suspend fun updateSettings(@Body body: UserSettingsUpdateRequest): Response<UserSettingsData>
 
+    @GET("users/{id}/")
+    suspend fun getUserPublicProfile(@Path("id") id: Int): Response<UserPublicProfileData>
+
     // ── Resources ───────────────────────────────────────────────────────────────
 
     @GET("resources")

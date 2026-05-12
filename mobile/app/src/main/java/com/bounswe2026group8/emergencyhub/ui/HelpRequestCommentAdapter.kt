@@ -41,6 +41,9 @@ class HelpRequestCommentAdapter(
         val comment = items[position]
 
         holder.txtCommentAuthor.text = comment.author.fullName
+        holder.txtCommentAuthor.setOnClickListener {
+            PublicProfileActivity.navigate(holder.itemView.context, comment.author.id, currentUserId)
+        }
         holder.txtCommentContent.text = comment.content
         holder.txtCommentTime.text = TimeUtils.timeAgo(comment.createdAt)
 

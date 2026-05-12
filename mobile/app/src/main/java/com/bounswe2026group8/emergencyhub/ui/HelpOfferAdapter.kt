@@ -48,6 +48,9 @@ class HelpOfferAdapter(
         holder.txtAvailability.text = BadgeUtils.formatAvailabilityLabel(ctx, item.availability)
         holder.txtDescription.text = item.description
         holder.txtAuthor.text = ctx.getString(R.string.help_offer_author_format, item.author.fullName)
+        holder.txtAuthor.setOnClickListener {
+            PublicProfileActivity.navigate(ctx, item.author.id, currentUserId)
+        }
         holder.txtTimeAgo.text = TimeUtils.timeAgo(item.createdAt)
 
         if (currentUserId != null && item.author.id == currentUserId) {

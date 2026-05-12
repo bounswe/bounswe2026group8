@@ -18,6 +18,19 @@ data class ProfileData(
     @SerializedName("updated_at") val updatedAt: String?,
 )
 
+data class UserPublicProfileData(
+    val id: Int,
+    @SerializedName("full_name") val fullName: String,
+    val email: String,
+    val role: String,
+    @SerializedName("staff_role") val staffRole: String = "NONE",
+    val hub: Hub?,
+    @SerializedName("neighborhood_address") val neighborhoodAddress: String?,
+    val profile: ProfileData?,
+    val resources: List<ResourceData>?,
+    @SerializedName("expertise_fields") val expertiseFields: List<ExpertiseFieldData>?
+)
+
 data class ProfileUpdateRequest(
     @SerializedName("phone_number") val phoneNumber: String? = null,
     @SerializedName("blood_type") val bloodType: String? = null,
