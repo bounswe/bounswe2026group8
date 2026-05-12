@@ -9,10 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bounswe2026group8.emergencyhub.R
+import com.bounswe2026group8.emergencyhub.api.Hub
 import com.bounswe2026group8.emergencyhub.api.RetrofitClient
+import com.bounswe2026group8.emergencyhub.api.UpdateMeRequest
 import com.bounswe2026group8.emergencyhub.api.UserSettingsData
 import com.bounswe2026group8.emergencyhub.api.UserSettingsUpdateRequest
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
+import com.bounswe2026group8.emergencyhub.util.ThemeManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.launch
@@ -117,9 +120,116 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.btnBack).setOnClickListener { finish() }
+        buildAppearanceRows()
+        buildHubRow()
         buildSettingRows()
         setSwitchesEnabled(false)
         loadSettings()
+    }
+
+    private fun buildHubRow() {
+        renderCurrentHub(tokenManager.getUser()?.hub)
+        findViewById<MaterialButton>(R.id.btnChangeHub).setOnClickListener { openHubPicker() }
+    }
+
+    private fun renderCurrentHub(hub: Hub?) {
+        val display = findViewById<TextView>(R.id.textCurrentHub)
+        display.text = if (hub == null) {
+            getString(R.string.hub_none)
+        } else {
+            listOfNotNull(hub.district, hub.city, hub.country)
+                .filter { it.isNotBlank() }
+                .ifEmpty { listOf(hub.name) }
+                .joinToString(", ")
+        }
+    }
+
+    private fun openHubPicker() {
+        val current = tokenManager.getUser()?.hub
+        LocationPickerDialog(
+            context = this,
+            initialCountry = current?.country,
+            initialCity = current?.city,
+            initialDistrict = current?.district,
+        ) { country, city, district ->
+            saveHub(country, city, district)
+        }.show()
+    }
+
+    private fun saveHub(country: String, city: String, district: String) {
+        val changeButton = findViewById<MaterialButton>(R.id.btnChangeHub)
+        changeButton.isEnabled = false
+        changeButton.text = getString(R.string.hub_saving)
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.getService(this@SettingsActivity)
+                    .updateMe(UpdateMeRequest(country = country, city = city, district = district))
+                if (response.isSuccessful) {
+                    response.body()?.let { user ->
+                        tokenManager.saveUser(user)
+                        renderCurrentHub(user.hub)
+                    }
+                    toast(getString(R.string.saved))
+                } else {
+                    toast(getString(R.string.settings_save_failed))
+                }
+            } catch (_: Exception) {
+                toast(getString(R.string.network_error))
+            } finally {
+                changeButton.isEnabled = true
+                changeButton.text = getString(R.string.hub_change)
+            }
+        }
+    }
+
+    private fun buildAppearanceRows() {
+        val appearanceRows = findViewById<LinearLayout>(R.id.appearanceRows)
+        addThemeSwitchRow(appearanceRows)
+    }
+
+    private fun addThemeSwitchRow(parent: LinearLayout) {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(0, 12.dp, 0, 12.dp)
+        }
+
+        val textColumn = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        val title = TextView(this).apply {
+            text = getString(R.string.settings_dark_mode)
+            setTextColor(ContextCompat.getColor(context, R.color.text_primary))
+            textSize = 14f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+        }
+
+        val description = TextView(this).apply {
+            text = getString(R.string.settings_dark_mode_desc)
+            setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
+            textSize = 12f
+            setPadding(0, 4.dp, 16.dp, 0)
+        }
+
+        val switch = MaterialSwitch(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            )
+            contentDescription = getString(R.string.settings_dark_mode)
+            isChecked = ThemeManager.isDarkMode(this@SettingsActivity)
+            setOnCheckedChangeListener { _, checked ->
+                ThemeManager.setDarkMode(this@SettingsActivity, checked)
+            }
+        }
+
+        textColumn.addView(title)
+        textColumn.addView(description)
+        row.addView(textColumn)
+        row.addView(switch)
+        parent.addView(row)
     }
 
     private fun buildSettingRows() {

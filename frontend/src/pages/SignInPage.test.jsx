@@ -11,6 +11,20 @@ import { MemoryRouter } from 'react-router-dom';
 import SignInPage from './SignInPage';
 import { AuthProvider } from '../context/AuthContext';
 
+jest.mock('react-i18next', () => {
+  const en = require('../locales/en.json');
+  function t(key) {
+    const parts = key.split('.');
+    let val = en;
+    for (const p of parts) {
+      if (val == null || typeof val !== 'object') return key;
+      val = val[p];
+    }
+    return typeof val === 'string' ? val : key;
+  }
+  return { useTranslation: () => ({ t, i18n: { changeLanguage: jest.fn(), language: 'en' } }) };
+});
+
 jest.mock('../services/api');
 import * as api from '../services/api';
 

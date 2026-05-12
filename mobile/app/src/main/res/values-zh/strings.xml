@@ -42,6 +42,8 @@
     <string name="feature_profile_desc">管理您的账户</string>
     <string name="feature_offline">离线信息</string>
     <string name="feature_offline_desc">关键数据访问</string>
+    <string name="feature_settings">设置</string>
+    <string name="feature_settings_desc">隐私和提醒</string>
 
     <!-- Help Center -->
     <string name="help_center_title">帮助中心</string>
@@ -162,6 +164,23 @@
     <string name="profile_cert_url">证书URL（可选）</string>
     <string name="profile_no_expertise">尚未添加专业领域。</string>
 
+    <string name="my_posts_title">我的帖子</string>
+    <string name="my_posts_card_desc">查看你发布的论坛帖子</string>
+    <string name="my_posts_loading">正在加载你的帖子...</string>
+    <string name="my_posts_empty">你还没有发布任何论坛帖子。</string>
+    <string name="my_posts_load_failed">无法加载你的帖子</string>
+    <string name="my_posts_sign_in_required">请登录后查看你的帖子。</string>
+    <string name="back_to_profile">← 返回个人资料</string>
+    <string name="my_posts_tab_forum_posts">论坛帖子</string>
+    <string name="my_posts_tab_help_requests">求助请求</string>
+    <string name="my_posts_tab_help_offers">帮助提议</string>
+    <string name="my_posts_empty_forum_posts">你还没有发布任何论坛帖子。</string>
+    <string name="my_posts_empty_help_requests">你还没有创建任何求助请求。</string>
+    <string name="my_posts_empty_help_offers">你还没有发布任何帮助提议。</string>
+    <string name="my_posts_load_failed_forum_posts">无法加载你的论坛帖子</string>
+    <string name="my_posts_load_failed_help_requests">无法加载你的求助请求</string>
+    <string name="my_posts_load_failed_help_offers">无法加载你的帮助提议</string>
+
     <!-- Forum -->
     <string name="forum_title">论坛</string>
     <string name="forum_hub_all">所有中心 — 所有人</string>
@@ -207,6 +226,34 @@
     <!-- Language -->
     <string name="language">语言</string>
     <string name="select_language">选择语言</string>
+    <string name="settings_title">设置</string>
+    <string name="settings_notifications">通知</string>
+    <string name="settings_privacy">隐私</string>
+    <string name="settings_privacy_note">选择其他用户可以在你的公开资料中看到哪些内容。</string>
+    <string name="settings_load_failed">无法加载设置</string>
+    <string name="settings_save_failed">无法保存设置</string>
+    <string name="settings_notify_help_requests">求助请求提醒</string>
+    <string name="settings_notify_help_requests_desc">当附近的求助请求需要关注时接收通知。</string>
+    <string name="settings_notify_urgent_posts">紧急论坛提醒</string>
+    <string name="settings_notify_urgent_posts_desc">接收紧急社区帖子的通知。</string>
+    <string name="settings_notify_expertise_matches_only">仅限我的专业领域</string>
+    <string name="settings_notify_expertise_matches_only_desc">将求助请求提醒限制为与你专业领域匹配的类别。</string>
+    <string name="settings_show_phone_number">显示电话号码</string>
+    <string name="settings_show_phone_number_desc">允许其他人查看你的电话号码。</string>
+    <string name="settings_show_emergency_contact">显示紧急联系人</string>
+    <string name="settings_show_emergency_contact_desc">允许其他人查看你的紧急联系人信息。</string>
+    <string name="settings_show_medical_info">显示医疗信息</string>
+    <string name="settings_show_medical_info_desc">允许其他人查看血型、残障状态和特殊需求字段。</string>
+    <string name="settings_show_availability_status">显示可用状态</string>
+    <string name="settings_show_availability_status_desc">允许其他人查看你是否安全、需要帮助或可以提供帮助。</string>
+    <string name="settings_show_bio">显示简介</string>
+    <string name="settings_show_bio_desc">允许其他人查看你的个人简介。</string>
+    <string name="settings_show_location">显示位置</string>
+    <string name="settings_show_location_desc">允许其他人查看你的社区或地址。</string>
+    <string name="settings_show_resources">显示资源</string>
+    <string name="settings_show_resources_desc">允许其他人查看你列出的资源。</string>
+    <string name="settings_show_expertise">显示专业能力</string>
+    <string name="settings_show_expertise_desc">允许其他人查看你的专业领域。</string>
     <string name="dashboard_welcome_format">欢迎，%1$s！</string>
     <string name="dashboard_role_expert">专家</string>
     <string name="dashboard_role_standard">标准用户</string>
@@ -243,6 +290,15 @@
     <string name="profile_cert_level_advanced">高级</string>
     <string name="new_item">+ 新建</string>
     <string name="hub_label">中心：</string>
+    <string name="hub_section_title">中心</string>
+    <string name="hub_current_label">当前中心</string>
+    <string name="hub_none">未选择中心</string>
+    <string name="hub_change">更改</string>
+    <string name="hub_saving">正在保存…</string>
+    <string name="location_picker_choose_country">选择国家</string>
+    <string name="location_picker_choose_city">在 %1$s 选择城市</string>
+    <string name="location_picker_choose_district">在 %1$s 选择区域</string>
+    <string name="location_picker_search">搜索</string>
     <string name="share">分享</string>
     <string name="repost">转发</string>
     <string name="reposted">已转发</string>
@@ -498,4 +554,26 @@
     <string name="tutorial_call">呼叫</string>
     <string name="tutorial_calling">正在呼叫 %1$s</string>
     <string name="tutorial_changing_field">更改此字段</string>
+
+    <!-- Badges -->
+    <string name="badges_title">我的徽章</string>
+    <string name="badges_card_desc">查看您的成就和进度</string>
+    <string name="badges_empty">您还没有获得任何徽章。开始参与社区活动吧！</string>
+    <string name="badges_load_failed">加载徽章失败</string>
+    <string name="badges_max_level">已达到最高等级</string>
+    <!-- Settings -->
+    <string name="settings_appearance">&#x5916;&#x89C2;</string>
+    <string name="settings_dark_mode">&#x6DF1;&#x8272;&#x6A21;&#x5F0F;</string>
+    <string name="settings_dark_mode_desc">&#x4F7F;&#x7528;&#x6DF1;&#x84DD;&#x8272;&#x4E3B;&#x9898;&#x3002;&#x5173;&#x95ED;&#x6B64;&#x9009;&#x9879;&#x53EF;&#x4F7F;&#x7528;&#x6D45;&#x8272;&#x80CC;&#x666F;&#x3002;</string>
+
+    <string name="badge_name_commenter">社交達人</string>
+    <string name="badge_desc_commenter">獎勵給積極參與社區討論的用戶。</string>
+    <string name="badge_name_voter">投票者</string>
+    <string name="badge_desc_voter">獎勵給對社區貼文進行投票的用戶。</string>
+    <string name="badge_name_forum_active">論壇活躍者</string>
+    <string name="badge_desc_forum_active">獎勵給在社區論壇中發佈新貼文的用戶。</string>
+    <string name="badge_name_responder">響應者</string>
+    <string name="badge_desc_responder">獎勵給承擔社區求助請求責任的用戶。</string>
+    <string name="assigned_expert_format">已分配给: %1$s</string>
 </resources>
+

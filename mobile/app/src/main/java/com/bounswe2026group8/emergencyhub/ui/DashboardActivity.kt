@@ -55,7 +55,7 @@ class DashboardActivity : AppCompatActivity() {
 
         findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener { performLogout() }
 
-        hubSelectorHelper = HubSelectorHelper(this, findViewById<Spinner>(R.id.spinnerHubSelector))
+        hubSelectorHelper = HubSelectorHelper(this, findViewById<TextView>(R.id.textHubDisplay))
         setupLanguageSelector()
         setupFeatureCards()
     }
@@ -194,6 +194,8 @@ class DashboardActivity : AppCompatActivity() {
 
         findViewById<MaterialCardView>(R.id.cardSettings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
+        }
+
         findViewById<MaterialCardView>(R.id.cardStaffTools).setOnClickListener {
             startActivity(Intent(this, StaffDashboardActivity::class.java))
         }

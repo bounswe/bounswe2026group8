@@ -48,6 +48,7 @@ interface ApiService {
     suspend fun getHelpRequests(
         @Query("hub_id") hubId: Int? = null,
         @Query("category") category: String? = null,
+        @Query("author") author: Int? = null,
         @Query("expertise_match") expertiseMatch: Boolean? = null,
     ): Response<List<HelpRequestItem>>
 
@@ -70,6 +71,16 @@ interface ApiService {
     suspend fun updateHelpRequestStatus(
         @Path("id") id: Int,
         @Body body: UpdateHelpRequestStatusRequest
+    ): Response<HelpRequestDetail>
+
+    @POST("help-requests/{id}/take-on/")
+    suspend fun takeOnHelpRequest(
+        @Path("id") id: Int
+    ): Response<HelpRequestDetail>
+
+    @POST("help-requests/{id}/release/")
+    suspend fun releaseHelpRequest(
+        @Path("id") id: Int
     ): Response<HelpRequestDetail>
 
     // ── Help Request Comments ────────────────────────────────────────────
@@ -95,7 +106,8 @@ interface ApiService {
     @GET("help-offers/")
     suspend fun getHelpOffers(
         @Query("hub_id") hubId: Int? = null,
-        @Query("category") category: String? = null
+        @Query("category") category: String? = null,
+        @Query("author") author: Int? = null
     ): Response<List<HelpOfferItem>>
 
     @POST("help-offers/")
@@ -118,8 +130,10 @@ interface ApiService {
 
     @GET("forum/posts/")
     suspend fun getPosts(
-        @Query("forum_type") forumType: String,
-        @Query("hub") hub: Int? = null
+        @Query("forum_type") forumType: String? = null,
+        @Query("hub") hub: Int? = null,
+        @Query("author") author: Int? = null,
+        @Query("author_role") authorRole: String? = null
     ): Response<List<Post>>
 
     @POST("forum/posts/")
@@ -216,6 +230,16 @@ interface ApiService {
 
     @DELETE("expertise/{id}")
     suspend fun deleteExpertiseField(@Path("id") id: Int): Response<Unit>
+
+    // ── Badges ──────────────────────────────────────────────────────────────────
+
+    /** GET /api/badges/my-badges/ — current user's badge progress. */
+    @GET("api/badges/my-badges/")
+    suspend fun getMyBadges(): Response<List<UserBadgeItem>>
+
+    /** GET /api/badges/users/{id}/ — badge progress for a specific user. */
+    @GET("api/badges/users/{userId}/")
+    suspend fun getUserBadges(@Path("userId") userId: Int): Response<List<UserBadgeItem>>
 
     // ── Mesh (offline messages archive) ─────────────────────────────────────────
 

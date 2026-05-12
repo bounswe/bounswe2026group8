@@ -3,13 +3,15 @@ import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { register, getExpertiseCategories } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import LocationPickerModal from '../components/LocationPickerModal';
 
 export default function SignUpPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, loading, hubs } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const { t, i18n } = useTranslation();
 
   const [expertiseCategories, setExpertiseCategories] = useState([]);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -17,7 +19,9 @@ export default function SignUpPage() {
     password: '',
     confirm_password: '',
     role: 'STANDARD',
-    hub_id: '',
+    hub_country: '',
+    hub_city: '',
+    hub_district: '',
     neighborhood_address: '',
     category_id: '',
   });
@@ -93,9 +97,10 @@ export default function SignUpPage() {
       confirm_password: form.confirm_password,
       role: form.role,
     };
-    const hubId = form.hub_id || '';
-    if (hubId) {
-      payload.hub_id = Number(hubId);
+    if (form.hub_country && form.hub_city) {
+      payload.hub_country = form.hub_country;
+      payload.hub_city = form.hub_city;
+      if (form.hub_district) payload.hub_district = form.hub_district;
     }
     if (form.neighborhood_address.trim()) {
       payload.neighborhood_address = form.neighborhood_address.trim();
@@ -244,20 +249,16 @@ export default function SignUpPage() {
 
             {/* Hub */}
             <div className="form-group">
-              <label htmlFor="hub_id">{t('sign_up.labels.hub')}</label>
-              <select
-                  id="hub_id"
-                  name="hub_id"
-                  value={form.hub_id}
-                  onChange={handleChange}
+              <label>{t('sign_up.labels.hub')}</label>
+              <button
+                  type="button"
+                  className="btn btn-secondary btn-block location-picker-trigger"
+                  onClick={() => setPickerOpen(true)}
               >
-                <option value="">{t('sign_up.placeholders.select_hub')}</option>
-                {hubs.map((h) => (
-                    <option key={h.id} value={String(h.id)}>
-                      {h.name}
-                    </option>
-                ))}
-              </select>
+                {form.hub_city
+                    ? [form.hub_district, form.hub_city, form.hub_country].filter(Boolean).join(', ')
+                    : t('sign_up.placeholders.select_hub')}
+              </button>
             </div>
 
             {/* Expertise category — only visible for EXPERT */}
@@ -321,6 +322,15 @@ export default function SignUpPage() {
             </Link>
           </p>
         </div>
+        <LocationPickerModal
+            open={pickerOpen}
+            initial={{ country: form.hub_country, city: form.hub_city, district: form.hub_district }}
+            onClose={() => setPickerOpen(false)}
+            onSelect={({ country, city, district }) => {
+              setForm((prev) => ({ ...prev, hub_country: country, hub_city: city, hub_district: district }));
+              setPickerOpen(false);
+            }}
+        />
       </div>
   );
 }

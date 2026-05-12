@@ -74,6 +74,11 @@
       "most_liked": "En Çok Beğenilen",
       "hot": "Popüler"
     },
+    "filter": {
+      "all": "Tümü",
+      "experts": "Uzmanlar",
+      "standard_users": "Standart Kullanıcılar"
+    },
     "empty_states": {
       "loading": "Gönderiler yükleniyor...",
       "select_hub": "{{tab}} gönderilerini görmek için bir merkez seçin.",
@@ -365,6 +370,33 @@
       "posted": "GÖnderildi"
     }
   },
+  "badges": {
+    "commenter": {
+      "title": "Sohbetçi",
+      "description": "Topluluk tartışmalarına aktif olarak katıldığınız için verilir."
+    },
+    "voter": {
+      "title": "Oy Veren",
+      "description": "Topluluk gönderilerini oyladığınız için verilir."
+    },
+    "forum_active": {
+      "title": "Aktif Forumcu",
+      "description": "Topluluk forumunda yeni gönderiler oluşturduğunuz için verilir."
+    },
+    "responder": {
+      "title": "Yardımsever",
+      "description": "Topluluk yardım taleplerinin sorumluluğunu üstlendiğiniz için verilir."
+    }
+  },
+  "my_badges": {
+    "header": {
+      "title": "Rozetlerim",
+      "back": "Geri"
+    },
+    "loading": "Başarılarınız yükleniyor...",
+    "empty": "Henüz bir rozet kazanmadınız. Topluluğa katılarak ilk rozetinizi kazanın!",
+    "max_level": "MAKSİMUM SEVİYE"
+  },
   "post_create": {
     "types": {
       "global": "Global",
@@ -628,12 +660,16 @@
   },
   "profile": {
     "header": {
-      "title": "Sizin Profiliniz",
+      "title": "Profiliniz",
       "back": "Geri"
     },
     "my_posts": {
       "title": "Gönderilerim",
       "desc": "Forum gönderileriniz, yardım talep ve tekliflerinizi görüntüleyin."
+    },
+    "my_badges": {
+      "title": "Rozetlerim",
+      "desc": "Kazandığınız rozetleri ve başarımları görüntüleyin"
     },
     "sections": {
       "personal_info": "Kişisel Bilgiler",
@@ -711,6 +747,84 @@
     "phone_validation": {
       "invalid": "Geçerli bir telefon numarası girin (ör. +90 555 123 4567)",
       "length": "6–15 karakter arasında olmalı"
+    }
+  },
+  "settings": {
+    "header": {
+      "title": "Ayarlar",
+      "back": "Geri"
+    },
+    "sections": {
+      "appearance": "G\u00f6r\u00fcn\u00fcm",
+      "hub": "Merkez",
+      "notifications": "Bildirimler",
+      "privacy": "Gizlilik"
+    },
+    "privacy_note": "Diğer oturum açmış kullanıcıların herkese açık profilinizde neleri görebileceğini seçin.",
+    "states": {
+      "loading": "Ayarlar yükleniyor...",
+      "unavailable": "Ayarlar şu anda kullanılamıyor."
+    },
+    "toasts": {
+      "saved": "Kaydedildi",
+      "load_failed": "Ayarlar yüklenemedi.",
+      "save_failed": "Ayarlar kaydedilemedi."
+    },
+    "hub": {
+      "current": "Mevcut merkez",
+      "none": "Merkez seçilmedi",
+      "saving": "Kaydediliyor...",
+      "change": "Değiştir"
+    },
+    "fields": {
+      "dark_mode": {
+        "label": "Koyu mod",
+        "desc": "Koyu mavi temay\u0131 kullan\u0131n. A\u00e7\u0131k arka plan i\u00e7in bunu kapat\u0131n."
+      },
+      "notify_help_requests": {
+        "label": "Yardım talebi bildirimleri",
+        "desc": "İlgili yardım talepleri oluşturulduğunda anlık bildirim alın."
+      },
+      "notify_urgent_posts": {
+        "label": "Acil forum bildirimleri",
+        "desc": "Acil forum gönderileri için anlık bildirim alın."
+      },
+      "notify_expertise_matches_only": {
+        "label": "Yalnızca uzmanlığımla ilgili bildir",
+        "desc": "Uzmanlar, kendi uzmanlık alanı dışındaki yedek yardım talebi bildirimlerini atlar."
+      },
+      "show_phone_number": {
+        "label": "Telefon numarasını göster",
+        "desc": "Diğer kullanıcıların telefon numaranızı görmesine izin verin."
+      },
+      "show_emergency_contact": {
+        "label": "Acil durum kişisini göster",
+        "desc": "Diğer kullanıcıların acil durum kişi bilgilerinizi görmesine izin verin."
+      },
+      "show_medical_info": {
+        "label": "Tıbbi ve erişilebilirlik bilgilerini göster",
+        "desc": "Kan grubu, engellilik durumu ve özel ihtiyaçların herkese açık görünmesine izin verin."
+      },
+      "show_availability_status": {
+        "label": "Uygunluk durumunu göster",
+        "desc": "Güvende, yardıma ihtiyaç duyuyor veya yardım etmeye uygun olduğunuzu gösterin."
+      },
+      "show_bio": {
+        "label": "Biyografiyi göster",
+        "desc": "Biyografinizi herkese açık profilinizde gösterin."
+      },
+      "show_location": {
+        "label": "Mahalle/adres göster",
+        "desc": "Mahallenizi veya adresinizi herkese açık profilinizde gösterin."
+      },
+      "show_resources": {
+        "label": "Kaynakları göster",
+        "desc": "Listelediğiniz acil durum kaynaklarını gösterin."
+      },
+      "show_expertise": {
+        "label": "Uzmanlığı göster",
+        "desc": "Uzmanlık alanlarınızı ve sertifika bağlantılarınızı gösterin."
+      }
     }
   },
   "emergency_info": {
@@ -1072,5 +1186,12 @@
       "mapPreview": "Harita önizlemesi",
       "mapDesc": "Canlı harita araçlarını ve kayıtlı toplanma noktalarını kullanmak için giriş yap."
     }
+  },
+  "location_picker": {
+    "choose_country": "Ülke seçin",
+    "choose_city": "{{country}} içinden şehir seçin",
+    "choose_district": "{{city}} içinden ilçe seçin",
+    "search": "Ara...",
+    "no_results": "Sonuç bulunamadı"
   }
 }

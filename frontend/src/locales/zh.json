@@ -74,6 +74,11 @@
       "most_liked": "最多点赞",
       "hot": "热门"
     },
+    "filter": {
+      "all": "全部",
+      "experts": "专家",
+      "standard_users": "标准用户"
+    },
     "empty_states": {
       "loading": "正在加载帖子...",
       "select_hub": "选择一个中心以查看 {{tab}} 帖子。",
@@ -365,6 +370,33 @@
       "posted": "发布时间"
     }
   },
+  "badges": {
+    "commenter": {
+      "title": "社交達人",
+      "description": "獎勵給積極參與社區討論的用戶。"
+    },
+    "voter": {
+      "title": "投票者",
+      "description": "獎勵給對社區貼文進行投票的用戶。"
+    },
+    "forum_active": {
+      "title": "論壇活躍者",
+      "description": "獎勵給在社區論壇中發佈新貼文的用戶。"
+    },
+    "responder": {
+      "title": "響應者",
+      "description": "獎勵給承擔社區求助請求責任的用戶。"
+    }
+  },
+  "my_badges": {
+    "header": {
+      "title": "我的徽章",
+      "back": "返回"
+    },
+    "loading": "正在載入您的成就...",
+    "empty": "您還沒有獲得任何徽章。快來參與社區討論吧！",
+    "max_level": "已達到最高等級"
+  },
   "post_create": {
     "types": {
       "global": "全局",
@@ -635,6 +667,10 @@
       "title": "我的帖子",
       "desc": "查看您的论坛帖子、求助和提供的帮助"
     },
+    "my_badges": {
+      "title": "我的徽章",
+      "desc": "查看您获得的徽章和成就"
+    },
     "sections": {
       "personal_info": "个人信息",
       "resources": "物资资源",
@@ -711,6 +747,84 @@
     "phone_validation": {
       "invalid": "请输入有效的电话号码 (例如：+86 138 1234 5678)",
       "length": "必须是 6–15 位数字"
+    }
+  },
+  "settings": {
+    "header": {
+      "title": "设置",
+      "back": "返回"
+    },
+    "sections": {
+      "appearance": "\u5916\u89c2",
+      "hub": "中心",
+      "notifications": "通知",
+      "privacy": "隐私"
+    },
+    "privacy_note": "选择其他已登录用户可以在你的公开资料中看到哪些内容。",
+    "states": {
+      "loading": "正在加载设置...",
+      "unavailable": "设置目前不可用。"
+    },
+    "toasts": {
+      "saved": "已保存",
+      "load_failed": "无法加载设置。",
+      "save_failed": "无法保存设置。"
+    },
+    "hub": {
+      "current": "当前中心",
+      "none": "未选择中心",
+      "saving": "正在保存...",
+      "change": "更改"
+    },
+    "fields": {
+      "dark_mode": {
+        "label": "\u6df1\u8272\u6a21\u5f0f",
+        "desc": "\u4f7f\u7528\u6df1\u84dd\u8272\u4e3b\u9898\u3002\u5173\u95ed\u6b64\u9009\u9879\u53ef\u4f7f\u7528\u6d45\u8272\u80cc\u666f\u3002"
+      },
+      "notify_help_requests": {
+        "label": "求助请求通知",
+        "desc": "当创建相关求助请求时接收推送通知。"
+      },
+      "notify_urgent_posts": {
+        "label": "紧急论坛通知",
+        "desc": "接收紧急论坛帖子的推送通知。"
+      },
+      "notify_expertise_matches_only": {
+        "label": "仅通知我的专业领域",
+        "desc": "专家会跳过专业领域之外的备用求助请求通知。"
+      },
+      "show_phone_number": {
+        "label": "显示电话号码",
+        "desc": "允许其他用户查看你的电话号码。"
+      },
+      "show_emergency_contact": {
+        "label": "显示紧急联系人",
+        "desc": "允许其他用户查看你的紧急联系人信息。"
+      },
+      "show_medical_info": {
+        "label": "显示医疗和无障碍信息",
+        "desc": "允许血型、残障状态和特殊需求公开显示。"
+      },
+      "show_availability_status": {
+        "label": "显示可用状态",
+        "desc": "显示你是否安全、需要帮助或可以提供帮助。"
+      },
+      "show_bio": {
+        "label": "显示简介",
+        "desc": "在公开资料中显示你的简介。"
+      },
+      "show_location": {
+        "label": "显示社区/地址",
+        "desc": "在公开资料中显示你的社区或地址。"
+      },
+      "show_resources": {
+        "label": "显示资源",
+        "desc": "显示你列出的应急资源。"
+      },
+      "show_expertise": {
+        "label": "显示专业能力",
+        "desc": "显示你的专业领域和证书链接。"
+      }
     }
   },
   "emergency_info": {
@@ -1072,5 +1186,12 @@
       "mapPreview": "地图预览",
       "mapDesc": "Sign in to use live map tools and saved gathering points."
     }
+  },
+  "location_picker": {
+    "choose_country": "选择国家",
+    "choose_city": "在 {{country}} 选择城市",
+    "choose_district": "在 {{city}} 选择区域",
+    "search": "搜索...",
+    "no_results": "无结果"
   }
 }

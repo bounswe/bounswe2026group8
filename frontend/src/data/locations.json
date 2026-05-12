@@ -1,0 +1,812 @@
+{
+  "countries": [
+    {
+      "code": "TR",
+      "name": "Turkey",
+      "cities": [
+        {"name": "Adana", "districts": ["Aladağ", "Ceyhan", "Çukurova", "Feke", "İmamoğlu", "Karaisalı", "Karataş", "Kozan", "Pozantı", "Saimbeyli", "Sarıçam", "Seyhan", "Tufanbeyli", "Yumurtalık", "Yüreğir"]},
+        {"name": "Adıyaman", "districts": ["Besni", "Çelikhan", "Gerger", "Gölbaşı", "Kahta", "Merkez", "Samsat", "Sincik", "Tut"]},
+        {"name": "Afyonkarahisar", "districts": ["Başmakçı", "Bayat", "Bolvadin", "Çay", "Çobanlar", "Dazkırı", "Dinar", "Emirdağ", "Evciler", "Hocalar", "İhsaniye", "İscehisar", "Kızılören", "Merkez", "Sandıklı", "Sinanpaşa", "Sultandağı", "Şuhut"]},
+        {"name": "Ağrı", "districts": ["Diyadin", "Doğubayazıt", "Eleşkirt", "Hamur", "Merkez", "Patnos", "Taşlıçay", "Tutak"]},
+        {"name": "Aksaray", "districts": ["Ağaçören", "Eskil", "Gülağaç", "Güzelyurt", "Merkez", "Ortaköy", "Sarıyahşi", "Sultanhanı"]},
+        {"name": "Amasya", "districts": ["Göynücek", "Gümüşhacıköy", "Hamamözü", "Merkez", "Merzifon", "Suluova", "Taşova"]},
+        {"name": "Ankara", "districts": ["Akyurt", "Altındağ", "Ayaş", "Bala", "Beypazarı", "Çamlıdere", "Çankaya", "Çubuk", "Elmadağ", "Etimesgut", "Evren", "Gölbaşı", "Güdül", "Haymana", "Kahramankazan", "Kalecik", "Keçiören", "Kızılcahamam", "Mamak", "Nallıhan", "Polatlı", "Pursaklar", "Sincan", "Şereflikoçhisar", "Yenimahalle"]},
+        {"name": "Antalya", "districts": ["Akseki", "Aksu", "Alanya", "Demre", "Döşemealtı", "Elmalı", "Finike", "Gazipaşa", "Gündoğmuş", "İbradı", "Kaş", "Kemer", "Kepez", "Konyaaltı", "Korkuteli", "Kumluca", "Manavgat", "Muratpaşa", "Serik"]},
+        {"name": "Ardahan", "districts": ["Çıldır", "Damal", "Göle", "Hanak", "Merkez", "Posof"]},
+        {"name": "Artvin", "districts": ["Ardanuç", "Arhavi", "Borçka", "Hopa", "Kemalpaşa", "Merkez", "Murgul", "Şavşat", "Yusufeli"]},
+        {"name": "Aydın", "districts": ["Bozdoğan", "Buharkent", "Çine", "Didim", "Efeler", "Germencik", "İncirliova", "Karacasu", "Karpuzlu", "Koçarlı", "Köşk", "Kuşadası", "Kuyucak", "Nazilli", "Söke", "Sultanhisar", "Yenipazar"]},
+        {"name": "Balıkesir", "districts": ["Altıeylül", "Ayvalık", "Balya", "Bandırma", "Bigadiç", "Burhaniye", "Dursunbey", "Edremit", "Erdek", "Gömeç", "Gönen", "Havran", "İvrindi", "Karesi", "Kepsut", "Manyas", "Marmara", "Savaştepe", "Sındırgı", "Susurluk"]},
+        {"name": "Bartın", "districts": ["Amasra", "Kurucaşile", "Merkez", "Ulus"]},
+        {"name": "Batman", "districts": ["Beşiri", "Gercüş", "Hasankeyf", "Kozluk", "Merkez", "Sason"]},
+        {"name": "Bayburt", "districts": ["Aydıntepe", "Demirözü", "Merkez"]},
+        {"name": "Bilecik", "districts": ["Bozüyük", "Gölpazarı", "İnhisar", "Merkez", "Osmaneli", "Pazaryeri", "Söğüt", "Yenipazar"]},
+        {"name": "Bingöl", "districts": ["Adaklı", "Genç", "Karlıova", "Kiğı", "Merkez", "Solhan", "Yayladere", "Yedisu"]},
+        {"name": "Bitlis", "districts": ["Adilcevaz", "Ahlat", "Güroymak", "Hizan", "Merkez", "Mutki", "Tatvan"]},
+        {"name": "Bolu", "districts": ["Dörtdivan", "Gerede", "Göynük", "Kıbrıscık", "Mengen", "Merkez", "Mudurnu", "Seben", "Yeniçağa"]},
+        {"name": "Burdur", "districts": ["Ağlasun", "Altınyayla", "Bucak", "Çavdır", "Çeltikçi", "Gölhisar", "Karamanlı", "Kemer", "Merkez", "Tefenni", "Yeşilova"]},
+        {"name": "Bursa", "districts": ["Büyükorhan", "Gemlik", "Gürsu", "Harmancık", "İnegöl", "İznik", "Karacabey", "Keles", "Kestel", "Mudanya", "Mustafakemalpaşa", "Nilüfer", "Orhaneli", "Orhangazi", "Osmangazi", "Yenişehir", "Yıldırım"]},
+        {"name": "Çanakkale", "districts": ["Ayvacık", "Bayramiç", "Biga", "Bozcaada", "Çan", "Eceabat", "Ezine", "Gelibolu", "Gökçeada", "Lapseki", "Merkez", "Yenice"]},
+        {"name": "Çankırı", "districts": ["Atkaracalar", "Bayramören", "Çerkeş", "Eldivan", "Ilgaz", "Kızılırmak", "Korgun", "Kurşunlu", "Merkez", "Orta", "Şabanözü", "Yapraklı"]},
+        {"name": "Çorum", "districts": ["Alaca", "Bayat", "Boğazkale", "Dodurga", "İskilip", "Kargı", "Laçin", "Mecitözü", "Merkez", "Oğuzlar", "Ortaköy", "Osmancık", "Sungurlu", "Uğurludağ"]},
+        {"name": "Denizli", "districts": ["Acıpayam", "Babadağ", "Baklan", "Bekilli", "Beyağaç", "Bozkurt", "Buldan", "Çal", "Çameli", "Çardak", "Çivril", "Güney", "Honaz", "Kale", "Merkezefendi", "Pamukkale", "Sarayköy", "Serinhisar", "Tavas"]},
+        {"name": "Diyarbakır", "districts": ["Bağlar", "Bismil", "Çermik", "Çınar", "Çüngüş", "Dicle", "Eğil", "Ergani", "Hani", "Hazro", "Kayapınar", "Kocaköy", "Kulp", "Lice", "Silvan", "Sur", "Yenişehir"]},
+        {"name": "Düzce", "districts": ["Akçakoca", "Cumayeri", "Çilimli", "Gölyaka", "Gümüşova", "Kaynaşlı", "Merkez", "Yığılca"]},
+        {"name": "Edirne", "districts": ["Enez", "Havsa", "İpsala", "Keşan", "Lalapaşa", "Meriç", "Merkez", "Süloğlu", "Uzunköprü"]},
+        {"name": "Elazığ", "districts": ["Ağın", "Alacakaya", "Arıcak", "Baskil", "Karakoçan", "Keban", "Kovancılar", "Maden", "Merkez", "Palu", "Sivrice"]},
+        {"name": "Erzincan", "districts": ["Çayırlı", "İliç", "Kemah", "Kemaliye", "Merkez", "Otlukbeli", "Refahiye", "Tercan", "Üzümlü"]},
+        {"name": "Erzurum", "districts": ["Aşkale", "Aziziye", "Çat", "Hınıs", "Horasan", "İspir", "Karaçoban", "Karayazı", "Köprüköy", "Narman", "Oltu", "Olur", "Palandöken", "Pasinler", "Pazaryolu", "Şenkaya", "Tekman", "Tortum", "Uzundere", "Yakutiye"]},
+        {"name": "Eskişehir", "districts": ["Alpu", "Beylikova", "Çifteler", "Günyüzü", "Han", "İnönü", "Mahmudiye", "Mihalgazi", "Mihalıççık", "Odunpazarı", "Sarıcakaya", "Seyitgazi", "Sivrihisar", "Tepebaşı"]},
+        {"name": "Gaziantep", "districts": ["Araban", "İslahiye", "Karkamış", "Nizip", "Nurdağı", "Oğuzeli", "Şahinbey", "Şehitkamil", "Yavuzeli"]},
+        {"name": "Giresun", "districts": ["Alucra", "Bulancak", "Çamoluk", "Çanakçı", "Dereli", "Doğankent", "Espiye", "Eynesil", "Görele", "Güce", "Keşap", "Merkez", "Piraziz", "Şebinkarahisar", "Tirebolu", "Yağlıdere"]},
+        {"name": "Gümüşhane", "districts": ["Kelkit", "Köse", "Kürtün", "Merkez", "Şiran", "Torul"]},
+        {"name": "Hakkari", "districts": ["Çukurca", "Derecik", "Merkez", "Şemdinli", "Yüksekova"]},
+        {"name": "Hatay", "districts": ["Altınözü", "Antakya", "Arsuz", "Belen", "Defne", "Dörtyol", "Erzin", "Hassa", "İskenderun", "Kırıkhan", "Kumlu", "Payas", "Reyhanlı", "Samandağ", "Yayladağı"]},
+        {"name": "Iğdır", "districts": ["Aralık", "Karakoyunlu", "Merkez", "Tuzluca"]},
+        {"name": "Isparta", "districts": ["Aksu", "Atabey", "Eğirdir", "Gelendost", "Gönen", "Keçiborlu", "Merkez", "Senirkent", "Sütçüler", "Şarkikaraağaç", "Uluborlu", "Yalvaç", "Yenişarbademli"]},
+        {"name": "İstanbul", "districts": ["Adalar", "Arnavutköy", "Ataşehir", "Avcılar", "Bağcılar", "Bahçelievler", "Bakırköy", "Başakşehir", "Bayrampaşa", "Beşiktaş", "Beykoz", "Beylikdüzü", "Beyoğlu", "Büyükçekmece", "Çatalca", "Çekmeköy", "Esenler", "Esenyurt", "Eyüpsultan", "Fatih", "Gaziosmanpaşa", "Güngören", "Kadıköy", "Kağıthane", "Kartal", "Küçükçekmece", "Maltepe", "Pendik", "Sancaktepe", "Sarıyer", "Silivri", "Sultanbeyli", "Sultangazi", "Şile", "Şişli", "Tuzla", "Ümraniye", "Üsküdar", "Zeytinburnu"]},
+        {"name": "İzmir", "districts": ["Aliağa", "Balçova", "Bayındır", "Bayraklı", "Bergama", "Beydağ", "Bornova", "Buca", "Çeşme", "Çiğli", "Dikili", "Foça", "Gaziemir", "Güzelbahçe", "Karabağlar", "Karaburun", "Karşıyaka", "Kemalpaşa", "Kınık", "Kiraz", "Konak", "Menderes", "Menemen", "Narlıdere", "Ödemiş", "Seferihisar", "Selçuk", "Tire", "Torbalı", "Urla"]},
+        {"name": "Kahramanmaraş", "districts": ["Afşin", "Andırın", "Çağlayancerit", "Dulkadiroğlu", "Ekinözü", "Elbistan", "Göksun", "Nurhak", "Onikişubat", "Pazarcık", "Türkoğlu"]},
+        {"name": "Karabük", "districts": ["Eflani", "Eskipazar", "Merkez", "Ovacık", "Safranbolu", "Yenice"]},
+        {"name": "Karaman", "districts": ["Ayrancı", "Başyayla", "Ermenek", "Kazımkarabekir", "Merkez", "Sarıveliler"]},
+        {"name": "Kars", "districts": ["Akyaka", "Arpaçay", "Digor", "Kağızman", "Merkez", "Sarıkamış", "Selim", "Susuz"]},
+        {"name": "Kastamonu", "districts": ["Abana", "Ağlı", "Araç", "Azdavay", "Bozkurt", "Cide", "Çatalzeytin", "Daday", "Devrekani", "Doğanyurt", "Hanönü", "İhsangazi", "İnebolu", "Küre", "Merkez", "Pınarbaşı", "Seydiler", "Şenpazar", "Taşköprü", "Tosya"]},
+        {"name": "Kayseri", "districts": ["Akkışla", "Bünyan", "Develi", "Felahiye", "Hacılar", "İncesu", "Kocasinan", "Melikgazi", "Özvatan", "Pınarbaşı", "Sarıoğlan", "Sarız", "Talas", "Tomarza", "Yahyalı", "Yeşilhisar"]},
+        {"name": "Kırıkkale", "districts": ["Bahşılı", "Balışeyh", "Çelebi", "Delice", "Karakeçili", "Keskin", "Merkez", "Sulakyurt", "Yahşihan"]},
+        {"name": "Kırklareli", "districts": ["Babaeski", "Demirköy", "Kofçaz", "Lüleburgaz", "Merkez", "Pehlivanköy", "Pınarhisar", "Vize"]},
+        {"name": "Kırşehir", "districts": ["Akçakent", "Akpınar", "Boztepe", "Çiçekdağı", "Kaman", "Merkez", "Mucur"]},
+        {"name": "Kilis", "districts": ["Elbeyli", "Merkez", "Musabeyli", "Polateli"]},
+        {"name": "Kocaeli", "districts": ["Başiskele", "Çayırova", "Darıca", "Derince", "Dilovası", "Gebze", "Gölcük", "İzmit", "Kandıra", "Karamürsel", "Kartepe", "Körfez"]},
+        {"name": "Konya", "districts": ["Ahırlı", "Akören", "Akşehir", "Altınekin", "Beyşehir", "Bozkır", "Cihanbeyli", "Çeltik", "Çumra", "Derbent", "Derebucak", "Doğanhisar", "Emirgazi", "Ereğli", "Güneysınır", "Hadim", "Halkapınar", "Hüyük", "Ilgın", "Kadınhanı", "Karapınar", "Karatay", "Kulu", "Meram", "Sarayönü", "Selçuklu", "Seydişehir", "Taşkent", "Tuzlukçu", "Yalıhüyük", "Yunak"]},
+        {"name": "Kütahya", "districts": ["Altıntaş", "Aslanapa", "Çavdarhisar", "Domaniç", "Dumlupınar", "Emet", "Gediz", "Hisarcık", "Merkez", "Pazarlar", "Simav", "Şaphane", "Tavşanlı"]},
+        {"name": "Malatya", "districts": ["Akçadağ", "Arapgir", "Arguvan", "Battalgazi", "Darende", "Doğanşehir", "Doğanyol", "Hekimhan", "Kale", "Kuluncak", "Pütürge", "Yazıhan", "Yeşilyurt"]},
+        {"name": "Manisa", "districts": ["Ahmetli", "Akhisar", "Alaşehir", "Demirci", "Gölmarmara", "Gördes", "Kırkağaç", "Köprübaşı", "Kula", "Salihli", "Sarıgöl", "Saruhanlı", "Selendi", "Soma", "Şehzadeler", "Turgutlu", "Yunusemre"]},
+        {"name": "Mardin", "districts": ["Artuklu", "Dargeçit", "Derik", "Kızıltepe", "Mazıdağı", "Midyat", "Nusaybin", "Ömerli", "Savur", "Yeşilli"]},
+        {"name": "Mersin", "districts": ["Akdeniz", "Anamur", "Aydıncık", "Bozyazı", "Çamlıyayla", "Erdemli", "Gülnar", "Mezitli", "Mut", "Silifke", "Tarsus", "Toroslar", "Yenişehir"]},
+        {"name": "Muğla", "districts": ["Bodrum", "Dalaman", "Datça", "Fethiye", "Kavaklıdere", "Köyceğiz", "Marmaris", "Menteşe", "Milas", "Ortaca", "Seydikemer", "Ula", "Yatağan"]},
+        {"name": "Muş", "districts": ["Bulanık", "Hasköy", "Korkut", "Malazgirt", "Merkez", "Varto"]},
+        {"name": "Nevşehir", "districts": ["Acıgöl", "Avanos", "Derinkuyu", "Gülşehir", "Hacıbektaş", "Kozaklı", "Merkez", "Ürgüp"]},
+        {"name": "Niğde", "districts": ["Altunhisar", "Bor", "Çamardı", "Çiftlik", "Merkez", "Ulukışla"]},
+        {"name": "Ordu", "districts": ["Akkuş", "Altınordu", "Aybastı", "Çamaş", "Çatalpınar", "Çaybaşı", "Fatsa", "Gölköy", "Gülyalı", "Gürgentepe", "İkizce", "Kabadüz", "Kabataş", "Korgan", "Kumru", "Mesudiye", "Perşembe", "Ulubey", "Ünye"]},
+        {"name": "Osmaniye", "districts": ["Bahçe", "Düziçi", "Hasanbeyli", "Kadirli", "Merkez", "Sumbas", "Toprakkale"]},
+        {"name": "Rize", "districts": ["Ardeşen", "Çamlıhemşin", "Çayeli", "Derepazarı", "Fındıklı", "Güneysu", "Hemşin", "İkizdere", "İyidere", "Kalkandere", "Merkez", "Pazar"]},
+        {"name": "Sakarya", "districts": ["Adapazarı", "Akyazı", "Arifiye", "Erenler", "Ferizli", "Geyve", "Hendek", "Karapürçek", "Karasu", "Kaynarca", "Kocaali", "Pamukova", "Sapanca", "Serdivan", "Söğütlü", "Taraklı"]},
+        {"name": "Samsun", "districts": ["19 Mayıs", "Alaçam", "Asarcık", "Atakum", "Ayvacık", "Bafra", "Canik", "Çarşamba", "Havza", "İlkadım", "Kavak", "Ladik", "Salıpazarı", "Tekkeköy", "Terme", "Vezirköprü", "Yakakent"]},
+        {"name": "Şanlıurfa", "districts": ["Akçakale", "Birecik", "Bozova", "Ceylanpınar", "Eyyübiye", "Halfeti", "Haliliye", "Harran", "Hilvan", "Karaköprü", "Siverek", "Suruç", "Viranşehir"]},
+        {"name": "Siirt", "districts": ["Baykan", "Eruh", "Kurtalan", "Merkez", "Pervari", "Şirvan", "Tillo"]},
+        {"name": "Sinop", "districts": ["Ayancık", "Boyabat", "Dikmen", "Durağan", "Erfelek", "Gerze", "Merkez", "Saraydüzü", "Türkeli"]},
+        {"name": "Sivas", "districts": ["Akıncılar", "Altınyayla", "Divriği", "Doğanşar", "Gemerek", "Gölova", "Gürün", "Hafik", "İmranlı", "Kangal", "Koyulhisar", "Merkez", "Suşehri", "Şarkışla", "Ulaş", "Yıldızeli", "Zara"]},
+        {"name": "Şırnak", "districts": ["Beytüşşebap", "Cizre", "Güçlükonak", "İdil", "Merkez", "Silopi", "Uludere"]},
+        {"name": "Tekirdağ", "districts": ["Çerkezköy", "Çorlu", "Ergene", "Hayrabolu", "Kapaklı", "Malkara", "Marmaraereğlisi", "Muratlı", "Saray", "Süleymanpaşa", "Şarköy"]},
+        {"name": "Tokat", "districts": ["Almus", "Artova", "Başçiftlik", "Erbaa", "Merkez", "Niksar", "Pazar", "Reşadiye", "Sulusaray", "Turhal", "Yeşilyurt", "Zile"]},
+        {"name": "Trabzon", "districts": ["Akçaabat", "Araklı", "Arsin", "Beşikdüzü", "Çarşıbaşı", "Çaykara", "Dernekpazarı", "Düzköy", "Hayrat", "Köprübaşı", "Maçka", "Of", "Ortahisar", "Sürmene", "Şalpazarı", "Tonya", "Vakfıkebir", "Yomra"]},
+        {"name": "Tunceli", "districts": ["Çemişgezek", "Hozat", "Mazgirt", "Merkez", "Nazımiye", "Ovacık", "Pertek", "Pülümür"]},
+        {"name": "Uşak", "districts": ["Banaz", "Eşme", "Karahallı", "Merkez", "Sivaslı", "Ulubey"]},
+        {"name": "Van", "districts": ["Bahçesaray", "Başkale", "Çaldıran", "Çatak", "Edremit", "Erciş", "Gevaş", "Gürpınar", "İpekyolu", "Muradiye", "Özalp", "Saray", "Tuşba"]},
+        {"name": "Yalova", "districts": ["Altınova", "Armutlu", "Çınarcık", "Çiftlikköy", "Merkez", "Termal"]},
+        {"name": "Yozgat", "districts": ["Akdağmadeni", "Aydıncık", "Boğazlıyan", "Çandır", "Çayıralan", "Çekerek", "Kadışehri", "Merkez", "Saraykent", "Sarıkaya", "Sorgun", "Şefaatli", "Yenifakılı", "Yerköy"]},
+        {"name": "Zonguldak", "districts": ["Alaplı", "Çaycuma", "Devrek", "Ereğli", "Gökçebey", "Kilimli", "Kozlu", "Merkez"]}
+      ]
+    },
+    {
+      "code": "US",
+      "name": "United States",
+      "cities": [
+        {"name": "New York City", "districts": ["Manhattan", "Brooklyn", "Queens", "The Bronx", "Staten Island"]},
+        {"name": "Los Angeles", "districts": ["Downtown", "Hollywood", "Venice", "Santa Monica", "Beverly Hills", "Westwood", "Koreatown", "Silver Lake", "Echo Park", "Pasadena", "Burbank", "Long Beach", "San Fernando Valley", "South LA", "East LA", "Boyle Heights", "Mid-City"]},
+        {"name": "Chicago", "districts": ["The Loop", "Lincoln Park", "Lake View", "Wicker Park", "Hyde Park", "Pilsen", "Bronzeville", "South Shore", "Uptown", "Logan Square", "Bucktown", "Andersonville", "West Loop", "Edgewater", "Rogers Park"]},
+        {"name": "Houston"}, {"name": "Phoenix"}, {"name": "Philadelphia"}, {"name": "San Antonio"}, {"name": "San Diego"}, {"name": "Dallas"}, {"name": "San Jose"}, {"name": "Austin"}, {"name": "Jacksonville"}, {"name": "Fort Worth"}, {"name": "Columbus"}, {"name": "Charlotte"}, {"name": "Indianapolis"}, {"name": "San Francisco"}, {"name": "Seattle"}, {"name": "Denver"}, {"name": "Washington, D.C."}, {"name": "Boston"}, {"name": "El Paso"}, {"name": "Nashville"}, {"name": "Detroit"}, {"name": "Oklahoma City"}, {"name": "Portland"}, {"name": "Las Vegas"}, {"name": "Memphis"}, {"name": "Louisville"}, {"name": "Baltimore"}, {"name": "Milwaukee"}, {"name": "Albuquerque"}, {"name": "Tucson"}, {"name": "Fresno"}, {"name": "Mesa"}, {"name": "Sacramento"}, {"name": "Atlanta"}, {"name": "Kansas City"}, {"name": "Colorado Springs"}, {"name": "Omaha"}, {"name": "Raleigh"}, {"name": "Miami"}, {"name": "Long Beach"}, {"name": "Virginia Beach"}, {"name": "Oakland"}, {"name": "Minneapolis"}, {"name": "Tulsa"}, {"name": "Arlington"}, {"name": "Tampa"}, {"name": "New Orleans"}, {"name": "Wichita"}, {"name": "Cleveland"}, {"name": "Bakersfield"}, {"name": "Aurora"}, {"name": "Anaheim"}, {"name": "Honolulu"}, {"name": "Santa Ana"}, {"name": "Riverside"}, {"name": "Corpus Christi"}, {"name": "Lexington"}, {"name": "Stockton"}, {"name": "St. Louis"}, {"name": "Saint Paul"}, {"name": "Henderson"}, {"name": "Pittsburgh"}, {"name": "Cincinnati"}, {"name": "Anchorage"}, {"name": "Greensboro"}, {"name": "Plano"}, {"name": "Newark"}, {"name": "Lincoln"}, {"name": "Toledo"}, {"name": "Orlando"}, {"name": "Chula Vista"}, {"name": "Jersey City"}, {"name": "Chandler"}, {"name": "Fort Wayne"}, {"name": "Buffalo"}, {"name": "Durham"}, {"name": "St. Petersburg"}, {"name": "Irvine"}, {"name": "Laredo"}, {"name": "Lubbock"}, {"name": "Madison"}, {"name": "Gilbert"}, {"name": "Norfolk"}, {"name": "Reno"}, {"name": "Winston-Salem"}, {"name": "Glendale"}, {"name": "Hialeah"}, {"name": "Garland"}, {"name": "Scottsdale"}, {"name": "Irving"}, {"name": "Chesapeake"}, {"name": "North Las Vegas"}, {"name": "Fremont"}, {"name": "Baton Rouge"}, {"name": "Richmond"}, {"name": "Boise"}, {"name": "San Bernardino"}, {"name": "Spokane"}, {"name": "Des Moines"}, {"name": "Modesto"}, {"name": "Birmingham"}, {"name": "Tacoma"}, {"name": "Fontana"}, {"name": "Rochester"}, {"name": "Oxnard"}, {"name": "Moreno Valley"}, {"name": "Fayetteville"}, {"name": "Aurora (CO)"}, {"name": "Glendale (CA)"}, {"name": "Yonkers"}, {"name": "Huntington Beach"}, {"name": "Montgomery"}, {"name": "Amarillo"}, {"name": "Little Rock"}, {"name": "Akron"}, {"name": "Columbus (GA)"}, {"name": "Augusta"}, {"name": "Grand Rapids"}, {"name": "Shreveport"}, {"name": "Salt Lake City"}, {"name": "Tallahassee"}, {"name": "Huntsville"}, {"name": "Worcester"}, {"name": "Knoxville"}, {"name": "Grand Prairie"}, {"name": "Newport News"}, {"name": "Brownsville"}, {"name": "Overland Park"}, {"name": "Santa Clarita"}, {"name": "Providence"}, {"name": "Garden Grove"}, {"name": "Chattanooga"}, {"name": "Oceanside"}, {"name": "Jackson"}, {"name": "Fort Lauderdale"}, {"name": "Rancho Cucamonga"}, {"name": "Santa Rosa"}, {"name": "Port St. Lucie"}, {"name": "Tempe"}, {"name": "Ontario"}, {"name": "Vancouver (WA)"}, {"name": "Cape Coral"}, {"name": "Sioux Falls"}, {"name": "Springfield (MO)"}, {"name": "Peoria"}, {"name": "Pembroke Pines"}, {"name": "Elk Grove"}, {"name": "Salem"}, {"name": "Lancaster"}, {"name": "Corona"}, {"name": "Eugene"}, {"name": "Palmdale"}, {"name": "Salinas"}, {"name": "Springfield (MA)"}, {"name": "Pasadena (TX)"}, {"name": "Rockford"}, {"name": "Pomona"}, {"name": "Hayward"}, {"name": "Fort Collins"}, {"name": "Joliet"}, {"name": "Escondido"}, {"name": "Kansas City (KS)"}, {"name": "Torrance"}, {"name": "Bridgeport"}, {"name": "Alexandria"}, {"name": "Sunnyvale"}, {"name": "Cary"}, {"name": "Lakewood"}, {"name": "Hollywood (FL)"}, {"name": "Paterson"}, {"name": "Syracuse"}, {"name": "Naperville"}, {"name": "McKinney"}, {"name": "Mesquite"}, {"name": "Clarksville"}, {"name": "Savannah"}, {"name": "Dayton"}, {"name": "Orange"}, {"name": "Fullerton"}, {"name": "Pasadena (CA)"}, {"name": "Hampton"}, {"name": "McAllen"}, {"name": "Killeen"}, {"name": "Warren"}, {"name": "West Valley City"}, {"name": "Columbia"}, {"name": "New Haven"}, {"name": "Sterling Heights"}, {"name": "Olathe"}, {"name": "Miramar"}, {"name": "Thousand Oaks"}, {"name": "Frisco"}, {"name": "Cedar Rapids"}, {"name": "Topeka"}, {"name": "Visalia"}, {"name": "Waco"}, {"name": "Elizabeth"}, {"name": "Bellevue"}, {"name": "Gainesville"}, {"name": "Simi Valley"}, {"name": "Charleston"}, {"name": "Concord"}, {"name": "Hartford"}, {"name": "Roseville"}, {"name": "Thornton"}, {"name": "Carrollton"}, {"name": "Coral Springs"}, {"name": "Stamford"}, {"name": "Kent"}, {"name": "Lafayette"}, {"name": "Surprise"}, {"name": "Denton"}, {"name": "Victorville"}, {"name": "Evansville"}, {"name": "Midland"}, {"name": "Santa Clara"}, {"name": "Athens"}, {"name": "Allentown"}, {"name": "Abilene"}, {"name": "Beaumont"}, {"name": "Vallejo"}, {"name": "Independence"}, {"name": "Springfield (IL)"}, {"name": "Ann Arbor"}, {"name": "Provo"}, {"name": "Peoria (AZ)"}, {"name": "Norman"}, {"name": "Berkeley"}, {"name": "El Monte"}, {"name": "Murfreesboro"}, {"name": "Lansing"}, {"name": "Columbia (MO)"}, {"name": "Downey"}, {"name": "Costa Mesa"}, {"name": "Inglewood"}, {"name": "Miami Gardens"}, {"name": "Manchester"}, {"name": "Elgin"}, {"name": "Wilmington"}, {"name": "Waterbury"}, {"name": "Fargo"}, {"name": "Arvada"}, {"name": "Carlsbad"}, {"name": "Westminster"}, {"name": "Rochester (MN)"}, {"name": "Gresham"}, {"name": "Clearwater"}, {"name": "Lowell"}, {"name": "West Jordan"}, {"name": "Pueblo"}, {"name": "San Buenaventura"}, {"name": "Fairfield"}, {"name": "Cambridge"}, {"name": "West Covina"}, {"name": "Billings"}, {"name": "Murrieta"}, {"name": "High Point"}, {"name": "Round Rock"}, {"name": "Richmond (CA)"}, {"name": "Broken Arrow"}, {"name": "San Mateo"}, {"name": "Wichita Falls"}, {"name": "Erie"}, {"name": "Rialto"}, {"name": "Norwalk"}, {"name": "Burbank"}, {"name": "Renton"}, {"name": "Vista"}, {"name": "Davenport"}, {"name": "South Bend"}, {"name": "Vacaville"}, {"name": "Lakewood (CO)"}
+      ]
+    },
+    {
+      "code": "CA",
+      "name": "Canada",
+      "cities": [
+        {"name": "Toronto", "districts": ["Downtown", "North York", "Scarborough", "Etobicoke", "East York", "York"]},
+        {"name": "Montreal", "districts": ["Ville-Marie", "Plateau-Mont-Royal", "Rosemont–La Petite-Patrie", "Verdun", "Le Sud-Ouest", "Saint-Laurent", "Ahuntsic-Cartierville", "Mercier–Hochelaga-Maisonneuve", "Côte-des-Neiges–Notre-Dame-de-Grâce", "Villeray–Saint-Michel–Parc-Extension"]},
+        {"name": "Vancouver", "districts": ["Downtown", "West End", "Kitsilano", "Mount Pleasant", "Strathcona", "Yaletown", "Gastown", "Kerrisdale", "Marpole", "Renfrew-Collingwood", "Sunset", "Killarney", "Riley Park", "Hastings-Sunrise"]},
+        {"name": "Calgary"}, {"name": "Edmonton"}, {"name": "Ottawa"}, {"name": "Winnipeg"}, {"name": "Quebec City"}, {"name": "Hamilton"}, {"name": "Kitchener"}, {"name": "London"}, {"name": "Victoria"}, {"name": "Halifax"}, {"name": "Oshawa"}, {"name": "Windsor"}, {"name": "Saskatoon"}, {"name": "Regina"}, {"name": "St. John's"}, {"name": "Barrie"}, {"name": "Kelowna"}, {"name": "Abbotsford"}, {"name": "Sherbrooke"}, {"name": "Trois-Rivières"}, {"name": "Guelph"}, {"name": "Kingston"}, {"name": "Thunder Bay"}, {"name": "Sudbury"}, {"name": "Saguenay"}, {"name": "Levis"}, {"name": "Brampton"}, {"name": "Surrey"}, {"name": "Mississauga"}, {"name": "Markham"}, {"name": "Vaughan"}, {"name": "Gatineau"}, {"name": "Burnaby"}, {"name": "Richmond Hill"}, {"name": "Richmond"}, {"name": "Oakville"}, {"name": "Burlington"}, {"name": "Greater Sudbury"}, {"name": "Saint John"}, {"name": "Moncton"}, {"name": "Fredericton"}, {"name": "Charlottetown"}, {"name": "Whitehorse"}, {"name": "Yellowknife"}, {"name": "Iqaluit"}, {"name": "Laval"}, {"name": "Longueuil"}, {"name": "Cambridge"}, {"name": "Waterloo"}, {"name": "Brantford"}, {"name": "St. Catharines"}, {"name": "Niagara Falls"}, {"name": "Peterborough"}, {"name": "Belleville"}, {"name": "North Bay"}, {"name": "Sault Ste. Marie"}, {"name": "Timmins"}, {"name": "Lethbridge"}, {"name": "Red Deer"}, {"name": "Medicine Hat"}, {"name": "Grande Prairie"}, {"name": "Nanaimo"}, {"name": "Kamloops"}, {"name": "Chilliwack"}, {"name": "Prince George"}, {"name": "Cranbrook"}
+      ]
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom",
+      "cities": [
+        {"name": "London", "districts": ["City of London", "Westminster", "Camden", "Islington", "Hackney", "Tower Hamlets", "Southwark", "Lambeth", "Wandsworth", "Hammersmith and Fulham", "Kensington and Chelsea", "Brent", "Ealing", "Hounslow", "Richmond upon Thames", "Kingston upon Thames", "Merton", "Sutton", "Croydon", "Bromley", "Lewisham", "Greenwich", "Bexley", "Havering", "Barking and Dagenham", "Redbridge", "Newham", "Waltham Forest", "Haringey", "Enfield", "Barnet", "Harrow", "Hillingdon"]},
+        {"name": "Birmingham"}, {"name": "Manchester"}, {"name": "Leeds"}, {"name": "Liverpool"}, {"name": "Sheffield"}, {"name": "Bristol"}, {"name": "Newcastle upon Tyne"}, {"name": "Nottingham"}, {"name": "Leicester"}, {"name": "Coventry"}, {"name": "Bradford"}, {"name": "Cardiff"}, {"name": "Belfast"}, {"name": "Edinburgh"}, {"name": "Glasgow"}, {"name": "Aberdeen"}, {"name": "Dundee"}, {"name": "Inverness"}, {"name": "Stirling"}, {"name": "Perth"}, {"name": "Swansea"}, {"name": "Newport"}, {"name": "Wrexham"}, {"name": "Brighton and Hove"}, {"name": "Plymouth"}, {"name": "Stoke-on-Trent"}, {"name": "Wolverhampton"}, {"name": "Derby"}, {"name": "Southampton"}, {"name": "Portsmouth"}, {"name": "Reading"}, {"name": "Northampton"}, {"name": "Luton"}, {"name": "Milton Keynes"}, {"name": "Sunderland"}, {"name": "Norwich"}, {"name": "York"}, {"name": "Oxford"}, {"name": "Cambridge"}, {"name": "Exeter"}, {"name": "Gloucester"}, {"name": "Bath"}, {"name": "Salisbury"}, {"name": "Worcester"}, {"name": "Lincoln"}, {"name": "Lancaster"}, {"name": "Preston"}, {"name": "Blackpool"}, {"name": "Bolton"}, {"name": "Stockport"}, {"name": "Oldham"}, {"name": "Rochdale"}, {"name": "Salford"}, {"name": "Wigan"}, {"name": "Warrington"}, {"name": "St Helens"}, {"name": "Birkenhead"}, {"name": "Huddersfield"}, {"name": "Wakefield"}, {"name": "Halifax"}, {"name": "Doncaster"}, {"name": "Rotherham"}, {"name": "Barnsley"}, {"name": "Chesterfield"}, {"name": "Mansfield"}, {"name": "Hull"}, {"name": "Grimsby"}, {"name": "Middlesbrough"}, {"name": "Stockton-on-Tees"}, {"name": "Darlington"}, {"name": "Durham"}, {"name": "Carlisle"}, {"name": "Ipswich"}, {"name": "Colchester"}, {"name": "Chelmsford"}, {"name": "Southend-on-Sea"}, {"name": "Basildon"}, {"name": "Watford"}, {"name": "Crawley"}, {"name": "Maidstone"}, {"name": "Canterbury"}, {"name": "Bournemouth"}, {"name": "Poole"}, {"name": "Cheltenham"}, {"name": "Swindon"}, {"name": "Telford"}, {"name": "Shrewsbury"}, {"name": "Hereford"}, {"name": "Stafford"}, {"name": "Burton upon Trent"}, {"name": "Walsall"}, {"name": "Dudley"}, {"name": "West Bromwich"}, {"name": "Solihull"}, {"name": "Tamworth"}, {"name": "Nuneaton"}, {"name": "Bedford"}, {"name": "Slough"}, {"name": "High Wycombe"}, {"name": "Aylesbury"}, {"name": "Guildford"}, {"name": "Woking"}, {"name": "Aberystwyth"}, {"name": "Bangor"}, {"name": "Llandudno"}, {"name": "Caernarfon"}, {"name": "St Andrews"}, {"name": "Paisley"}, {"name": "East Kilbride"}, {"name": "Livingston"}, {"name": "Falkirk"}, {"name": "Kirkcaldy"}, {"name": "Greenock"}, {"name": "Ayr"}, {"name": "Dumfries"}, {"name": "Lerwick"}, {"name": "Kirkwall"}, {"name": "Derry/Londonderry"}, {"name": "Lisburn"}, {"name": "Bangor (NI)"}, {"name": "Newry"}, {"name": "Armagh"}, {"name": "Enniskillen"}, {"name": "Omagh"}, {"name": "Coleraine"}
+      ]
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "cities": [
+        {"name": "Dublin", "districts": ["Dublin 1", "Dublin 2", "Dublin 3", "Dublin 4", "Dublin 5", "Dublin 6", "Dublin 7", "Dublin 8", "Dublin 9", "Dublin 10", "Dublin 11", "Dublin 12", "Dublin 13", "Dublin 14", "Dublin 15", "Dublin 16", "Dublin 17", "Dublin 18", "Dublin 20", "Dublin 22", "Dublin 24"]},
+        {"name": "Cork"}, {"name": "Galway"}, {"name": "Limerick"}, {"name": "Waterford"}, {"name": "Drogheda"}, {"name": "Dundalk"}, {"name": "Swords"}, {"name": "Bray"}, {"name": "Navan"}, {"name": "Ennis"}, {"name": "Kilkenny"}, {"name": "Tralee"}, {"name": "Carlow"}, {"name": "Newbridge"}, {"name": "Naas"}, {"name": "Athlone"}, {"name": "Mullingar"}, {"name": "Wexford"}, {"name": "Letterkenny"}, {"name": "Sligo"}, {"name": "Tullamore"}, {"name": "Killarney"}, {"name": "Arklow"}, {"name": "Cobh"}, {"name": "Castlebar"}, {"name": "Tipperary"}, {"name": "Clonmel"}, {"name": "Longford"}, {"name": "Roscommon"}, {"name": "Cavan"}, {"name": "Monaghan"}, {"name": "Donegal"}, {"name": "Westport"}
+      ]
+    },
+    {
+      "code": "DE",
+      "name": "Germany",
+      "cities": [
+        {"name": "Berlin", "districts": ["Mitte", "Friedrichshain-Kreuzberg", "Pankow", "Charlottenburg-Wilmersdorf", "Spandau", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg", "Neukölln", "Treptow-Köpenick", "Marzahn-Hellersdorf", "Lichtenberg", "Reinickendorf"]},
+        {"name": "Hamburg", "districts": ["Hamburg-Mitte", "Altona", "Eimsbüttel", "Hamburg-Nord", "Wandsbek", "Bergedorf", "Harburg"]},
+        {"name": "Munich"}, {"name": "Cologne"}, {"name": "Frankfurt"}, {"name": "Stuttgart"}, {"name": "Düsseldorf"}, {"name": "Leipzig"}, {"name": "Dortmund"}, {"name": "Essen"}, {"name": "Bremen"}, {"name": "Dresden"}, {"name": "Hannover"}, {"name": "Nuremberg"}, {"name": "Duisburg"}, {"name": "Bochum"}, {"name": "Wuppertal"}, {"name": "Bielefeld"}, {"name": "Bonn"}, {"name": "Münster"}, {"name": "Mannheim"}, {"name": "Karlsruhe"}, {"name": "Augsburg"}, {"name": "Wiesbaden"}, {"name": "Gelsenkirchen"}, {"name": "Mönchengladbach"}, {"name": "Braunschweig"}, {"name": "Chemnitz"}, {"name": "Kiel"}, {"name": "Aachen"}, {"name": "Halle"}, {"name": "Magdeburg"}, {"name": "Freiburg"}, {"name": "Krefeld"}, {"name": "Lübeck"}, {"name": "Mainz"}, {"name": "Erfurt"}, {"name": "Oberhausen"}, {"name": "Rostock"}, {"name": "Kassel"}, {"name": "Hagen"}, {"name": "Saarbrücken"}, {"name": "Potsdam"}, {"name": "Hamm"}, {"name": "Ludwigshafen"}, {"name": "Oldenburg"}, {"name": "Mülheim"}, {"name": "Osnabrück"}, {"name": "Leverkusen"}, {"name": "Heidelberg"}, {"name": "Solingen"}, {"name": "Darmstadt"}, {"name": "Herne"}, {"name": "Regensburg"}, {"name": "Neuss"}, {"name": "Paderborn"}, {"name": "Ingolstadt"}, {"name": "Würzburg"}, {"name": "Fürth"}, {"name": "Wolfsburg"}, {"name": "Offenbach"}, {"name": "Ulm"}, {"name": "Heilbronn"}, {"name": "Pforzheim"}, {"name": "Göttingen"}, {"name": "Bottrop"}, {"name": "Reutlingen"}, {"name": "Koblenz"}, {"name": "Erlangen"}, {"name": "Bremerhaven"}, {"name": "Remscheid"}, {"name": "Recklinghausen"}, {"name": "Trier"}, {"name": "Jena"}, {"name": "Moers"}, {"name": "Salzgitter"}, {"name": "Siegen"}, {"name": "Hildesheim"}, {"name": "Cottbus"}, {"name": "Gera"}, {"name": "Kaiserslautern"}, {"name": "Witten"}, {"name": "Schwerin"}, {"name": "Iserlohn"}, {"name": "Gütersloh"}, {"name": "Esslingen"}, {"name": "Ludwigsburg"}, {"name": "Hanau"}, {"name": "Zwickau"}, {"name": "Tübingen"}, {"name": "Düren"}, {"name": "Flensburg"}, {"name": "Ratingen"}, {"name": "Konstanz"}, {"name": "Worms"}, {"name": "Marl"}, {"name": "Lüneburg"}, {"name": "Velbert"}, {"name": "Minden"}, {"name": "Dessau-Roßlau"}, {"name": "Wilhelmshaven"}, {"name": "Norderstedt"}, {"name": "Bayreuth"}, {"name": "Lünen"}, {"name": "Bamberg"}, {"name": "Aschaffenburg"}, {"name": "Brandenburg an der Havel"}, {"name": "Celle"}, {"name": "Dorsten"}, {"name": "Castrop-Rauxel"}, {"name": "Landshut"}, {"name": "Aalen"}, {"name": "Lippstadt"}, {"name": "Detmold"}, {"name": "Sindelfingen"}, {"name": "Plauen"}, {"name": "Garbsen"}, {"name": "Neumünster"}, {"name": "Rüsselsheim"}
+      ]
+    },
+    {
+      "code": "AT",
+      "name": "Austria",
+      "cities": [
+        {"name": "Vienna", "districts": ["Innere Stadt", "Leopoldstadt", "Landstraße", "Wieden", "Margareten", "Mariahilf", "Neubau", "Josefstadt", "Alsergrund", "Favoriten", "Simmering", "Meidling", "Hietzing", "Penzing", "Rudolfsheim-Fünfhaus", "Ottakring", "Hernals", "Währing", "Döbling", "Brigittenau", "Floridsdorf", "Donaustadt", "Liesing"]},
+        {"name": "Graz"}, {"name": "Linz"}, {"name": "Salzburg"}, {"name": "Innsbruck"}, {"name": "Klagenfurt"}, {"name": "Villach"}, {"name": "Wels"}, {"name": "Sankt Pölten"}, {"name": "Dornbirn"}, {"name": "Steyr"}, {"name": "Wiener Neustadt"}, {"name": "Feldkirch"}, {"name": "Bregenz"}, {"name": "Leonding"}, {"name": "Klosterneuburg"}, {"name": "Baden"}, {"name": "Wolfsberg"}, {"name": "Krems an der Donau"}, {"name": "Leoben"}, {"name": "Eisenstadt"}, {"name": "Lustenau"}, {"name": "Kufstein"}, {"name": "Kapfenberg"}, {"name": "Mödling"}
+      ]
+    },
+    {
+      "code": "CH",
+      "name": "Switzerland",
+      "cities": [
+        {"name": "Zürich"}, {"name": "Geneva"}, {"name": "Basel"}, {"name": "Bern"}, {"name": "Lausanne"}, {"name": "Winterthur"}, {"name": "Lucerne"}, {"name": "St. Gallen"}, {"name": "Lugano"}, {"name": "Biel/Bienne"}, {"name": "Thun"}, {"name": "Köniz"}, {"name": "La Chaux-de-Fonds"}, {"name": "Schaffhausen"}, {"name": "Fribourg"}, {"name": "Vernier"}, {"name": "Chur"}, {"name": "Neuchâtel"}, {"name": "Uster"}, {"name": "Sion"}, {"name": "Emmen"}, {"name": "Zug"}, {"name": "Yverdon-les-Bains"}, {"name": "Rapperswil-Jona"}, {"name": "Dübendorf"}, {"name": "Montreux"}, {"name": "Frauenfeld"}, {"name": "Aarau"}, {"name": "Wetzikon"}, {"name": "Davos"}, {"name": "Locarno"}, {"name": "Bellinzona"}, {"name": "Liestal"}, {"name": "Solothurn"}, {"name": "Herisau"}
+      ]
+    },
+    {
+      "code": "FR",
+      "name": "France",
+      "cities": [
+        {"name": "Paris", "districts": ["1er arrondissement", "2e arrondissement", "3e arrondissement", "4e arrondissement", "5e arrondissement", "6e arrondissement", "7e arrondissement", "8e arrondissement", "9e arrondissement", "10e arrondissement", "11e arrondissement", "12e arrondissement", "13e arrondissement", "14e arrondissement", "15e arrondissement", "16e arrondissement", "17e arrondissement", "18e arrondissement", "19e arrondissement", "20e arrondissement"]},
+        {"name": "Marseille", "districts": ["1er", "2e", "3e", "4e", "5e", "6e", "7e", "8e", "9e", "10e", "11e", "12e", "13e", "14e", "15e", "16e"]},
+        {"name": "Lyon", "districts": ["1er", "2e", "3e", "4e", "5e", "6e", "7e", "8e", "9e"]},
+        {"name": "Toulouse"}, {"name": "Nice"}, {"name": "Nantes"}, {"name": "Montpellier"}, {"name": "Strasbourg"}, {"name": "Bordeaux"}, {"name": "Lille"}, {"name": "Rennes"}, {"name": "Reims"}, {"name": "Le Havre"}, {"name": "Saint-Étienne"}, {"name": "Toulon"}, {"name": "Grenoble"}, {"name": "Dijon"}, {"name": "Angers"}, {"name": "Nîmes"}, {"name": "Villeurbanne"}, {"name": "Saint-Denis"}, {"name": "Le Mans"}, {"name": "Aix-en-Provence"}, {"name": "Clermont-Ferrand"}, {"name": "Brest"}, {"name": "Tours"}, {"name": "Amiens"}, {"name": "Limoges"}, {"name": "Annecy"}, {"name": "Perpignan"}, {"name": "Boulogne-Billancourt"}, {"name": "Metz"}, {"name": "Besançon"}, {"name": "Orléans"}, {"name": "Rouen"}, {"name": "Argenteuil"}, {"name": "Mulhouse"}, {"name": "Montreuil"}, {"name": "Caen"}, {"name": "Nancy"}, {"name": "Saint-Paul"}, {"name": "Tourcoing"}, {"name": "Roubaix"}, {"name": "Nanterre"}, {"name": "Avignon"}, {"name": "Vitry-sur-Seine"}, {"name": "Créteil"}, {"name": "Dunkirk"}, {"name": "Poitiers"}, {"name": "Asnières-sur-Seine"}, {"name": "Courbevoie"}, {"name": "Versailles"}, {"name": "Colombes"}, {"name": "Fort-de-France"}, {"name": "Aulnay-sous-Bois"}, {"name": "Saint-Pierre"}, {"name": "Cherbourg-en-Cotentin"}, {"name": "Rueil-Malmaison"}, {"name": "Pau"}, {"name": "Aubervilliers"}, {"name": "Champigny-sur-Marne"}, {"name": "Le Tampon"}, {"name": "Antibes"}, {"name": "Saint-Maur-des-Fossés"}, {"name": "Cannes"}, {"name": "Calais"}, {"name": "Béziers"}, {"name": "Mérignac"}, {"name": "Drancy"}, {"name": "La Rochelle"}, {"name": "Ajaccio"}, {"name": "Cergy"}, {"name": "Mantes-la-Jolie"}, {"name": "Issy-les-Moulineaux"}, {"name": "Levallois-Perret"}, {"name": "Troyes"}, {"name": "Noisy-le-Grand"}, {"name": "Lorient"}, {"name": "Neuilly-sur-Seine"}, {"name": "Sarcelles"}, {"name": "Pessac"}, {"name": "Vénissieux"}, {"name": "Niort"}, {"name": "Évry-Courcouronnes"}, {"name": "Chambéry"}, {"name": "Saint-Quentin"}, {"name": "Beauvais"}, {"name": "Valence"}, {"name": "Hyères"}, {"name": "Cayenne"}, {"name": "Quimper"}, {"name": "Boulogne-sur-Mer"}, {"name": "La Seyne-sur-Mer"}, {"name": "Bourges"}, {"name": "Vannes"}, {"name": "Montauban"}, {"name": "Pantin"}, {"name": "Maisons-Alfort"}, {"name": "Chelles"}, {"name": "La Roche-sur-Yon"}, {"name": "Bondy"}
+      ]
+    },
+    {
+      "code": "BE",
+      "name": "Belgium",
+      "cities": [
+        {"name": "Brussels"}, {"name": "Antwerp"}, {"name": "Ghent"}, {"name": "Charleroi"}, {"name": "Liège"}, {"name": "Bruges"}, {"name": "Namur"}, {"name": "Leuven"}, {"name": "Mons"}, {"name": "Aalst"}, {"name": "Mechelen"}, {"name": "La Louvière"}, {"name": "Kortrijk"}, {"name": "Hasselt"}, {"name": "Ostend"}, {"name": "Sint-Niklaas"}, {"name": "Tournai"}, {"name": "Genk"}, {"name": "Seraing"}, {"name": "Roeselare"}, {"name": "Verviers"}, {"name": "Mouscron"}, {"name": "Beveren"}, {"name": "Dendermonde"}, {"name": "Beringen"}, {"name": "Turnhout"}, {"name": "Sint-Truiden"}, {"name": "Lokeren"}, {"name": "Lier"}, {"name": "Heist-op-den-Berg"}, {"name": "Mol"}, {"name": "Wavre"}, {"name": "Geel"}, {"name": "Vilvoorde"}, {"name": "Ypres"}, {"name": "Spa"}, {"name": "Eupen"}, {"name": "Dinant"}
+      ]
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands",
+      "cities": [
+        {"name": "Amsterdam", "districts": ["Centrum", "Noord", "Oost", "Zuid", "West", "Nieuw-West", "Zuidoost", "Westpoort"]},
+        {"name": "Rotterdam"}, {"name": "The Hague"}, {"name": "Utrecht"}, {"name": "Eindhoven"}, {"name": "Groningen"}, {"name": "Tilburg"}, {"name": "Almere"}, {"name": "Breda"}, {"name": "Nijmegen"}, {"name": "Enschede"}, {"name": "Haarlem"}, {"name": "Arnhem"}, {"name": "Zaanstad"}, {"name": "Amersfoort"}, {"name": "Apeldoorn"}, {"name": "'s-Hertogenbosch"}, {"name": "Hoofddorp"}, {"name": "Maastricht"}, {"name": "Leiden"}, {"name": "Dordrecht"}, {"name": "Zoetermeer"}, {"name": "Zwolle"}, {"name": "Deventer"}, {"name": "Delft"}, {"name": "Alkmaar"}, {"name": "Leeuwarden"}, {"name": "Venlo"}, {"name": "Sittard-Geleen"}, {"name": "Helmond"}, {"name": "Heerlen"}, {"name": "Hilversum"}, {"name": "Amstelveen"}, {"name": "Roosendaal"}, {"name": "Purmerend"}, {"name": "Oss"}, {"name": "Schiedam"}, {"name": "Spijkenisse"}, {"name": "Vlaardingen"}, {"name": "Almelo"}, {"name": "Gouda"}, {"name": "Lelystad"}, {"name": "Hengelo"}, {"name": "Ede"}, {"name": "Emmen"}, {"name": "Assen"}, {"name": "Middelburg"}
+      ]
+    },
+    {
+      "code": "LU",
+      "name": "Luxembourg",
+      "cities": [
+        {"name": "Luxembourg City"}, {"name": "Esch-sur-Alzette"}, {"name": "Differdange"}, {"name": "Dudelange"}, {"name": "Ettelbruck"}, {"name": "Diekirch"}, {"name": "Wiltz"}, {"name": "Echternach"}, {"name": "Rumelange"}, {"name": "Grevenmacher"}, {"name": "Remich"}, {"name": "Vianden"}, {"name": "Mersch"}, {"name": "Bettembourg"}, {"name": "Schifflange"}
+      ]
+    },
+    {
+      "code": "IT",
+      "name": "Italy",
+      "cities": [
+        {"name": "Rome", "districts": ["Municipio I", "Municipio II", "Municipio III", "Municipio IV", "Municipio V", "Municipio VI", "Municipio VII", "Municipio VIII", "Municipio IX", "Municipio X", "Municipio XI", "Municipio XII", "Municipio XIII", "Municipio XIV", "Municipio XV"]},
+        {"name": "Milan", "districts": ["Centro Storico", "Stazione Centrale", "Porta Venezia", "Città Studi", "Vittoria", "Vigentino", "Barona", "Fiera", "Sempione", "Niguarda"]},
+        {"name": "Naples"}, {"name": "Turin"}, {"name": "Palermo"}, {"name": "Genoa"}, {"name": "Bologna"}, {"name": "Florence"}, {"name": "Bari"}, {"name": "Catania"}, {"name": "Venice"}, {"name": "Verona"}, {"name": "Messina"}, {"name": "Padua"}, {"name": "Trieste"}, {"name": "Brescia"}, {"name": "Parma"}, {"name": "Taranto"}, {"name": "Prato"}, {"name": "Modena"}, {"name": "Reggio Calabria"}, {"name": "Reggio Emilia"}, {"name": "Perugia"}, {"name": "Ravenna"}, {"name": "Livorno"}, {"name": "Cagliari"}, {"name": "Foggia"}, {"name": "Rimini"}, {"name": "Salerno"}, {"name": "Ferrara"}, {"name": "Sassari"}, {"name": "Latina"}, {"name": "Giugliano in Campania"}, {"name": "Monza"}, {"name": "Syracuse"}, {"name": "Pescara"}, {"name": "Bergamo"}, {"name": "Forlì"}, {"name": "Trento"}, {"name": "Vicenza"}, {"name": "Terni"}, {"name": "Bolzano"}, {"name": "Novara"}, {"name": "Piacenza"}, {"name": "Ancona"}, {"name": "Andria"}, {"name": "Arezzo"}, {"name": "Udine"}, {"name": "Cesena"}, {"name": "Lecce"}, {"name": "La Spezia"}, {"name": "Pesaro"}, {"name": "Alessandria"}, {"name": "Barletta"}, {"name": "Catanzaro"}, {"name": "Pistoia"}, {"name": "Pisa"}, {"name": "Brindisi"}, {"name": "Como"}, {"name": "Caserta"}, {"name": "Lucca"}, {"name": "Treviso"}, {"name": "Varese"}, {"name": "Marsala"}, {"name": "Cremona"}, {"name": "Carpi"}, {"name": "Mantua"}, {"name": "Cosenza"}, {"name": "Pavia"}, {"name": "Asti"}, {"name": "Sanremo"}, {"name": "Massa"}, {"name": "Potenza"}, {"name": "L'Aquila"}, {"name": "Imola"}, {"name": "Avellino"}, {"name": "Trapani"}, {"name": "Matera"}, {"name": "Vigevano"}, {"name": "Olbia"}, {"name": "Lamezia Terme"}, {"name": "Crotone"}, {"name": "Viareggio"}, {"name": "Rho"}, {"name": "Acireale"}, {"name": "Frosinone"}, {"name": "Aosta"}, {"name": "Benevento"}, {"name": "Belluno"}, {"name": "Pordenone"}, {"name": "Campobasso"}, {"name": "Sondrio"}, {"name": "Enna"}, {"name": "Agrigento"}, {"name": "Nuoro"}, {"name": "Macerata"}, {"name": "Caltanissetta"}, {"name": "Vibo Valentia"}, {"name": "Ascoli Piceno"}, {"name": "Iglesias"}, {"name": "Oristano"}
+      ]
+    },
+    {
+      "code": "ES",
+      "name": "Spain",
+      "cities": [
+        {"name": "Madrid", "districts": ["Centro", "Arganzuela", "Retiro", "Salamanca", "Chamartín", "Tetuán", "Chamberí", "Fuencarral-El Pardo", "Moncloa-Aravaca", "Latina", "Carabanchel", "Usera", "Puente de Vallecas", "Moratalaz", "Ciudad Lineal", "Hortaleza", "Villaverde", "Villa de Vallecas", "Vicálvaro", "San Blas-Canillejas", "Barajas"]},
+        {"name": "Barcelona", "districts": ["Ciutat Vella", "Eixample", "Sants-Montjuïc", "Les Corts", "Sarrià-Sant Gervasi", "Gràcia", "Horta-Guinardó", "Nou Barris", "Sant Andreu", "Sant Martí"]},
+        {"name": "Valencia"}, {"name": "Seville"}, {"name": "Zaragoza"}, {"name": "Málaga"}, {"name": "Murcia"}, {"name": "Palma"}, {"name": "Las Palmas"}, {"name": "Bilbao"}, {"name": "Alicante"}, {"name": "Córdoba"}, {"name": "Valladolid"}, {"name": "Vigo"}, {"name": "Gijón"}, {"name": "L'Hospitalet de Llobregat"}, {"name": "Vitoria-Gasteiz"}, {"name": "A Coruña"}, {"name": "Granada"}, {"name": "Elche"}, {"name": "Oviedo"}, {"name": "Badalona"}, {"name": "Cartagena"}, {"name": "Terrassa"}, {"name": "Jerez de la Frontera"}, {"name": "Sabadell"}, {"name": "Móstoles"}, {"name": "Santa Cruz de Tenerife"}, {"name": "Alcalá de Henares"}, {"name": "Pamplona"}, {"name": "Fuenlabrada"}, {"name": "Almería"}, {"name": "Leganés"}, {"name": "San Sebastián"}, {"name": "Burgos"}, {"name": "Santander"}, {"name": "Castellón de la Plana"}, {"name": "Getafe"}, {"name": "Albacete"}, {"name": "Alcorcón"}, {"name": "Logroño"}, {"name": "Badajoz"}, {"name": "Salamanca"}, {"name": "Huelva"}, {"name": "Marbella"}, {"name": "Lleida"}, {"name": "Tarragona"}, {"name": "León"}, {"name": "Cádiz"}, {"name": "Jaén"}, {"name": "Mataró"}, {"name": "Ourense"}, {"name": "Algeciras"}, {"name": "Reus"}, {"name": "Telde"}, {"name": "Barakaldo"}, {"name": "Santiago de Compostela"}, {"name": "Lugo"}, {"name": "Girona"}, {"name": "Cáceres"}, {"name": "Lorca"}, {"name": "Coslada"}, {"name": "Talavera de la Reina"}, {"name": "El Puerto de Santa María"}, {"name": "Cornellà de Llobregat"}, {"name": "Avilés"}, {"name": "Palencia"}, {"name": "Pontevedra"}, {"name": "Toledo"}, {"name": "Guadalajara"}, {"name": "Ciudad Real"}, {"name": "Manresa"}, {"name": "Chiclana de la Frontera"}, {"name": "Mérida"}, {"name": "Gandía"}, {"name": "Roquetas de Mar"}, {"name": "Benidorm"}, {"name": "Ferrol"}, {"name": "Sanlúcar de Barrameda"}, {"name": "Soria"}, {"name": "Zamora"}, {"name": "Huesca"}, {"name": "Cuenca"}, {"name": "Teruel"}, {"name": "Ávila"}, {"name": "Segovia"}, {"name": "Melilla"}, {"name": "Ceuta"}
+      ]
+    },
+    {
+      "code": "PT",
+      "name": "Portugal",
+      "cities": [
+        {"name": "Lisbon", "districts": ["Ajuda", "Alcântara", "Alvalade", "Areeiro", "Arroios", "Avenidas Novas", "Beato", "Belém", "Benfica", "Campo de Ourique", "Campolide", "Carnide", "Estrela", "Lumiar", "Marvila", "Misericórdia", "Olivais", "Parque das Nações", "Penha de França", "Santa Clara", "Santa Maria Maior", "Santo António", "São Domingos de Benfica", "São Vicente"]},
+        {"name": "Porto"}, {"name": "Vila Nova de Gaia"}, {"name": "Amadora"}, {"name": "Braga"}, {"name": "Funchal"}, {"name": "Coimbra"}, {"name": "Setúbal"}, {"name": "Almada"}, {"name": "Agualva-Cacém"}, {"name": "Queluz"}, {"name": "Aveiro"}, {"name": "Viseu"}, {"name": "Leiria"}, {"name": "Faro"}, {"name": "Évora"}, {"name": "Beja"}, {"name": "Guimarães"}, {"name": "Viana do Castelo"}, {"name": "Bragança"}, {"name": "Castelo Branco"}, {"name": "Portalegre"}, {"name": "Santarém"}, {"name": "Sintra"}, {"name": "Cascais"}, {"name": "Oeiras"}, {"name": "Lagos"}, {"name": "Lagoa"}, {"name": "Albufeira"}, {"name": "Portimão"}, {"name": "Loulé"}, {"name": "Olhão"}, {"name": "Tavira"}, {"name": "Ponta Delgada"}, {"name": "Angra do Heroísmo"}, {"name": "Horta"}, {"name": "Caldas da Rainha"}, {"name": "Vila Real"}, {"name": "Mafra"}, {"name": "Loures"}, {"name": "Odivelas"}, {"name": "Barreiro"}, {"name": "Seixal"}, {"name": "Matosinhos"}, {"name": "Maia"}, {"name": "Gondomar"}, {"name": "Valongo"}, {"name": "Espinho"}, {"name": "Penafiel"}, {"name": "Felgueiras"}
+      ]
+    },
+    {
+      "code": "GR",
+      "name": "Greece",
+      "cities": [
+        {"name": "Athens", "districts": ["1st Municipal District", "2nd Municipal District", "3rd Municipal District", "4th Municipal District", "5th Municipal District", "6th Municipal District", "7th Municipal District"]},
+        {"name": "Thessaloniki"}, {"name": "Patras"}, {"name": "Piraeus"}, {"name": "Larissa"}, {"name": "Heraklion"}, {"name": "Peristeri"}, {"name": "Kallithea"}, {"name": "Acharnes"}, {"name": "Kalamaria"}, {"name": "Nikaia"}, {"name": "Glyfada"}, {"name": "Volos"}, {"name": "Ilio"}, {"name": "Keratsini"}, {"name": "Ilioupoli"}, {"name": "Marousi"}, {"name": "Chalandri"}, {"name": "Nea Smyrni"}, {"name": "Agios Dimitrios"}, {"name": "Zografou"}, {"name": "Aigaleo"}, {"name": "Korydallos"}, {"name": "Trikala"}, {"name": "Chalcis"}, {"name": "Serres"}, {"name": "Alexandroupoli"}, {"name": "Xanthi"}, {"name": "Katerini"}, {"name": "Agrinio"}, {"name": "Kalamata"}, {"name": "Kavala"}, {"name": "Chania"}, {"name": "Lamia"}, {"name": "Komotini"}, {"name": "Rhodes"}, {"name": "Drama"}, {"name": "Veria"}, {"name": "Ioannina"}, {"name": "Kos"}, {"name": "Mytilene"}, {"name": "Tripoli"}, {"name": "Corinth"}, {"name": "Sparta"}, {"name": "Pyrgos"}, {"name": "Karditsa"}, {"name": "Kozani"}, {"name": "Florina"}, {"name": "Kastoria"}, {"name": "Edessa"}, {"name": "Polygyros"}, {"name": "Naxos"}, {"name": "Syros"}, {"name": "Mykonos"}, {"name": "Santorini"}, {"name": "Corfu"}, {"name": "Zakynthos"}, {"name": "Kefalonia"}, {"name": "Lefkada"}, {"name": "Nafplio"}, {"name": "Sparti"}, {"name": "Aegina"}, {"name": "Hydra"}, {"name": "Argos"}, {"name": "Patmos"}
+      ]
+    },
+    {
+      "code": "CY",
+      "name": "Cyprus",
+      "cities": [
+        {"name": "Nicosia"}, {"name": "Limassol"}, {"name": "Larnaca"}, {"name": "Famagusta"}, {"name": "Paphos"}, {"name": "Kyrenia"}, {"name": "Morphou"}, {"name": "Polis"}, {"name": "Aradippou"}, {"name": "Paralimni"}, {"name": "Strovolos"}, {"name": "Engomi"}, {"name": "Lakatamia"}, {"name": "Aglandjia"}
+      ]
+    },
+    {
+      "code": "MT",
+      "name": "Malta",
+      "cities": [
+        {"name": "Valletta"}, {"name": "Birkirkara"}, {"name": "Mosta"}, {"name": "Qormi"}, {"name": "Żabbar"}, {"name": "St. Paul's Bay"}, {"name": "Sliema"}, {"name": "Naxxar"}, {"name": "Fgura"}, {"name": "Żejtun"}, {"name": "Rabat"}, {"name": "Attard"}, {"name": "Marsaskala"}, {"name": "Paola"}, {"name": "San Ġwann"}, {"name": "Marsa"}, {"name": "Tarxien"}, {"name": "Hamrun"}, {"name": "Mellieħa"}, {"name": "Floriana"}, {"name": "Pietà"}, {"name": "Senglea"}, {"name": "Vittoriosa"}, {"name": "Cospicua"}, {"name": "Victoria"}, {"name": "Mdina"}
+      ]
+    },
+    {
+      "code": "SE",
+      "name": "Sweden",
+      "cities": [
+        {"name": "Stockholm", "districts": ["Bromma", "Enskede-Årsta-Vantör", "Farsta", "Hägersten-Älvsjö", "Hässelby-Vällingby", "Kungsholmen", "Norrmalm", "Östermalm", "Rinkeby-Kista", "Skarpnäck", "Skärholmen", "Södermalm", "Spånga-Tensta"]},
+        {"name": "Gothenburg"}, {"name": "Malmö"}, {"name": "Uppsala"}, {"name": "Västerås"}, {"name": "Örebro"}, {"name": "Linköping"}, {"name": "Helsingborg"}, {"name": "Jönköping"}, {"name": "Norrköping"}, {"name": "Lund"}, {"name": "Umeå"}, {"name": "Gävle"}, {"name": "Borås"}, {"name": "Eskilstuna"}, {"name": "Södertälje"}, {"name": "Karlstad"}, {"name": "Täby"}, {"name": "Växjö"}, {"name": "Halmstad"}, {"name": "Sundsvall"}, {"name": "Luleå"}, {"name": "Trollhättan"}, {"name": "Östersund"}, {"name": "Borlänge"}, {"name": "Falun"}, {"name": "Skellefteå"}, {"name": "Kalmar"}, {"name": "Kristianstad"}, {"name": "Karlskrona"}, {"name": "Skövde"}, {"name": "Uddevalla"}, {"name": "Motala"}, {"name": "Landskrona"}, {"name": "Örnsköldsvik"}, {"name": "Nyköping"}, {"name": "Trelleborg"}, {"name": "Visby"}, {"name": "Kiruna"}, {"name": "Mariestad"}, {"name": "Ystad"}, {"name": "Hudiksvall"}, {"name": "Lidköping"}, {"name": "Värnamo"}, {"name": "Vänersborg"}, {"name": "Piteå"}
+      ]
+    },
+    {
+      "code": "NO",
+      "name": "Norway",
+      "cities": [
+        {"name": "Oslo", "districts": ["Alna", "Bjerke", "Frogner", "Gamle Oslo", "Grorud", "Grünerløkka", "Nordre Aker", "Nordstrand", "Østensjø", "Sagene", "St. Hanshaugen", "Stovner", "Søndre Nordstrand", "Ullern", "Vestre Aker"]},
+        {"name": "Bergen"}, {"name": "Trondheim"}, {"name": "Stavanger"}, {"name": "Drammen"}, {"name": "Fredrikstad"}, {"name": "Kristiansand"}, {"name": "Sandnes"}, {"name": "Tromsø"}, {"name": "Sarpsborg"}, {"name": "Skien"}, {"name": "Bodø"}, {"name": "Ålesund"}, {"name": "Sandefjord"}, {"name": "Haugesund"}, {"name": "Tønsberg"}, {"name": "Moss"}, {"name": "Porsgrunn"}, {"name": "Arendal"}, {"name": "Hamar"}, {"name": "Larvik"}, {"name": "Halden"}, {"name": "Lillehammer"}, {"name": "Molde"}, {"name": "Harstad"}, {"name": "Kongsberg"}, {"name": "Mo i Rana"}, {"name": "Steinkjer"}, {"name": "Kristiansund"}, {"name": "Gjøvik"}, {"name": "Narvik"}, {"name": "Alta"}, {"name": "Hammerfest"}, {"name": "Kirkenes"}, {"name": "Vadsø"}, {"name": "Honningsvåg"}, {"name": "Svolvær"}, {"name": "Røros"}
+      ]
+    },
+    {
+      "code": "FI",
+      "name": "Finland",
+      "cities": [
+        {"name": "Helsinki", "districts": ["Eteläinen", "Läntinen", "Keskinen", "Pohjoinen", "Koillinen", "Kaakkoinen", "Itäinen", "Östersundom"]},
+        {"name": "Espoo"}, {"name": "Tampere"}, {"name": "Vantaa"}, {"name": "Oulu"}, {"name": "Turku"}, {"name": "Jyväskylä"}, {"name": "Kuopio"}, {"name": "Lahti"}, {"name": "Pori"}, {"name": "Kouvola"}, {"name": "Joensuu"}, {"name": "Lappeenranta"}, {"name": "Hämeenlinna"}, {"name": "Vaasa"}, {"name": "Seinäjoki"}, {"name": "Rovaniemi"}, {"name": "Mikkeli"}, {"name": "Kotka"}, {"name": "Salo"}, {"name": "Porvoo"}, {"name": "Kokkola"}, {"name": "Hyvinkää"}, {"name": "Lohja"}, {"name": "Järvenpää"}, {"name": "Kajaani"}, {"name": "Rauma"}, {"name": "Tuusula"}, {"name": "Kerava"}, {"name": "Nokia"}, {"name": "Kaarina"}, {"name": "Imatra"}, {"name": "Ylöjärvi"}, {"name": "Riihimäki"}, {"name": "Raisio"}, {"name": "Savonlinna"}, {"name": "Iisalmi"}, {"name": "Pietarsaari"}, {"name": "Tornio"}, {"name": "Kemi"}, {"name": "Sodankylä"}
+      ]
+    },
+    {
+      "code": "DK",
+      "name": "Denmark",
+      "cities": [
+        {"name": "Copenhagen", "districts": ["Indre By", "Christianshavn", "Vesterbro", "Nørrebro", "Østerbro", "Amager Vest", "Amager Øst", "Bispebjerg", "Vanløse", "Brønshøj-Husum", "Valby"]},
+        {"name": "Aarhus"}, {"name": "Odense"}, {"name": "Aalborg"}, {"name": "Esbjerg"}, {"name": "Randers"}, {"name": "Kolding"}, {"name": "Horsens"}, {"name": "Vejle"}, {"name": "Roskilde"}, {"name": "Herning"}, {"name": "Helsingør"}, {"name": "Silkeborg"}, {"name": "Næstved"}, {"name": "Fredericia"}, {"name": "Viborg"}, {"name": "Køge"}, {"name": "Holstebro"}, {"name": "Taastrup"}, {"name": "Slagelse"}, {"name": "Hillerød"}, {"name": "Sønderborg"}, {"name": "Svendborg"}, {"name": "Hjørring"}, {"name": "Holbæk"}, {"name": "Frederikshavn"}, {"name": "Nørresundby"}, {"name": "Ringsted"}, {"name": "Haderslev"}, {"name": "Skive"}, {"name": "Birkerød"}, {"name": "Aabenraa"}, {"name": "Nyborg"}, {"name": "Middelfart"}, {"name": "Hørsholm"}, {"name": "Ikast"}, {"name": "Korsør"}, {"name": "Kalundborg"}, {"name": "Rønne"}
+      ]
+    },
+    {
+      "code": "IS",
+      "name": "Iceland",
+      "cities": [
+        {"name": "Reykjavík"}, {"name": "Kópavogur"}, {"name": "Hafnarfjörður"}, {"name": "Akureyri"}, {"name": "Garðabær"}, {"name": "Mosfellsbær"}, {"name": "Reykjanesbær"}, {"name": "Selfoss"}, {"name": "Akranes"}, {"name": "Vestmannaeyjar"}, {"name": "Egilsstaðir"}, {"name": "Húsavík"}, {"name": "Ísafjörður"}, {"name": "Sauðárkrókur"}, {"name": "Hella"}, {"name": "Hveragerði"}, {"name": "Vík"}, {"name": "Höfn"}, {"name": "Stykkishólmur"}, {"name": "Borgarnes"}, {"name": "Bolungarvík"}, {"name": "Siglufjörður"}, {"name": "Ólafsvík"}, {"name": "Seyðisfjörður"}, {"name": "Þingeyri"}
+      ]
+    },
+    {
+      "code": "EE",
+      "name": "Estonia",
+      "cities": [
+        {"name": "Tallinn"}, {"name": "Tartu"}, {"name": "Narva"}, {"name": "Pärnu"}, {"name": "Kohtla-Järve"}, {"name": "Viljandi"}, {"name": "Maardu"}, {"name": "Rakvere"}, {"name": "Sillamäe"}, {"name": "Kuressaare"}, {"name": "Võru"}, {"name": "Valga"}, {"name": "Jõhvi"}, {"name": "Haapsalu"}, {"name": "Keila"}, {"name": "Paide"}, {"name": "Türi"}, {"name": "Tapa"}, {"name": "Põlva"}, {"name": "Rapla"}, {"name": "Jõgeva"}
+      ]
+    },
+    {
+      "code": "LV",
+      "name": "Latvia",
+      "cities": [
+        {"name": "Riga"}, {"name": "Daugavpils"}, {"name": "Liepāja"}, {"name": "Jelgava"}, {"name": "Jūrmala"}, {"name": "Ventspils"}, {"name": "Rēzekne"}, {"name": "Valmiera"}, {"name": "Jēkabpils"}, {"name": "Ogre"}, {"name": "Tukums"}, {"name": "Cēsis"}, {"name": "Salaspils"}, {"name": "Kuldīga"}, {"name": "Olaine"}, {"name": "Saldus"}, {"name": "Talsi"}, {"name": "Dobele"}, {"name": "Bauska"}, {"name": "Sigulda"}, {"name": "Krāslava"}, {"name": "Madona"}, {"name": "Aizkraukle"}, {"name": "Limbaži"}, {"name": "Gulbene"}, {"name": "Preiļi"}, {"name": "Balvi"}, {"name": "Ludza"}
+      ]
+    },
+    {
+      "code": "LT",
+      "name": "Lithuania",
+      "cities": [
+        {"name": "Vilnius"}, {"name": "Kaunas"}, {"name": "Klaipėda"}, {"name": "Šiauliai"}, {"name": "Panevėžys"}, {"name": "Alytus"}, {"name": "Marijampolė"}, {"name": "Mažeikiai"}, {"name": "Jonava"}, {"name": "Utena"}, {"name": "Kėdainiai"}, {"name": "Telšiai"}, {"name": "Tauragė"}, {"name": "Visaginas"}, {"name": "Ukmergė"}, {"name": "Plungė"}, {"name": "Kretinga"}, {"name": "Šilutė"}, {"name": "Palanga"}, {"name": "Druskininkai"}, {"name": "Radviliškis"}, {"name": "Rokiškis"}, {"name": "Biržai"}, {"name": "Elektrėnai"}, {"name": "Anykščiai"}, {"name": "Lentvaris"}, {"name": "Garliava"}, {"name": "Grigiškės"}, {"name": "Naujoji Akmenė"}, {"name": "Prienai"}
+      ]
+    },
+    {
+      "code": "PL",
+      "name": "Poland",
+      "cities": [
+        {"name": "Warsaw", "districts": ["Śródmieście", "Mokotów", "Wola", "Praga-Południe", "Ursynów", "Bielany", "Praga-Północ", "Bemowo", "Białołęka", "Targówek", "Wawer", "Ochota", "Włochy", "Żoliborz", "Ursus", "Wesoła", "Rembertów", "Wilanów"]},
+        {"name": "Kraków"}, {"name": "Łódź"}, {"name": "Wrocław"}, {"name": "Poznań"}, {"name": "Gdańsk"}, {"name": "Szczecin"}, {"name": "Bydgoszcz"}, {"name": "Lublin"}, {"name": "Białystok"}, {"name": "Katowice"}, {"name": "Gdynia"}, {"name": "Częstochowa"}, {"name": "Radom"}, {"name": "Rzeszów"}, {"name": "Toruń"}, {"name": "Sosnowiec"}, {"name": "Kielce"}, {"name": "Gliwice"}, {"name": "Olsztyn"}, {"name": "Zabrze"}, {"name": "Bielsko-Biała"}, {"name": "Bytom"}, {"name": "Zielona Góra"}, {"name": "Rybnik"}, {"name": "Ruda Śląska"}, {"name": "Opole"}, {"name": "Tychy"}, {"name": "Gorzów Wielkopolski"}, {"name": "Dąbrowa Górnicza"}, {"name": "Elbląg"}, {"name": "Płock"}, {"name": "Wałbrzych"}, {"name": "Włocławek"}, {"name": "Tarnów"}, {"name": "Chorzów"}, {"name": "Koszalin"}, {"name": "Kalisz"}, {"name": "Legnica"}, {"name": "Grudziądz"}, {"name": "Słupsk"}, {"name": "Jaworzno"}, {"name": "Jastrzębie-Zdrój"}, {"name": "Nowy Sącz"}, {"name": "Jelenia Góra"}, {"name": "Siedlce"}, {"name": "Mysłowice"}, {"name": "Konin"}, {"name": "Piła"}, {"name": "Piotrków Trybunalski"}, {"name": "Inowrocław"}, {"name": "Lubin"}, {"name": "Ostrów Wielkopolski"}, {"name": "Gniezno"}, {"name": "Suwałki"}, {"name": "Stargard"}, {"name": "Głogów"}, {"name": "Pabianice"}, {"name": "Leszno"}, {"name": "Łomża"}, {"name": "Żory"}, {"name": "Zamość"}, {"name": "Pruszków"}, {"name": "Ełk"}, {"name": "Tczew"}, {"name": "Tomaszów Mazowiecki"}, {"name": "Chełm"}, {"name": "Mielec"}, {"name": "Kędzierzyn-Koźle"}, {"name": "Przemyśl"}, {"name": "Stalowa Wola"}, {"name": "Zakopane"}, {"name": "Bełchatów"}, {"name": "Świdnica"}, {"name": "Biała Podlaska"}, {"name": "Olkusz"}
+      ]
+    },
+    {
+      "code": "CZ",
+      "name": "Czech Republic",
+      "cities": [
+        {"name": "Prague", "districts": ["Prague 1", "Prague 2", "Prague 3", "Prague 4", "Prague 5", "Prague 6", "Prague 7", "Prague 8", "Prague 9", "Prague 10", "Prague 11", "Prague 12", "Prague 13", "Prague 14", "Prague 15"]},
+        {"name": "Brno"}, {"name": "Ostrava"}, {"name": "Plzeň"}, {"name": "Liberec"}, {"name": "Olomouc"}, {"name": "České Budějovice"}, {"name": "Hradec Králové"}, {"name": "Ústí nad Labem"}, {"name": "Pardubice"}, {"name": "Zlín"}, {"name": "Havířov"}, {"name": "Kladno"}, {"name": "Most"}, {"name": "Opava"}, {"name": "Frýdek-Místek"}, {"name": "Karviná"}, {"name": "Jihlava"}, {"name": "Teplice"}, {"name": "Karlovy Vary"}, {"name": "Chomutov"}, {"name": "Děčín"}, {"name": "Mladá Boleslav"}, {"name": "Třinec"}, {"name": "Prostějov"}, {"name": "Třebíč"}, {"name": "Tábor"}, {"name": "Znojmo"}, {"name": "Příbram"}, {"name": "Cheb"}, {"name": "Trutnov"}, {"name": "Kolín"}, {"name": "Písek"}, {"name": "Kroměříž"}, {"name": "Šumperk"}, {"name": "Vsetín"}, {"name": "Uherské Hradiště"}, {"name": "Hodonín"}, {"name": "Český Krumlov"}
+      ]
+    },
+    {
+      "code": "SK",
+      "name": "Slovakia",
+      "cities": [
+        {"name": "Bratislava"}, {"name": "Košice"}, {"name": "Prešov"}, {"name": "Žilina"}, {"name": "Banská Bystrica"}, {"name": "Nitra"}, {"name": "Trnava"}, {"name": "Trenčín"}, {"name": "Martin"}, {"name": "Poprad"}, {"name": "Prievidza"}, {"name": "Zvolen"}, {"name": "Považská Bystrica"}, {"name": "Michalovce"}, {"name": "Spišská Nová Ves"}, {"name": "Komárno"}, {"name": "Levice"}, {"name": "Humenné"}, {"name": "Liptovský Mikuláš"}, {"name": "Bardejov"}, {"name": "Ružomberok"}, {"name": "Piešťany"}, {"name": "Lučenec"}, {"name": "Topoľčany"}, {"name": "Pezinok"}, {"name": "Čadca"}, {"name": "Rimavská Sobota"}, {"name": "Trebišov"}, {"name": "Dubnica nad Váhom"}, {"name": "Senica"}, {"name": "Brezno"}, {"name": "Skalica"}, {"name": "Vranov nad Topľou"}, {"name": "Snina"}
+      ]
+    },
+    {
+      "code": "HU",
+      "name": "Hungary",
+      "cities": [
+        {"name": "Budapest", "districts": ["I. kerület", "II. kerület", "III. kerület", "IV. kerület", "V. kerület", "VI. kerület", "VII. kerület", "VIII. kerület", "IX. kerület", "X. kerület", "XI. kerület", "XII. kerület", "XIII. kerület", "XIV. kerület", "XV. kerület", "XVI. kerület", "XVII. kerület", "XVIII. kerület", "XIX. kerület", "XX. kerület", "XXI. kerület", "XXII. kerület", "XXIII. kerület"]},
+        {"name": "Debrecen"}, {"name": "Szeged"}, {"name": "Miskolc"}, {"name": "Pécs"}, {"name": "Győr"}, {"name": "Nyíregyháza"}, {"name": "Kecskemét"}, {"name": "Székesfehérvár"}, {"name": "Szombathely"}, {"name": "Szolnok"}, {"name": "Tatabánya"}, {"name": "Kaposvár"}, {"name": "Békéscsaba"}, {"name": "Érd"}, {"name": "Veszprém"}, {"name": "Zalaegerszeg"}, {"name": "Sopron"}, {"name": "Eger"}, {"name": "Nagykanizsa"}, {"name": "Dunaújváros"}, {"name": "Hódmezővásárhely"}, {"name": "Salgótarján"}, {"name": "Cegléd"}, {"name": "Baja"}, {"name": "Gödöllő"}, {"name": "Esztergom"}, {"name": "Vác"}, {"name": "Ózd"}, {"name": "Pápa"}, {"name": "Gyula"}, {"name": "Mosonmagyaróvár"}, {"name": "Komárom"}, {"name": "Orosháza"}, {"name": "Hévíz"}, {"name": "Siófok"}, {"name": "Szentendre"}, {"name": "Visegrád"}
+      ]
+    },
+    {
+      "code": "RO",
+      "name": "Romania",
+      "cities": [
+        {"name": "Bucharest", "districts": ["Sector 1", "Sector 2", "Sector 3", "Sector 4", "Sector 5", "Sector 6"]},
+        {"name": "Cluj-Napoca"}, {"name": "Timișoara"}, {"name": "Iași"}, {"name": "Constanța"}, {"name": "Craiova"}, {"name": "Brașov"}, {"name": "Galați"}, {"name": "Ploiești"}, {"name": "Oradea"}, {"name": "Brăila"}, {"name": "Arad"}, {"name": "Pitești"}, {"name": "Sibiu"}, {"name": "Bacău"}, {"name": "Târgu Mureș"}, {"name": "Baia Mare"}, {"name": "Buzău"}, {"name": "Botoșani"}, {"name": "Satu Mare"}, {"name": "Râmnicu Vâlcea"}, {"name": "Drobeta-Turnu Severin"}, {"name": "Suceava"}, {"name": "Piatra Neamț"}, {"name": "Târgu Jiu"}, {"name": "Tulcea"}, {"name": "Focșani"}, {"name": "Bistrița"}, {"name": "Reșița"}, {"name": "Slatina"}, {"name": "Călărași"}, {"name": "Alba Iulia"}, {"name": "Giurgiu"}, {"name": "Deva"}, {"name": "Hunedoara"}, {"name": "Zalău"}, {"name": "Sfântu Gheorghe"}, {"name": "Vaslui"}, {"name": "Bârlad"}, {"name": "Roman"}, {"name": "Turda"}, {"name": "Mediaș"}, {"name": "Slobozia"}, {"name": "Alexandria"}, {"name": "Lugoj"}, {"name": "Petroșani"}, {"name": "Câmpina"}, {"name": "Tecuci"}, {"name": "Onești"}, {"name": "Pașcani"}, {"name": "Făgăraș"}, {"name": "Mangalia"}, {"name": "Năvodari"}, {"name": "Râmnicu Sărat"}, {"name": "Sighișoara"}, {"name": "Sinaia"}, {"name": "Brașov-Predeal"}
+      ]
+    },
+    {
+      "code": "BG",
+      "name": "Bulgaria",
+      "cities": [
+        {"name": "Sofia", "districts": ["Sredets", "Krasno Selo", "Vazrazhdane", "Oborishte", "Serdika", "Poduyane", "Slatina", "Izgrev", "Lozenets", "Triaditsa", "Krasna Polyana", "Ilinden", "Nadezhda", "Iskar", "Mladost", "Studentski", "Vitosha", "Ovcha Kupel", "Lyulin", "Vrabnitsa", "Kremikovtsi", "Pancharevo", "Bankya", "Novi Iskar"]},
+        {"name": "Plovdiv"}, {"name": "Varna"}, {"name": "Burgas"}, {"name": "Ruse"}, {"name": "Stara Zagora"}, {"name": "Pleven"}, {"name": "Sliven"}, {"name": "Dobrich"}, {"name": "Shumen"}, {"name": "Pernik"}, {"name": "Haskovo"}, {"name": "Yambol"}, {"name": "Pazardzhik"}, {"name": "Blagoevgrad"}, {"name": "Veliko Tarnovo"}, {"name": "Vratsa"}, {"name": "Gabrovo"}, {"name": "Asenovgrad"}, {"name": "Vidin"}, {"name": "Kazanlak"}, {"name": "Kyustendil"}, {"name": "Kardzhali"}, {"name": "Montana"}, {"name": "Dimitrovgrad"}, {"name": "Targovishte"}, {"name": "Lovech"}, {"name": "Silistra"}, {"name": "Razgrad"}, {"name": "Dupnitsa"}, {"name": "Gorna Oryahovitsa"}, {"name": "Smolyan"}, {"name": "Petrich"}, {"name": "Sandanski"}, {"name": "Samokov"}, {"name": "Sozopol"}, {"name": "Nessebar"}, {"name": "Bansko"}, {"name": "Velingrad"}
+      ]
+    },
+    {
+      "code": "HR",
+      "name": "Croatia",
+      "cities": [
+        {"name": "Zagreb"}, {"name": "Split"}, {"name": "Rijeka"}, {"name": "Osijek"}, {"name": "Zadar"}, {"name": "Slavonski Brod"}, {"name": "Pula"}, {"name": "Karlovac"}, {"name": "Sisak"}, {"name": "Varaždin"}, {"name": "Šibenik"}, {"name": "Dubrovnik"}, {"name": "Bjelovar"}, {"name": "Kaštela"}, {"name": "Vinkovci"}, {"name": "Velika Gorica"}, {"name": "Vukovar"}, {"name": "Koprivnica"}, {"name": "Požega"}, {"name": "Đakovo"}, {"name": "Čakovec"}, {"name": "Solin"}, {"name": "Križevci"}, {"name": "Samobor"}, {"name": "Petrinja"}, {"name": "Virovitica"}, {"name": "Rovinj"}, {"name": "Trogir"}, {"name": "Makarska"}, {"name": "Hvar"}, {"name": "Korčula"}, {"name": "Krk"}, {"name": "Opatija"}, {"name": "Poreč"}
+      ]
+    },
+    {
+      "code": "SI",
+      "name": "Slovenia",
+      "cities": [
+        {"name": "Ljubljana"}, {"name": "Maribor"}, {"name": "Celje"}, {"name": "Kranj"}, {"name": "Velenje"}, {"name": "Koper"}, {"name": "Novo Mesto"}, {"name": "Ptuj"}, {"name": "Trbovlje"}, {"name": "Murska Sobota"}, {"name": "Nova Gorica"}, {"name": "Jesenice"}, {"name": "Domžale"}, {"name": "Škofja Loka"}, {"name": "Slovenj Gradec"}, {"name": "Postojna"}, {"name": "Krško"}, {"name": "Logatec"}, {"name": "Idrija"}, {"name": "Sežana"}, {"name": "Piran"}, {"name": "Izola"}, {"name": "Bled"}, {"name": "Bohinj"}, {"name": "Portorož"}, {"name": "Kočevje"}, {"name": "Litija"}, {"name": "Brežice"}, {"name": "Hrastnik"}, {"name": "Zagorje ob Savi"}
+      ]
+    },
+    {
+      "code": "RS",
+      "name": "Serbia",
+      "cities": [
+        {"name": "Belgrade", "districts": ["Stari Grad", "Savski Venac", "Vračar", "Voždovac", "Zvezdara", "Palilula", "Zemun", "Novi Beograd", "Rakovica", "Čukarica", "Surčin", "Mladenovac", "Sopot", "Lazarevac", "Obrenovac", "Grocka", "Barajevo"]},
+        {"name": "Novi Sad"}, {"name": "Niš"}, {"name": "Kragujevac"}, {"name": "Subotica"}, {"name": "Pančevo"}, {"name": "Zrenjanin"}, {"name": "Čačak"}, {"name": "Smederevo"}, {"name": "Leskovac"}, {"name": "Kruševac"}, {"name": "Užice"}, {"name": "Vranje"}, {"name": "Kraljevo"}, {"name": "Šabac"}, {"name": "Sombor"}, {"name": "Valjevo"}, {"name": "Požarevac"}, {"name": "Pirot"}, {"name": "Sremska Mitrovica"}, {"name": "Jagodina"}, {"name": "Loznica"}, {"name": "Vršac"}, {"name": "Bor"}, {"name": "Prokuplje"}, {"name": "Bačka Palanka"}, {"name": "Inđija"}, {"name": "Negotin"}, {"name": "Aleksinac"}, {"name": "Apatin"}, {"name": "Kikinda"}, {"name": "Novi Pazar"}, {"name": "Paraćin"}, {"name": "Senta"}, {"name": "Bogatić"}
+      ]
+    },
+    {
+      "code": "BA",
+      "name": "Bosnia and Herzegovina",
+      "cities": [
+        {"name": "Sarajevo"}, {"name": "Banja Luka"}, {"name": "Tuzla"}, {"name": "Zenica"}, {"name": "Mostar"}, {"name": "Bijeljina"}, {"name": "Prijedor"}, {"name": "Brčko"}, {"name": "Doboj"}, {"name": "Cazin"}, {"name": "Bihać"}, {"name": "Travnik"}, {"name": "Trebinje"}, {"name": "Goražde"}, {"name": "Zvornik"}, {"name": "Tešanj"}, {"name": "Visoko"}, {"name": "Sanski Most"}, {"name": "Velika Kladuša"}, {"name": "Lukavac"}, {"name": "Konjic"}, {"name": "Gradiška"}, {"name": "Široki Brijeg"}, {"name": "Livno"}, {"name": "Foča"}, {"name": "Jajce"}, {"name": "Bugojno"}, {"name": "Tomislavgrad"}, {"name": "Čapljina"}, {"name": "Stolac"}, {"name": "Modriča"}
+      ]
+    },
+    {
+      "code": "ME",
+      "name": "Montenegro",
+      "cities": [
+        {"name": "Podgorica"}, {"name": "Nikšić"}, {"name": "Pljevlja"}, {"name": "Bijelo Polje"}, {"name": "Cetinje"}, {"name": "Bar"}, {"name": "Herceg Novi"}, {"name": "Berane"}, {"name": "Budva"}, {"name": "Ulcinj"}, {"name": "Tivat"}, {"name": "Rožaje"}, {"name": "Kotor"}, {"name": "Mojkovac"}, {"name": "Kolašin"}, {"name": "Žabljak"}, {"name": "Plav"}, {"name": "Šavnik"}, {"name": "Andrijevica"}, {"name": "Plužine"}, {"name": "Danilovgrad"}
+      ]
+    },
+    {
+      "code": "MK",
+      "name": "North Macedonia",
+      "cities": [
+        {"name": "Skopje", "districts": ["Aerodrom", "Butel", "Centar", "Čair", "Gazi Baba", "Gjorče Petrov", "Karpoš", "Kisela Voda", "Saraj", "Šuto Orizari"]},
+        {"name": "Bitola"}, {"name": "Kumanovo"}, {"name": "Prilep"}, {"name": "Tetovo"}, {"name": "Veles"}, {"name": "Štip"}, {"name": "Ohrid"}, {"name": "Gostivar"}, {"name": "Strumica"}, {"name": "Kavadarci"}, {"name": "Kočani"}, {"name": "Kičevo"}, {"name": "Struga"}, {"name": "Radoviš"}, {"name": "Gevgelija"}, {"name": "Debar"}, {"name": "Kriva Palanka"}, {"name": "Sveti Nikole"}, {"name": "Negotino"}, {"name": "Delčevo"}, {"name": "Vinica"}, {"name": "Resen"}, {"name": "Probištip"}, {"name": "Berovo"}, {"name": "Kratovo"}, {"name": "Krushevo"}
+      ]
+    },
+    {
+      "code": "AL",
+      "name": "Albania",
+      "cities": [
+        {"name": "Tirana"}, {"name": "Durrës"}, {"name": "Vlorë"}, {"name": "Shkodër"}, {"name": "Elbasan"}, {"name": "Korçë"}, {"name": "Fier"}, {"name": "Berat"}, {"name": "Lushnjë"}, {"name": "Pogradec"}, {"name": "Kavajë"}, {"name": "Gjirokastër"}, {"name": "Sarandë"}, {"name": "Lezhë"}, {"name": "Kukës"}, {"name": "Patos"}, {"name": "Tepelenë"}, {"name": "Peshkopi"}, {"name": "Burrel"}, {"name": "Permet"}, {"name": "Krujë"}, {"name": "Bajram Curri"}, {"name": "Çorovodë"}, {"name": "Erseke"}, {"name": "Kuçovë"}, {"name": "Librazhd"}, {"name": "Mamurras"}, {"name": "Bulqizë"}
+      ]
+    },
+    {
+      "code": "XK",
+      "name": "Kosovo",
+      "cities": [
+        {"name": "Pristina"}, {"name": "Prizren"}, {"name": "Mitrovica"}, {"name": "Peja"}, {"name": "Gjakova"}, {"name": "Ferizaj"}, {"name": "Gjilan"}, {"name": "Vushtrri"}, {"name": "Suva Reka"}, {"name": "Rahovec"}, {"name": "Lipjan"}, {"name": "Malisheva"}, {"name": "Kamenica"}, {"name": "Skenderaj"}, {"name": "Drenas"}, {"name": "Istog"}, {"name": "Klina"}, {"name": "Deçan"}, {"name": "Viti"}, {"name": "Podujevo"}, {"name": "Obiliq"}, {"name": "Fushë Kosova"}, {"name": "Hani i Elezit"}
+      ]
+    },
+    {
+      "code": "RU",
+      "name": "Russia",
+      "cities": [
+        {"name": "Moscow", "districts": ["Central", "Northern", "North-Eastern", "Eastern", "South-Eastern", "Southern", "South-Western", "Western", "North-Western", "Zelenogradsky", "Novomoskovsky", "Troitsky"]},
+        {"name": "Saint Petersburg", "districts": ["Admiralteysky", "Vasileostrovsky", "Vyborgsky", "Kalininsky", "Kirovsky", "Kolpinsky", "Krasnogvardeysky", "Krasnoselsky", "Kronshtadtsky", "Kurortny", "Moskovsky", "Nevsky", "Petrogradsky", "Petrodvortsovy", "Primorsky", "Pushkinsky", "Frunzensky", "Central"]},
+        {"name": "Novosibirsk"}, {"name": "Yekaterinburg"}, {"name": "Kazan"}, {"name": "Nizhny Novgorod"}, {"name": "Chelyabinsk"}, {"name": "Samara"}, {"name": "Omsk"}, {"name": "Rostov-on-Don"}, {"name": "Ufa"}, {"name": "Krasnoyarsk"}, {"name": "Voronezh"}, {"name": "Perm"}, {"name": "Volgograd"}, {"name": "Krasnodar"}, {"name": "Saratov"}, {"name": "Tyumen"}, {"name": "Tolyatti"}, {"name": "Izhevsk"}, {"name": "Barnaul"}, {"name": "Ulyanovsk"}, {"name": "Irkutsk"}, {"name": "Khabarovsk"}, {"name": "Yaroslavl"}, {"name": "Vladivostok"}, {"name": "Makhachkala"}, {"name": "Tomsk"}, {"name": "Orenburg"}, {"name": "Kemerovo"}, {"name": "Novokuznetsk"}, {"name": "Ryazan"}, {"name": "Astrakhan"}, {"name": "Naberezhnye Chelny"}, {"name": "Penza"}, {"name": "Lipetsk"}, {"name": "Kirov"}, {"name": "Cheboksary"}, {"name": "Tula"}, {"name": "Kaliningrad"}, {"name": "Balashikha"}, {"name": "Kursk"}, {"name": "Sevastopol"}, {"name": "Sochi"}, {"name": "Stavropol"}, {"name": "Ulan-Ude"}, {"name": "Tver"}, {"name": "Magnitogorsk"}, {"name": "Ivanovo"}, {"name": "Bryansk"}, {"name": "Belgorod"}, {"name": "Surgut"}, {"name": "Vladimir"}, {"name": "Nizhny Tagil"}, {"name": "Arkhangelsk"}, {"name": "Chita"}, {"name": "Kaluga"}, {"name": "Smolensk"}, {"name": "Volzhsky"}, {"name": "Yakutsk"}, {"name": "Saransk"}, {"name": "Cherepovets"}, {"name": "Vologda"}, {"name": "Kurgan"}, {"name": "Orel"}, {"name": "Podolsk"}, {"name": "Grozny"}, {"name": "Murmansk"}, {"name": "Tambov"}, {"name": "Sterlitamak"}, {"name": "Petrozavodsk"}, {"name": "Komsomolsk-on-Amur"}, {"name": "Kostroma"}, {"name": "Nizhnevartovsk"}, {"name": "Novorossiysk"}, {"name": "Yoshkar-Ola"}, {"name": "Khimki"}, {"name": "Taganrog"}, {"name": "Bratsk"}, {"name": "Shakhty"}, {"name": "Dzerzhinsk"}, {"name": "Engels"}, {"name": "Syktyvkar"}, {"name": "Nakhodka"}, {"name": "Pyatigorsk"}, {"name": "Blagoveshchensk"}, {"name": "Korolyov"}, {"name": "Pskov"}, {"name": "Veliky Novgorod"}, {"name": "Biysk"}, {"name": "Rybinsk"}, {"name": "Prokopyevsk"}, {"name": "Yuzhno-Sakhalinsk"}, {"name": "Severodvinsk"}, {"name": "Armavir"}, {"name": "Petropavlovsk-Kamchatsky"}, {"name": "Norilsk"}, {"name": "Volzhsk"}, {"name": "Mytishchi"}, {"name": "Lyubertsy"}, {"name": "Novocherkassk"}, {"name": "Maykop"}, {"name": "Nazran"}, {"name": "Vladikavkaz"}, {"name": "Nalchik"}, {"name": "Cherkessk"}, {"name": "Magas"}, {"name": "Elista"}, {"name": "Magadan"}, {"name": "Anadyr"}, {"name": "Salekhard"}, {"name": "Khanty-Mansiysk"}, {"name": "Naryan-Mar"}, {"name": "Birobidzhan"}, {"name": "Tuapse"}, {"name": "Gelendzhik"}, {"name": "Anapa"}, {"name": "Kazan"}
+      ]
+    },
+    {
+      "code": "UA",
+      "name": "Ukraine",
+      "cities": [
+        {"name": "Kyiv", "districts": ["Holosiivskyi", "Darnytskyi", "Desnianskyi", "Dniprovskyi", "Obolonskyi", "Pecherskyi", "Podilskyi", "Sviatoshynskyi", "Solomianskyi", "Shevchenkivskyi"]},
+        {"name": "Kharkiv"}, {"name": "Odesa"}, {"name": "Dnipro"}, {"name": "Donetsk"}, {"name": "Zaporizhzhia"}, {"name": "Lviv"}, {"name": "Kryvyi Rih"}, {"name": "Mykolaiv"}, {"name": "Mariupol"}, {"name": "Luhansk"}, {"name": "Vinnytsia"}, {"name": "Makiivka"}, {"name": "Sevastopol"}, {"name": "Simferopol"}, {"name": "Kherson"}, {"name": "Poltava"}, {"name": "Chernihiv"}, {"name": "Cherkasy"}, {"name": "Khmelnytskyi"}, {"name": "Sumy"}, {"name": "Zhytomyr"}, {"name": "Rivne"}, {"name": "Kropyvnytskyi"}, {"name": "Ivano-Frankivsk"}, {"name": "Ternopil"}, {"name": "Kremenchuk"}, {"name": "Lutsk"}, {"name": "Bila Tserkva"}, {"name": "Kramatorsk"}, {"name": "Melitopol"}, {"name": "Sloviansk"}, {"name": "Yalta"}, {"name": "Drohobych"}, {"name": "Berdiansk"}, {"name": "Pavlohrad"}, {"name": "Sieverodonetsk"}, {"name": "Alchevsk"}, {"name": "Yevpatoriia"}, {"name": "Kerch"}, {"name": "Lysychansk"}, {"name": "Kamianets-Podilskyi"}, {"name": "Mukachevo"}, {"name": "Uzhhorod"}, {"name": "Bakhmut"}, {"name": "Konotop"}, {"name": "Smila"}, {"name": "Brovary"}, {"name": "Boryspil"}, {"name": "Irpin"}, {"name": "Bucha"}
+      ]
+    },
+    {
+      "code": "BY",
+      "name": "Belarus",
+      "cities": [
+        {"name": "Minsk"}, {"name": "Gomel"}, {"name": "Mogilev"}, {"name": "Vitebsk"}, {"name": "Grodno"}, {"name": "Brest"}, {"name": "Babruysk"}, {"name": "Baranavichy"}, {"name": "Barysaw"}, {"name": "Pinsk"}, {"name": "Orsha"}, {"name": "Mazyr"}, {"name": "Maladzyechna"}, {"name": "Salihorsk"}, {"name": "Lida"}, {"name": "Polotsk"}, {"name": "Navapolatsk"}, {"name": "Zhlobin"}, {"name": "Svetlahorsk"}, {"name": "Rechytsa"}, {"name": "Slutsk"}, {"name": "Kobryn"}, {"name": "Vawkavysk"}, {"name": "Slonim"}, {"name": "Smarhon"}, {"name": "Asipovichy"}, {"name": "Krychau"}, {"name": "Horki"}, {"name": "Marina Horka"}, {"name": "Stowbtsy"}, {"name": "Beryoza"}, {"name": "Hlybokaye"}, {"name": "Lyepyel"}, {"name": "Ivatsevichy"}, {"name": "Kalinkavichy"}, {"name": "Astravets"}, {"name": "Dobruš"}
+      ]
+    },
+    {
+      "code": "MD",
+      "name": "Moldova",
+      "cities": [
+        {"name": "Chișinău"}, {"name": "Tiraspol"}, {"name": "Bălți"}, {"name": "Bender"}, {"name": "Cahul"}, {"name": "Ungheni"}, {"name": "Soroca"}, {"name": "Orhei"}, {"name": "Comrat"}, {"name": "Edineț"}, {"name": "Drochia"}, {"name": "Hîncești"}, {"name": "Strășeni"}, {"name": "Florești"}, {"name": "Căușeni"}, {"name": "Ialoveni"}, {"name": "Rîbnița"}, {"name": "Dubăsari"}, {"name": "Anenii Noi"}, {"name": "Călărași"}, {"name": "Briceni"}, {"name": "Cantemir"}, {"name": "Cimișlia"}, {"name": "Criuleni"}, {"name": "Dondușeni"}, {"name": "Fălești"}, {"name": "Glodeni"}, {"name": "Leova"}, {"name": "Nisporeni"}, {"name": "Ocnița"}, {"name": "Rezina"}, {"name": "Râșcani"}, {"name": "Sîngerei"}, {"name": "Șoldănești"}, {"name": "Ștefan Vodă"}, {"name": "Taraclia"}, {"name": "Telenești"}, {"name": "Vulcănești"}
+      ]
+    },
+    {
+      "code": "MC",
+      "name": "Monaco",
+      "cities": [
+        {"name": "Monaco-Ville"}, {"name": "Monte Carlo"}, {"name": "La Condamine"}, {"name": "Fontvieille"}, {"name": "Moneghetti"}, {"name": "La Rousse"}, {"name": "Larvotto"}, {"name": "Saint Roman"}, {"name": "Jardin Exotique"}, {"name": "Les Révoires"}
+      ]
+    },
+    {
+      "code": "AD",
+      "name": "Andorra",
+      "cities": [
+        {"name": "Andorra la Vella"}, {"name": "Escaldes-Engordany"}, {"name": "Encamp"}, {"name": "Sant Julià de Lòria"}, {"name": "La Massana"}, {"name": "Canillo"}, {"name": "Ordino"}, {"name": "Pas de la Casa"}, {"name": "Soldeu"}, {"name": "Arinsal"}
+      ]
+    },
+    {
+      "code": "SM",
+      "name": "San Marino",
+      "cities": [
+        {"name": "City of San Marino"}, {"name": "Borgo Maggiore"}, {"name": "Serravalle"}, {"name": "Domagnano"}, {"name": "Fiorentino"}, {"name": "Acquaviva"}, {"name": "Faetano"}, {"name": "Chiesanuova"}, {"name": "Montegiardino"}
+      ]
+    },
+    {
+      "code": "LI",
+      "name": "Liechtenstein",
+      "cities": [
+        {"name": "Vaduz"}, {"name": "Schaan"}, {"name": "Triesen"}, {"name": "Balzers"}, {"name": "Eschen"}, {"name": "Mauren"}, {"name": "Triesenberg"}, {"name": "Ruggell"}, {"name": "Gamprin"}, {"name": "Schellenberg"}, {"name": "Planken"}
+      ]
+    },
+    {
+      "code": "VA",
+      "name": "Vatican City",
+      "cities": [
+        {"name": "Vatican City"}
+      ]
+    },
+    {
+      "code": "JP",
+      "name": "Japan",
+      "cities": [
+        {"name": "Tokyo", "districts": ["Chiyoda", "Chūō", "Minato", "Shinjuku", "Bunkyō", "Taitō", "Sumida", "Kōtō", "Shinagawa", "Meguro", "Ōta", "Setagaya", "Shibuya", "Nakano", "Suginami", "Toshima", "Kita", "Arakawa", "Itabashi", "Nerima", "Adachi", "Katsushika", "Edogawa"]},
+        {"name": "Yokohama", "districts": ["Tsurumi", "Kanagawa", "Nishi", "Naka", "Minami", "Hodogaya", "Isogo", "Kanazawa", "Kōhoku", "Totsuka", "Kōnan", "Asahi", "Midori", "Seya", "Sakae", "Izumi", "Aoba", "Tsuzuki"]},
+        {"name": "Osaka", "districts": ["Kita", "Miyakojima", "Fukushima", "Konohana", "Nishi", "Minato", "Taishō", "Tennōji", "Naniwa", "Nishiyodogawa", "Higashiyodogawa", "Higashinari", "Ikuno", "Asahi", "Jōtō", "Tsurumi", "Abeno", "Sumiyoshi", "Higashisumiyoshi", "Hirano", "Nishinari", "Yodogawa", "Suminoe", "Chūō"]},
+        {"name": "Nagoya"}, {"name": "Sapporo"}, {"name": "Kobe"}, {"name": "Kyoto"}, {"name": "Fukuoka"}, {"name": "Kawasaki"}, {"name": "Saitama"}, {"name": "Hiroshima"}, {"name": "Sendai"}, {"name": "Kitakyushu"}, {"name": "Chiba"}, {"name": "Sakai"}, {"name": "Niigata"}, {"name": "Hamamatsu"}, {"name": "Kumamoto"}, {"name": "Sagamihara"}, {"name": "Shizuoka"}, {"name": "Okayama"}, {"name": "Kagoshima"}, {"name": "Funabashi"}, {"name": "Hachiōji"}, {"name": "Himeji"}, {"name": "Matsuyama"}, {"name": "Higashiōsaka"}, {"name": "Nishinomiya"}, {"name": "Kurashiki"}, {"name": "Ichikawa"}, {"name": "Fukuyama"}, {"name": "Amagasaki"}, {"name": "Kanazawa"}, {"name": "Utsunomiya"}, {"name": "Matsudo"}, {"name": "Ōita"}, {"name": "Kawaguchi"}, {"name": "Kashiwa"}, {"name": "Toyama"}, {"name": "Toyohashi"}, {"name": "Nagasaki"}, {"name": "Gifu"}, {"name": "Hirakata"}, {"name": "Toyota"}, {"name": "Suita"}, {"name": "Takamatsu"}, {"name": "Wakayama"}, {"name": "Asahikawa"}, {"name": "Iwaki"}, {"name": "Naha"}, {"name": "Aomori"}, {"name": "Akita"}, {"name": "Morioka"}, {"name": "Fukushima"}, {"name": "Maebashi"}, {"name": "Mito"}, {"name": "Tsu"}, {"name": "Yokosuka"}, {"name": "Kōchi"}, {"name": "Miyazaki"}, {"name": "Tottori"}, {"name": "Yamagata"}, {"name": "Saga"}, {"name": "Tokushima"}, {"name": "Yamaguchi"}, {"name": "Fukui"}, {"name": "Otsu"}, {"name": "Nara"}, {"name": "Matsumoto"}, {"name": "Nagano"}, {"name": "Tsuchiura"}
+      ]
+    },
+    {
+      "code": "CN",
+      "name": "China",
+      "cities": [
+        {"name": "Beijing", "districts": ["Dongcheng", "Xicheng", "Chaoyang", "Fengtai", "Shijingshan", "Haidian", "Mentougou", "Fangshan", "Tongzhou", "Shunyi", "Changping", "Daxing", "Huairou", "Pinggu", "Miyun", "Yanqing"]},
+        {"name": "Shanghai", "districts": ["Huangpu", "Xuhui", "Changning", "Jing'an", "Putuo", "Hongkou", "Yangpu", "Minhang", "Baoshan", "Jiading", "Pudong", "Jinshan", "Songjiang", "Qingpu", "Fengxian", "Chongming"]},
+        {"name": "Guangzhou"}, {"name": "Shenzhen"}, {"name": "Tianjin"}, {"name": "Wuhan"}, {"name": "Chongqing"}, {"name": "Chengdu"}, {"name": "Nanjing"}, {"name": "Xi'an"}, {"name": "Hangzhou"}, {"name": "Suzhou"}, {"name": "Foshan"}, {"name": "Shenyang"}, {"name": "Qingdao"}, {"name": "Dongguan"}, {"name": "Zhengzhou"}, {"name": "Changsha"}, {"name": "Harbin"}, {"name": "Dalian"}, {"name": "Jinan"}, {"name": "Kunming"}, {"name": "Hefei"}, {"name": "Changchun"}, {"name": "Ningbo"}, {"name": "Wuxi"}, {"name": "Fuzhou"}, {"name": "Xiamen"}, {"name": "Taiyuan"}, {"name": "Nanchang"}, {"name": "Nanning"}, {"name": "Guiyang"}, {"name": "Lanzhou"}, {"name": "Urumqi"}, {"name": "Hohhot"}, {"name": "Yinchuan"}, {"name": "Xining"}, {"name": "Lhasa"}, {"name": "Haikou"}, {"name": "Sanya"}, {"name": "Shijiazhuang"}, {"name": "Tangshan"}, {"name": "Baoding"}, {"name": "Handan"}, {"name": "Cangzhou"}, {"name": "Langfang"}, {"name": "Qinhuangdao"}, {"name": "Zhangjiakou"}, {"name": "Datong"}, {"name": "Linfen"}, {"name": "Yuncheng"}, {"name": "Baotou"}, {"name": "Ordos"}, {"name": "Chifeng"}, {"name": "Anshan"}, {"name": "Fushun"}, {"name": "Benxi"}, {"name": "Dandong"}, {"name": "Jinzhou"}, {"name": "Yingkou"}, {"name": "Liaoyang"}, {"name": "Panjin"}, {"name": "Jilin"}, {"name": "Siping"}, {"name": "Liaoyuan"}, {"name": "Tonghua"}, {"name": "Baishan"}, {"name": "Songyuan"}, {"name": "Baicheng"}, {"name": "Qiqihar"}, {"name": "Mudanjiang"}, {"name": "Daqing"}, {"name": "Jiamusi"}, {"name": "Jixi"}, {"name": "Hegang"}, {"name": "Shuangyashan"}, {"name": "Yichun"}, {"name": "Heihe"}, {"name": "Suihua"}, {"name": "Xuzhou"}, {"name": "Yangzhou"}, {"name": "Zhenjiang"}, {"name": "Nantong"}, {"name": "Changzhou"}, {"name": "Lianyungang"}, {"name": "Huai'an"}, {"name": "Yancheng"}, {"name": "Taizhou"}, {"name": "Suqian"}, {"name": "Wenzhou"}, {"name": "Shaoxing"}, {"name": "Jiaxing"}, {"name": "Huzhou"}, {"name": "Quzhou"}, {"name": "Jinhua"}, {"name": "Lishui"}, {"name": "Zhoushan"}, {"name": "Wuhu"}, {"name": "Bengbu"}, {"name": "Huainan"}, {"name": "Huaibei"}, {"name": "Tongling"}, {"name": "Anqing"}, {"name": "Huangshan"}, {"name": "Chuzhou"}, {"name": "Fuyang"}, {"name": "Suzhou (Anhui)"}, {"name": "Lu'an"}, {"name": "Bozhou"}, {"name": "Chizhou"}, {"name": "Xuancheng"}, {"name": "Quanzhou"}, {"name": "Putian"}, {"name": "Zhangzhou"}, {"name": "Sanming"}, {"name": "Longyan"}, {"name": "Ningde"}, {"name": "Nanping"}, {"name": "Ganzhou"}, {"name": "Jingdezhen"}, {"name": "Pingxiang"}, {"name": "Jiujiang"}, {"name": "Xinyu"}, {"name": "Yingtan"}, {"name": "Ji'an"}, {"name": "Yichun (Jiangxi)"}, {"name": "Fuzhou (Jiangxi)"}, {"name": "Shangrao"}, {"name": "Zibo"}, {"name": "Zaozhuang"}, {"name": "Dongying"}, {"name": "Yantai"}, {"name": "Weifang"}, {"name": "Jining"}, {"name": "Tai'an"}, {"name": "Weihai"}, {"name": "Rizhao"}, {"name": "Linyi"}, {"name": "Dezhou"}, {"name": "Liaocheng"}, {"name": "Binzhou"}, {"name": "Heze"}, {"name": "Luoyang"}, {"name": "Pingdingshan"}, {"name": "Anyang"}, {"name": "Hebi"}, {"name": "Xinxiang"}, {"name": "Jiaozuo"}, {"name": "Puyang"}, {"name": "Xuchang"}, {"name": "Luohe"}, {"name": "Sanmenxia"}, {"name": "Nanyang"}, {"name": "Shangqiu"}, {"name": "Xinyang"}, {"name": "Zhoukou"}, {"name": "Zhumadian"}, {"name": "Huangshi"}, {"name": "Shiyan"}, {"name": "Yichang"}, {"name": "Xiangyang"}, {"name": "Ezhou"}, {"name": "Jingmen"}, {"name": "Xiaogan"}, {"name": "Jingzhou"}, {"name": "Huanggang"}, {"name": "Xianning"}, {"name": "Suizhou"}, {"name": "Enshi"}, {"name": "Zhuzhou"}, {"name": "Xiangtan"}, {"name": "Hengyang"}, {"name": "Shaoyang"}, {"name": "Yueyang"}, {"name": "Changde"}, {"name": "Zhangjiajie"}, {"name": "Yiyang"}, {"name": "Chenzhou"}, {"name": "Yongzhou"}, {"name": "Huaihua"}, {"name": "Loudi"}, {"name": "Shaoguan"}, {"name": "Zhuhai"}, {"name": "Shantou"}, {"name": "Jiangmen"}, {"name": "Zhanjiang"}, {"name": "Maoming"}, {"name": "Zhaoqing"}, {"name": "Huizhou"}, {"name": "Meizhou"}, {"name": "Shanwei"}, {"name": "Heyuan"}, {"name": "Yangjiang"}, {"name": "Qingyuan"}, {"name": "Chaozhou"}, {"name": "Jieyang"}, {"name": "Yunfu"}, {"name": "Liuzhou"}, {"name": "Guilin"}, {"name": "Wuzhou"}, {"name": "Beihai"}, {"name": "Fangchenggang"}, {"name": "Qinzhou"}, {"name": "Guigang"}, {"name": "Yulin"}, {"name": "Baise"}, {"name": "Hezhou"}, {"name": "Hechi"}, {"name": "Laibin"}, {"name": "Chongzuo"}, {"name": "Mianyang"}, {"name": "Deyang"}, {"name": "Nanchong"}, {"name": "Yibin"}, {"name": "Luzhou"}, {"name": "Leshan"}, {"name": "Zigong"}, {"name": "Suining"}, {"name": "Neijiang"}, {"name": "Guang'an"}, {"name": "Dazhou"}, {"name": "Meishan"}, {"name": "Ya'an"}, {"name": "Bazhong"}, {"name": "Ziyang"}, {"name": "Liupanshui"}, {"name": "Zunyi"}, {"name": "Anshun"}, {"name": "Bijie"}, {"name": "Tongren"}, {"name": "Qujing"}, {"name": "Yuxi"}, {"name": "Baoshan (Yunnan)"}, {"name": "Zhaotong"}, {"name": "Lijiang"}, {"name": "Pu'er"}, {"name": "Lincang"}, {"name": "Xianyang"}, {"name": "Tongchuan"}, {"name": "Baoji"}, {"name": "Weinan"}, {"name": "Yan'an"}, {"name": "Hanzhong"}, {"name": "Yulin (Shaanxi)"}, {"name": "Ankang"}, {"name": "Shangluo"}, {"name": "Jiayuguan"}, {"name": "Jinchang"}, {"name": "Baiyin"}, {"name": "Tianshui"}, {"name": "Wuwei"}, {"name": "Zhangye"}, {"name": "Pingliang"}, {"name": "Jiuquan"}, {"name": "Qingyang"}, {"name": "Dingxi"}, {"name": "Longnan"}, {"name": "Karamay"}, {"name": "Turpan"}, {"name": "Hami"}, {"name": "Aksu"}, {"name": "Kashgar"}, {"name": "Hotan"}, {"name": "Yining"}, {"name": "Tacheng"}, {"name": "Altay"}, {"name": "Korla"}, {"name": "Macau"}, {"name": "Hong Kong"}
+      ]
+    },
+    {
+      "code": "IN",
+      "name": "India",
+      "cities": [
+        {"name": "Mumbai", "districts": ["Mumbai City", "Mumbai Suburban", "Andheri", "Bandra", "Borivali", "Colaba", "Dadar", "Dharavi", "Goregaon", "Juhu", "Kandivali", "Kurla", "Malad", "Powai", "Santacruz", "Vikhroli", "Worli"]},
+        {"name": "Delhi", "districts": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"]},
+        {"name": "Bengaluru"}, {"name": "Hyderabad"}, {"name": "Ahmedabad"}, {"name": "Chennai"}, {"name": "Kolkata"}, {"name": "Surat"}, {"name": "Pune"}, {"name": "Jaipur"}, {"name": "Lucknow"}, {"name": "Kanpur"}, {"name": "Nagpur"}, {"name": "Indore"}, {"name": "Thane"}, {"name": "Bhopal"}, {"name": "Visakhapatnam"}, {"name": "Pimpri-Chinchwad"}, {"name": "Patna"}, {"name": "Vadodara"}, {"name": "Ghaziabad"}, {"name": "Ludhiana"}, {"name": "Agra"}, {"name": "Nashik"}, {"name": "Faridabad"}, {"name": "Meerut"}, {"name": "Rajkot"}, {"name": "Kalyan-Dombivli"}, {"name": "Vasai-Virar"}, {"name": "Varanasi"}, {"name": "Srinagar"}, {"name": "Aurangabad"}, {"name": "Dhanbad"}, {"name": "Amritsar"}, {"name": "Navi Mumbai"}, {"name": "Allahabad"}, {"name": "Ranchi"}, {"name": "Howrah"}, {"name": "Coimbatore"}, {"name": "Jabalpur"}, {"name": "Gwalior"}, {"name": "Vijayawada"}, {"name": "Jodhpur"}, {"name": "Madurai"}, {"name": "Raipur"}, {"name": "Kota"}, {"name": "Guwahati"}, {"name": "Chandigarh"}, {"name": "Solapur"}, {"name": "Hubli-Dharwad"}, {"name": "Mysuru"}, {"name": "Tiruchirappalli"}, {"name": "Bareilly"}, {"name": "Aligarh"}, {"name": "Tiruppur"}, {"name": "Gurugram"}, {"name": "Moradabad"}, {"name": "Jalandhar"}, {"name": "Bhubaneswar"}, {"name": "Salem"}, {"name": "Warangal"}, {"name": "Mira-Bhayandar"}, {"name": "Jalgaon"}, {"name": "Guntur"}, {"name": "Thiruvananthapuram"}, {"name": "Bhiwandi"}, {"name": "Saharanpur"}, {"name": "Gorakhpur"}, {"name": "Bikaner"}, {"name": "Amravati"}, {"name": "Noida"}, {"name": "Jamshedpur"}, {"name": "Bhilai"}, {"name": "Cuttack"}, {"name": "Firozabad"}, {"name": "Kochi"}, {"name": "Nellore"}, {"name": "Bhavnagar"}, {"name": "Dehradun"}, {"name": "Durgapur"}, {"name": "Asansol"}, {"name": "Rourkela"}, {"name": "Nanded"}, {"name": "Kolhapur"}, {"name": "Ajmer"}, {"name": "Akola"}, {"name": "Gulbarga"}, {"name": "Jamnagar"}, {"name": "Ujjain"}, {"name": "Loni"}, {"name": "Siliguri"}, {"name": "Jhansi"}, {"name": "Ulhasnagar"}, {"name": "Jammu"}, {"name": "Sangli-Miraj"}, {"name": "Mangaluru"}, {"name": "Erode"}, {"name": "Belagavi"}, {"name": "Ambattur"}, {"name": "Tirunelveli"}, {"name": "Malegaon"}, {"name": "Gaya"}, {"name": "Jalna"}, {"name": "Udaipur"}, {"name": "Maheshtala"}, {"name": "Davanagere"}, {"name": "Kozhikode"}, {"name": "Kurnool"}, {"name": "Rajpur Sonarpur"}, {"name": "Bokaro"}, {"name": "South Dumdum"}, {"name": "Bellary"}, {"name": "Patiala"}, {"name": "Gopalpur"}, {"name": "Agartala"}, {"name": "Bhagalpur"}, {"name": "Muzaffarnagar"}, {"name": "Bhatpara"}, {"name": "Panihati"}, {"name": "Latur"}, {"name": "Dhule"}, {"name": "Rohtak"}, {"name": "Korba"}, {"name": "Bhilwara"}, {"name": "Berhampur"}, {"name": "Muzaffarpur"}, {"name": "Ahmednagar"}, {"name": "Mathura"}, {"name": "Kollam"}, {"name": "Avadi"}, {"name": "Kadapa"}, {"name": "Kamarhati"}, {"name": "Sambalpur"}, {"name": "Bilaspur"}, {"name": "Shahjahanpur"}, {"name": "Satara"}, {"name": "Bijapur"}, {"name": "Rampur"}, {"name": "Shivamogga"}, {"name": "Chandrapur"}, {"name": "Junagadh"}, {"name": "Thrissur"}, {"name": "Alwar"}, {"name": "Bardhaman"}, {"name": "Kulti"}, {"name": "Kakinada"}, {"name": "Nizamabad"}, {"name": "Parbhani"}, {"name": "Tumkur"}, {"name": "Hisar"}, {"name": "Ozhukarai"}, {"name": "Bihar Sharif"}, {"name": "Panipat"}, {"name": "Darbhanga"}
+      ]
+    },
+    {
+      "code": "KR",
+      "name": "South Korea",
+      "cities": [
+        {"name": "Seoul", "districts": ["Jongno", "Jung", "Yongsan", "Seongdong", "Gwangjin", "Dongdaemun", "Jungnang", "Seongbuk", "Gangbuk", "Dobong", "Nowon", "Eunpyeong", "Seodaemun", "Mapo", "Yangcheon", "Gangseo", "Guro", "Geumcheon", "Yeongdeungpo", "Dongjak", "Gwanak", "Seocho", "Gangnam", "Songpa", "Gangdong"]},
+        {"name": "Busan"}, {"name": "Incheon"}, {"name": "Daegu"}, {"name": "Daejeon"}, {"name": "Gwangju"}, {"name": "Suwon"}, {"name": "Ulsan"}, {"name": "Goyang"}, {"name": "Yongin"}, {"name": "Seongnam"}, {"name": "Bucheon"}, {"name": "Cheongju"}, {"name": "Ansan"}, {"name": "Jeonju"}, {"name": "Anyang"}, {"name": "Cheonan"}, {"name": "Namyangju"}, {"name": "Hwaseong"}, {"name": "Pohang"}, {"name": "Uijeongbu"}, {"name": "Siheung"}, {"name": "Pyeongtaek"}, {"name": "Gimhae"}, {"name": "Jeju"}, {"name": "Gumi"}, {"name": "Wonju"}, {"name": "Jinju"}, {"name": "Chuncheon"}, {"name": "Iksan"}, {"name": "Asan"}, {"name": "Gunpo"}, {"name": "Yangsan"}, {"name": "Gunsan"}, {"name": "Mokpo"}, {"name": "Geoje"}, {"name": "Yeosu"}, {"name": "Suncheon"}, {"name": "Gangneung"}, {"name": "Pocheon"}, {"name": "Yangju"}, {"name": "Andong"}, {"name": "Sejong"}, {"name": "Sokcho"}, {"name": "Tongyeong"}, {"name": "Boryeong"}, {"name": "Sangju"}, {"name": "Gimcheon"}, {"name": "Mungyeong"}, {"name": "Yeongju"}, {"name": "Donghae"}, {"name": "Taebaek"}, {"name": "Samcheok"}, {"name": "Hongseong"}
+      ]
+    },
+    {
+      "code": "ID",
+      "name": "Indonesia",
+      "cities": [
+        {"name": "Jakarta", "districts": ["Central Jakarta", "North Jakarta", "South Jakarta", "East Jakarta", "West Jakarta", "Thousand Islands"]},
+        {"name": "Surabaya"}, {"name": "Bandung"}, {"name": "Medan"}, {"name": "Semarang"}, {"name": "Palembang"}, {"name": "Makassar"}, {"name": "Tangerang"}, {"name": "Depok"}, {"name": "Bekasi"}, {"name": "South Tangerang"}, {"name": "Bogor"}, {"name": "Batam"}, {"name": "Pekanbaru"}, {"name": "Bandar Lampung"}, {"name": "Padang"}, {"name": "Malang"}, {"name": "Denpasar"}, {"name": "Samarinda"}, {"name": "Tasikmalaya"}, {"name": "Banjarmasin"}, {"name": "Serang"}, {"name": "Balikpapan"}, {"name": "Pontianak"}, {"name": "Jambi"}, {"name": "Cimahi"}, {"name": "Surakarta"}, {"name": "Mataram"}, {"name": "Manado"}, {"name": "Yogyakarta"}, {"name": "Cilegon"}, {"name": "Kupang"}, {"name": "Palu"}, {"name": "Ambon"}, {"name": "Bengkulu"}, {"name": "Pekalongan"}, {"name": "Tegal"}, {"name": "Kediri"}, {"name": "Binjai"}, {"name": "Sukabumi"}, {"name": "Dumai"}, {"name": "Tarakan"}, {"name": "Banda Aceh"}, {"name": "Cirebon"}, {"name": "Probolinggo"}, {"name": "Madiun"}, {"name": "Banjarbaru"}, {"name": "Lhokseumawe"}, {"name": "Pematangsiantar"}, {"name": "Singkawang"}, {"name": "Salatiga"}, {"name": "Gorontalo"}, {"name": "Palopo"}, {"name": "Magelang"}, {"name": "Ternate"}, {"name": "Mojokerto"}, {"name": "Bitung"}, {"name": "Padangsidempuan"}, {"name": "Palangka Raya"}, {"name": "Pasuruan"}, {"name": "Parepare"}, {"name": "Sorong"}, {"name": "Jayapura"}, {"name": "Bukittinggi"}, {"name": "Tomohon"}, {"name": "Kotamobagu"}, {"name": "Gunungsitoli"}, {"name": "Bau-Bau"}, {"name": "Sungaipenuh"}, {"name": "Subulussalam"}, {"name": "Tual"}, {"name": "Banjar"}, {"name": "Tidore"}, {"name": "Sawahlunto"}, {"name": "Payakumbuh"}
+      ]
+    },
+    {
+      "code": "TH",
+      "name": "Thailand",
+      "cities": [
+        {"name": "Bangkok", "districts": ["Phra Nakhon", "Dusit", "Nong Chok", "Bang Rak", "Bang Khen", "Bang Kapi", "Pathum Wan", "Pom Prap Sattru Phai", "Phra Khanong", "Min Buri", "Lat Krabang", "Yan Nawa", "Samphanthawong", "Phaya Thai", "Thon Buri", "Bangkok Yai", "Huai Khwang", "Khlong San", "Taling Chan", "Bangkok Noi", "Bang Khun Thian", "Phasi Charoen", "Nong Khaem", "Rat Burana", "Bang Phlat", "Din Daeng", "Bueng Kum", "Sathon", "Bang Sue", "Chatuchak", "Bang Kho Laem", "Prawet", "Khlong Toei", "Suan Luang", "Chom Thong", "Don Mueang", "Ratchathewi", "Lat Phrao", "Watthana", "Bang Khae", "Lak Si", "Sai Mai", "Khan Na Yao", "Saphan Sung", "Wang Thonglang", "Khlong Sam Wa", "Bang Na", "Thawi Watthana", "Thung Khru", "Bang Bon"]},
+        {"name": "Nonthaburi"}, {"name": "Pak Kret"}, {"name": "Chiang Mai"}, {"name": "Hat Yai"}, {"name": "Nakhon Ratchasima"}, {"name": "Udon Thani"}, {"name": "Surat Thani"}, {"name": "Khon Kaen"}, {"name": "Pattaya"}, {"name": "Si Racha"}, {"name": "Phuket"}, {"name": "Nakhon Sawan"}, {"name": "Ubon Ratchathani"}, {"name": "Yala"}, {"name": "Songkhla"}, {"name": "Krabi"}, {"name": "Rayong"}, {"name": "Chiang Rai"}, {"name": "Lampang"}, {"name": "Phitsanulok"}, {"name": "Trang"}, {"name": "Pattani"}, {"name": "Sakon Nakhon"}, {"name": "Buriram"}, {"name": "Roi Et"}, {"name": "Sukhothai"}, {"name": "Mae Sot"}, {"name": "Kanchanaburi"}, {"name": "Hua Hin"}, {"name": "Cha-am"}, {"name": "Nakhon Pathom"}, {"name": "Ratchaburi"}, {"name": "Samut Sakhon"}, {"name": "Samut Prakan"}, {"name": "Ayutthaya"}, {"name": "Lopburi"}, {"name": "Saraburi"}, {"name": "Nakhon Si Thammarat"}, {"name": "Mae Hong Son"}, {"name": "Nan"}, {"name": "Phrae"}, {"name": "Tak"}, {"name": "Phetchabun"}, {"name": "Loei"}, {"name": "Nong Khai"}, {"name": "Mukdahan"}, {"name": "Nakhon Phanom"}, {"name": "Chumphon"}, {"name": "Ranong"}, {"name": "Phang Nga"}, {"name": "Satun"}, {"name": "Narathiwat"}
+      ]
+    },
+    {
+      "code": "VN",
+      "name": "Vietnam",
+      "cities": [
+        {"name": "Ho Chi Minh City", "districts": ["District 1", "District 2", "District 3", "District 4", "District 5", "District 6", "District 7", "District 8", "District 9", "District 10", "District 11", "District 12", "Bình Tân", "Bình Thạnh", "Gò Vấp", "Phú Nhuận", "Tân Bình", "Tân Phú", "Thủ Đức", "Bình Chánh", "Cần Giờ", "Củ Chi", "Hóc Môn", "Nhà Bè"]},
+        {"name": "Hanoi", "districts": ["Ba Đình", "Hoàn Kiếm", "Tây Hồ", "Long Biên", "Cầu Giấy", "Đống Đa", "Hai Bà Trưng", "Hoàng Mai", "Thanh Xuân", "Hà Đông", "Nam Từ Liêm", "Bắc Từ Liêm", "Sơn Tây"]},
+        {"name": "Haiphong"}, {"name": "Da Nang"}, {"name": "Can Tho"}, {"name": "Bien Hoa"}, {"name": "Hue"}, {"name": "Nha Trang"}, {"name": "Buôn Ma Thuột"}, {"name": "Vung Tau"}, {"name": "Quy Nhơn"}, {"name": "Rạch Giá"}, {"name": "Long Xuyên"}, {"name": "Thái Nguyên"}, {"name": "Nam Định"}, {"name": "Pleiku"}, {"name": "Cà Mau"}, {"name": "Vĩnh Long"}, {"name": "Mỹ Tho"}, {"name": "Phan Thiết"}, {"name": "Cẩm Phả"}, {"name": "Hạ Long"}, {"name": "Bắc Ninh"}, {"name": "Việt Trì"}, {"name": "Thanh Hóa"}, {"name": "Vinh"}, {"name": "Đà Lạt"}, {"name": "Sa Đéc"}, {"name": "Tuy Hòa"}, {"name": "Phan Rang–Tháp Chàm"}, {"name": "Sóc Trăng"}, {"name": "Đông Hà"}, {"name": "Đồng Hới"}, {"name": "Hà Tĩnh"}, {"name": "Hội An"}, {"name": "Tam Kỳ"}, {"name": "Quảng Ngãi"}, {"name": "Kon Tum"}, {"name": "Tây Ninh"}, {"name": "Thủ Dầu Một"}, {"name": "Bến Tre"}, {"name": "Trà Vinh"}, {"name": "Cao Lãnh"}, {"name": "Bạc Liêu"}, {"name": "Móng Cái"}, {"name": "Lào Cai"}, {"name": "Yên Bái"}, {"name": "Sơn La"}, {"name": "Điện Biên Phủ"}, {"name": "Lai Châu"}, {"name": "Hà Giang"}, {"name": "Cao Bằng"}, {"name": "Bắc Kạn"}, {"name": "Lạng Sơn"}, {"name": "Tuyên Quang"}, {"name": "Hưng Yên"}, {"name": "Hải Dương"}
+      ]
+    },
+    {
+      "code": "PH",
+      "name": "Philippines",
+      "cities": [
+        {"name": "Manila"}, {"name": "Quezon City"}, {"name": "Caloocan"}, {"name": "Davao City"}, {"name": "Cebu City"}, {"name": "Zamboanga City"}, {"name": "Antipolo"}, {"name": "Taguig"}, {"name": "Pasig"}, {"name": "Cagayan de Oro"}, {"name": "Parañaque"}, {"name": "Dasmariñas"}, {"name": "Valenzuela"}, {"name": "Bacolod"}, {"name": "General Santos"}, {"name": "Las Piñas"}, {"name": "Makati"}, {"name": "Bacoor"}, {"name": "Muntinlupa"}, {"name": "Iloilo City"}, {"name": "Mandaluyong"}, {"name": "Marikina"}, {"name": "Pasay"}, {"name": "Calamba"}, {"name": "Imus"}, {"name": "Angeles"}, {"name": "Olongapo"}, {"name": "Butuan"}, {"name": "Mandaue"}, {"name": "Iligan"}, {"name": "Baguio"}, {"name": "Cotabato City"}, {"name": "Lucena"}, {"name": "Tagum"}, {"name": "Lapu-Lapu"}, {"name": "San Juan"}, {"name": "Tarlac City"}, {"name": "Naga"}, {"name": "Tagaytay"}, {"name": "Puerto Princesa"}, {"name": "Tacloban"}, {"name": "Surigao City"}, {"name": "Ormoc"}, {"name": "Roxas"}, {"name": "Legazpi"}, {"name": "Cabanatuan"}, {"name": "Santa Rosa"}, {"name": "Tuguegarao"}, {"name": "Pagadian"}, {"name": "Dipolog"}, {"name": "Dumaguete"}, {"name": "Vigan"}, {"name": "Laoag"}, {"name": "Batangas City"}, {"name": "Lipa"}, {"name": "Malolos"}, {"name": "Meycauayan"}, {"name": "San Fernando"}, {"name": "Tabaco"}, {"name": "Sorsogon City"}, {"name": "Mati"}, {"name": "Calapan"}, {"name": "Boracay"}, {"name": "San Pedro"}, {"name": "Biñan"}
+      ]
+    },
+    {
+      "code": "MY",
+      "name": "Malaysia",
+      "cities": [
+        {"name": "Kuala Lumpur"}, {"name": "George Town"}, {"name": "Ipoh"}, {"name": "Johor Bahru"}, {"name": "Shah Alam"}, {"name": "Petaling Jaya"}, {"name": "Kota Kinabalu"}, {"name": "Kuching"}, {"name": "Malacca City"}, {"name": "Alor Setar"}, {"name": "Miri"}, {"name": "Sandakan"}, {"name": "Tawau"}, {"name": "Seremban"}, {"name": "Kuantan"}, {"name": "Kuala Terengganu"}, {"name": "Kota Bharu"}, {"name": "Sibu"}, {"name": "Bintulu"}, {"name": "Taiping"}, {"name": "Kajang"}, {"name": "Subang Jaya"}, {"name": "Klang"}, {"name": "Ampang Jaya"}, {"name": "Putrajaya"}, {"name": "Cyberjaya"}, {"name": "Iskandar Puteri"}, {"name": "Pasir Gudang"}, {"name": "Kulai"}, {"name": "Muar"}, {"name": "Batu Pahat"}, {"name": "Kluang"}, {"name": "Kangar"}, {"name": "Sungai Petani"}, {"name": "Lahad Datu"}, {"name": "Keningau"}, {"name": "Labuan"}
+      ]
+    },
+    {
+      "code": "SG",
+      "name": "Singapore",
+      "cities": [
+        {"name": "Singapore", "districts": ["Central Area", "Bedok", "Bishan", "Bukit Batok", "Bukit Merah", "Bukit Panjang", "Bukit Timah", "Choa Chu Kang", "Clementi", "Geylang", "Hougang", "Jurong East", "Jurong West", "Kallang", "Marine Parade", "Novena", "Pasir Ris", "Punggol", "Queenstown", "Sembawang", "Sengkang", "Serangoon", "Tampines", "Toa Payoh", "Woodlands", "Yishun"]}
+      ]
+    },
+    {
+      "code": "PK",
+      "name": "Pakistan",
+      "cities": [
+        {"name": "Karachi"}, {"name": "Lahore"}, {"name": "Faisalabad"}, {"name": "Rawalpindi"}, {"name": "Gujranwala"}, {"name": "Peshawar"}, {"name": "Multan"}, {"name": "Islamabad"}, {"name": "Hyderabad"}, {"name": "Quetta"}, {"name": "Bahawalpur"}, {"name": "Sargodha"}, {"name": "Sialkot"}, {"name": "Sukkur"}, {"name": "Larkana"}, {"name": "Sheikhupura"}, {"name": "Mirpur Khas"}, {"name": "Rahim Yar Khan"}, {"name": "Gujrat"}, {"name": "Kasur"}, {"name": "Mardan"}, {"name": "Mingora"}, {"name": "Dera Ghazi Khan"}, {"name": "Sahiwal"}, {"name": "Nawabshah"}, {"name": "Mansehra"}, {"name": "Okara"}, {"name": "Chiniot"}, {"name": "Kamoke"}, {"name": "Hafizabad"}, {"name": "Sadiqabad"}, {"name": "Jhang"}, {"name": "Khanewal"}, {"name": "Dadu"}, {"name": "Khanpur"}, {"name": "Muzaffargarh"}, {"name": "Pakpattan"}, {"name": "Bhakkar"}, {"name": "Wah Cantonment"}, {"name": "Abbottabad"}, {"name": "Muzaffarabad"}, {"name": "Gilgit"}, {"name": "Skardu"}, {"name": "Chitral"}, {"name": "Bannu"}, {"name": "Kohat"}, {"name": "Dera Ismail Khan"}, {"name": "Gwadar"}, {"name": "Turbat"}, {"name": "Khuzdar"}
+      ]
+    },
+    {
+      "code": "BD",
+      "name": "Bangladesh",
+      "cities": [
+        {"name": "Dhaka"}, {"name": "Chittagong"}, {"name": "Khulna"}, {"name": "Rajshahi"}, {"name": "Sylhet"}, {"name": "Mymensingh"}, {"name": "Rangpur"}, {"name": "Barisal"}, {"name": "Comilla"}, {"name": "Narayanganj"}, {"name": "Gazipur"}, {"name": "Tongi"}, {"name": "Jessore"}, {"name": "Bogra"}, {"name": "Dinajpur"}, {"name": "Tangail"}, {"name": "Jamalpur"}, {"name": "Cox's Bazar"}, {"name": "Brahmanbaria"}, {"name": "Pabna"}, {"name": "Naogaon"}, {"name": "Saidpur"}, {"name": "Sirajganj"}, {"name": "Kushtia"}, {"name": "Faridpur"}, {"name": "Habiganj"}, {"name": "Feni"}, {"name": "Noakhali"}, {"name": "Manikganj"}, {"name": "Munshiganj"}, {"name": "Patuakhali"}, {"name": "Bhola"}, {"name": "Pirojpur"}, {"name": "Bagerhat"}, {"name": "Satkhira"}, {"name": "Magura"}, {"name": "Narail"}, {"name": "Chuadanga"}, {"name": "Meherpur"}, {"name": "Jhenaidah"}
+      ]
+    },
+    {
+      "code": "IR",
+      "name": "Iran",
+      "cities": [
+        {"name": "Tehran", "districts": ["District 1", "District 2", "District 3", "District 4", "District 5", "District 6", "District 7", "District 8", "District 9", "District 10", "District 11", "District 12", "District 13", "District 14", "District 15", "District 16", "District 17", "District 18", "District 19", "District 20", "District 21", "District 22"]},
+        {"name": "Mashhad"}, {"name": "Isfahan"}, {"name": "Karaj"}, {"name": "Shiraz"}, {"name": "Tabriz"}, {"name": "Qom"}, {"name": "Ahvaz"}, {"name": "Kermanshah"}, {"name": "Urmia"}, {"name": "Rasht"}, {"name": "Zahedan"}, {"name": "Hamadan"}, {"name": "Kerman"}, {"name": "Yazd"}, {"name": "Ardabil"}, {"name": "Bandar Abbas"}, {"name": "Arak"}, {"name": "Eslamshahr"}, {"name": "Zanjan"}, {"name": "Sanandaj"}, {"name": "Qazvin"}, {"name": "Khorramabad"}, {"name": "Gorgan"}, {"name": "Sari"}, {"name": "Bushehr"}, {"name": "Birjand"}, {"name": "Bojnord"}, {"name": "Yasuj"}, {"name": "Ilam"}, {"name": "Semnan"}, {"name": "Shahrekord"}, {"name": "Bandar-e Anzali"}, {"name": "Babol"}, {"name": "Amol"}, {"name": "Nishapur"}, {"name": "Sabzevar"}, {"name": "Maragheh"}, {"name": "Saqqez"}, {"name": "Mahabad"}, {"name": "Kashan"}, {"name": "Najafabad"}, {"name": "Borujerd"}, {"name": "Dezful"}, {"name": "Abadan"}
+      ]
+    },
+    {
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "cities": [
+        {"name": "Riyadh", "districts": ["Al Olaya", "Al Malaz", "Al Sulimaniyah", "Al Bathaa", "Al Murabba", "Al Naseem", "Al Aziziyah", "Al Diriyah", "Al Yarmuk", "Al Rabwah", "Al Wizarat", "Al Shifa", "Al Murouj", "King Fahd District", "Diplomatic Quarter"]},
+        {"name": "Jeddah"}, {"name": "Mecca"}, {"name": "Medina"}, {"name": "Dammam"}, {"name": "Khobar"}, {"name": "Tabuk"}, {"name": "Buraydah"}, {"name": "Khamis Mushait"}, {"name": "Hail"}, {"name": "Hofuf"}, {"name": "Taif"}, {"name": "Najran"}, {"name": "Yanbu"}, {"name": "Al Qatif"}, {"name": "Abha"}, {"name": "Jubail"}, {"name": "Dhahran"}, {"name": "Al Kharj"}, {"name": "Sakaka"}, {"name": "Arar"}, {"name": "Jizan"}, {"name": "Qurayyat"}, {"name": "Rabigh"}, {"name": "Unaizah"}
+      ]
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "cities": [
+        {"name": "Dubai", "districts": ["Bur Dubai", "Deira", "Downtown Dubai", "Dubai Marina", "Jumeirah", "Jumeirah Beach Residence", "Al Barsha", "Business Bay", "Jebel Ali", "Al Quoz", "Mirdif", "Discovery Gardens", "International City", "Dubai Silicon Oasis", "Al Karama", "Satwa", "Oud Metha", "Al Wasl", "Umm Suqeim", "The Palm Jumeirah", "Dubai Festival City", "Al Garhoud", "Al Twar", "Al Mizhar", "Nad Al Sheba", "Al Khawaneej"]},
+        {"name": "Abu Dhabi"}, {"name": "Sharjah"}, {"name": "Al Ain"}, {"name": "Ajman"}, {"name": "Ras Al Khaimah"}, {"name": "Fujairah"}, {"name": "Umm Al Quwain"}, {"name": "Khor Fakkan"}, {"name": "Dibba Al-Fujairah"}, {"name": "Madinat Zayed"}, {"name": "Ruwais"}, {"name": "Liwa Oasis"}, {"name": "Kalba"}, {"name": "Dibba Al-Hisn"}, {"name": "Hatta"}
+      ]
+    },
+    {
+      "code": "IL",
+      "name": "Israel",
+      "cities": [
+        {"name": "Jerusalem"}, {"name": "Tel Aviv"}, {"name": "Haifa"}, {"name": "Rishon LeZion"}, {"name": "Petah Tikva"}, {"name": "Ashdod"}, {"name": "Netanya"}, {"name": "Beersheba"}, {"name": "Bnei Brak"}, {"name": "Holon"}, {"name": "Ramat Gan"}, {"name": "Ashkelon"}, {"name": "Rehovot"}, {"name": "Bat Yam"}, {"name": "Beit Shemesh"}, {"name": "Kfar Saba"}, {"name": "Herzliya"}, {"name": "Hadera"}, {"name": "Modi'in"}, {"name": "Nazareth"}, {"name": "Lod"}, {"name": "Ramla"}, {"name": "Ra'anana"}, {"name": "Nahariya"}, {"name": "Givatayim"}, {"name": "Hod HaSharon"}, {"name": "Kiryat Ata"}, {"name": "Kiryat Gat"}, {"name": "Kiryat Bialik"}, {"name": "Kiryat Ono"}, {"name": "Kiryat Motzkin"}, {"name": "Eilat"}, {"name": "Tiberias"}, {"name": "Acre"}, {"name": "Karmiel"}, {"name": "Yavne"}, {"name": "Sderot"}, {"name": "Dimona"}, {"name": "Tzfat"}, {"name": "Migdal HaEmek"}, {"name": "Maale Adumim"}
+      ]
+    },
+    {
+      "code": "KZ",
+      "name": "Kazakhstan",
+      "cities": [
+        {"name": "Almaty"}, {"name": "Astana"}, {"name": "Shymkent"}, {"name": "Karaganda"}, {"name": "Aktobe"}, {"name": "Taraz"}, {"name": "Pavlodar"}, {"name": "Ust-Kamenogorsk"}, {"name": "Semey"}, {"name": "Atyrau"}, {"name": "Kyzylorda"}, {"name": "Kostanay"}, {"name": "Petropavl"}, {"name": "Oral"}, {"name": "Temirtau"}, {"name": "Aktau"}, {"name": "Turkistan"}, {"name": "Kokshetau"}, {"name": "Taldykorgan"}, {"name": "Ekibastuz"}, {"name": "Rudny"}, {"name": "Zhanaozen"}, {"name": "Balkhash"}, {"name": "Zhezkazgan"}
+      ]
+    },
+    {
+      "code": "AZ",
+      "name": "Azerbaijan",
+      "cities": [
+        {"name": "Baku"}, {"name": "Ganja"}, {"name": "Sumgayit"}, {"name": "Mingachevir"}, {"name": "Lankaran"}, {"name": "Shaki"}, {"name": "Yevlakh"}, {"name": "Nakhchivan"}, {"name": "Shirvan"}, {"name": "Khirdalan"}, {"name": "Quba"}, {"name": "Khachmaz"}, {"name": "Salyan"}, {"name": "Tovuz"}, {"name": "Aghjabadi"}, {"name": "Astara"}, {"name": "Bilasuvar"}, {"name": "Gabala"}, {"name": "Gadabay"}, {"name": "Goychay"}, {"name": "Imishli"}, {"name": "Masally"}, {"name": "Sabirabad"}, {"name": "Shamakhi"}, {"name": "Zaqatala"}
+      ]
+    },
+    {
+      "code": "GE",
+      "name": "Georgia",
+      "cities": [
+        {"name": "Tbilisi"}, {"name": "Kutaisi"}, {"name": "Batumi"}, {"name": "Rustavi"}, {"name": "Gori"}, {"name": "Zugdidi"}, {"name": "Poti"}, {"name": "Sukhumi"}, {"name": "Telavi"}, {"name": "Akhaltsikhe"}, {"name": "Ozurgeti"}, {"name": "Senaki"}, {"name": "Kobuleti"}, {"name": "Marneuli"}, {"name": "Khashuri"}, {"name": "Samtredia"}, {"name": "Chiatura"}, {"name": "Borjomi"}, {"name": "Mestia"}, {"name": "Kazbegi"}, {"name": "Sighnaghi"}, {"name": "Mtskheta"}
+      ]
+    },
+    {
+      "code": "AM",
+      "name": "Armenia",
+      "cities": [
+        {"name": "Yerevan"}, {"name": "Gyumri"}, {"name": "Vanadzor"}, {"name": "Vagharshapat"}, {"name": "Hrazdan"}, {"name": "Abovyan"}, {"name": "Kapan"}, {"name": "Armavir"}, {"name": "Ararat"}, {"name": "Ijevan"}, {"name": "Sevan"}, {"name": "Artashat"}, {"name": "Goris"}, {"name": "Gavar"}, {"name": "Dilijan"}, {"name": "Sisian"}, {"name": "Yeghegnadzor"}, {"name": "Stepanavan"}, {"name": "Jermuk"}, {"name": "Tsaghkadzor"}, {"name": "Alaverdi"}
+      ]
+    },
+    {
+      "code": "EG",
+      "name": "Egypt",
+      "cities": [
+        {"name": "Cairo", "districts": ["Downtown Cairo", "Zamalek", "Maadi", "Heliopolis", "Nasr City", "Garden City", "Mohandessin", "Dokki", "Giza", "Shubra", "Bulaq", "Sayyida Zaynab", "Helwan", "Old Cairo", "Abdeen", "Manial", "New Cairo", "Sheikh Zayed", "6th of October"]},
+        {"name": "Alexandria"}, {"name": "Giza"}, {"name": "Shubra El Kheima"}, {"name": "Port Said"}, {"name": "Suez"}, {"name": "El Mahalla El Kubra"}, {"name": "Luxor"}, {"name": "Asyut"}, {"name": "Mansoura"}, {"name": "Tanta"}, {"name": "Faiyum"}, {"name": "Zagazig"}, {"name": "Ismailia"}, {"name": "Aswan"}, {"name": "Damanhur"}, {"name": "Damietta"}, {"name": "Minya"}, {"name": "Beni Suef"}, {"name": "Hurghada"}, {"name": "Qena"}, {"name": "Sohag"}, {"name": "Banha"}, {"name": "Kafr el-Sheikh"}, {"name": "Arish"}, {"name": "Mallawi"}, {"name": "10th of Ramadan City"}, {"name": "Sharm El Sheikh"}, {"name": "Marsa Matruh"}, {"name": "Edfu"}, {"name": "Beni Mazar"}, {"name": "Sadat City"}, {"name": "New Cairo"}, {"name": "6th of October City"}
+      ]
+    },
+    {
+      "code": "ZA",
+      "name": "South Africa",
+      "cities": [
+        {"name": "Johannesburg", "districts": ["Sandton", "Soweto", "Rosebank", "Randburg", "Roodepoort", "Alexandra", "Midrand", "Bryanston", "Hyde Park", "Houghton", "Parktown", "Melville", "Yeoville", "Hillbrow", "Braamfontein", "Newtown", "Fordsburg", "Diepkloof", "Orlando"]},
+        {"name": "Cape Town", "districts": ["City Bowl", "Atlantic Seaboard", "Camps Bay", "Sea Point", "Green Point", "Constantia", "Bishopscourt", "Bantry Bay", "Clifton", "Hout Bay", "Mitchells Plain", "Khayelitsha", "Bellville", "Durbanville", "Stellenbosch", "Somerset West", "Strand", "Gordon's Bay", "Fish Hoek", "Simon's Town", "Kalk Bay"]},
+        {"name": "Durban"}, {"name": "Pretoria"}, {"name": "Port Elizabeth"}, {"name": "Bloemfontein"}, {"name": "East London"}, {"name": "Pietermaritzburg"}, {"name": "Polokwane"}, {"name": "Nelspruit"}, {"name": "Kimberley"}, {"name": "Rustenburg"}, {"name": "George"}, {"name": "Welkom"}, {"name": "Vereeniging"}, {"name": "Mahikeng"}, {"name": "Witbank"}, {"name": "Newcastle"}, {"name": "Klerksdorp"}, {"name": "Vanderbijlpark"}, {"name": "Stellenbosch"}, {"name": "Knysna"}, {"name": "Mossel Bay"}, {"name": "Worcester"}, {"name": "Paarl"}, {"name": "Oudtshoorn"}, {"name": "Upington"}, {"name": "Springbok"}, {"name": "Richards Bay"}, {"name": "Empangeni"}, {"name": "Ladysmith"}, {"name": "Vryheid"}, {"name": "Howick"}, {"name": "Margate"}, {"name": "Plettenberg Bay"}, {"name": "Hermanus"}, {"name": "Saldanha"}, {"name": "Beaufort West"}, {"name": "Queenstown"}, {"name": "Mthatha"}, {"name": "Grahamstown"}, {"name": "Stutterheim"}, {"name": "Aliwal North"}
+      ]
+    },
+    {
+      "code": "NG",
+      "name": "Nigeria",
+      "cities": [
+        {"name": "Lagos"}, {"name": "Kano"}, {"name": "Ibadan"}, {"name": "Kaduna"}, {"name": "Port Harcourt"}, {"name": "Benin City"}, {"name": "Maiduguri"}, {"name": "Zaria"}, {"name": "Aba"}, {"name": "Jos"}, {"name": "Ilorin"}, {"name": "Oyo"}, {"name": "Enugu"}, {"name": "Abeokuta"}, {"name": "Abuja"}, {"name": "Sokoto"}, {"name": "Onitsha"}, {"name": "Warri"}, {"name": "Okene"}, {"name": "Calabar"}, {"name": "Uyo"}, {"name": "Katsina"}, {"name": "Akure"}, {"name": "Bauchi"}, {"name": "Ebute Ikorodu"}, {"name": "Makurdi"}, {"name": "Minna"}, {"name": "Effon Alaiye"}, {"name": "Ilesa"}, {"name": "Owo"}, {"name": "Ikare"}, {"name": "Shaki"}, {"name": "Iwo"}, {"name": "Ado-Ekiti"}, {"name": "Ile-Ife"}, {"name": "Ondo"}, {"name": "Awka"}, {"name": "Umuahia"}, {"name": "Yola"}, {"name": "Damaturu"}, {"name": "Gombe"}, {"name": "Lokoja"}, {"name": "Asaba"}, {"name": "Lafia"}, {"name": "Birnin Kebbi"}, {"name": "Dutse"}, {"name": "Gusau"}, {"name": "Jalingo"}, {"name": "Yenagoa"}
+      ]
+    },
+    {
+      "code": "MA",
+      "name": "Morocco",
+      "cities": [
+        {"name": "Casablanca"}, {"name": "Rabat"}, {"name": "Fez"}, {"name": "Marrakesh"}, {"name": "Agadir"}, {"name": "Tangier"}, {"name": "Meknes"}, {"name": "Oujda"}, {"name": "Kenitra"}, {"name": "Tetouan"}, {"name": "Safi"}, {"name": "Mohammedia"}, {"name": "Khouribga"}, {"name": "El Jadida"}, {"name": "Béni Mellal"}, {"name": "Aït Melloul"}, {"name": "Nador"}, {"name": "Dar Bouazza"}, {"name": "Taza"}, {"name": "Settat"}, {"name": "Berrechid"}, {"name": "Khémisset"}, {"name": "Inezgane"}, {"name": "Ksar el-Kebir"}, {"name": "Larache"}, {"name": "Guelmim"}, {"name": "Khénifra"}, {"name": "Errachidia"}, {"name": "Sidi Slimane"}, {"name": "Tan-Tan"}, {"name": "Ouarzazate"}, {"name": "Essaouira"}, {"name": "Chefchaouen"}, {"name": "Ifrane"}, {"name": "Al Hoceima"}, {"name": "Asilah"}, {"name": "Beni Ansar"}, {"name": "Dakhla"}, {"name": "Laayoune"}, {"name": "Tarfaya"}, {"name": "Tiznit"}, {"name": "Zagora"}, {"name": "Merzouga"}, {"name": "Volubilis"}
+      ]
+    },
+    {
+      "code": "KE",
+      "name": "Kenya",
+      "cities": [
+        {"name": "Nairobi"}, {"name": "Mombasa"}, {"name": "Kisumu"}, {"name": "Nakuru"}, {"name": "Eldoret"}, {"name": "Ruiru"}, {"name": "Kikuyu"}, {"name": "Kangundo-Tala"}, {"name": "Malindi"}, {"name": "Naivasha"}, {"name": "Kitui"}, {"name": "Machakos"}, {"name": "Thika"}, {"name": "Kakamega"}, {"name": "Garissa"}, {"name": "Kilifi"}, {"name": "Nyeri"}, {"name": "Lamu"}, {"name": "Embu"}, {"name": "Meru"}, {"name": "Kericho"}, {"name": "Kisii"}, {"name": "Bungoma"}, {"name": "Voi"}, {"name": "Lodwar"}, {"name": "Wajir"}, {"name": "Mandera"}, {"name": "Isiolo"}, {"name": "Marsabit"}, {"name": "Moyale"}, {"name": "Narok"}, {"name": "Bomet"}, {"name": "Migori"}, {"name": "Homa Bay"}, {"name": "Siaya"}, {"name": "Vihiga"}, {"name": "Busia"}, {"name": "Kapenguria"}, {"name": "Kapsabet"}, {"name": "Iten"}, {"name": "Kerugoya"}, {"name": "Murang'a"}, {"name": "Nanyuki"}, {"name": "Kitale"}
+      ]
+    },
+    {
+      "code": "ET",
+      "name": "Ethiopia",
+      "cities": [
+        {"name": "Addis Ababa"}, {"name": "Dire Dawa"}, {"name": "Mek'ele"}, {"name": "Adama"}, {"name": "Gondar"}, {"name": "Hawassa"}, {"name": "Bahir Dar"}, {"name": "Jimma"}, {"name": "Dessie"}, {"name": "Jijiga"}, {"name": "Shashamane"}, {"name": "Bishoftu"}, {"name": "Sodo"}, {"name": "Arba Minch"}, {"name": "Hosaena"}, {"name": "Harar"}, {"name": "Dilla"}, {"name": "Nekemte"}, {"name": "Debre Birhan"}, {"name": "Debre Markos"}, {"name": "Asella"}, {"name": "Ambo"}, {"name": "Adigrat"}, {"name": "Aksum"}, {"name": "Lalibela"}, {"name": "Robe"}, {"name": "Goba"}, {"name": "Yirgalem"}, {"name": "Negele Boran"}, {"name": "Moyale"}, {"name": "Gambela"}, {"name": "Assosa"}, {"name": "Semera"}
+      ]
+    },
+    {
+      "code": "GH",
+      "name": "Ghana",
+      "cities": [
+        {"name": "Accra"}, {"name": "Kumasi"}, {"name": "Tamale"}, {"name": "Sekondi-Takoradi"}, {"name": "Sunyani"}, {"name": "Cape Coast"}, {"name": "Ho"}, {"name": "Koforidua"}, {"name": "Tema"}, {"name": "Wa"}, {"name": "Bolgatanga"}, {"name": "Techiman"}, {"name": "Obuasi"}, {"name": "Tarkwa"}, {"name": "Madina"}, {"name": "Teshie"}, {"name": "Nungua"}, {"name": "Ashaiman"}, {"name": "Winneba"}, {"name": "Berekum"}, {"name": "Yendi"}, {"name": "Kintampo"}, {"name": "Aflao"}, {"name": "Bawku"}, {"name": "Damongo"}, {"name": "Goaso"}, {"name": "Nkawkaw"}, {"name": "Ejura"}
+      ]
+    },
+    {
+      "code": "TZ",
+      "name": "Tanzania",
+      "cities": [
+        {"name": "Dar es Salaam"}, {"name": "Dodoma"}, {"name": "Mwanza"}, {"name": "Arusha"}, {"name": "Mbeya"}, {"name": "Morogoro"}, {"name": "Tanga"}, {"name": "Kahama"}, {"name": "Tabora"}, {"name": "Zanzibar City"}, {"name": "Kigoma"}, {"name": "Sumbawanga"}, {"name": "Kasulu"}, {"name": "Songea"}, {"name": "Moshi"}, {"name": "Musoma"}, {"name": "Iringa"}, {"name": "Shinyanga"}, {"name": "Singida"}, {"name": "Bukoba"}, {"name": "Babati"}, {"name": "Lindi"}, {"name": "Mtwara"}, {"name": "Mafia"}, {"name": "Bagamoyo"}, {"name": "Mahonda"}
+      ]
+    },
+    {
+      "code": "DZ",
+      "name": "Algeria",
+      "cities": [
+        {"name": "Algiers"}, {"name": "Oran"}, {"name": "Constantine"}, {"name": "Annaba"}, {"name": "Blida"}, {"name": "Batna"}, {"name": "Djelfa"}, {"name": "Sétif"}, {"name": "Sidi Bel Abbès"}, {"name": "Biskra"}, {"name": "Tébessa"}, {"name": "Ech Cheliff"}, {"name": "Tiaret"}, {"name": "Béjaïa"}, {"name": "Tlemcen"}, {"name": "Ouargla"}, {"name": "Béchar"}, {"name": "Mostaganem"}, {"name": "Bordj Bou Arréridj"}, {"name": "Skikda"}, {"name": "Médéa"}, {"name": "Tizi Ouzou"}, {"name": "El Eulma"}, {"name": "Touggourt"}, {"name": "Laghouat"}, {"name": "M'Sila"}, {"name": "Jijel"}, {"name": "Relizane"}, {"name": "Saïda"}, {"name": "Guelma"}, {"name": "Khenchela"}, {"name": "Souk Ahras"}, {"name": "Mascara"}, {"name": "Tipaza"}, {"name": "Aïn Defla"}, {"name": "Bouira"}, {"name": "Boumerdès"}, {"name": "Tindouf"}, {"name": "Tamanrasset"}, {"name": "Illizi"}, {"name": "Ghardaïa"}, {"name": "El Oued"}, {"name": "Adrar"}, {"name": "Naâma"}, {"name": "Aïn Témouchent"}
+      ]
+    },
+    {
+      "code": "TN",
+      "name": "Tunisia",
+      "cities": [
+        {"name": "Tunis"}, {"name": "Sfax"}, {"name": "Sousse"}, {"name": "Kairouan"}, {"name": "Bizerte"}, {"name": "Gabès"}, {"name": "Ariana"}, {"name": "Gafsa"}, {"name": "El Mourouj"}, {"name": "Nabeul"}, {"name": "Kasserine"}, {"name": "Monastir"}, {"name": "Ben Arous"}, {"name": "La Marsa"}, {"name": "Hammamet"}, {"name": "Médenine"}, {"name": "Manouba"}, {"name": "Mahdia"}, {"name": "Tataouine"}, {"name": "Sidi Bouzid"}, {"name": "Béja"}, {"name": "Jendouba"}, {"name": "Le Kef"}, {"name": "Siliana"}, {"name": "Tozeur"}, {"name": "Kebili"}, {"name": "Zaghouan"}, {"name": "Douz"}, {"name": "Djerba"}, {"name": "Hammam Sousse"}
+      ]
+    },
+    {
+      "code": "AU",
+      "name": "Australia",
+      "cities": [
+        {"name": "Sydney", "districts": ["Sydney CBD", "North Shore", "Eastern Suburbs", "Inner West", "Northern Beaches", "Southern Sydney", "Western Sydney", "South-Western Sydney", "Hills District", "Bondi", "Manly", "Parramatta", "Chatswood", "Newtown", "Surry Hills", "Paddington", "Cronulla", "Liverpool", "Penrith", "Blacktown", "Hornsby", "Ryde"]},
+        {"name": "Melbourne", "districts": ["Melbourne CBD", "Carlton", "Fitzroy", "Brunswick", "St Kilda", "South Yarra", "Richmond", "Footscray", "Docklands", "Southbank", "Hawthorn", "Camberwell", "Box Hill", "Glen Waverley", "Dandenong", "Frankston", "Geelong", "Werribee", "Sunshine", "Preston", "Northcote", "Bentleigh"]},
+        {"name": "Brisbane"}, {"name": "Perth"}, {"name": "Adelaide"}, {"name": "Gold Coast"}, {"name": "Canberra"}, {"name": "Newcastle"}, {"name": "Wollongong"}, {"name": "Logan City"}, {"name": "Geelong"}, {"name": "Hobart"}, {"name": "Townsville"}, {"name": "Cairns"}, {"name": "Toowoomba"}, {"name": "Darwin"}, {"name": "Ballarat"}, {"name": "Bendigo"}, {"name": "Launceston"}, {"name": "Mackay"}, {"name": "Rockhampton"}, {"name": "Bunbury"}, {"name": "Bundaberg"}, {"name": "Hervey Bay"}, {"name": "Wagga Wagga"}, {"name": "Coffs Harbour"}, {"name": "Gladstone"}, {"name": "Mildura"}, {"name": "Shepparton"}, {"name": "Port Macquarie"}, {"name": "Tamworth"}, {"name": "Orange"}, {"name": "Dubbo"}, {"name": "Albury"}, {"name": "Geraldton"}, {"name": "Kalgoorlie"}, {"name": "Broome"}, {"name": "Alice Springs"}, {"name": "Katherine"}, {"name": "Mount Gambier"}, {"name": "Whyalla"}, {"name": "Port Lincoln"}, {"name": "Devonport"}, {"name": "Burnie"}, {"name": "Karratha"}, {"name": "Port Hedland"}
+      ]
+    },
+    {
+      "code": "NZ",
+      "name": "New Zealand",
+      "cities": [
+        {"name": "Auckland", "districts": ["Auckland Central", "North Shore", "Waitākere", "Manukau", "Papakura", "Franklin", "Rodney", "Devonport", "Takapuna", "Albany", "Howick", "Ōtara", "Manurewa", "Pakuranga", "Henderson", "New Lynn", "Mount Albert", "Mount Eden", "Ponsonby", "Newmarket", "Parnell", "Remuera", "Mission Bay"]},
+        {"name": "Wellington"}, {"name": "Christchurch"}, {"name": "Hamilton"}, {"name": "Tauranga"}, {"name": "Dunedin"}, {"name": "Palmerston North"}, {"name": "Napier"}, {"name": "Hastings"}, {"name": "Nelson"}, {"name": "Rotorua"}, {"name": "New Plymouth"}, {"name": "Whangārei"}, {"name": "Invercargill"}, {"name": "Whanganui"}, {"name": "Gisborne"}, {"name": "Timaru"}, {"name": "Taupo"}, {"name": "Masterton"}, {"name": "Levin"}, {"name": "Pukekohe"}, {"name": "Tokoroa"}, {"name": "Cambridge"}, {"name": "Te Awamutu"}, {"name": "Ashburton"}, {"name": "Oamaru"}, {"name": "Greymouth"}, {"name": "Westport"}, {"name": "Hokitika"}, {"name": "Queenstown"}, {"name": "Wanaka"}, {"name": "Te Anau"}, {"name": "Picton"}, {"name": "Blenheim"}, {"name": "Kaikoura"}, {"name": "Kerikeri"}, {"name": "Paihia"}
+      ]
+    },
+    {
+      "code": "BR",
+      "name": "Brazil",
+      "cities": [
+        {"name": "São Paulo", "districts": ["Sé", "Mooca", "Lapa", "Pinheiros", "Vila Mariana", "Santana", "Penha", "Aricanduva", "Butantã", "Casa Verde", "Campo Limpo", "Capela do Socorro", "Cidade Ademar", "Cidade Tiradentes", "Ermelino Matarazzo", "Freguesia do Ó", "Guaianases", "Ipiranga", "Itaim Paulista", "Itaquera", "Jabaquara", "Jaçanã", "M'Boi Mirim", "Parelheiros", "Perus", "Pirituba", "Santo Amaro", "São Mateus", "São Miguel Paulista", "Vila Maria", "Vila Prudente"]},
+        {"name": "Rio de Janeiro", "districts": ["Centro", "Zona Sul", "Copacabana", "Ipanema", "Leblon", "Botafogo", "Flamengo", "Lapa", "Santa Teresa", "Tijuca", "Barra da Tijuca", "Recreio dos Bandeirantes", "Jacarepaguá", "Méier", "Madureira", "Bangu", "Campo Grande", "Santa Cruz", "Ilha do Governador", "Vila Isabel", "Grajaú"]},
+        {"name": "Brasília"}, {"name": "Salvador"}, {"name": "Fortaleza"}, {"name": "Belo Horizonte"}, {"name": "Manaus"}, {"name": "Curitiba"}, {"name": "Recife"}, {"name": "Porto Alegre"}, {"name": "Belém"}, {"name": "Goiânia"}, {"name": "Guarulhos"}, {"name": "Campinas"}, {"name": "São Luís"}, {"name": "São Gonçalo"}, {"name": "Maceió"}, {"name": "Duque de Caxias"}, {"name": "Campo Grande"}, {"name": "Natal"}, {"name": "Teresina"}, {"name": "São Bernardo do Campo"}, {"name": "Nova Iguaçu"}, {"name": "João Pessoa"}, {"name": "Santo André"}, {"name": "Osasco"}, {"name": "Jaboatão dos Guararapes"}, {"name": "Ribeirão Preto"}, {"name": "Uberlândia"}, {"name": "Contagem"}, {"name": "Sorocaba"}, {"name": "Aracaju"}, {"name": "Feira de Santana"}, {"name": "Cuiabá"}, {"name": "Joinville"}, {"name": "Aparecida de Goiânia"}, {"name": "Londrina"}, {"name": "Juiz de Fora"}, {"name": "Ananindeua"}, {"name": "Niterói"}, {"name": "Porto Velho"}, {"name": "Belford Roxo"}, {"name": "Serra"}, {"name": "Caxias do Sul"}, {"name": "Campos dos Goytacazes"}, {"name": "Florianópolis"}, {"name": "Macapá"}, {"name": "Vila Velha"}, {"name": "São José dos Campos"}, {"name": "Mauá"}, {"name": "São João de Meriti"}, {"name": "Mogi das Cruzes"}, {"name": "Santos"}, {"name": "Diadema"}, {"name": "Betim"}, {"name": "Carapicuíba"}, {"name": "Piracicaba"}, {"name": "Olinda"}, {"name": "Jundiaí"}, {"name": "Bauru"}, {"name": "Maringá"}, {"name": "Anápolis"}, {"name": "Itaquaquecetuba"}, {"name": "São Vicente"}, {"name": "Caruaru"}, {"name": "Petrolina"}, {"name": "Vitória"}, {"name": "Caucaia"}, {"name": "Pelotas"}, {"name": "Canoas"}, {"name": "Franca"}, {"name": "Ponta Grossa"}, {"name": "Paulista"}, {"name": "Blumenau"}, {"name": "Boa Vista"}, {"name": "Ribeirão das Neves"}, {"name": "Santarém"}, {"name": "Limeira"}, {"name": "Suzano"}, {"name": "Vitória da Conquista"}, {"name": "Petrópolis"}, {"name": "Volta Redonda"}, {"name": "Foz do Iguaçu"}, {"name": "Praia Grande"}, {"name": "Uberaba"}, {"name": "Cascavel"}, {"name": "Montes Claros"}, {"name": "Taubaté"}, {"name": "Governador Valadares"}
+      ]
+    },
+    {
+      "code": "AR",
+      "name": "Argentina",
+      "cities": [
+        {"name": "Buenos Aires", "districts": ["Agronomía", "Almagro", "Balvanera", "Barracas", "Belgrano", "Boedo", "Caballito", "Chacarita", "Coghlan", "Colegiales", "Constitución", "Flores", "Floresta", "La Boca", "La Paternal", "Liniers", "Mataderos", "Monte Castro", "Monserrat", "Nueva Pompeya", "Núñez", "Palermo", "Parque Avellaneda", "Parque Chacabuco", "Parque Chas", "Parque Patricios", "Puerto Madero", "Recoleta", "Retiro", "Saavedra", "San Cristóbal", "San Nicolás", "San Telmo", "Vélez Sársfield", "Versalles", "Villa Crespo", "Villa del Parque", "Villa Devoto", "Villa General Mitre", "Villa Lugano", "Villa Luro", "Villa Ortúzar", "Villa Pueyrredón", "Villa Real", "Villa Riachuelo", "Villa Santa Rita", "Villa Soldati", "Villa Urquiza"]},
+        {"name": "Córdoba"}, {"name": "Rosario"}, {"name": "Mendoza"}, {"name": "San Miguel de Tucumán"}, {"name": "La Plata"}, {"name": "Mar del Plata"}, {"name": "Salta"}, {"name": "Santa Fe"}, {"name": "San Juan"}, {"name": "Resistencia"}, {"name": "Neuquén"}, {"name": "Santiago del Estero"}, {"name": "Corrientes"}, {"name": "Posadas"}, {"name": "Bahía Blanca"}, {"name": "Paraná"}, {"name": "Formosa"}, {"name": "La Rioja"}, {"name": "Catamarca"}, {"name": "Río Cuarto"}, {"name": "Comodoro Rivadavia"}, {"name": "San Luis"}, {"name": "San Salvador de Jujuy"}, {"name": "San Rafael"}, {"name": "Tandil"}, {"name": "Río Gallegos"}, {"name": "Concordia"}, {"name": "Villa María"}, {"name": "Ushuaia"}, {"name": "Trelew"}, {"name": "Viedma"}, {"name": "Río Grande"}, {"name": "Bariloche"}, {"name": "Olavarría"}, {"name": "Pergamino"}, {"name": "Junín"}, {"name": "Necochea"}, {"name": "Puerto Iguazú"}, {"name": "El Calafate"}, {"name": "Rawson"}, {"name": "Goya"}, {"name": "Reconquista"}, {"name": "Rafaela"}, {"name": "Tartagal"}, {"name": "San Pedro"}, {"name": "Esquel"}, {"name": "Mercedes"}, {"name": "Luján"}
+      ]
+    },
+    {
+      "code": "CL",
+      "name": "Chile",
+      "cities": [
+        {"name": "Santiago", "districts": ["Santiago Centro", "Las Condes", "Providencia", "Ñuñoa", "Vitacura", "Lo Barnechea", "La Reina", "Maipú", "Puente Alto", "La Florida", "Peñalolén", "Macul", "San Miguel", "San Joaquín", "La Granja", "Lo Espejo", "El Bosque", "La Cisterna", "San Ramón", "La Pintana", "Pedro Aguirre Cerda", "Cerrillos", "Estación Central", "Quinta Normal", "Lo Prado", "Pudahuel", "Cerro Navia", "Renca", "Quilicura", "Conchalí", "Huechuraba", "Independencia", "Recoleta"]},
+        {"name": "Valparaíso"}, {"name": "Viña del Mar"}, {"name": "Concepción"}, {"name": "Antofagasta"}, {"name": "Temuco"}, {"name": "Rancagua"}, {"name": "Talca"}, {"name": "Iquique"}, {"name": "Arica"}, {"name": "Puerto Montt"}, {"name": "Coquimbo"}, {"name": "La Serena"}, {"name": "Chillán"}, {"name": "Calama"}, {"name": "Osorno"}, {"name": "Valdivia"}, {"name": "Punta Arenas"}, {"name": "Copiapó"}, {"name": "Curicó"}, {"name": "Quillota"}, {"name": "Los Ángeles"}, {"name": "Linares"}, {"name": "San Antonio"}, {"name": "Melipilla"}, {"name": "Castro"}, {"name": "Ancud"}, {"name": "Coyhaique"}, {"name": "Puerto Natales"}, {"name": "Vallenar"}, {"name": "Ovalle"}, {"name": "Illapel"}, {"name": "Los Andes"}, {"name": "San Felipe"}, {"name": "Rengo"}, {"name": "Cauquenes"}, {"name": "Constitución"}, {"name": "Lota"}, {"name": "Tomé"}, {"name": "Coronel"}, {"name": "Angol"}, {"name": "Villarrica"}, {"name": "Pucón"}
+      ]
+    },
+    {
+      "code": "CO",
+      "name": "Colombia",
+      "cities": [
+        {"name": "Bogotá", "districts": ["Usaquén", "Chapinero", "Santa Fe", "San Cristóbal", "Usme", "Tunjuelito", "Bosa", "Kennedy", "Fontibón", "Engativá", "Suba", "Barrios Unidos", "Teusaquillo", "Los Mártires", "Antonio Nariño", "Puente Aranda", "La Candelaria", "Rafael Uribe Uribe", "Ciudad Bolívar", "Sumapaz"]},
+        {"name": "Medellín"}, {"name": "Cali"}, {"name": "Barranquilla"}, {"name": "Cartagena"}, {"name": "Cúcuta"}, {"name": "Soledad"}, {"name": "Ibagué"}, {"name": "Bucaramanga"}, {"name": "Soacha"}, {"name": "Santa Marta"}, {"name": "Villavicencio"}, {"name": "Pereira"}, {"name": "Bello"}, {"name": "Valledupar"}, {"name": "Pasto"}, {"name": "Manizales"}, {"name": "Buenaventura"}, {"name": "Neiva"}, {"name": "Palmira"}, {"name": "Armenia"}, {"name": "Popayán"}, {"name": "Sincelejo"}, {"name": "Floridablanca"}, {"name": "Itagüí"}, {"name": "Tuluá"}, {"name": "Envigado"}, {"name": "Montería"}, {"name": "Cartago"}, {"name": "Florencia"}, {"name": "Riohacha"}, {"name": "Tunja"}, {"name": "Quibdó"}, {"name": "Yopal"}, {"name": "Mocoa"}, {"name": "Leticia"}, {"name": "Inírida"}, {"name": "San José del Guaviare"}, {"name": "Mitú"}, {"name": "Puerto Carreño"}, {"name": "Arauca"}, {"name": "San Andrés"}, {"name": "Apartadó"}, {"name": "Girardot"}, {"name": "Sogamoso"}, {"name": "Duitama"}, {"name": "Zipaquirá"}, {"name": "Fusagasugá"}, {"name": "Facatativá"}, {"name": "Chía"}
+      ]
+    },
+    {
+      "code": "PE",
+      "name": "Peru",
+      "cities": [
+        {"name": "Lima", "districts": ["Cercado de Lima", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", "Cieneguilla", "Comas", "El Agustino", "Independencia", "Jesús María", "La Molina", "La Victoria", "Lince", "Los Olivos", "Lurigancho", "Lurín", "Magdalena del Mar", "Miraflores", "Pachacámac", "Pucusana", "Pueblo Libre", "Puente Piedra", "Punta Hermosa", "Punta Negra", "Rímac", "San Bartolo", "San Borja", "San Isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis", "San Martín de Porres", "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa", "Santiago de Surco", "Surquillo", "Villa El Salvador", "Villa María del Triunfo"]},
+        {"name": "Arequipa"}, {"name": "Trujillo"}, {"name": "Chiclayo"}, {"name": "Piura"}, {"name": "Iquitos"}, {"name": "Cusco"}, {"name": "Chimbote"}, {"name": "Huancayo"}, {"name": "Tacna"}, {"name": "Juliaca"}, {"name": "Ica"}, {"name": "Sullana"}, {"name": "Ayacucho"}, {"name": "Chincha Alta"}, {"name": "Cajamarca"}, {"name": "Pucallpa"}, {"name": "Tarapoto"}, {"name": "Puno"}, {"name": "Tumbes"}, {"name": "Talara"}, {"name": "Huaraz"}, {"name": "Huánuco"}, {"name": "Jaén"}, {"name": "Pisco"}, {"name": "Chulucanas"}, {"name": "Moyobamba"}, {"name": "Abancay"}, {"name": "Cerro de Pasco"}, {"name": "Moquegua"}, {"name": "Yurimaguas"}, {"name": "Madre de Dios"}, {"name": "Puerto Maldonado"}, {"name": "Andahuaylas"}, {"name": "Barranca"}, {"name": "Huacho"}, {"name": "Huaral"}, {"name": "Tingo María"}, {"name": "Catacaos"}, {"name": "Sechura"}, {"name": "Paita"}
+      ]
+    },
+    {
+      "code": "VE",
+      "name": "Venezuela",
+      "cities": [
+        {"name": "Caracas"}, {"name": "Maracaibo"}, {"name": "Valencia"}, {"name": "Barquisimeto"}, {"name": "Maracay"}, {"name": "Ciudad Guayana"}, {"name": "San Cristóbal"}, {"name": "Maturín"}, {"name": "Ciudad Bolívar"}, {"name": "Cumaná"}, {"name": "Barcelona"}, {"name": "Mérida"}, {"name": "Cabimas"}, {"name": "Coro"}, {"name": "Puerto La Cruz"}, {"name": "Los Teques"}, {"name": "Punto Fijo"}, {"name": "Acarigua"}, {"name": "Petare"}, {"name": "Guarenas"}, {"name": "Guatire"}, {"name": "La Guaira"}, {"name": "Valera"}, {"name": "Carúpano"}, {"name": "El Tigre"}, {"name": "Trujillo"}, {"name": "Anaco"}, {"name": "Tucupita"}, {"name": "Porlamar"}, {"name": "Margarita"}, {"name": "San Felipe"}, {"name": "Guanare"}, {"name": "San Carlos"}
+      ]
+    },
+    {
+      "code": "EC",
+      "name": "Ecuador",
+      "cities": [
+        {"name": "Quito"}, {"name": "Guayaquil"}, {"name": "Cuenca"}, {"name": "Santo Domingo"}, {"name": "Machala"}, {"name": "Manta"}, {"name": "Portoviejo"}, {"name": "Ambato"}, {"name": "Riobamba"}, {"name": "Loja"}, {"name": "Esmeraldas"}, {"name": "Ibarra"}, {"name": "Quevedo"}, {"name": "Latacunga"}, {"name": "Babahoyo"}, {"name": "Milagro"}, {"name": "Tulcán"}, {"name": "Otavalo"}, {"name": "Salinas"}, {"name": "Tena"}, {"name": "Macas"}, {"name": "Puyo"}, {"name": "Lago Agrio"}, {"name": "Coca"}, {"name": "Zamora"}, {"name": "Azogues"}
+      ]
+    },
+    {
+      "code": "BO",
+      "name": "Bolivia",
+      "cities": [
+        {"name": "La Paz"}, {"name": "Santa Cruz de la Sierra"}, {"name": "Cochabamba"}, {"name": "Sucre"}, {"name": "Oruro"}, {"name": "El Alto"}, {"name": "Tarija"}, {"name": "Potosí"}, {"name": "Trinidad"}, {"name": "Cobija"}, {"name": "Montero"}, {"name": "Quillacollo"}, {"name": "Riberalta"}, {"name": "Yacuiba"}, {"name": "Camiri"}, {"name": "Villa Tunari"}, {"name": "Puerto Suárez"}, {"name": "Uyuni"}, {"name": "Copacabana"}, {"name": "Llallagua"}
+      ]
+    },
+    {
+      "code": "UY",
+      "name": "Uruguay",
+      "cities": [
+        {"name": "Montevideo"}, {"name": "Salto"}, {"name": "Ciudad de la Costa"}, {"name": "Paysandú"}, {"name": "Las Piedras"}, {"name": "Rivera"}, {"name": "Maldonado"}, {"name": "Tacuarembó"}, {"name": "Melo"}, {"name": "Mercedes"}, {"name": "Artigas"}, {"name": "Minas"}, {"name": "San José"}, {"name": "Durazno"}, {"name": "Florida"}, {"name": "Punta del Este"}, {"name": "Colonia del Sacramento"}, {"name": "Fray Bentos"}, {"name": "Treinta y Tres"}, {"name": "Trinidad"}, {"name": "Rocha"}, {"name": "Canelones"}
+      ]
+    },
+    {
+      "code": "PY",
+      "name": "Paraguay",
+      "cities": [
+        {"name": "Asunción"}, {"name": "Ciudad del Este"}, {"name": "San Lorenzo"}, {"name": "Capiatá"}, {"name": "Lambaré"}, {"name": "Fernando de la Mora"}, {"name": "Limpio"}, {"name": "Nemby"}, {"name": "Encarnación"}, {"name": "Mariano Roque Alonso"}, {"name": "Pedro Juan Caballero"}, {"name": "Coronel Oviedo"}, {"name": "Concepción"}, {"name": "Caaguazú"}, {"name": "Villarrica"}, {"name": "Pilar"}, {"name": "Hernandarias"}, {"name": "San Pedro"}, {"name": "Caacupé"}, {"name": "Filadelfia"}
+      ]
+    },
+    {
+      "code": "MX",
+      "name": "Mexico",
+      "cities": [
+        {"name": "Mexico City", "districts": ["Álvaro Obregón", "Azcapotzalco", "Benito Juárez", "Coyoacán", "Cuajimalpa", "Cuauhtémoc", "Gustavo A. Madero", "Iztacalco", "Iztapalapa", "La Magdalena Contreras", "Miguel Hidalgo", "Milpa Alta", "Tláhuac", "Tlalpan", "Venustiano Carranza", "Xochimilco"]},
+        {"name": "Guadalajara"}, {"name": "Monterrey"}, {"name": "Puebla"}, {"name": "Tijuana"}, {"name": "León"}, {"name": "Juárez"}, {"name": "Zapopan"}, {"name": "Mérida"}, {"name": "San Luis Potosí"}, {"name": "Aguascalientes"}, {"name": "Hermosillo"}, {"name": "Saltillo"}, {"name": "Mexicali"}, {"name": "Culiacán"}, {"name": "Querétaro"}, {"name": "Acapulco"}, {"name": "Tlalnepantla"}, {"name": "Cancún"}, {"name": "Chihuahua"}, {"name": "Morelia"}, {"name": "Naucalpan"}, {"name": "Reynosa"}, {"name": "Toluca"}, {"name": "Veracruz"}, {"name": "Torreón"}, {"name": "Tlaquepaque"}, {"name": "Tuxtla Gutiérrez"}, {"name": "Durango"}, {"name": "Ciudad López Mateos"}, {"name": "Tampico"}, {"name": "Ecatepec"}, {"name": "Ciudad Nezahualcóyotl"}, {"name": "Cuautitlán Izcalli"}, {"name": "Villahermosa"}, {"name": "Coacalco de Berriozábal"}, {"name": "Xalapa"}, {"name": "Matamoros"}, {"name": "Nuevo Laredo"}, {"name": "Mazatlán"}, {"name": "Irapuato"}, {"name": "Tepic"}, {"name": "Oaxaca"}, {"name": "Pachuca"}, {"name": "Campeche"}, {"name": "Celaya"}, {"name": "Colima"}, {"name": "La Paz"}, {"name": "Los Cabos"}, {"name": "Playa del Carmen"}, {"name": "Cozumel"}, {"name": "Chetumal"}, {"name": "Cuernavaca"}, {"name": "Tehuacán"}, {"name": "Atizapán de Zaragoza"}, {"name": "San Nicolás de los Garza"}, {"name": "Apodaca"}, {"name": "Guadalupe"}, {"name": "General Escobedo"}, {"name": "Cuautla"}, {"name": "Salamanca"}, {"name": "San Juan del Río"}, {"name": "Boca del Río"}, {"name": "Tampico"}, {"name": "Tepatitlán de Morelos"}, {"name": "Manzanillo"}, {"name": "Tehuacán"}, {"name": "Iguala"}, {"name": "Chilpancingo"}, {"name": "Zihuatanejo"}, {"name": "Tapachula"}, {"name": "San Cristóbal de las Casas"}, {"name": "Comitán"}, {"name": "Ensenada"}, {"name": "Tecate"}, {"name": "Rosarito"}, {"name": "Coatzacoalcos"}, {"name": "Minatitlán"}, {"name": "Poza Rica"}, {"name": "Córdoba"}, {"name": "Orizaba"}, {"name": "Tlaxcala"}, {"name": "Zacatecas"}, {"name": "Fresnillo"}
+      ]
+    },
+    {
+      "code": "CU",
+      "name": "Cuba",
+      "cities": [
+        {"name": "Havana"}, {"name": "Santiago de Cuba"}, {"name": "Camagüey"}, {"name": "Holguín"}, {"name": "Santa Clara"}, {"name": "Guantánamo"}, {"name": "Bayamo"}, {"name": "Cienfuegos"}, {"name": "Pinar del Río"}, {"name": "Las Tunas"}, {"name": "Matanzas"}, {"name": "Sancti Spíritus"}, {"name": "Ciego de Ávila"}, {"name": "Manzanillo"}, {"name": "Varadero"}, {"name": "Cárdenas"}, {"name": "Nuevitas"}, {"name": "Trinidad"}, {"name": "Baracoa"}, {"name": "Moa"}, {"name": "Banes"}, {"name": "Florida"}
+      ]
+    },
+    {
+      "code": "DO",
+      "name": "Dominican Republic",
+      "cities": [
+        {"name": "Santo Domingo"}, {"name": "Santiago de los Caballeros"}, {"name": "Santo Domingo Este"}, {"name": "Santo Domingo Oeste"}, {"name": "Santo Domingo Norte"}, {"name": "San Pedro de Macorís"}, {"name": "La Romana"}, {"name": "Bella Vista"}, {"name": "San Cristóbal"}, {"name": "Puerto Plata"}, {"name": "San Francisco de Macorís"}, {"name": "La Vega"}, {"name": "Higüey"}, {"name": "Moca"}, {"name": "Bonao"}, {"name": "Azua"}, {"name": "Baní"}, {"name": "Barahona"}, {"name": "Punta Cana"}, {"name": "Boca Chica"}, {"name": "Bávaro"}, {"name": "Samaná"}, {"name": "Mao"}, {"name": "Cotuí"}
+      ]
+    },
+    {
+      "code": "PA",
+      "name": "Panama",
+      "cities": [
+        {"name": "Panama City"}, {"name": "San Miguelito"}, {"name": "Tocumen"}, {"name": "David"}, {"name": "Arraiján"}, {"name": "Colón"}, {"name": "Las Cumbres"}, {"name": "La Chorrera"}, {"name": "Pacora"}, {"name": "Santiago de Veraguas"}, {"name": "Chitré"}, {"name": "Penonomé"}, {"name": "Aguadulce"}, {"name": "Changuinola"}, {"name": "Bocas del Toro"}, {"name": "Boquete"}, {"name": "Volcán"}, {"name": "Las Tablas"}, {"name": "El Cope"}
+      ]
+    }
+  ]
+}

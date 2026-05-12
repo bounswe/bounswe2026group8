@@ -84,6 +84,12 @@ class ExpertiseFieldSerializer(serializers.ModelSerializer):
     `IsVerificationCoordinatorOrAdmin` endpoints.
     """
 
+    category = ExpertiseCategorySerializer(read_only=True)
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=ExpertiseCategory.objects.filter(is_active=True),
+        source='category',
+        write_only=True,
+    )
     reviewed_by_id = serializers.PrimaryKeyRelatedField(source='reviewed_by', read_only=True)
     reviewed_by_name = serializers.SerializerMethodField()
 
@@ -91,7 +97,8 @@ class ExpertiseFieldSerializer(serializers.ModelSerializer):
         model = ExpertiseField
         fields = [
             'id',
-            'field',
+            'category',
+            'category_id',
             'certification_level',
             'certification_document_url',
             'verification_status',
@@ -120,7 +127,7 @@ class ExpertiseFieldSerializer(serializers.ModelSerializer):
 class HubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hub
-        fields = ['id', 'name', 'slug']
+        fields = ['id', 'name', 'slug', 'country', 'city', 'district']
         read_only_fields = fields
 
 
@@ -131,11 +138,11 @@ class HubWriteSerializer(serializers.ModelSerializer):
     spell out the URL slug for every neighborhood.
     """
 
-    slug = serializers.CharField(required=False, allow_blank=True, max_length=120)
+    slug = serializers.CharField(required=False, allow_blank=True, max_length=200)
 
     class Meta:
         model = Hub
-        fields = ['id', 'name', 'slug']
+        fields = ['id', 'name', 'slug', 'country', 'city', 'district']
         read_only_fields = ['id']
 
     def validate(self, attrs):
@@ -147,6 +154,43 @@ class HubWriteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'slug': ['Could not derive a slug; provide one explicitly.']})
         attrs['slug'] = slug
         return attrs
+
+
+def resolve_or_create_hub(country, city, district=''):
+    """Look up an existing Hub by (country, city, district) or create one.
+
+    `country` and `city` are required; `district` is optional. Returns the Hub
+    instance (created or found).
+    """
+    country = (country or '').strip()
+    city = (city or '').strip()
+    district = (district or '').strip()
+    if not country or not city:
+        raise serializers.ValidationError({'detail': 'country and city are required.'})
+
+    hub, _ = Hub.objects.get_or_create(
+        country=country,
+        city=city,
+        district=district,
+        defaults=_hub_defaults(country, city, district),
+    )
+    return hub
+
+
+def _hub_defaults(country, city, district):
+    label = f'{city} / {district}, {country}' if district else f'{city}, {country}'
+    base_slug = slugify(f'{country}-{city}-{district}' if district else f'{country}-{city}') or 'hub'
+    slug = base_slug
+    suffix = 2
+    while Hub.objects.filter(slug=slug).exists():
+        slug = f'{base_slug}-{suffix}'
+        suffix += 1
+    name = label
+    name_suffix = 2
+    while Hub.objects.filter(name=name).exists():
+        name = f'{label} ({name_suffix})'
+        name_suffix += 1
+    return {'name': name, 'slug': slug}
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -263,6 +307,9 @@ class RegisterSerializer(serializers.Serializer):
     confirm_password = serializers.CharField(write_only=True)
     role = serializers.ChoiceField(choices=User.Role.choices)
     hub_id = serializers.IntegerField(required=False, allow_null=True)
+    hub_country = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    hub_city = serializers.CharField(required=False, allow_blank=True, max_length=120)
+    hub_district = serializers.CharField(required=False, allow_blank=True, max_length=120)
     neighborhood_address = serializers.CharField(
         max_length=255, required=False, allow_blank=True, allow_null=True
     )
@@ -301,8 +348,14 @@ class RegisterSerializer(serializers.Serializer):
         validated_data.pop('confirm_password')
         password = validated_data.pop('password')
         hub_id = validated_data.pop('hub_id', None)
+        hub_country = validated_data.pop('hub_country', '').strip()
+        hub_city = validated_data.pop('hub_city', '').strip()
+        hub_district = validated_data.pop('hub_district', '').strip()
         category = validated_data.pop('category_id', None)
-        if hub_id is not None:
+        if hub_country and hub_city:
+            hub = resolve_or_create_hub(hub_country, hub_city, hub_district)
+            validated_data['hub_id'] = hub.id
+        elif hub_id is not None:
             validated_data['hub_id'] = hub_id
         # Defensive: registration must never set staff authority or active state.
         for forbidden in ('staff_role', 'is_active', 'is_staff', 'is_superuser'):

@@ -133,6 +133,15 @@
     <string name="offline_info_tips">• Emergency contact numbers\n• First aid basics\n• Evacuation procedures\n• Safety checklists\n• Community resources</string>
     <string name="hub_city">Hub (City)</string>
     <string name="select_hub">Select a hub</string>
+    <string name="location_picker_choose_country">Choose country</string>
+    <string name="location_picker_choose_city">Choose city in %1$s</string>
+    <string name="location_picker_choose_district">Choose district in %1$s</string>
+    <string name="location_picker_search">Search</string>
+    <string name="hub_current_label">Current hub</string>
+    <string name="hub_none">No hub selected</string>
+    <string name="hub_change">Change</string>
+    <string name="hub_saving">Saving…</string>
+    <string name="hub_section_title">Hub</string>
 
     <!-- Notification Preferences -->
     <string name="notification_preferences">Notification Preferences</string>
@@ -140,6 +149,9 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_dark_mode">Dark mode</string>
+    <string name="settings_dark_mode_desc">Use the dark blue theme. Turn this off for a light background.</string>
     <string name="settings_notifications">Notifications</string>
     <string name="settings_privacy">Privacy</string>
     <string name="settings_privacy_note">Choose what other users can see on your public profile.</string>
@@ -265,6 +277,22 @@
     <string name="profile_expertise_field">Field (e.g. First Aid)</string>
     <string name="profile_cert_url">Certificate URL (optional)</string>
     <string name="profile_no_expertise">No expertise fields added yet.</string>
+    <string name="my_posts_title">My Posts</string>
+    <string name="my_posts_card_desc">View the forum posts you shared</string>
+    <string name="my_posts_loading">Loading your posts...</string>
+    <string name="my_posts_empty">You have not shared any forum posts yet.</string>
+    <string name="my_posts_load_failed">Failed to load your posts</string>
+    <string name="my_posts_sign_in_required">Sign in to view your posts.</string>
+    <string name="back_to_profile">← Back to Profile</string>
+    <string name="my_posts_tab_forum_posts">Forum Posts</string>
+    <string name="my_posts_tab_help_requests">Help Requests</string>
+    <string name="my_posts_tab_help_offers">Help Offers</string>
+    <string name="my_posts_empty_forum_posts">You have not shared any forum posts yet.</string>
+    <string name="my_posts_empty_help_requests">You have not created any help requests yet.</string>
+    <string name="my_posts_empty_help_offers">You have not made any help offers yet.</string>
+    <string name="my_posts_load_failed_forum_posts">Failed to load your forum posts</string>
+    <string name="my_posts_load_failed_help_requests">Failed to load your help requests</string>
+    <string name="my_posts_load_failed_help_offers">Failed to load your help offers</string>
 
     <!-- Forum -->
     <string name="forum_title">Forum</string>
@@ -281,6 +309,9 @@
     <string name="sort_newest">Newest</string>
     <string name="sort_most_liked">Most Liked</string>
     <string name="sort_hot">Hot</string>
+    <string name="filter_all_forum">All</string>
+    <string name="filter_experts">Experts</string>
+    <string name="filter_standard_users">Standard Users</string>
     <string name="forum_loading">Loading posts…</string>
     <string name="forum_empty_global">No global posts yet.</string>
     <string name="forum_empty_hub">No %1$s posts yet.</string>
@@ -333,6 +364,11 @@
     <string name="mesh_content_required">Content is required</string>
     <string name="mesh_type_required">Pick a post type</string>
     <string name="mesh_post_created">Post created</string>
+    <string name="mesh_sos">SEND SOS</string>
+    <string name="mesh_sos_title">Help needed!</string>
+    <string name="mesh_sos_body">A person needs immediate help!</string>
+    <string name="mesh_sos_sent">SOS broadcast sent with your location</string>
+    <string name="mesh_sos_sent_no_location">SOS broadcast sent (no location available)</string>
     <string name="mesh_comment_created">Comment posted</string>
     <string name="mesh_comments_heading">Comments (%1$d)</string>
     <string name="mesh_no_comments">No comments yet.</string>
@@ -367,6 +403,16 @@
     <string name="nearest_label">Nearest gathering point</string>
     <string name="nearest_format">Nearest: %1$s</string>
     <string name="back">Back</string>
+    <string name="voice_input_start">Start voice input</string>
+    <string name="voice_input_stop">Stop voice input</string>
+    <string name="voice_input_unavailable">Speech recognition is not available on this device.</string>
+    <string name="voice_input_permission_denied">Microphone permission is required for voice input.</string>
+    <string name="voice_input_no_match">Could not understand speech. Please try again.</string>
+    <string name="voice_input_busy">Voice recognition is busy. Please try again.</string>
+    <string name="voice_input_network_error">Voice recognition needs a stable connection right now.</string>
+    <string name="voice_input_failed">Voice input failed. Please try again.</string>
+    <string name="voice_input_start_failed">Could not start voice input.</string>
+    <string name="voice_input_fallback_hint">On-device voice input is unavailable right now. Try again with the system recognizer.</string>
 
     <!-- Language -->
     <string name="language">Language</string>
@@ -639,4 +685,25 @@
     <string name="tutorial_call">Call</string>
     <string name="tutorial_calling">Calling %1$s</string>
     <string name="tutorial_changing_field">Changing this field</string>
+
+    <!-- Badges -->
+    <string name="badges_title">My Badges</string>
+    <string name="badges_card_desc">View your achievements and progress</string>
+    <string name="badges_empty">You haven\'t earned any badges yet. Start participating in the community!</string>
+    <string name="badges_load_failed">Failed to load badges</string>
+    <string name="badges_max_level">MAX LEVEL REACHED</string>
+    <string name="badges_name_with_level" translatable="false">%1$s %2$d</string>
+    <string name="badges_progress_format" translatable="false">%1$d / %2$d</string>
+    <string name="badges_pill_format" translatable="false">%1$s %2$s</string>
+    <string name="arrow_right" translatable="false">→</string>
+    <string name="badge_name_commenter">Commenter</string>
+    <string name="badge_desc_commenter">Awarded for being an active participant in community discussions.</string>
+    <string name="badge_name_voter">Voter</string>
+    <string name="badge_desc_voter">Awarded for voting on community posts.</string>
+    <string name="badge_name_forum_active">Forum Active</string>
+    <string name="badge_desc_forum_active">Awarded for creating new posts in the community forum.</string>
+    <string name="badge_name_responder">Responder</string>
+    <string name="badge_desc_responder">Awarded for taking responsibility for community help requests.</string>
+    <string name="assigned_expert_format">Assigned to: %1$s</string>
 </resources>
+

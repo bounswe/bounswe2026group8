@@ -92,6 +92,11 @@
       "most_liked": "Most Liked",
       "hot": "Hot"
     },
+    "filter": {
+      "all": "All",
+      "experts": "Experts",
+      "standard_users": "Standard Users"
+    },
     "empty_states": {
       "loading": "Loading posts...",
       "select_hub": "Select a hub to see {{tab}} posts.",
@@ -382,6 +387,33 @@
       "posted": "Posted"
     }
   },
+  "badges": {
+    "commenter": {
+      "title": "Commenter",
+      "description": "Awarded for being an active participant in community discussions."
+    },
+    "voter": {
+      "title": "Voter",
+      "description": "Awarded for voting on community posts."
+    },
+    "forum_active": {
+      "title": "Forum Active",
+      "description": "Awarded for creating new posts in the community forum."
+    },
+    "responder": {
+      "title": "Responder",
+      "description": "Awarded for taking responsibility for community help requests."
+    }
+  },
+  "my_badges": {
+    "header": {
+      "title": "My Badges",
+      "back": "Back"
+    },
+    "loading": "Loading your achievements...",
+    "empty": "You haven't earned any badges yet. Start participating in the community!",
+    "max_level": "MAX LEVEL REACHED"
+  },
   "post_create": {
     "types": {
       "global": "Global",
@@ -652,6 +684,10 @@
       "title": "My Posts",
       "desc": "View your forum posts, help requests, and help offers"
     },
+    "my_badges": {
+      "title": "My Badges",
+      "desc": "View your earned badges and achievements"
+    },
     "sections": {
       "personal_info": "Personal Information",
       "resources": "Resources",
@@ -736,6 +772,8 @@
       "back": "Back"
     },
     "sections": {
+      "appearance": "Appearance",
+      "hub": "Hub",
       "notifications": "Notifications",
       "privacy": "Public Profile Privacy"
     },
@@ -749,7 +787,17 @@
       "load_failed": "Could not load settings.",
       "save_failed": "Could not save settings."
     },
+    "hub": {
+      "current": "Current hub",
+      "none": "No hub selected",
+      "saving": "Saving...",
+      "change": "Change"
+    },
     "fields": {
+      "dark_mode": {
+        "label": "Dark mode",
+        "desc": "Use the dark blue theme. Turn this off for a light background."
+      },
       "notify_help_requests": {
         "label": "Help request notifications",
         "desc": "Receive push notifications when relevant help requests are created."
@@ -1155,5 +1203,12 @@
       "mapPreview": "Map preview",
       "mapDesc": "Sign in to use live map tools and saved gathering points."
     }
+  },
+  "location_picker": {
+    "choose_country": "Choose country",
+    "choose_city": "Choose city in {{country}}",
+    "choose_district": "Choose district in {{city}}",
+    "search": "Search...",
+    "no_results": "No results"
   }
 }

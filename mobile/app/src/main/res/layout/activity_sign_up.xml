@@ -168,13 +168,17 @@
             android:textSize="14sp"
             android:layout_marginBottom="8dp" />
 
-        <Spinner
-            android:id="@+id/spinnerHub"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickHub"
+            style="@style/Widget.EmergencyHub.Button.Secondary"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/tab_pill_bg"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
+            android:text="@string/select_hub"
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            android:gravity="start|center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:layout_marginBottom="16dp" />
 
         <!-- Neighborhood (optional) -->

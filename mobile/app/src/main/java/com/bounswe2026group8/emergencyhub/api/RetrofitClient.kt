@@ -1,6 +1,7 @@
 package com.bounswe2026group8.emergencyhub.api
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.bounswe2026group8.emergencyhub.BuildConfig
 import com.bounswe2026group8.emergencyhub.auth.TokenManager
 import com.bounswe2026group8.emergencyhub.util.ImageUrlResolver
@@ -20,6 +21,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
 
     private val BASE_URL = BuildConfig.BASE_URL
+
+    /**
+     * Overrides BASE_URL during instrumented tests.
+     * Set to [MockWebServer.url("/").toString()] before calling [getService]; call [reset] to restore.
+     */
+    @VisibleForTesting
+    internal var testBaseUrl: String? = null
+
+    /** Clears the cached [ApiService] so it is rebuilt with the current [testBaseUrl] on the next call. */
+    @VisibleForTesting
+    internal fun reset() {
+        apiService = null
+    }
 
     /**
      * Resolves an image URL so it is loadable from the mobile client.
@@ -54,7 +68,7 @@ object RetrofitClient {
                 .build()
 
             apiService = Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(testBaseUrl ?: BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
